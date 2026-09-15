@@ -185,7 +185,8 @@ they are harmless and ignored when scheduling.
 
 ## Status
 
-Working and deployed at [vlc-spanish.netlify.app](https://vlc-spanish.netlify.app):
+Phase 1 is complete. Working and deployed at
+[vlc-spanish.netlify.app](https://vlc-spanish.netlify.app):
 
 - The dictionary, users, and per-person progress, stored in Netlify Blobs behind four functions
 - Typed quizzes with SM-2 scheduling, graded per the rules below
@@ -195,6 +196,11 @@ Working and deployed at [vlc-spanish.netlify.app](https://vlc-spanish.netlify.ap
 Not built, in rough order of likely usefulness:
 
 - Multiple-choice and flashcard formats; mixed-format sessions
+- **A quiz layout that survives the on-screen keyboard.** The keyboard now stays up for a whole
+  session, which is what you want — but it halves the usable height, and the screen is currently
+  laid out for the full viewport with the button pinned to the bottom. Worth solving alongside the
+  new formats rather than patching the typed screen alone. iOS Safari does not support the viewport
+  `interactive-widget` hint, so the layout cannot rely on being resized.
 - A progress screen: per-tag mastery, recent misses, session history
 - Conjugation drills driven by the `verb` metadata already in the dictionary (needs no API)
 - Offline answer queueing — quizzes read from cache offline, but results are not yet synced back
