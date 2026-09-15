@@ -138,11 +138,17 @@ export const progressSchema = z.object({
 
 export type Progress = z.infer<typeof progressSchema>;
 
-/** `progress/<userId>` blob: entryId -> direction -> Progress. */
+/**
+ * `progress/<userId>` blob: entryId -> direction -> Progress.
+ *
+ * The inner record is a *partial* record: a word is usually practised in one
+ * direction before the other, so requiring both keys (which `z.record` with an
+ * enum key does) would reject ordinary data.
+ */
 export const progressBlobSchema = z.object({
   userId: slug,
   updatedAt: z.iso.datetime().optional(),
-  entries: z.record(z.string(), z.record(directionSchema, progressSchema)),
+  entries: z.record(z.string(), z.partialRecord(directionSchema, progressSchema)),
 });
 
 export type ProgressBlob = z.infer<typeof progressBlobSchema>;

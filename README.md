@@ -4,34 +4,53 @@ A vocabulary drilling app for an elementary Peninsular Spanish class. One shared
 family, per-person spaced-repetition progress, and typed quizzes that grade the way a teacher would —
 accepting the feminine form, noticing a missing accent, insisting on the article.
 
-Claude does the thinking (turning a raw word list from class into full dictionary entries); the app
-does the dictionary, the scheduling, and the drilling.
+Dictionary entries are authored **outside** the app — a Claude chat agent follows
+[DICTIONARY_BRIEF.md](DICTIONARY_BRIEF.md), the entries go into `data/dictionary.json`, and an
+import script pushes them live. The app itself does the dictionary, the scheduling, and the
+drilling, and never calls the Claude API. That is a deliberate decision (see
+[Working on the dictionary](#working-on-the-dictionary)): it means no API key, no billing, and no
+public endpoint that can spend money.
 
-See [PLAN.md](PLAN.md) for the full spec and [DICTIONARY_BRIEF.md](DICTIONARY_BRIEF.md) for the
-rules a dictionary-generating agent must follow.
+See [PLAN.md](PLAN.md) for the original spec. Where this README and PLAN.md disagree, this README is
+current — notably PLAN.md §6 describes an in-app "add words" flow that is not being built.
 
 ## Stack
 
 - **Vite+** (`vp`) — dev server, build, test, lint, format. Not plain Vite; see [AGENTS.md](AGENTS.md).
 - **React 19 + TypeScript**, strict mode, React Compiler enabled
-- **react-router** for the seven screens
-- **zod** as the single source of truth for data shapes — runtime validation, TS types, and the
-  JSON schema handed to the Claude API all derive from `src/lib/schema.ts`
-- **Netlify Functions + Netlify Blobs** for the shared store and the Claude proxy
+- **react-router** in declarative mode
+- **zod** as the single source of truth for data shapes — runtime validation and TS types both
+  derive from `src/lib/schema.ts`
+- **Netlify Functions + Netlify Blobs** for the shared store
 - Plain CSS with CSS modules. No Tailwind, no CSS-in-JS.
 
 ## Commands
 
 ```sh
-vp dev                      # dev server (--host, so a phone on the same wifi can reach it)
+netlify dev                 # THE ONE TO USE: app + functions + local Blobs, on :8888
 vp test                     # run tests once
 vp test watch               # watch mode
 vp check --fix              # format, lint, and type check
 vp build                    # production build to dist/
-netlify dev                 # app + functions + a local Blobs store, on :8888
 ```
 
 Run `vp install` after pulling. `vp check` and `vp test` should both pass before committing.
+
+### Develop on :8888, not :5173
+
+`netlify dev` is the only way to run the whole app locally. It starts (or adopts) the Vite server on
+:5173 and puts the functions in front of it on **:8888**.
+
+Opening **:5173** directly gives you the frontend with no `/api/*` routes. That fails in a confusing
+way rather than an obvious one: Vite's SPA fallback answers `/api/dictionary` with **200 and the
+index.html page**, not a 404, so the app receives a web page where it expects JSON. The app shows a
+red "could not load your words" banner saying the server returned a page instead of data. If you see
+that, you are on the wrong port.
+
+Hot reloading works normally through :8888. If you stop the :5173 server while `netlify dev` is
+running, :8888 loses its frontend — restart both, or let `netlify dev` start Vite itself.
+
+The same gap applies to `vp preview`, which serves the built assets with no functions.
 
 ## Layout
 
@@ -41,33 +60,65 @@ src/lib/          pure logic, no React, thoroughly tested
   normalize.ts      text folding: case, accents, articles, "tímido/a" shorthand
   grade.ts          answer grading in both directions
   scheduler.ts      SM-2 spaced repetition behind a swappable Scheduler interface
+  session.ts        picks the cards for a quiz, and which english gloss to prompt with
   dates.ts          ISO calendar-date maths in whole local days
   slug.ts           stable entry ids
+src/
+  api.ts          typed client over the functions; validates every response
+  app/            store (context + data loading) and the shell with its nav
+  screens/        one file per screen, each with a CSS module beside it
 netlify/
   functions/      the /api routes
   lib/            code shared between functions
 scripts/
   validate-dictionary.ts   schema check with warnings, exits non-zero on error
+  import-dictionary.ts     file -> live store
+  export-dictionary.ts     live store -> file
 data/
-  dictionary.json          the seed dictionary
+  dictionary.json          the dictionary
 ```
 
 `src/lib` deliberately has no React or network code in it. The grading and scheduling rules are the
 part of this app most worth getting right, so they are pure functions with tests rather than logic
 tangled into components.
 
+## Screens
+
+- **Who's practising** — name picker, plus a field to add a name. The choice is remembered in
+  `localStorage`; a name that no longer exists on the server is ignored.
+- **Home** — due / new / total counts and three quick starts: due words, new words, misses.
+- **Quiz** — one prompt at a time, typed answer, inline verdict, progress bar, and a summary
+  listing what to look at again. Nouns are prompted with "include the article".
+- **Dictionary** — search both languages (accent-insensitive, so `timido` finds `tímido`), filter
+  by tag, read the notes.
+- **Settings** — switch user.
+
 ## Data
 
 One shared dictionary, tagged by class section. Progress is per person, per entry, and per direction
-(`en→es` and `es→en` are separate cards). Identity is a name picked from a list — no passwords, no
-email. Everything lives in Netlify Blobs as a handful of JSON blobs, with ETag conditional writes so
-two people adding words at once cannot clobber each other.
+(`en→es` and `es→en` are separate cards, and a word is normally practised in one direction before
+the other). Identity is a name picked from a list — no passwords, no email. Everything lives in
+Netlify Blobs as a handful of JSON blobs.
+
+Shared blobs are written with ETag conditional writes (read → merge → write, retry on mismatch) so
+two people writing at once cannot clobber each other. One trap worth knowing: **the local
+`netlify dev` Blobs store returns no ETags at all**, while production does. Code that treats a
+missing ETag as "the blob does not exist" will write with `onlyIfNew`, fail forever against an
+existing blob, and work fine in production while being broken locally. `netlify/lib/store.mts`
+tracks existence separately for this reason, and there is a regression test for it.
+
+Progress is written once per session rather than after every card.
 
 ## Working on the dictionary
 
-`data/dictionary.json` is the seed file in git. The live copy lives in Netlify Blobs and is what the
-app actually reads. They are separate: **editing the file changes nothing in production until you
-import it**, and words added through the app do not appear in the file until you export them.
+`data/dictionary.json` is the source of truth, and it lives in git. The live copy in Netlify Blobs
+is what the app reads. They are separate: **editing the file changes nothing in production until you
+import it.**
+
+There is no way to add words from inside the app — that is deliberate. New words come from a Claude
+chat agent following [DICTIONARY_BRIEF.md](DICTIONARY_BRIEF.md), get pasted into
+`data/dictionary.json`, and are imported from a terminal. This keeps the dictionary version
+controlled and reviewable, and it means the deployed site has no endpoint that costs money to call.
 
 Three commands, all of which take an optional path and an optional `--url`:
 
@@ -96,10 +147,10 @@ the whole dictionary. The output tells you which ids were added versus updated.
 `--url` defaults to `http://localhost:8888` (a `netlify dev` session), so **the production url is not
 optional — leave it off and you will quietly import into your local store instead.**
 
-### Pulling production changes back down
+### Pulling production back down
 
-Once anyone adds words through the app, production is ahead of the file. Before editing the file
-again, pull it down or you will overwrite their additions with a stale copy:
+Nothing writes words to production except the import script, so the file should already match. Use
+export to check that, or to recover the dictionary if the local file is ever lost:
 
 ```sh
 vp run export:dictionary data/dictionary.json
@@ -117,6 +168,23 @@ To genuinely remove or rename an entry: export, edit the file, then overwrite th
 the Netlify CLI (`netlify blobs:set vocab dictionary --input data/dictionary.json`). Progress is
 keyed by entry id and is stored separately, so a deleted word leaves behind orphaned progress rows;
 they are harmless and ignored when scheduling.
+
+## Status
+
+Working and deployed at [vlc-spanish.netlify.app](https://vlc-spanish.netlify.app):
+
+- The dictionary, users, and per-person progress, stored in Netlify Blobs behind four functions
+- Typed quizzes with SM-2 scheduling, graded per the rules below
+- Dictionary browse and search, name picker, user switching
+- Installable PWA with offline caching of the app shell and dictionary
+
+Not built, in rough order of likely usefulness:
+
+- Multiple-choice and flashcard formats; mixed-format sessions
+- A progress screen: per-tag mastery, recent misses, session history
+- Conjugation drills driven by the `verb` metadata already in the dictionary (needs no API)
+- Offline answer queueing — quizzes read from cache offline, but results are not yet synced back
+- Sentence practice, which is the one feature that would need the Claude API back
 
 ## Grading rules
 

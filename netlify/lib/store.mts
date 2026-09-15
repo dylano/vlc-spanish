@@ -29,7 +29,10 @@ export const EMPTY_DICTIONARY: Dictionary = { version: 1, entries: [] };
 
 interface Versioned<T> {
   data: T;
+  /** Absent when the store does not supply one — the local dev store does not. */
   etag?: string;
+  /** Whether the blob is actually present, which a missing etag does not tell us. */
+  exists: boolean;
 }
 
 async function readVersioned<T>(
@@ -39,8 +42,8 @@ async function readVersioned<T>(
   fallback: T,
 ): Promise<Versioned<T>> {
   const result = await store.getWithMetadata(key, { type: "json" });
-  if (!result?.data) return { data: fallback };
-  return { data: parse(result.data), etag: result.etag };
+  if (!result?.data) return { data: fallback, exists: false };
+  return { data: parse(result.data), etag: result.etag, exists: true };
 }
 
 export function readDictionary(store: Store): Promise<Versioned<Dictionary>> {
@@ -82,13 +85,18 @@ export async function updateBlob<T>(
   attempts = 4,
 ): Promise<T> {
   for (let attempt = 0; attempt < attempts; attempt++) {
-    const { data, etag } = await read(store);
+    const { data, etag, exists } = await read(store);
     const next = modify(data);
-    const { modified } = await store.setJSON(
-      key,
-      next,
-      etag === undefined ? { onlyIfNew: true } : { onlyIfMatch: etag },
-    );
+
+    // Three cases, and conflating the first two is a trap: the local dev store
+    // returns no etag at all, so "no etag" cannot be read as "no blob" — doing
+    // so writes with onlyIfNew against an existing blob and never succeeds.
+    let options: { onlyIfNew: true } | { onlyIfMatch: string } | undefined;
+    if (!exists) options = { onlyIfNew: true };
+    else if (etag !== undefined) options = { onlyIfMatch: etag };
+    else options = undefined; // last write wins; no conditional support available
+
+    const { modified } = await store.setJSON(key, next, options);
     if (modified) return next;
   }
   throw new ConflictError();

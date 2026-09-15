@@ -1,0 +1,35 @@
+.banner {
+  max-width: 34rem;
+  margin: 16px auto 0;
+  padding: 12px 14px;
+  border: 1px solid var(--wrong);
+  border-radius: 10px;
+  color: var(--wrong);
+  background: var(--bg);
+}
+
+.bannerTitle {
+  font-weight: 600;
+  margin: 0 0 2px;
+}
+
+.bannerBody {
+  margin: 0;
+  color: var(--text);
+  font-size: 0.9rem;
+}
+
+.retry {
+  margin-top: 10px;
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--text);
+  cursor: pointer;
+}
+
+.loading {
+  padding: 24px;
+  color: var(--text-muted);
+}

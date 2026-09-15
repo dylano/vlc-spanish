@@ -28,6 +28,12 @@ export interface GradeOptions {
    * When false the article is optional and a wrong article is only "hard".
    */
   requireArticle?: boolean;
+  /**
+   * Other entries that answer to the same english prompt. Prompting "to be"
+   * cannot distinguish ser from estar, so an answer matching one of these is
+   * graded "hard" with an explanation rather than simply marked wrong.
+   */
+  confusableWith?: Entry[];
 }
 
 const SEVERITY: Record<Result, number> = { correct: 0, hard: 1, wrong: 2 };
@@ -206,6 +212,16 @@ function gradeSpanish(entry: Entry, answer: string, opts: GradeOptions): Grade {
   const match = findBestMatch(entry, answer);
 
   if (!match) {
+    const mate = (opts.confusableWith ?? []).find(
+      (candidate) => findBestMatch(candidate, answer)?.candidate.kind === "exact",
+    );
+    if (mate) {
+      return {
+        result: "hard",
+        expected,
+        note: `that is ${mate.es} — this one is ${entry.es}${entry.notes ? `. ${entry.notes}` : ""}`,
+      };
+    }
     return { result: "wrong", expected, note: entry.notes };
   }
 
