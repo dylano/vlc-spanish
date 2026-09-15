@@ -1,0 +1,54 @@
+{
+  "version": 1,
+  "entries": [
+    {
+      "id": "simpatico",
+      "es": "simpático",
+      "en": ["nice", "friendly", "likeable"],
+      "pos": "adj",
+      "forms": { "f": "simpática" },
+      "notes": "False friend — not 'sympathetic'.",
+      "tags": ["character-traits"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "abuelo",
+      "es": "abuelo",
+      "en": ["grandfather"],
+      "pos": "noun",
+      "gender": "m",
+      "forms": { "f": "abuela", "pl": "abuelos" },
+      "notes": "Plural 'los abuelos' = grandparents.",
+      "tags": ["family"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "acostarse",
+      "es": "acostarse",
+      "en": ["to go to bed"],
+      "pos": "verb",
+      "verb": { "reflexive": true, "regular": false, "stemChange": "o→ue" },
+      "forms": { "yo": "me acuesto" },
+      "tags": ["daily-activities"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "a-menudo",
+      "es": "a menudo",
+      "en": ["often"],
+      "pos": "adv",
+      "tags": ["frequency"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "quinientos",
+      "es": "quinientos",
+      "en": ["five hundred", "500"],
+      "pos": "number",
+      "value": 500,
+      "forms": { "f": "quinientas" },
+      "tags": ["numbers"],
+      "added": "2026-09-15"
+    }
+  ]
+}
