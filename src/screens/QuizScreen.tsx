@@ -15,7 +15,7 @@ const GRADE_OPTIONS = { requireArticle: true };
  * How long a correct answer stays on screen before the next card. Long enough to
  * register that it landed, short enough that it never feels like waiting.
  */
-const CORRECT_PAUSE_MS = 700;
+const CORRECT_PAUSE_MS = 550;
 
 const VERDICT: Record<Result, string> = {
   correct: "Correct",
@@ -128,6 +128,8 @@ export default function QuizScreen() {
     setResult(undefined);
     setAnswer("");
     setIndex((current) => current + 1);
+    // Cheap insurance: focus is normally never lost, but if something else took
+    // it, this call still sits inside the tap that triggered it.
     inputRef.current?.focus();
   }
 
@@ -301,9 +303,14 @@ export default function QuizScreen() {
             className={`${styles.answer} ${result ? ANSWER_STYLE[result.result] : ""}`}
             value={answer}
             onChange={(event) => {
-              setAnswer(event.target.value);
+              // Frozen while the result is showing, but deliberately NOT
+              // readOnly: flipping that on a focused input dismisses the
+              // keyboard on iOS, which is what made it slide up and down
+              // between every card.
+              if (!result) setAnswer(event.target.value);
             }}
-            readOnly={result !== undefined}
+            enterKeyHint={result ? "next" : "go"}
+            inputMode="text"
             autoComplete="off"
             autoCapitalize="none"
             autoCorrect="off"
@@ -327,7 +334,16 @@ export default function QuizScreen() {
           ) : null}
         </div>
 
-        <button type="submit" className={styles.button}>
+        <button
+          type="submit"
+          className={styles.button}
+          // Stops the tap moving focus out of the input, which is what closes
+          // the keyboard. The click still fires; only the focus change is
+          // suppressed, so the keyboard stays up from the first card to the last.
+          onMouseDown={(event) => {
+            event.preventDefault();
+          }}
+        >
           {result ? "Next" : "Check"}
         </button>
       </form>
