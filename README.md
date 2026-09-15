@@ -28,7 +28,7 @@ vp test                     # run tests once
 vp test watch               # watch mode
 vp check --fix              # format, lint, and type check
 vp build                    # production build to dist/
-vp run validate:dictionary  # validate data/dictionary.json against the schema
+netlify dev                 # app + functions + a local Blobs store, on :8888
 ```
 
 Run `vp install` after pulling. `vp check` and `vp test` should both pass before committing.
@@ -63,6 +63,61 @@ One shared dictionary, tagged by class section. Progress is per person, per entr
 email. Everything lives in Netlify Blobs as a handful of JSON blobs, with ETag conditional writes so
 two people adding words at once cannot clobber each other.
 
+## Working on the dictionary
+
+`data/dictionary.json` is the seed file in git. The live copy lives in Netlify Blobs and is what the
+app actually reads. They are separate: **editing the file changes nothing in production until you
+import it**, and words added through the app do not appear in the file until you export them.
+
+Three commands, all of which take an optional path and an optional `--url`:
+
+```sh
+vp run validate:dictionary            # check the file against the schema
+vp run import:dictionary              # file  -> live store   (upsert by id)
+vp run export:dictionary              # live store -> file
+```
+
+### Propagating hand-edited words to production
+
+After editing `data/dictionary.json` by hand (or dropping in a file from a dictionary-generating
+agent):
+
+```sh
+vp run validate:dictionary data/dictionary.json
+vp run import:dictionary data/dictionary.json --url https://vlc-spanish.netlify.app
+```
+
+Validate first — the import re-validates and refuses a bad file, but the validator gives better
+errors and adds warnings the import does not. Import is an **upsert by `id`**: entries whose ids
+already exist are replaced, new ids are appended, and nothing is ever deleted. That makes it safe to
+re-run, and it means you can import a small file containing only the words you changed rather than
+the whole dictionary. The output tells you which ids were added versus updated.
+
+`--url` defaults to `http://localhost:8888` (a `netlify dev` session), so **the production url is not
+optional — leave it off and you will quietly import into your local store instead.**
+
+### Pulling production changes back down
+
+Once anyone adds words through the app, production is ahead of the file. Before editing the file
+again, pull it down or you will overwrite their additions with a stale copy:
+
+```sh
+vp run export:dictionary data/dictionary.json
+git diff data/dictionary.json      # review what the family added
+```
+
+Export defaults to production, writes sorted and pretty-printed, and validates before writing. The
+round trip is lossless: export then import is a no-op.
+
+### Deleting or renaming
+
+Neither script deletes. Because `id` is the primary key, **changing a headword's spelling and
+re-importing creates a second entry** rather than renaming the first — the old id is still there.
+To genuinely remove or rename an entry: export, edit the file, then overwrite the blob directly with
+the Netlify CLI (`netlify blobs:set vocab dictionary --input data/dictionary.json`). Progress is
+keyed by entry id and is stored separately, so a deleted word leaves behind orphaned progress rows;
+they are harmless and ignored when scheduling.
+
 ## Grading rules
 
 Worth knowing before you change `grade.ts`, because the tests encode all of it:
@@ -86,4 +141,14 @@ property of the Netlify site, not something in `netlify.toml` — it is set at c
 (`netlify sites:create --name vlc-spanish`) or in the Netlify UI.
 
 Environment variables live in Netlify, never in the repo. See `.env.example` for the list.
-`ANTHROPIC_API_KEY` is used only inside functions and must never reach the client.
+`ANTHROPIC_API_KEY` is used only inside functions and must never reach the client — do not prefix it
+with `VITE_`, which would bundle it into the browser build. `FAMILY_SECRET` gates the Claude-backed
+endpoints and exists to protect the API bill rather than the users.
+
+Local development with working functions needs the Netlify CLI:
+
+```sh
+netlify dev        # serves the app and the functions together on :8888, with a local Blobs store
+```
+
+Plain `vp dev` serves the frontend only; `/api/*` will 404.
