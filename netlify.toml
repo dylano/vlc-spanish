@@ -1,0 +1,35 @@
+[build]
+command = "pnpm run build"
+publish = "dist"
+
+[build.environment]
+NODE_VERSION = "22"
+
+[functions]
+directory = "netlify/functions"
+node_bundler = "esbuild"
+
+# `netlify dev` runs the Vite+ dev server and proxies the functions in front of it.
+[dev]
+command = "pnpm run dev"
+targetPort = 5173
+framework = "#custom"
+autoLaunch = false
+
+# SPA fallback for react-router. Functions declare explicit /api paths and are
+# matched before this rule.
+[[redirects]]
+from = "/*"
+to = "/index.html"
+status = 200
+
+# The service worker must never be served stale, or an old one pins old assets.
+[[headers]]
+for = "/sw.js"
+[headers.values]
+Cache-Control = "no-cache"
+
+[[headers]]
+for = "/manifest.webmanifest"
+[headers.values]
+Cache-Control = "no-cache"
