@@ -109,6 +109,13 @@ tracks existence separately for this reason, and there is a regression test for 
 
 Progress is written once per session rather than after every card.
 
+**Numbers are in the dictionary but not in the drill.** They were a third of the entries, which
+crowded out the words that carry meaning, so `isDrillable` in `src/lib/session.ts` holds back
+anything tagged `numbers`. They are still searchable in the dictionary, and a session that asks for
+that tag by name (`/quiz?tag=numbers`) still serves them. The home-screen counts apply the same
+predicate — a count that includes words no session will offer promises practice the app cannot
+deliver.
+
 **Words versus cards.** A 159-word dictionary holds up to 318 cards, because each word is scheduled
 separately in each direction. The home-screen totals are deliberately counted **per word**
 (`src/lib/counts.ts`): a word counts as new only when it has been practised in neither direction,

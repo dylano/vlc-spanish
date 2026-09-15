@@ -13,6 +13,12 @@ Roughly 100–150 entries covering an elementary Peninsular Spanish class, acros
 Use exactly these tag strings. An entry may carry more than one tag. Add a new tag only if a word
 genuinely fits none of the above, and keep it kebab-case.
 
+**Do not enumerate numbers exhaustively.** The app keeps numbers in the dictionary to look up but
+holds them back from quizzes, because a long run of them crowds out the words that carry meaning.
+Cover the ones a class actually teaches as vocabulary — the irregular and awkward forms
+(`quinientos`, `setecientos`, `veintiuno`) and anything with a note worth making — rather than every
+integer in a range.
+
 ## Peninsular Spanish, specifically
 
 This is a class taken in Spain. Where Spain differs from Latin America, Spain wins.

@@ -5,6 +5,7 @@ import {
   confusableEntries,
   DEFAULT_CONFIG,
   glossIndex,
+  isDrillable,
   MIXED_EN_ES_SHARE,
   promptGloss,
 } from "./session.ts";
@@ -253,5 +254,67 @@ describe("buildSession", () => {
       expect(card.prompt).toBe("to be");
       expect(card.confusableWith).toHaveLength(1);
     }
+  });
+});
+
+describe("excluding numbers", () => {
+  const cinco: Entry = {
+    id: "cinco",
+    es: "cinco",
+    en: ["five"],
+    pos: "number",
+    value: 5,
+    tags: ["numbers"],
+    added: TODAY,
+  };
+  const casa: Entry = {
+    id: "casa",
+    es: "casa",
+    en: ["house"],
+    pos: "noun",
+    gender: "f",
+    tags: ["house"],
+    added: TODAY,
+  };
+
+  it("treats numbers as not drillable", () => {
+    expect(isDrillable(cinco)).toBe(false);
+    expect(isDrillable(casa)).toBe(true);
+  });
+
+  it("keeps numbers out of an ordinary session", () => {
+    const cards = buildSession({
+      entries: [cinco, casa],
+      progress: emptyProgress(),
+      userId: "dylan",
+      config: { ...DEFAULT_CONFIG, size: 10, direction: "en→es" },
+      today: TODAY,
+      random: seeded(11),
+    });
+    expect(cards.map((card) => card.entry.id)).toEqual(["casa"]);
+  });
+
+  it("includes them when the numbers tag is asked for by name", () => {
+    const cards = buildSession({
+      entries: [cinco, casa],
+      progress: emptyProgress(),
+      userId: "dylan",
+      config: { ...DEFAULT_CONFIG, size: 10, direction: "en→es", tags: ["numbers"] },
+      today: TODAY,
+      random: seeded(12),
+    });
+    expect(cards.map((card) => card.entry.id)).toEqual(["cinco"]);
+  });
+
+  it("does not offer numbers even when they are the only words left", () => {
+    const cards = buildSession({
+      entries: [cinco],
+      progress: emptyProgress(),
+      userId: "dylan",
+      config: { ...DEFAULT_CONFIG, size: 10, direction: "en→es" },
+      today: TODAY,
+      random: seeded(13),
+    });
+    expect(cards).toHaveLength(0);
   });
 });

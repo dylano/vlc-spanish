@@ -129,3 +129,21 @@ describe("countWords", () => {
     expect(counts.total).toBe(159);
   });
 });
+
+describe("counts and sessions agree", () => {
+  it("does not count numbers as words waiting to be practised", () => {
+    const five: Entry = {
+      id: "cinco",
+      es: "cinco",
+      en: ["five"],
+      pos: "number",
+      value: 5,
+      tags: ["numbers"],
+      added: TODAY,
+    };
+    const counts = countWords([...entries, five], blob([]), TODAY);
+    // Four words in the dictionary, but only the three drillable ones are new.
+    expect(counts.total).toBe(4);
+    expect(counts.unseen).toBe(3);
+  });
+});

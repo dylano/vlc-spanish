@@ -5,6 +5,21 @@ import type { Direction, Entry, Progress, ProgressBlob } from "./schema.ts";
 /** Share of a mixed session prompted english → spanish. */
 export const MIXED_EN_ES_SHARE = 0.7;
 
+/**
+ * Tag whose words are kept out of general practice.
+ *
+ * Numbers are a third of the dictionary but carry little of its meaning, so
+ * drilling them alongside everything else crowds out the words worth learning.
+ * They stay in the dictionary to look up, and a session that asks for this tag
+ * by name still gets them.
+ */
+export const EXCLUDED_TAG = "numbers";
+
+/** Whether an entry belongs in a session that did not ask for it by tag. */
+export function isDrillable(entry: Entry): boolean {
+  return entry.pos !== "number" && !entry.tags.includes(EXCLUDED_TAG);
+}
+
 export interface QuizConfig {
   size: number;
   direction: Direction | "mixed";
@@ -79,7 +94,9 @@ function progressFor(
 }
 
 function matchesTags(entry: Entry, tags: string[] | undefined): boolean {
-  if (!tags || tags.length === 0) return true;
+  if (!tags || tags.length === 0) return isDrillable(entry);
+  // Asking for a tag by name overrides the exclusion, so numbers remain
+  // practisable on purpose even though they never turn up by accident.
   return entry.tags.some((tag) => tags.includes(tag));
 }
 

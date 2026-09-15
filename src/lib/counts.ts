@@ -1,6 +1,7 @@
 import type { IsoDate } from "./dates.ts";
 import { isDue } from "./scheduler.ts";
 import { DIRECTIONS, type Direction, type Entry, type ProgressBlob } from "./schema.ts";
+import { isDrillable } from "./session.ts";
 
 /**
  * Home-screen totals.
@@ -14,7 +15,7 @@ import { DIRECTIONS, type Direction, type Entry, type ProgressBlob } from "./sch
  * each word at most once.
  */
 export interface Counts {
-  /** Words in the dictionary. */
+  /** Words in the dictionary, including ones never offered for practice. */
   total: number;
   /** Words with at least one direction ready to review. */
   due: number;
@@ -30,6 +31,10 @@ export function countWords(entries: Entry[], progress: ProgressBlob, today: IsoD
   let missed = 0;
 
   for (const entry of entries) {
+    // Counting words a session would never offer makes the home screen promise
+    // practice it cannot deliver.
+    if (!isDrillable(entry)) continue;
+
     const records = progress.entries[entry.id];
     let seenAny = false;
     let dueAny = false;
