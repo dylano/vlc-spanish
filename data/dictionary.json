@@ -1,0 +1,1877 @@
+{
+  "version": 1,
+  "entries": [
+    {
+      "id": "guapo",
+      "es": "guapo",
+      "en": ["good-looking", "handsome", "pretty", "attractive"],
+      "pos": "adj",
+      "forms": {
+        "f": "guapa",
+        "pl": "guapos"
+      },
+      "tags": ["physical-traits"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "feo",
+      "es": "feo",
+      "en": ["ugly"],
+      "pos": "adj",
+      "forms": {
+        "f": "fea",
+        "pl": "feos"
+      },
+      "tags": ["physical-traits"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "alto",
+      "es": "alto",
+      "en": ["tall"],
+      "pos": "adj",
+      "forms": {
+        "f": "alta",
+        "pl": "altos"
+      },
+      "notes": "Also 'high' for things, not just people.",
+      "tags": ["physical-traits"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "bajo",
+      "es": "bajo",
+      "en": ["short"],
+      "pos": "adj",
+      "forms": {
+        "f": "baja",
+        "pl": "bajos"
+      },
+      "notes": "Short in height. Also 'low' for things.",
+      "tags": ["physical-traits"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "delgado",
+      "es": "delgado",
+      "en": ["thin", "slim", "slender"],
+      "pos": "adj",
+      "forms": {
+        "f": "delgada",
+        "pl": "delgados"
+      },
+      "tags": ["physical-traits"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "gordo",
+      "es": "gordo",
+      "en": ["fat", "overweight"],
+      "pos": "adj",
+      "forms": {
+        "f": "gorda",
+        "pl": "gordos"
+      },
+      "tags": ["physical-traits"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "normal",
+      "es": "normal",
+      "en": ["normal", "average", "ordinary"],
+      "pos": "adj",
+      "forms": {
+        "pl": "normales"
+      },
+      "notes": "Invariable: same form for masculine and feminine.",
+      "tags": ["physical-traits"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "moreno",
+      "es": "moreno",
+      "en": ["dark-haired", "brunette", "dark"],
+      "pos": "adj",
+      "forms": {
+        "f": "morena",
+        "pl": "morenos"
+      },
+      "notes": "Dark-haired; can also mean dark-skinned or tanned.",
+      "tags": ["physical-traits"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "rubio",
+      "es": "rubio",
+      "en": ["blond", "blonde", "fair-haired"],
+      "pos": "adj",
+      "forms": {
+        "f": "rubia",
+        "pl": "rubios"
+      },
+      "tags": ["physical-traits"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "castano",
+      "es": "castaño",
+      "en": ["brown-haired", "chestnut"],
+      "pos": "adj",
+      "forms": {
+        "f": "castaña",
+        "pl": "castaños"
+      },
+      "tags": ["physical-traits"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "calvo",
+      "es": "calvo",
+      "en": ["bald"],
+      "pos": "adj",
+      "forms": {
+        "f": "calva",
+        "pl": "calvos"
+      },
+      "tags": ["physical-traits"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "divertido",
+      "es": "divertido",
+      "en": ["fun", "funny", "entertaining", "amusing"],
+      "pos": "adj",
+      "forms": {
+        "f": "divertida",
+        "pl": "divertidos"
+      },
+      "tags": ["character-traits"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "aburrido",
+      "es": "aburrido",
+      "en": ["boring", "bored"],
+      "pos": "adj",
+      "forms": {
+        "f": "aburrida",
+        "pl": "aburridos"
+      },
+      "notes": "With 'ser' it means boring; with 'estar' it means bored.",
+      "tags": ["character-traits"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "abierto",
+      "es": "abierto",
+      "en": ["open", "open-minded", "outgoing"],
+      "pos": "adj",
+      "forms": {
+        "f": "abierta",
+        "pl": "abiertos"
+      },
+      "notes": "Of a person: open-minded or outgoing.",
+      "tags": ["character-traits"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "cerrado",
+      "es": "cerrado",
+      "en": ["closed", "reserved", "closed-off"],
+      "pos": "adj",
+      "forms": {
+        "f": "cerrada",
+        "pl": "cerrados"
+      },
+      "notes": "Of a person: reserved or closed-off.",
+      "tags": ["character-traits"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "serio",
+      "es": "serio",
+      "en": ["serious"],
+      "pos": "adj",
+      "forms": {
+        "f": "seria",
+        "pl": "serios"
+      },
+      "tags": ["character-traits"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "simpatico",
+      "es": "simpático",
+      "en": ["nice", "friendly", "likeable", "kind"],
+      "pos": "adj",
+      "forms": {
+        "f": "simpática",
+        "pl": "simpáticos"
+      },
+      "notes": "False friend — not 'sympathetic'.",
+      "tags": ["character-traits"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "timido",
+      "es": "tímido",
+      "en": ["shy", "timid"],
+      "pos": "adj",
+      "forms": {
+        "f": "tímida",
+        "pl": "tímidos"
+      },
+      "tags": ["character-traits"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "inteligente",
+      "es": "inteligente",
+      "en": ["intelligent", "smart", "clever"],
+      "pos": "adj",
+      "forms": {
+        "pl": "inteligentes"
+      },
+      "tags": ["character-traits"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "alegre",
+      "es": "alegre",
+      "en": ["cheerful", "happy", "joyful"],
+      "pos": "adj",
+      "forms": {
+        "pl": "alegres"
+      },
+      "notes": "With 'ser', cheerful by nature; with 'estar', happy right now.",
+      "tags": ["character-traits"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "agradable",
+      "es": "agradable",
+      "en": ["pleasant", "nice", "agreeable"],
+      "pos": "adj",
+      "forms": {
+        "pl": "agradables"
+      },
+      "tags": ["character-traits"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "sociable",
+      "es": "sociable",
+      "en": ["sociable", "outgoing"],
+      "pos": "adj",
+      "forms": {
+        "pl": "sociables"
+      },
+      "tags": ["character-traits"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "interesante",
+      "es": "interesante",
+      "en": ["interesting"],
+      "pos": "adj",
+      "forms": {
+        "pl": "interesantes"
+      },
+      "tags": ["character-traits"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "padre",
+      "es": "padre",
+      "en": ["father", "dad"],
+      "pos": "noun",
+      "gender": "m",
+      "forms": {
+        "f": "madre",
+        "pl": "padres"
+      },
+      "notes": "Plural 'los padres' means parents, not just fathers.",
+      "tags": ["family"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "madre",
+      "es": "madre",
+      "en": ["mother", "mum", "mom"],
+      "pos": "noun",
+      "gender": "f",
+      "forms": {
+        "m": "padre",
+        "pl": "madres"
+      },
+      "tags": ["family"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "padres",
+      "es": "padres",
+      "en": ["parents"],
+      "pos": "noun",
+      "gender": "m",
+      "notes": "Masculine plural covering both parents.",
+      "tags": ["family"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "hijo",
+      "es": "hijo",
+      "en": ["son"],
+      "pos": "noun",
+      "gender": "m",
+      "forms": {
+        "f": "hija",
+        "pl": "hijos"
+      },
+      "notes": "Plural 'los hijos' means children (sons and daughters).",
+      "tags": ["family"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "abuelo",
+      "es": "abuelo",
+      "en": ["grandfather", "grandpa"],
+      "pos": "noun",
+      "gender": "m",
+      "forms": {
+        "f": "abuela",
+        "pl": "abuelos"
+      },
+      "notes": "Plural 'los abuelos' means grandparents.",
+      "tags": ["family"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "abuelos",
+      "es": "abuelos",
+      "en": ["grandparents"],
+      "pos": "noun",
+      "gender": "m",
+      "tags": ["family"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "hermano",
+      "es": "hermano",
+      "en": ["brother"],
+      "pos": "noun",
+      "gender": "m",
+      "forms": {
+        "f": "hermana",
+        "pl": "hermanos"
+      },
+      "notes": "Plural 'los hermanos' means siblings, or brothers specifically; context decides.",
+      "tags": ["family"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "hermanos",
+      "es": "hermanos",
+      "en": ["siblings", "brothers and sisters", "brothers"],
+      "pos": "noun",
+      "gender": "m",
+      "tags": ["family"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "sobrino",
+      "es": "sobrino",
+      "en": ["nephew"],
+      "pos": "noun",
+      "gender": "m",
+      "forms": {
+        "f": "sobrina",
+        "pl": "sobrinos"
+      },
+      "tags": ["family"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "primo",
+      "es": "primo",
+      "en": ["cousin"],
+      "pos": "noun",
+      "gender": "m",
+      "forms": {
+        "f": "prima",
+        "pl": "primos"
+      },
+      "tags": ["family"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "nieto",
+      "es": "nieto",
+      "en": ["grandson", "grandchild"],
+      "pos": "noun",
+      "gender": "m",
+      "forms": {
+        "f": "nieta",
+        "pl": "nietos"
+      },
+      "notes": "Plural 'los nietos' means grandchildren.",
+      "tags": ["family"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "mujer",
+      "es": "mujer",
+      "en": ["wife", "woman"],
+      "pos": "noun",
+      "gender": "f",
+      "forms": {
+        "m": "marido",
+        "pl": "mujeres"
+      },
+      "notes": "Means both 'wife' and 'woman'; 'esposa' is the more formal word for wife.",
+      "tags": ["family"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "marido",
+      "es": "marido",
+      "en": ["husband"],
+      "pos": "noun",
+      "gender": "m",
+      "forms": {
+        "f": "mujer",
+        "pl": "maridos"
+      },
+      "tags": ["family"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "tio",
+      "es": "tío",
+      "en": ["uncle"],
+      "pos": "noun",
+      "gender": "m",
+      "forms": {
+        "f": "tía",
+        "pl": "tíos"
+      },
+      "notes": "Plural 'los tíos' means aunts and uncles. In Spain 'tío/tía' is also very common slang for 'guy' or 'mate'.",
+      "tags": ["family"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "siempre",
+      "es": "siempre",
+      "en": ["always"],
+      "pos": "adv",
+      "tags": ["frequency"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "normalmente",
+      "es": "normalmente",
+      "en": ["normally", "usually"],
+      "pos": "adv",
+      "tags": ["frequency"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "a-menudo",
+      "es": "a menudo",
+      "en": ["often", "frequently"],
+      "pos": "adv",
+      "tags": ["frequency"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "a-veces",
+      "es": "a veces",
+      "en": ["sometimes", "at times", "occasionally"],
+      "pos": "adv",
+      "tags": ["frequency"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "nunca",
+      "es": "nunca",
+      "en": ["never"],
+      "pos": "adv",
+      "tags": ["frequency"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "todos-los-dias",
+      "es": "todos los días",
+      "en": ["every day"],
+      "pos": "phrase",
+      "notes": "'Todos' agrees with the noun: todos los días, but todas las semanas.",
+      "tags": ["frequency"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "todos-los-meses",
+      "es": "todos los meses",
+      "en": ["every month"],
+      "pos": "phrase",
+      "tags": ["frequency"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "todas-las-semanas",
+      "es": "todas las semanas",
+      "en": ["every week"],
+      "pos": "phrase",
+      "tags": ["frequency"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "todas-las-tardes",
+      "es": "todas las tardes",
+      "en": ["every afternoon", "every evening"],
+      "pos": "phrase",
+      "tags": ["frequency"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "una-vez-a-la-semana",
+      "es": "una vez a la semana",
+      "en": ["once a week"],
+      "pos": "phrase",
+      "tags": ["frequency"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "una-vez-al-mes",
+      "es": "una vez al mes",
+      "en": ["once a month"],
+      "pos": "phrase",
+      "notes": "'Al' is 'a' + 'el' contracted.",
+      "tags": ["frequency"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "dos-veces-a-la-semana",
+      "es": "dos veces a la semana",
+      "en": ["twice a week", "two times a week"],
+      "pos": "phrase",
+      "tags": ["frequency"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "dos-veces-al-mes",
+      "es": "dos veces al mes",
+      "en": ["twice a month", "two times a month"],
+      "pos": "phrase",
+      "tags": ["frequency"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "dia",
+      "es": "día",
+      "en": ["day"],
+      "pos": "noun",
+      "gender": "m",
+      "forms": {
+        "pl": "días"
+      },
+      "notes": "Masculine despite ending in -a: el día, todos los días.",
+      "tags": ["frequency"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "mes",
+      "es": "mes",
+      "en": ["month"],
+      "pos": "noun",
+      "gender": "m",
+      "forms": {
+        "pl": "meses"
+      },
+      "tags": ["frequency"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "semana",
+      "es": "semana",
+      "en": ["week"],
+      "pos": "noun",
+      "gender": "f",
+      "forms": {
+        "pl": "semanas"
+      },
+      "tags": ["frequency"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "vez",
+      "es": "vez",
+      "en": ["time", "occasion"],
+      "pos": "noun",
+      "gender": "f",
+      "forms": {
+        "pl": "veces"
+      },
+      "notes": "Time as in an occasion: una vez, dos veces. Not clock time.",
+      "tags": ["frequency"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "por-la-manana",
+      "es": "por la mañana",
+      "en": ["in the morning"],
+      "pos": "phrase",
+      "notes": "With a clock time it becomes 'de': a las ocho de la mañana.",
+      "tags": ["times-of-day"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "al-mediodia",
+      "es": "al mediodía",
+      "en": ["at midday", "at noon"],
+      "pos": "phrase",
+      "tags": ["times-of-day"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "por-la-tarde",
+      "es": "por la tarde",
+      "en": ["in the afternoon", "in the evening"],
+      "pos": "phrase",
+      "tags": ["times-of-day"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "por-la-noche",
+      "es": "por la noche",
+      "en": ["at night", "in the evening"],
+      "pos": "phrase",
+      "tags": ["times-of-day"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "manana",
+      "es": "mañana",
+      "en": ["morning"],
+      "pos": "noun",
+      "gender": "f",
+      "forms": {
+        "pl": "mañanas"
+      },
+      "notes": "'La mañana' is the morning; 'mañana' on its own means tomorrow.",
+      "tags": ["times-of-day"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "mediodia",
+      "es": "mediodía",
+      "en": ["midday", "noon"],
+      "pos": "noun",
+      "gender": "m",
+      "forms": {
+        "pl": "mediodías"
+      },
+      "notes": "Masculine despite ending in -a.",
+      "tags": ["times-of-day"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "tarde",
+      "es": "tarde",
+      "en": ["afternoon", "evening"],
+      "pos": "noun",
+      "gender": "f",
+      "forms": {
+        "pl": "tardes"
+      },
+      "notes": "In Spain 'la tarde' runs until about 8 or 9 pm, later than English 'afternoon'.",
+      "tags": ["times-of-day"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "noche",
+      "es": "noche",
+      "en": ["night", "evening"],
+      "pos": "noun",
+      "gender": "f",
+      "forms": {
+        "pl": "noches"
+      },
+      "tags": ["times-of-day"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "levantarse",
+      "es": "levantarse",
+      "en": ["to get up"],
+      "pos": "verb",
+      "verb": {
+        "reflexive": true,
+        "regular": true
+      },
+      "forms": {
+        "yo": "me levanto",
+        "tu": "te levantas",
+        "el": "se levanta",
+        "nosotros": "nos levantamos",
+        "vosotros": "os levantáis",
+        "ellos": "se levantan"
+      },
+      "tags": ["daily-activities", "verbs"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "hacer-la-cama",
+      "es": "hacer la cama",
+      "en": ["to make the bed"],
+      "pos": "verb",
+      "verb": {
+        "reflexive": false,
+        "regular": false,
+        "irregularYo": "hago"
+      },
+      "tags": ["daily-activities", "verbs"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "desayunar",
+      "es": "desayunar",
+      "en": ["to have breakfast", "to eat breakfast"],
+      "pos": "verb",
+      "verb": {
+        "reflexive": false,
+        "regular": true
+      },
+      "tags": ["daily-activities", "verbs"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "ducharse",
+      "es": "ducharse",
+      "en": ["to shower", "to have a shower", "to take a shower"],
+      "pos": "verb",
+      "verb": {
+        "reflexive": true,
+        "regular": true
+      },
+      "forms": {
+        "yo": "me ducho",
+        "tu": "te duchas",
+        "el": "se ducha",
+        "nosotros": "nos duchamos",
+        "vosotros": "os ducháis",
+        "ellos": "se duchan"
+      },
+      "tags": ["daily-activities", "verbs"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "lavarse-los-dientes",
+      "es": "lavarse los dientes",
+      "en": ["to brush one's teeth", "to brush your teeth", "to clean one's teeth"],
+      "pos": "verb",
+      "verb": {
+        "reflexive": true,
+        "regular": true
+      },
+      "forms": {
+        "yo": "me lavo los dientes",
+        "tu": "te lavas los dientes",
+        "el": "se lava los dientes",
+        "nosotros": "nos lavamos los dientes",
+        "vosotros": "os laváis los dientes",
+        "ellos": "se lavan los dientes"
+      },
+      "notes": "Literally 'to wash the teeth'. Spanish uses 'los dientes', not 'mis dientes'; the reflexive pronoun already says whose.",
+      "tags": ["daily-activities", "verbs"],
+      "added": "2026-09-15",
+      "flagged": "Multi-word reflexive: the headword ends in 'dientes', not '-se', so the validator's reflexive check may need to allow this."
+    },
+    {
+      "id": "vestirse",
+      "es": "vestirse",
+      "en": ["to get dressed"],
+      "pos": "verb",
+      "verb": {
+        "reflexive": true,
+        "regular": false,
+        "stemChange": "e→i"
+      },
+      "forms": {
+        "yo": "me visto",
+        "tu": "te vistes",
+        "el": "se viste",
+        "nosotros": "nos vestimos",
+        "vosotros": "os vestís",
+        "ellos": "se visten"
+      },
+      "tags": ["daily-activities", "verbs"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "ir-al-trabajo",
+      "es": "ir al trabajo",
+      "en": ["to go to work"],
+      "pos": "verb",
+      "verb": {
+        "reflexive": false,
+        "regular": false
+      },
+      "notes": "'Al' is 'a' + 'el'. See 'ir' for the conjugation.",
+      "tags": ["daily-activities", "verbs"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "llegar-al-trabajo",
+      "es": "llegar al trabajo",
+      "en": ["to arrive at work", "to get to work"],
+      "pos": "verb",
+      "verb": {
+        "reflexive": false,
+        "regular": true
+      },
+      "tags": ["daily-activities", "verbs"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "comer",
+      "es": "comer",
+      "en": ["to have lunch", "to eat"],
+      "pos": "verb",
+      "verb": {
+        "reflexive": false,
+        "regular": true
+      },
+      "notes": "In Spain 'comer' means to have lunch specifically (the main midday meal); 'almorzar' is less common.",
+      "tags": ["daily-activities", "verbs"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "almorzar",
+      "es": "almorzar",
+      "en": ["to have lunch", "to eat lunch"],
+      "pos": "verb",
+      "verb": {
+        "reflexive": false,
+        "regular": false,
+        "stemChange": "o→ue"
+      },
+      "forms": {
+        "yo": "almuerzo",
+        "tu": "almuerzas",
+        "el": "almuerza",
+        "nosotros": "almorzamos",
+        "vosotros": "almorzáis",
+        "ellos": "almuerzan"
+      },
+      "notes": "Understood in Spain but 'comer' is the everyday word for lunch there.",
+      "tags": ["daily-activities", "verbs"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "hacer-deporte",
+      "es": "hacer deporte",
+      "en": ["to do sport", "to play sport", "to exercise", "to do sports"],
+      "pos": "verb",
+      "verb": {
+        "reflexive": false,
+        "regular": false,
+        "irregularYo": "hago"
+      },
+      "tags": ["daily-activities", "verbs"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "salir-del-trabajo",
+      "es": "salir del trabajo",
+      "en": ["to leave work", "to get off work"],
+      "pos": "verb",
+      "verb": {
+        "reflexive": false,
+        "regular": false,
+        "irregularYo": "salgo"
+      },
+      "notes": "'Del' is 'de' + 'el'. See 'salir' for the conjugation.",
+      "tags": ["daily-activities", "verbs"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "cenar",
+      "es": "cenar",
+      "en": ["to have dinner", "to eat dinner", "to have supper"],
+      "pos": "verb",
+      "verb": {
+        "reflexive": false,
+        "regular": true
+      },
+      "tags": ["daily-activities", "verbs"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "acostarse",
+      "es": "acostarse",
+      "en": ["to go to bed"],
+      "pos": "verb",
+      "verb": {
+        "reflexive": true,
+        "regular": false,
+        "stemChange": "o→ue"
+      },
+      "forms": {
+        "yo": "me acuesto",
+        "tu": "te acuestas",
+        "el": "se acuesta",
+        "nosotros": "nos acostamos",
+        "vosotros": "os acostáis",
+        "ellos": "se acuestan"
+      },
+      "tags": ["daily-activities", "verbs"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "cama",
+      "es": "cama",
+      "en": ["bed"],
+      "pos": "noun",
+      "gender": "f",
+      "forms": {
+        "pl": "camas"
+      },
+      "tags": ["daily-activities"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "diente",
+      "es": "diente",
+      "en": ["tooth"],
+      "pos": "noun",
+      "gender": "m",
+      "forms": {
+        "pl": "dientes"
+      },
+      "notes": "Plural 'los dientes'.",
+      "tags": ["daily-activities"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "trabajo",
+      "es": "trabajo",
+      "en": ["work", "job"],
+      "pos": "noun",
+      "gender": "m",
+      "forms": {
+        "pl": "trabajos"
+      },
+      "tags": ["daily-activities"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "deporte",
+      "es": "deporte",
+      "en": ["sport", "sports"],
+      "pos": "noun",
+      "gender": "m",
+      "forms": {
+        "pl": "deportes"
+      },
+      "tags": ["daily-activities"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "ser",
+      "es": "ser",
+      "en": ["to be"],
+      "pos": "verb",
+      "verb": {
+        "reflexive": false,
+        "regular": false
+      },
+      "forms": {
+        "yo": "soy",
+        "tu": "eres",
+        "el": "es",
+        "nosotros": "somos",
+        "vosotros": "sois",
+        "ellos": "son"
+      },
+      "notes": "For identity, traits, and origin: mi hermano es alto. Compare 'estar'.",
+      "tags": ["verbs"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "estar",
+      "es": "estar",
+      "en": ["to be"],
+      "pos": "verb",
+      "verb": {
+        "reflexive": false,
+        "regular": false,
+        "irregularYo": "estoy"
+      },
+      "forms": {
+        "yo": "estoy",
+        "tu": "estás",
+        "el": "está",
+        "nosotros": "estamos",
+        "vosotros": "estáis",
+        "ellos": "están"
+      },
+      "notes": "For location and temporary states: está aburrido = he is bored. Compare 'ser'.",
+      "tags": ["verbs"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "hacer",
+      "es": "hacer",
+      "en": ["to do", "to make"],
+      "pos": "verb",
+      "verb": {
+        "reflexive": false,
+        "regular": false,
+        "irregularYo": "hago"
+      },
+      "forms": {
+        "yo": "hago",
+        "tu": "haces",
+        "el": "hace",
+        "nosotros": "hacemos",
+        "vosotros": "hacéis",
+        "ellos": "hacen"
+      },
+      "tags": ["verbs"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "ir",
+      "es": "ir",
+      "en": ["to go"],
+      "pos": "verb",
+      "verb": {
+        "reflexive": false,
+        "regular": false
+      },
+      "forms": {
+        "yo": "voy",
+        "tu": "vas",
+        "el": "va",
+        "nosotros": "vamos",
+        "vosotros": "vais",
+        "ellos": "van"
+      },
+      "tags": ["verbs"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "llegar",
+      "es": "llegar",
+      "en": ["to arrive", "to get to"],
+      "pos": "verb",
+      "verb": {
+        "reflexive": false,
+        "regular": true
+      },
+      "tags": ["verbs"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "salir",
+      "es": "salir",
+      "en": ["to leave", "to go out"],
+      "pos": "verb",
+      "verb": {
+        "reflexive": false,
+        "regular": false,
+        "irregularYo": "salgo"
+      },
+      "forms": {
+        "yo": "salgo",
+        "tu": "sales",
+        "el": "sale",
+        "nosotros": "salimos",
+        "vosotros": "salís",
+        "ellos": "salen"
+      },
+      "tags": ["verbs"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "volver",
+      "es": "volver",
+      "en": ["to return", "to go back", "to come back"],
+      "pos": "verb",
+      "verb": {
+        "reflexive": false,
+        "regular": false,
+        "stemChange": "o→ue"
+      },
+      "forms": {
+        "yo": "vuelvo",
+        "tu": "vuelves",
+        "el": "vuelve",
+        "nosotros": "volvemos",
+        "vosotros": "volvéis",
+        "ellos": "vuelven"
+      },
+      "tags": ["verbs"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "tener",
+      "es": "tener",
+      "en": ["to have"],
+      "pos": "verb",
+      "verb": {
+        "reflexive": false,
+        "regular": false,
+        "stemChange": "e→ie",
+        "irregularYo": "tengo"
+      },
+      "forms": {
+        "yo": "tengo",
+        "tu": "tienes",
+        "el": "tiene",
+        "nosotros": "tenemos",
+        "vosotros": "tenéis",
+        "ellos": "tienen"
+      },
+      "tags": ["verbs"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "llamarse",
+      "es": "llamarse",
+      "en": ["to be called", "to be named"],
+      "pos": "verb",
+      "verb": {
+        "reflexive": true,
+        "regular": true
+      },
+      "forms": {
+        "yo": "me llamo",
+        "tu": "te llamas",
+        "el": "se llama",
+        "nosotros": "nos llamamos",
+        "vosotros": "os llamáis",
+        "ellos": "se llaman"
+      },
+      "notes": "Me llamo Doliver = my name is Doliver.",
+      "tags": ["verbs"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "hablar",
+      "es": "hablar",
+      "en": ["to speak", "to talk"],
+      "pos": "verb",
+      "verb": {
+        "reflexive": false,
+        "regular": true
+      },
+      "tags": ["verbs"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "comprender",
+      "es": "comprender",
+      "en": ["to understand", "to comprehend"],
+      "pos": "verb",
+      "verb": {
+        "reflexive": false,
+        "regular": true
+      },
+      "tags": ["verbs"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "escribir",
+      "es": "escribir",
+      "en": ["to write"],
+      "pos": "verb",
+      "verb": {
+        "reflexive": false,
+        "regular": true
+      },
+      "tags": ["verbs"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "querer",
+      "es": "querer",
+      "en": ["to want", "to love"],
+      "pos": "verb",
+      "verb": {
+        "reflexive": false,
+        "regular": false,
+        "stemChange": "e→ie"
+      },
+      "forms": {
+        "yo": "quiero",
+        "tu": "quieres",
+        "el": "quiere",
+        "nosotros": "queremos",
+        "vosotros": "queréis",
+        "ellos": "quieren"
+      },
+      "notes": "'To love' for people: te quiero. For things it means to want.",
+      "tags": ["verbs"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "lunes",
+      "es": "lunes",
+      "en": ["Monday"],
+      "pos": "noun",
+      "gender": "m",
+      "forms": {
+        "pl": "lunes"
+      },
+      "notes": "Days are lowercase and the week starts on Monday. 'Los lunes' means on Mondays; 'el lunes' means this Monday.",
+      "tags": ["days"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "martes",
+      "es": "martes",
+      "en": ["Tuesday"],
+      "pos": "noun",
+      "gender": "m",
+      "forms": {
+        "pl": "martes"
+      },
+      "tags": ["days"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "miercoles",
+      "es": "miércoles",
+      "en": ["Wednesday"],
+      "pos": "noun",
+      "gender": "m",
+      "forms": {
+        "pl": "miércoles"
+      },
+      "tags": ["days"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "jueves",
+      "es": "jueves",
+      "en": ["Thursday"],
+      "pos": "noun",
+      "gender": "m",
+      "forms": {
+        "pl": "jueves"
+      },
+      "tags": ["days"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "viernes",
+      "es": "viernes",
+      "en": ["Friday"],
+      "pos": "noun",
+      "gender": "m",
+      "forms": {
+        "pl": "viernes"
+      },
+      "tags": ["days"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "sabado",
+      "es": "sábado",
+      "en": ["Saturday"],
+      "pos": "noun",
+      "gender": "m",
+      "forms": {
+        "pl": "sábados"
+      },
+      "notes": "Unlike Monday to Friday, the plural adds -s: los sábados.",
+      "tags": ["days"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "domingo",
+      "es": "domingo",
+      "en": ["Sunday"],
+      "pos": "noun",
+      "gender": "m",
+      "forms": {
+        "pl": "domingos"
+      },
+      "tags": ["days"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "enero",
+      "es": "enero",
+      "en": ["January"],
+      "pos": "noun",
+      "gender": "m",
+      "notes": "Months are lowercase. Dates go number first: el 15 de enero.",
+      "tags": ["months"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "febrero",
+      "es": "febrero",
+      "en": ["February"],
+      "pos": "noun",
+      "gender": "m",
+      "tags": ["months"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "marzo",
+      "es": "marzo",
+      "en": ["March"],
+      "pos": "noun",
+      "gender": "m",
+      "tags": ["months"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "abril",
+      "es": "abril",
+      "en": ["April"],
+      "pos": "noun",
+      "gender": "m",
+      "tags": ["months"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "mayo",
+      "es": "mayo",
+      "en": ["May"],
+      "pos": "noun",
+      "gender": "m",
+      "tags": ["months"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "junio",
+      "es": "junio",
+      "en": ["June"],
+      "pos": "noun",
+      "gender": "m",
+      "tags": ["months"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "julio",
+      "es": "julio",
+      "en": ["July"],
+      "pos": "noun",
+      "gender": "m",
+      "tags": ["months"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "agosto",
+      "es": "agosto",
+      "en": ["August"],
+      "pos": "noun",
+      "gender": "m",
+      "tags": ["months"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "septiembre",
+      "es": "septiembre",
+      "en": ["September"],
+      "pos": "noun",
+      "gender": "m",
+      "tags": ["months"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "octubre",
+      "es": "octubre",
+      "en": ["October"],
+      "pos": "noun",
+      "gender": "m",
+      "tags": ["months"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "noviembre",
+      "es": "noviembre",
+      "en": ["November"],
+      "pos": "noun",
+      "gender": "m",
+      "tags": ["months"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "diciembre",
+      "es": "diciembre",
+      "en": ["December"],
+      "pos": "noun",
+      "gender": "m",
+      "tags": ["months"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "cero",
+      "es": "cero",
+      "en": ["zero", "0"],
+      "pos": "number",
+      "value": 0,
+      "tags": ["numbers"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "uno",
+      "es": "uno",
+      "en": ["one", "1"],
+      "pos": "number",
+      "value": 1,
+      "forms": {
+        "f": "una",
+        "apocope": "un"
+      },
+      "notes": "Becomes 'un' before a masculine noun (un hermano) and 'una' before a feminine one.",
+      "tags": ["numbers"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "dos",
+      "es": "dos",
+      "en": ["two", "2"],
+      "pos": "number",
+      "value": 2,
+      "tags": ["numbers"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "tres",
+      "es": "tres",
+      "en": ["three", "3"],
+      "pos": "number",
+      "value": 3,
+      "tags": ["numbers"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "cuatro",
+      "es": "cuatro",
+      "en": ["four", "4"],
+      "pos": "number",
+      "value": 4,
+      "tags": ["numbers"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "cinco",
+      "es": "cinco",
+      "en": ["five", "5"],
+      "pos": "number",
+      "value": 5,
+      "tags": ["numbers"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "seis",
+      "es": "seis",
+      "en": ["six", "6"],
+      "pos": "number",
+      "value": 6,
+      "tags": ["numbers"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "siete",
+      "es": "siete",
+      "en": ["seven", "7"],
+      "pos": "number",
+      "value": 7,
+      "tags": ["numbers"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "ocho",
+      "es": "ocho",
+      "en": ["eight", "8"],
+      "pos": "number",
+      "value": 8,
+      "tags": ["numbers"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "nueve",
+      "es": "nueve",
+      "en": ["nine", "9"],
+      "pos": "number",
+      "value": 9,
+      "tags": ["numbers"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "diez",
+      "es": "diez",
+      "en": ["ten", "10"],
+      "pos": "number",
+      "value": 10,
+      "tags": ["numbers"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "once",
+      "es": "once",
+      "en": ["eleven", "11"],
+      "pos": "number",
+      "value": 11,
+      "tags": ["numbers"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "doce",
+      "es": "doce",
+      "en": ["twelve", "12"],
+      "pos": "number",
+      "value": 12,
+      "tags": ["numbers"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "trece",
+      "es": "trece",
+      "en": ["thirteen", "13"],
+      "pos": "number",
+      "value": 13,
+      "tags": ["numbers"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "catorce",
+      "es": "catorce",
+      "en": ["fourteen", "14"],
+      "pos": "number",
+      "value": 14,
+      "tags": ["numbers"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "quince",
+      "es": "quince",
+      "en": ["fifteen", "15"],
+      "pos": "number",
+      "value": 15,
+      "tags": ["numbers"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "dieciseis",
+      "es": "dieciséis",
+      "en": ["sixteen", "16"],
+      "pos": "number",
+      "value": 16,
+      "notes": "Written as one word, with an accent. 16 to 19 and 21 to 29 all follow this one-word pattern.",
+      "tags": ["numbers"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "diecisiete",
+      "es": "diecisiete",
+      "en": ["seventeen", "17"],
+      "pos": "number",
+      "value": 17,
+      "tags": ["numbers"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "dieciocho",
+      "es": "dieciocho",
+      "en": ["eighteen", "18"],
+      "pos": "number",
+      "value": 18,
+      "tags": ["numbers"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "diecinueve",
+      "es": "diecinueve",
+      "en": ["nineteen", "19"],
+      "pos": "number",
+      "value": 19,
+      "tags": ["numbers"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "veinte",
+      "es": "veinte",
+      "en": ["twenty", "20"],
+      "pos": "number",
+      "value": 20,
+      "tags": ["numbers"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "veintiuno",
+      "es": "veintiuno",
+      "en": ["twenty-one", "21"],
+      "pos": "number",
+      "value": 21,
+      "forms": {
+        "f": "veintiuna",
+        "apocope": "veintiún"
+      },
+      "notes": "Becomes 'veintiún' before a masculine noun: veintiún años.",
+      "tags": ["numbers"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "veintidos",
+      "es": "veintidós",
+      "en": ["twenty-two", "22"],
+      "pos": "number",
+      "value": 22,
+      "tags": ["numbers"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "veintitres",
+      "es": "veintitrés",
+      "en": ["twenty-three", "23"],
+      "pos": "number",
+      "value": 23,
+      "tags": ["numbers"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "veinticuatro",
+      "es": "veinticuatro",
+      "en": ["twenty-four", "24"],
+      "pos": "number",
+      "value": 24,
+      "tags": ["numbers"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "veinticinco",
+      "es": "veinticinco",
+      "en": ["twenty-five", "25"],
+      "pos": "number",
+      "value": 25,
+      "tags": ["numbers"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "veintiseis",
+      "es": "veintiséis",
+      "en": ["twenty-six", "26"],
+      "pos": "number",
+      "value": 26,
+      "tags": ["numbers"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "veintisiete",
+      "es": "veintisiete",
+      "en": ["twenty-seven", "27"],
+      "pos": "number",
+      "value": 27,
+      "tags": ["numbers"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "veintiocho",
+      "es": "veintiocho",
+      "en": ["twenty-eight", "28"],
+      "pos": "number",
+      "value": 28,
+      "tags": ["numbers"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "veintinueve",
+      "es": "veintinueve",
+      "en": ["twenty-nine", "29"],
+      "pos": "number",
+      "value": 29,
+      "tags": ["numbers"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "treinta",
+      "es": "treinta",
+      "en": ["thirty", "30"],
+      "pos": "number",
+      "value": 30,
+      "notes": "From 31 upwards numbers are two words joined by 'y': treinta y uno, cuarenta y dos.",
+      "tags": ["numbers"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "cuarenta",
+      "es": "cuarenta",
+      "en": ["forty", "40"],
+      "pos": "number",
+      "value": 40,
+      "tags": ["numbers"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "cincuenta",
+      "es": "cincuenta",
+      "en": ["fifty", "50"],
+      "pos": "number",
+      "value": 50,
+      "tags": ["numbers"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "sesenta",
+      "es": "sesenta",
+      "en": ["sixty", "60"],
+      "pos": "number",
+      "value": 60,
+      "tags": ["numbers"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "setenta",
+      "es": "setenta",
+      "en": ["seventy", "70"],
+      "pos": "number",
+      "value": 70,
+      "tags": ["numbers"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "ochenta",
+      "es": "ochenta",
+      "en": ["eighty", "80"],
+      "pos": "number",
+      "value": 80,
+      "tags": ["numbers"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "noventa",
+      "es": "noventa",
+      "en": ["ninety", "90"],
+      "pos": "number",
+      "value": 90,
+      "tags": ["numbers"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "cien",
+      "es": "cien",
+      "en": ["one hundred", "a hundred", "hundred", "100"],
+      "pos": "number",
+      "value": 100,
+      "notes": "Exactly 100. From 101 it becomes 'ciento': ciento uno, ciento cincuenta.",
+      "tags": ["numbers"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "doscientos",
+      "es": "doscientos",
+      "en": ["two hundred", "200"],
+      "pos": "number",
+      "value": 200,
+      "forms": {
+        "f": "doscientoas"
+      },
+      "tags": ["numbers"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "trescientos",
+      "es": "trescientos",
+      "en": ["three hundred", "300"],
+      "pos": "number",
+      "value": 300,
+      "forms": {
+        "f": "trescientoas"
+      },
+      "tags": ["numbers"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "cuatrocientos",
+      "es": "cuatrocientos",
+      "en": ["four hundred", "400"],
+      "pos": "number",
+      "value": 400,
+      "forms": {
+        "f": "cuatrocientoas"
+      },
+      "tags": ["numbers"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "quinientos",
+      "es": "quinientos",
+      "en": ["five hundred", "500"],
+      "pos": "number",
+      "value": 500,
+      "forms": {
+        "f": "quinientoas"
+      },
+      "notes": "Irregular: not 'cincocientos'. Agrees in gender: quinientas mujeres.",
+      "tags": ["numbers"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "seiscientos",
+      "es": "seiscientos",
+      "en": ["six hundred", "600"],
+      "pos": "number",
+      "value": 600,
+      "forms": {
+        "f": "seiscientoas"
+      },
+      "tags": ["numbers"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "setecientos",
+      "es": "setecientos",
+      "en": ["seven hundred", "700"],
+      "pos": "number",
+      "value": 700,
+      "forms": {
+        "f": "setecientoas"
+      },
+      "notes": "Irregular: not 'sietecientos'.",
+      "tags": ["numbers"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "ochocientos",
+      "es": "ochocientos",
+      "en": ["eight hundred", "800"],
+      "pos": "number",
+      "value": 800,
+      "forms": {
+        "f": "ochocientoas"
+      },
+      "tags": ["numbers"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "novecientos",
+      "es": "novecientos",
+      "en": ["nine hundred", "900"],
+      "pos": "number",
+      "value": 900,
+      "forms": {
+        "f": "novecientoas"
+      },
+      "notes": "Irregular: not 'nuevecientos'.",
+      "tags": ["numbers"],
+      "added": "2026-09-15"
+    },
+    {
+      "id": "mil",
+      "es": "mil",
+      "en": ["one thousand", "a thousand", "thousand", "1000"],
+      "pos": "number",
+      "value": 1000,
+      "notes": "No article: mil, not 'un mil'. Does not change for gender.",
+      "tags": ["numbers"],
+      "added": "2026-09-15"
+    }
+  ]
+}

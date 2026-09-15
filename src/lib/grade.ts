@@ -101,8 +101,11 @@ export function spanishCandidates(entry: Entry): Candidate[] {
     }
     case "verb": {
       out.push({ text: entry.es, kind: "exact" });
-      if (entry.verb.reflexive && /se$/.test(entry.es)) {
-        out.push({ text: entry.es.replace(/se$/, ""), kind: "missing-reflexive" });
+      // The reflexive pronoun rides on the first word, which is not always the
+      // last: "lavarse los dientes" drops to "lavar los dientes".
+      const withoutReflexive = entry.es.replace(/^(\S+?)se\b/, "$1");
+      if (entry.verb.reflexive && withoutReflexive !== entry.es) {
+        out.push({ text: withoutReflexive, kind: "missing-reflexive" });
       }
       for (const [key, value] of Object.entries(entry.forms ?? {})) {
         if (value) {

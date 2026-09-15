@@ -193,6 +193,32 @@ describe("en→es verbs", () => {
   });
 });
 
+describe("multi-word reflexive verbs", () => {
+  const lavarse: VerbEntry = {
+    ...base,
+    id: "lavarse-los-dientes",
+    es: "lavarse los dientes",
+    en: ["to brush one's teeth"],
+    pos: "verb",
+    verb: { reflexive: true, regular: true },
+    forms: { yo: "me lavo los dientes" },
+  };
+
+  it("accepts the full phrase", () => {
+    expect(grade(lavarse, "en→es", "lavarse los dientes").result).toBe("correct");
+  });
+
+  it("flags a dropped reflexive pronoun on the first word", () => {
+    const result = grade(lavarse, "en→es", "lavar los dientes");
+    expect(result.result).toBe("hard");
+    expect(result.note).toContain("reflexive");
+  });
+
+  it("does not silently accept a conjugated phrase", () => {
+    expect(grade(lavarse, "en→es", "me lavo los dientes").result).toBe("hard");
+  });
+});
+
 describe("en→es numbers", () => {
   it("accepts the feminine form", () => {
     expect(grade(quinientos, "en→es", "quinientas").result).toBe("correct");

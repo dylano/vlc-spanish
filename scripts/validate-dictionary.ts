@@ -68,8 +68,10 @@ for (const entry of entries) {
   if (entry.pos === "verb" && !entry.en.some((value) => /^to\s/.test(value))) {
     warnings.push(`verb "${entry.id}" has no "to ..." english gloss`);
   }
-  if (entry.pos === "verb" && entry.verb.reflexive && !/se$/.test(entry.es)) {
-    warnings.push(`verb "${entry.id}" is marked reflexive but does not end in -se`);
+  // Multi-word reflexives carry the pronoun on the first word, not the phrase:
+  // "lavarse los dientes" is reflexive even though it ends in "dientes".
+  if (entry.pos === "verb" && entry.verb.reflexive && !/se$/.test(entry.es.split(/\s+/)[0] ?? "")) {
+    warnings.push(`verb "${entry.id}" is marked reflexive but its first word does not end in -se`);
   }
   if (entry.flagged) warnings.push(`"${entry.id}" is flagged for review: ${entry.flagged}`);
 }
