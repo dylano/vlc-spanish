@@ -167,10 +167,12 @@ describe("buildSession", () => {
     expect(cards).toHaveLength(0);
   });
 
-  it("restricts a misses session to lapsed cards", () => {
+  it("restricts a misses session to cards whose last answer was wrong", () => {
     const progress = withProgress([
       [entries[0]!, "en→es", { lapses: 2, lastResult: "wrong", due: "2026-12-01" }],
       [entries[1]!, "en→es", { lapses: 0, lastResult: "correct", due: "2026-12-01" }],
+      // Lapsed in the past but since relearned: no longer a miss.
+      [entries[2]!, "en→es", { lapses: 3, lastResult: "correct", due: "2026-12-01" }],
     ]);
     const cards = buildSession({
       entries,

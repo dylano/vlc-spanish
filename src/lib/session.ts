@@ -127,7 +127,8 @@ export function buildSession(options: BuildSessionOptions): Card[] {
       const seen = progress.entries[entry.id]?.[direction];
 
       if (config.scope === "misses") {
-        if (seen?.lastResult === "wrong" || (seen?.lapses ?? 0) > 0) rest.push(card);
+        // Matches the home-screen count: the most recent answer was wrong.
+        if (seen?.lastResult === "wrong") rest.push(card);
         continue;
       }
       if (config.scope === "recent") {

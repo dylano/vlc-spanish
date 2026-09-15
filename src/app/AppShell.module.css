@@ -2,55 +2,42 @@
   min-height: 100dvh;
   display: flex;
   flex-direction: column;
-  max-width: 34rem;
+  max-width: 30rem;
   margin: 0 auto;
-  padding: 0 16px env(safe-area-inset-bottom);
+  padding: 0 28px;
 }
 
 .main {
   flex: 1;
-  padding-block: 16px 96px;
+  display: flex;
+  flex-direction: column;
+  padding-block: 56px 24px;
 }
 
 .nav {
-  position: fixed;
-  left: 0;
-  right: 0;
-  bottom: 0;
   display: flex;
-  justify-content: center;
-  gap: 4px;
-  padding: 8px 8px calc(8px + env(safe-area-inset-bottom));
-  background: var(--surface);
-  border-top: 1px solid var(--border);
+  gap: 28px;
+  padding-block: 18px;
+  padding-bottom: calc(18px + env(safe-area-inset-bottom));
+  border-top: 1px solid var(--rule);
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
 }
 
 .navLink {
-  flex: 1;
-  max-width: 7rem;
-  padding: 10px 4px;
-  border-radius: 10px;
-  text-align: center;
-  font-size: 0.8rem;
+  color: var(--muted);
   text-decoration: none;
-  color: var(--text-muted);
+  padding-block: 6px;
 }
 
 .navLink[aria-current="page"] {
-  color: var(--accent);
-  background: var(--bg);
-  font-weight: 600;
-}
-
-.status {
-  padding: 24px 0;
-  color: var(--text-muted);
+  color: var(--ink);
 }
 
 .error {
-  padding: 12px;
-  border: 1px solid var(--wrong);
-  border-radius: 10px;
+  padding: 14px 0;
+  border-top: 1px solid var(--wrong);
   color: var(--wrong);
   margin-bottom: 16px;
 }

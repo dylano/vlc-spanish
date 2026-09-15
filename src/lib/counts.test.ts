@@ -73,13 +73,33 @@ describe("countWords", () => {
     expect(counts.unseen).toBe(2);
   });
 
-  it("counts a lapsed word as missed", () => {
+  it("counts a word whose last answer was wrong as missed", () => {
     const counts = countWords(
       entries,
       blob([["uno", "en→es", { lapses: 1, lastResult: "wrong", due: "2026-12-01" }]]),
       TODAY,
     );
     expect(counts.missed).toBe(1);
+  });
+
+  it("clears a word from misses once it is answered correctly again", () => {
+    // The word still carries a lapse from the earlier mistake, but it is no
+    // longer unlearned, so it should not keep showing up as a miss.
+    const counts = countWords(
+      entries,
+      blob([["uno", "en→es", { lapses: 1, lastResult: "correct", reps: 2, due: "2026-12-01" }]]),
+      TODAY,
+    );
+    expect(counts.missed).toBe(0);
+  });
+
+  it("clears a word from misses when the retry was only almost right", () => {
+    const counts = countWords(
+      entries,
+      blob([["uno", "en→es", { lapses: 2, lastResult: "hard", reps: 1, due: "2026-12-01" }]]),
+      TODAY,
+    );
+    expect(counts.missed).toBe(0);
   });
 
   it("reproduces the reported case: 11 cards across both directions", () => {

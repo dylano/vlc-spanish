@@ -251,3 +251,85 @@ describe("es→en", () => {
     expect(grade(quinientos, "es→en", "500").result).toBe("correct");
   });
 });
+
+describe("near misses", () => {
+  const dictionary: Entry[] = [simpatico, abuelo, mujer, nino, acostarse, quinientos, aMenudo];
+
+  const junio: Entry = {
+    ...base,
+    id: "junio",
+    es: "junio",
+    en: ["June"],
+    pos: "noun",
+    gender: "m",
+  };
+  const julio: Entry = {
+    ...base,
+    id: "julio",
+    es: "julio",
+    en: ["July"],
+    pos: "noun",
+    gender: "m",
+  };
+
+  const lavarse: VerbEntry = {
+    ...base,
+    id: "lavarse-los-dientes",
+    es: "lavarse los dientes",
+    en: ["to brush one's teeth"],
+    pos: "verb",
+    verb: { reflexive: true, regular: true },
+  };
+
+  it("forgives a transposed letter as a spelling slip", () => {
+    const result = grade(lavarse, "en→es", "lavarse los dienets", { dictionary });
+    expect(result.result).toBe("hard");
+    expect(result.note).toContain("spelling");
+  });
+
+  it("forgives a single dropped letter", () => {
+    const result = grade(aMenudo, "en→es", "a menud", { dictionary });
+    expect(result.result).toBe("hard");
+  });
+
+  it("does not forgive a wrong article inside a phrase", () => {
+    const result = grade(lavarse, "en→es", "lavarse las dientes", { dictionary });
+    expect(result.result).toBe("wrong");
+    expect(result.note).toContain("los");
+  });
+
+  it("does not forgive a different real word one edit away", () => {
+    // junio and julio differ by one letter but are different months; treating
+    // that as a typo would quietly mark a real mistake correct-ish.
+    const result = grade(junio, "en→es", "julio", { dictionary: [junio, julio] });
+    expect(result.result).toBe("wrong");
+    expect(result.note).toContain("July");
+  });
+
+  it("names the word the learner actually wrote", () => {
+    const result = grade(junio, "en→es", "julio", { dictionary: [junio, julio] });
+    expect(result.note).toContain("julio");
+  });
+
+  it("still marks an unrelated answer wrong", () => {
+    expect(grade(aMenudo, "en→es", "montaña", { dictionary }).result).toBe("wrong");
+  });
+
+  it("does not forgive two or more slipped letters", () => {
+    expect(grade(aMenudo, "en→es", "a mnedo", { dictionary }).result).toBe("wrong");
+  });
+
+  it("treats an empty answer as wrong, not as a near miss", () => {
+    expect(grade(aMenudo, "en→es", "", { dictionary }).result).toBe("wrong");
+  });
+
+  it("forgives a slipped letter in an english answer", () => {
+    const result = grade(abuelo, "es→en", "grandfathr");
+    expect(result.result).toBe("hard");
+    expect(result.note).toContain("spelling");
+  });
+
+  it("keeps an exact answer correct when a dictionary is supplied", () => {
+    expect(grade(abuelo, "en→es", "el abuelo", { dictionary }).result).toBe("correct");
+  });
+});

@@ -1,0 +1,54 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Public+Sans:wght@400;500;600&display=swap">
+  <style>
+    body { margin: 0; }
+    a { color: #2f6d4f; } a:hover { color: #191d1a; }
+  </style>
+</helmet>
+<div style="width: 390px; height: 844px; background: #faf8f4; font-family: 'Public Sans', system-ui, sans-serif; color: #191d1a; display: flex; flex-direction: column; padding: 56px 28px 28px; box-sizing: border-box;">
+  <div style="font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: #6f7872;">Session complete</div>
+
+  <div style="display: flex; align-items: baseline; gap: 10px; margin-top: 20px;">
+    <span style="font-family: 'Instrument Serif', Georgia, serif; font-size: 76px; line-height: 1;">8</span>
+    <span style="font-family: 'Instrument Serif', Georgia, serif; font-size: 34px; color: #6f7872;">of 10</span>
+  </div>
+
+  <div style="display: flex; gap: 18px; margin-top: 18px; font-size: 13px; color: #6f7872;">
+    <span><span style="color: #2f6d4f;">&#9679;</span> 8 correct</span>
+    <span><span style="color: #9a6b12;">&#9679;</span> 1 almost</span>
+    <span><span style="color: #a83a2c;">&#9679;</span> 1 missed</span>
+  </div>
+
+  <div style="flex-grow: 1; margin-top: 34px;">
+    <div style="font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: #6f7872; margin-bottom: 4px;">Worth another look</div>
+    <div style="border-top: 1px solid #e6e1d8;">
+      <div style="padding: 16px 0; border-bottom: 1px solid #e6e1d8;">
+        <div style="display: flex; justify-content: space-between; align-items: baseline; gap: 12px;">
+          <span style="font-family: 'Instrument Serif', Georgia, serif; font-size: 24px;">t&iacute;mido</span>
+          <span style="font-size: 14px; color: #6f7872;">shy</span>
+        </div>
+        <div style="font-size: 13px; color: #6f7872; margin-top: 4px;">you wrote &lsquo;timido&rsquo;</div>
+      </div>
+      <div style="padding: 16px 0; border-bottom: 1px solid #e6e1d8;">
+        <div style="display: flex; justify-content: space-between; align-items: baseline; gap: 12px;">
+          <span style="font-family: 'Instrument Serif', Georgia, serif; font-size: 24px;">a menudo</span>
+          <span style="font-size: 14px; color: #6f7872;">often</span>
+        </div>
+        <div style="font-size: 13px; color: #6f7872; margin-top: 4px;">you wrote &lsquo;siempre&rsquo;</div>
+      </div>
+    </div>
+  </div>
+
+  <button type="button" style="height: 56px; border: none; border-radius: 6px; background: #2f6d4f; color: #faf8f4; font-family: 'Public Sans', system-ui, sans-serif; font-size: 15px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; cursor: pointer;">Done</button>
+</div>
+</x-dc>
+</body>
+</html>

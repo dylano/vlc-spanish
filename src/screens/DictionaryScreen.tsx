@@ -28,7 +28,7 @@ export default function DictionaryScreen() {
   }, [entries, query, tag]);
 
   return (
-    <section>
+    <section className={styles.screen}>
       <label htmlFor="search" className="visually-hidden">
         Search words
       </label>
@@ -64,16 +64,16 @@ export default function DictionaryScreen() {
 
       <ul className={styles.list}>
         {filtered.map((entry) => (
-          <li key={entry.id} className={styles.row}>
-            <div>
+          <li key={entry.id} className={styles.entry}>
+            <div className={styles.head}>
               <span className={styles.es}>
                 {entry.pos === "noun" ? `${articleFor(entry.gender)} ` : ""}
                 {entry.es}
               </span>
-              <span className={styles.pos}>{entry.pos}</span>
+              <span className={styles.grammar}>{entry.pos}</span>
             </div>
-            <div className={styles.en}>{entry.en.join(", ")}</div>
-            {entry.notes ? <div className={styles.notes}>{entry.notes}</div> : null}
+            <p className={styles.en}>{entry.en.join(", ")}</p>
+            {entry.notes ? <p className={styles.note}>{entry.notes}</p> : null}
           </li>
         ))}
       </ul>

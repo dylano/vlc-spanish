@@ -1,8 +1,9 @@
-import { useMemo, useRef, useState, type FormEvent } from "react";
+import { useEffect, useMemo, useRef, useState, type FormEvent } from "react";
 import { useNavigate, useSearchParams } from "react-router";
 import { useStore } from "../app/store-context.ts";
 import { today } from "../lib/dates.ts";
 import { canonicalAnswer, grade, type Grade, type Result } from "../lib/grade.ts";
+import { normalize } from "../lib/normalize.ts";
 import { schedule } from "../lib/scheduler.ts";
 import { buildSession, DEFAULT_CONFIG, type Card, type QuizConfig } from "../lib/session.ts";
 import styles from "./QuizScreen.module.css";
@@ -10,17 +11,65 @@ import styles from "./QuizScreen.module.css";
 /** Nouns are always asked with their article: the article is how gender is tested. */
 const GRADE_OPTIONS = { requireArticle: true };
 
-interface Answered {
-  card: Card;
-  grade: Grade;
-  given: string;
-}
+/**
+ * How long a correct answer stays on screen before the next card. Long enough to
+ * register that it landed, short enough that it never feels like waiting.
+ */
+const CORRECT_PAUSE_MS = 700;
 
 const VERDICT: Record<Result, string> = {
   correct: "Correct",
   hard: "Almost",
   wrong: "Not quite",
 };
+
+const ANSWER_STYLE: Record<Result, string> = {
+  correct: styles.answerCorrect!,
+  hard: styles.answerHard!,
+  wrong: styles.answerWrong!,
+};
+
+const VERDICT_STYLE: Record<Result, string> = {
+  correct: styles.verdictCorrect!,
+  hard: styles.verdictHard!,
+  wrong: styles.verdictWrong!,
+};
+
+const SCOPE_LABEL: Record<QuizConfig["scope"], string> = {
+  due: "Review",
+  recent: "New words",
+  misses: "Misses",
+  all: "Practice",
+};
+
+interface Answered {
+  card: Card;
+  grade: Grade;
+  given: string;
+}
+
+/** Grammar line under the prompt, drawn from metadata the dictionary already has. */
+function grammarOf(card: Card): string | undefined {
+  const { entry } = card;
+  switch (entry.pos) {
+    case "noun":
+      return `noun · ${entry.gender === "m" ? "masculine" : "feminine"}`;
+    case "verb": {
+      const parts = ["verb"];
+      if (entry.verb.reflexive) parts.push("reflexive");
+      if (entry.verb.stemChange) parts.push(entry.verb.stemChange);
+      return parts.join(" · ");
+    }
+    case "adj":
+      return "adjective";
+    case "adv":
+      return "adverb";
+    case "number":
+      return "number";
+    default:
+      return undefined;
+  }
+}
 
 export default function QuizScreen() {
   const { entries, progress, userId, recordResults } = useStore();
@@ -42,8 +91,8 @@ export default function QuizScreen() {
     };
   }, [params]);
 
-  // The session is fixed when the screen opens: answering a card updates
-  // progress, and rebuilding mid-session would reshuffle under the user.
+  // Fixed when the screen opens: answering updates progress, and rebuilding
+  // mid-session would reshuffle the cards under the user.
   const cards = useMemo(
     () =>
       userId ? buildSession({ entries, progress, userId, config, today: today() }) : ([] as Card[]),
@@ -55,40 +104,67 @@ export default function QuizScreen() {
   const [answer, setAnswer] = useState("");
   const [result, setResult] = useState<Grade>();
   const [answered, setAnswered] = useState<Answered[]>([]);
+  const timer = useRef<ReturnType<typeof setTimeout>>(undefined);
 
   const card = cards[index];
   const finished = cards.length > 0 && index >= cards.length;
 
-  function submit(event: FormEvent) {
-    event.preventDefault();
-    if (!card || result) return;
-    const graded = grade(card.entry, card.direction, answer, {
-      ...GRADE_OPTIONS,
-      confusableWith: card.confusableWith,
-    });
-    setResult(graded);
-    setAnswered((current) => [...current, { card, grade: graded, given: answer }]);
-  }
+  useEffect(
+    () => () => {
+      clearTimeout(timer.current);
+    },
+    [],
+  );
 
-  function advance() {
-    if (!result || !card) return;
-    const next = schedule(card.progress, result.result, today());
-    recordResults([{ entryId: card.entry.id, direction: card.direction, next }]);
+  function commit(graded: Grade, answeredCard: Card) {
+    clearTimeout(timer.current);
+    recordResults([
+      {
+        entryId: answeredCard.entry.id,
+        direction: answeredCard.direction,
+        next: schedule(answeredCard.progress, graded.result, today()),
+      },
+    ]);
     setResult(undefined);
     setAnswer("");
     setIndex((current) => current + 1);
     inputRef.current?.focus();
   }
 
-  if (!userId) {
-    return <p>Choose a name first.</p>;
+  function check(event: FormEvent) {
+    event.preventDefault();
+    if (!card || result) return;
+    const graded = grade(card.entry, card.direction, answer, {
+      ...GRADE_OPTIONS,
+      confusableWith: card.confusableWith,
+      dictionary: entries,
+    });
+    setResult(graded);
+    setAnswered((current) => [...current, { card, grade: graded, given: answer }]);
+
+    // A right answer needs no acknowledgement from the user - show it landed,
+    // then move on. Anything else is worth stopping to read.
+    if (graded.result === "correct") {
+      timer.current = setTimeout(() => {
+        commit(graded, card);
+      }, CORRECT_PAUSE_MS);
+    }
   }
+
+  function advance() {
+    if (!result || !card) return;
+    commit(result, card);
+  }
+
+  if (!userId) return <p>Choose a name first.</p>;
 
   if (cards.length === 0) {
     return (
-      <section className={styles.summary}>
-        <h1>Nothing due</h1>
-        <p>There are no cards waiting in this scope. Try a different one, or come back tomorrow.</p>
+      <section className={styles.empty}>
+        <h1 className={styles.emptyTitle}>Nothing waiting</h1>
+        <p className={styles.emptyBody}>
+          There is nothing to practise in this set right now. Try another, or come back later.
+        </p>
         <button
           type="button"
           className={styles.button}
@@ -96,7 +172,7 @@ export default function QuizScreen() {
             void navigate("/");
           }}
         >
-          Back to home
+          Back
         </button>
       </section>
     );
@@ -104,44 +180,68 @@ export default function QuizScreen() {
 
   if (finished) {
     const correct = answered.filter((item) => item.grade.result === "correct").length;
+    const hard = answered.filter((item) => item.grade.result === "hard").length;
+    const wrong = answered.filter((item) => item.grade.result === "wrong").length;
     const misses = answered.filter((item) => item.grade.result !== "correct");
 
     return (
       <section className={styles.summary}>
-        <p className={styles.direction}>Session complete</p>
+        <p className={styles.label}>Session complete</p>
         <p className={styles.score}>
-          {correct} / {answered.length}
+          <span className={styles.scoreValue}>{correct}</span>
+          <span className={styles.scoreTotal}>of {answered.length}</span>
         </p>
+
+        <p className={styles.tally}>
+          <span>
+            <span className={styles.dotCorrect}>●</span> {correct} correct
+          </span>
+          {hard > 0 ? (
+            <span>
+              <span className={styles.dotHard}>●</span> {hard} almost
+            </span>
+          ) : null}
+          {wrong > 0 ? (
+            <span>
+              <span className={styles.dotWrong}>●</span> {wrong} missed
+            </span>
+          ) : null}
+        </p>
+
         {misses.length > 0 ? (
           <>
-            <h2>Worth another look</h2>
+            <p className={styles.missHeading}>Worth another look</p>
             <ul className={styles.missList}>
               {misses.map((item) => (
                 <li key={`${item.card.entry.id}-${item.card.direction}`} className={styles.miss}>
-                  <div className={styles.missEs}>
-                    {canonicalAnswer(item.card.entry, item.card.direction, GRADE_OPTIONS)}
+                  <div className={styles.missTop}>
+                    {/* Always the Spanish headword on the left and the English on
+                        the right, whichever way round the card was asked -
+                        otherwise an es→en miss prints the same text twice. */}
+                    <span className={styles.missEs}>
+                      {canonicalAnswer(item.card.entry, "en→es", GRADE_OPTIONS)}
+                    </span>
+                    <span className={styles.missEn}>{item.card.entry.en[0]}</span>
                   </div>
-                  <div className={styles.missEn}>
-                    you wrote {item.given.trim() === "" ? "nothing" : `"${item.given.trim()}"`}
-                  </div>
+                  <p className={styles.missGiven}>
+                    you wrote {item.given.trim() === "" ? "nothing" : `‘${item.given.trim()}’`}
+                  </p>
                 </li>
               ))}
             </ul>
           </>
-        ) : (
-          <p>Every answer correct.</p>
-        )}
-        <div className={styles.actions}>
-          <button
-            type="button"
-            className={styles.button}
-            onClick={() => {
-              void navigate("/");
-            }}
-          >
-            Done
-          </button>
-        </div>
+        ) : null}
+
+        <div className={styles.spacer} />
+        <button
+          type="button"
+          className={styles.button}
+          onClick={() => {
+            void navigate("/");
+          }}
+        >
+          Done
+        </button>
       </section>
     );
   }
@@ -149,45 +249,56 @@ export default function QuizScreen() {
   if (!card) return null;
 
   const asking = card.direction === "en→es" ? card.prompt : card.entry.es;
+  const grammar = card.direction === "en→es" ? grammarOf(card) : undefined;
+
+  // Echoing back a correct answer the user just typed is noise; the expected
+  // form only earns its place when it differs from what they wrote.
+  const showExpected = result !== undefined && normalize(result.expected) !== normalize(answer);
 
   return (
     <section className={styles.screen}>
-      <div className={styles.bar}>
-        <div className={styles.barFill} style={{ width: `${(index / cards.length) * 100}%` }} />
+      <div className={styles.progress} aria-hidden="true">
+        {cards.map((item, position) => (
+          <div
+            key={`${item.entry.id}-${item.direction}`}
+            className={`${styles.segment} ${position < index ? styles.segmentDone : ""}`}
+          />
+        ))}
       </div>
-      <div className={styles.meta}>
+      <p className={styles.meta}>
         <span>
           {index + 1} of {cards.length}
         </span>
-        <span>{config.scope === "due" ? "Due today" : config.scope}</span>
-      </div>
+        <span>{SCOPE_LABEL[config.scope]}</span>
+      </p>
 
-      <div className={styles.card}>
-        <p className={styles.direction}>
-          {card.direction === "en→es" ? "Say it in Spanish" : "Say it in English"}
-        </p>
-        <h1 className={styles.prompt}>{asking}</h1>
-        {card.direction === "en→es" && card.entry.pos === "noun" ? (
-          <p className={styles.hint}>include the article</p>
-        ) : null}
+      <form
+        className={styles.form}
+        onSubmit={
+          result
+            ? (event) => {
+                event.preventDefault();
+                advance();
+              }
+            : check
+        }
+      >
+        <div className={styles.question}>
+          <p className={styles.label}>
+            {card.direction === "en→es" ? "Say it in Spanish" : "Say it in English"}
+          </p>
+          <h1 className={styles.prompt}>{asking}</h1>
+          {grammar ? <p className={styles.grammar}>{grammar}</p> : null}
 
-        <form
-          onSubmit={
-            result
-              ? (event) => {
-                  event.preventDefault();
-                  advance();
-                }
-              : submit
-          }
-        >
+          <div className={styles.divider} />
+
           <label htmlFor="answer" className="visually-hidden">
             Your answer
           </label>
           <input
             id="answer"
             ref={inputRef}
-            className={styles.input}
+            className={`${styles.answer} ${result ? ANSWER_STYLE[result.result] : ""}`}
             value={answer}
             onChange={(event) => {
               setAnswer(event.target.value);
@@ -202,22 +313,24 @@ export default function QuizScreen() {
           />
 
           {result ? (
-            <div className={`${styles.feedback} ${styles[result.result]}`}>
-              <p className={styles.verdict}>{VERDICT[result.result]}</p>
-              <p className={styles.detail}>
-                {result.result === "correct" ? result.expected : `${result.expected}`}
-                {result.note ? ` — ${result.note}` : ""}
+            <div className={styles.feedback} role="status">
+              <p className={`${styles.verdict} ${VERDICT_STYLE[result.result]}`}>
+                {VERDICT[result.result]}
               </p>
+              {showExpected ? <p className={styles.expected}>{result.expected}</p> : null}
+              {result.note && result.result !== "correct" ? (
+                <p className={styles.note}>{result.note}</p>
+              ) : null}
             </div>
+          ) : card.direction === "en→es" && card.entry.pos === "noun" ? (
+            <p className={styles.hint}>Include the article</p>
           ) : null}
+        </div>
 
-          <div className={styles.actions}>
-            <button type="submit" className={styles.button}>
-              {result ? "Next" : "Check"}
-            </button>
-          </div>
-        </form>
-      </div>
+        <button type="submit" className={styles.button}>
+          {result ? "Next" : "Check"}
+        </button>
+      </form>
     </section>
   );
 }

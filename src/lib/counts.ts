@@ -20,7 +20,7 @@ export interface Counts {
   due: number;
   /** Words never practised in either direction. */
   unseen: number;
-  /** Words that have been got wrong at some point. */
+  /** Words whose most recent answer was wrong, in either direction. */
   missed: number;
 }
 
@@ -40,7 +40,9 @@ export function countWords(entries: Entry[], progress: ProgressBlob, today: IsoD
       if (!record) continue;
       seenAny = true;
       if (isDue(record, today)) dueAny = true;
-      if (record.lapses > 0 || record.lastResult === "wrong") missedAny = true;
+      // "Currently unlearned", not "ever got wrong": answering correctly again
+      // clears a word from the misses list rather than marking it forever.
+      if (record.lastResult === "wrong") missedAny = true;
     }
 
     if (!seenAny) unseen += 1;

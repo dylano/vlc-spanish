@@ -1,8 +1,11 @@
 import type { Direction, Entry } from "./schema.ts";
 import {
   articleFor,
+  articleOnlyDifference,
   differsOnlyByAccent,
   differsOnlyByEnye,
+  differsOnlyInEnding,
+  editDistance,
   expandSlashForms,
   foldAccents,
   normalize,
@@ -34,6 +37,12 @@ export interface GradeOptions {
    * graded "hard" with an explanation rather than simply marked wrong.
    */
   confusableWith?: Entry[];
+  /**
+   * The whole dictionary, used to tell a typo from a different word. `junio`
+   * and `julio` are one keystroke apart but mean different things, so an answer
+   * that is itself a headword is never forgiven as a slip.
+   */
+  dictionary?: Entry[];
 }
 
 const SEVERITY: Record<Result, number> = { correct: 0, hard: 1, wrong: 2 };
@@ -222,7 +231,7 @@ function gradeSpanish(entry: Entry, answer: string, opts: GradeOptions): Grade {
         note: `that is ${mate.es} — this one is ${entry.es}${entry.notes ? `. ${entry.notes}` : ""}`,
       };
     }
-    return { result: "wrong", expected, note: entry.notes };
+    return nearMiss(entry, answer, expected, opts);
   }
 
   let result: Result = "correct";
@@ -276,6 +285,42 @@ function gradeSpanish(entry: Entry, answer: string, opts: GradeOptions): Grade {
   return { result, expected, note: notes.length > 0 ? notes.join("; ") : undefined };
 }
 
+/**
+ * Nothing matched. Work out whether this was a gender mistake, a different word
+ * the learner actually knows, or a slip of the finger - only the last of which
+ * deserves any leniency.
+ */
+function nearMiss(entry: Entry, answer: string, expected: string, opts: GradeOptions): Grade {
+  const target = normalize(entry.es);
+  const given = normalize(answer);
+
+  const article = articleOnlyDifference(target, given);
+  if (article) {
+    return { result: "wrong", expected, note: `the article should be ‘${article.expected}’` };
+  }
+
+  const otherWord = (opts.dictionary ?? []).find(
+    (candidate) =>
+      candidate.id !== entry.id && foldAccents(normalize(candidate.es)) === foldAccents(given),
+  );
+  if (otherWord) {
+    return { result: "wrong", expected, note: `‘${otherWord.es}’ means ${otherWord.en[0]}` };
+  }
+
+  // An edit to the last letter of a noun or adjective is where gender and number
+  // live, so "inteligenta" is a mistake about the language, not about typing.
+  const inflects = entry.pos === "noun" || entry.pos === "adj";
+  const endingOnly = differsOnlyInEnding(foldAccents(target), foldAccents(given));
+
+  if (given !== "" && !(inflects && endingOnly)) {
+    if (editDistance(foldAccents(given), foldAccents(target), 1) <= 1) {
+      return { result: "hard", expected, note: "almost — check the spelling" };
+    }
+  }
+
+  return { result: "wrong", expected, note: entry.notes };
+}
+
 function gradeEnglish(entry: Entry, answer: string): Grade {
   const expected = entry.en[0]!;
   const given = stripEnglishLead(normalize(answer));
@@ -289,6 +334,15 @@ function gradeEnglish(entry: Entry, answer: string): Grade {
     const target = stripEnglishLead(normalize(accepted));
     if (differsOnlyByAccent(target, given)) {
       return { result: "hard", expected, note: `almost — ${accepted}` };
+    }
+  }
+
+  // A single slipped keystroke in an english answer carries far less risk of
+  // colliding with a different word than it does in spanish.
+  for (const accepted of entry.en) {
+    const target = stripEnglishLead(normalize(accepted));
+    if (given !== "" && editDistance(given, target, 1) <= 1) {
+      return { result: "hard", expected, note: "almost — check the spelling" };
     }
   }
 

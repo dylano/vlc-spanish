@@ -1,0 +1,4 @@
+# Design canvas artboards are generated; formatting them only creates churn the
+# next time they are regenerated. The seeded canvas is gitignored separately —
+# formatting that one corrupts it.
+design/

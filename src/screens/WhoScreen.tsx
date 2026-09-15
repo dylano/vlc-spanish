@@ -26,8 +26,9 @@ export default function WhoScreen() {
 
   return (
     <section className={styles.screen}>
-      <h1 className={styles.title}>Who's practising?</h1>
-      <p className={styles.subtitle}>Your progress is kept separately for each name.</p>
+      <p className={styles.label}>Spanish vocab</p>
+      <h1 className={styles.title}>Who is practising?</h1>
+      <p className={styles.subtitle}>Each name keeps its own progress.</p>
 
       {users.length === 0 ? (
         <p className={styles.subtitle}>No names yet — add one to get started.</p>
@@ -68,6 +69,7 @@ export default function WhoScreen() {
       </form>
 
       {error ? <p className={styles.error}>{error}</p> : null}
+      <div className={styles.spacer} />
     </section>
   );
 }

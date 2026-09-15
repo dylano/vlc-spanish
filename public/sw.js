@@ -6,12 +6,20 @@
  * survive going offline, and the dictionary should stay readable on a train.
  */
 
-const VERSION = "v1";
+const VERSION = "v2";
 const SHELL_CACHE = `shell-${VERSION}`;
 const ASSET_CACHE = `assets-${VERSION}`;
 const DATA_CACHE = `data-${VERSION}`;
 
-const SHELL_URLS = ["/", "/manifest.webmanifest", "/icon-192.png", "/icon-512.png"];
+const SHELL_URLS = [
+  "/",
+  "/manifest.webmanifest",
+  "/icon-192.png",
+  "/icon-512.png",
+  "/fonts/instrument-serif.woff2",
+  "/fonts/instrument-serif-italic.woff2",
+  "/fonts/public-sans.woff2",
+];
 
 self.addEventListener("install", (event) => {
   event.waitUntil(
@@ -89,7 +97,9 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
-  if (url.pathname.startsWith("/assets/")) {
+  // Build output is content-hashed and the fonts never change under their url,
+  // so both are safe to serve cache-first.
+  if (url.pathname.startsWith("/assets/") || url.pathname.startsWith("/fonts/")) {
     event.respondWith(handleAsset(request));
     return;
   }

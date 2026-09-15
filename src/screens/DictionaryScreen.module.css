@@ -1,65 +1,106 @@
+.screen {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
 .search {
   width: 100%;
-  padding: 12px;
-  font-size: 1rem;
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  background: var(--bg);
-  color: var(--text);
-  margin-bottom: 12px;
+  padding: 12px 0;
+  border: none;
+  border-bottom: 1px solid var(--rule);
+  border-radius: 0;
+  background: transparent;
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: 1.375rem;
 }
+
+.search::placeholder {
+  color: var(--muted);
+  font-family: var(--sans);
+  font-size: 1rem;
+}
+
+.search:focus {
+  outline: none;
+  border-bottom-color: var(--accent);
+}
+
 .tags {
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
-  margin-bottom: 16px;
+  margin: 16px 0;
 }
+
 .tag {
-  padding: 6px 10px;
-  font-size: 0.8rem;
-  border: 1px solid var(--border);
+  min-height: 34px;
+  padding: 6px 12px;
+  border: 1px solid var(--rule);
   border-radius: 999px;
-  background: var(--surface);
-  color: var(--text-muted);
+  background: transparent;
+  color: var(--muted);
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
   cursor: pointer;
 }
+
 .tagActive {
   background: var(--accent);
-  color: var(--bg);
   border-color: var(--accent);
+  color: var(--on-accent);
 }
+
 .count {
-  color: var(--text-muted);
-  font-size: 0.8rem;
-  margin: 0 0 8px;
+  font-size: var(--label-size);
+  letter-spacing: var(--label-tracking);
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 0 0 4px;
 }
+
 .list {
   list-style: none;
   padding: 0;
   margin: 0;
-  display: grid;
-  gap: 6px;
+  border-top: 1px solid var(--rule);
 }
-.row {
-  padding: 12px;
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  background: var(--surface);
+
+.entry {
+  padding: 14px 0;
+  border-bottom: 1px solid var(--rule);
 }
+
+.head {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+
 .es {
-  font-weight: 600;
+  font-family: var(--serif);
+  font-size: 1.5rem;
 }
-.pos {
-  font-size: 0.75rem;
-  color: var(--text-muted);
-  margin-left: 6px;
+
+.grammar {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 0.875rem;
+  color: var(--muted);
 }
+
 .en {
-  color: var(--text-muted);
-  font-size: 0.9rem;
+  font-size: 0.9375rem;
+  color: var(--muted);
+  margin: 2px 0 0;
 }
-.notes {
-  font-size: 0.85rem;
-  margin-top: 6px;
-  color: var(--text);
+
+.note {
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: var(--muted);
+  margin: 6px 0 0;
+  padding-left: 12px;
+  border-left: 1px solid var(--rule);
 }
