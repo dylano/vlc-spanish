@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useState, type ReactNode } from "react
 import * as api from "../api.ts";
 import { today } from "../lib/dates.ts";
 import type { Direction, Entry, Progress, ProgressBlob, User } from "../lib/schema.ts";
-import { isDue } from "../lib/scheduler.ts";
+import { countWords } from "../lib/counts.ts";
 import { StoreContext, type Store } from "./store-context.ts";
 
 const USER_KEY = "vlc-spanish:user";
@@ -121,24 +121,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     [userId],
   );
 
-  const counts = useMemo(() => {
-    const now = today();
-    let due = 0;
-    let unseen = 0;
-    let missed = 0;
-    for (const entry of entries) {
-      for (const direction of ["en→es", "es→en"] as Direction[]) {
-        const record = progress.entries[entry.id]?.[direction];
-        if (!record) {
-          if (direction === "en→es") unseen += 1;
-          continue;
-        }
-        if (isDue(record, now)) due += 1;
-        if (record.lapses > 0 || record.lastResult === "wrong") missed += 1;
-      }
-    }
-    return { due, unseen, missed };
-  }, [entries, progress]);
+  const counts = useMemo(() => countWords(entries, progress, today()), [entries, progress]);
 
   const value = useMemo<Store>(
     () => ({
@@ -151,9 +134,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       chooseUser,
       addUser: addUserAction,
       recordResults,
-      dueCount: () => counts.due,
-      unseenCount: () => counts.unseen,
-      missedCount: () => counts.missed,
+      counts,
       reload,
     }),
     [

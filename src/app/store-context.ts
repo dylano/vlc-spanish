@@ -1,4 +1,5 @@
 import { createContext, use } from "react";
+import type { Counts } from "../lib/counts.ts";
 import type { Direction, Entry, Progress, ProgressBlob, User } from "../lib/schema.ts";
 
 export interface Store {
@@ -11,9 +12,7 @@ export interface Store {
   chooseUser: (userId: string) => void;
   addUser: (displayName: string) => Promise<void>;
   recordResults: (results: { entryId: string; direction: Direction; next: Progress }[]) => void;
-  dueCount: () => number;
-  unseenCount: () => number;
-  missedCount: () => number;
+  counts: Counts;
   reload: () => Promise<void>;
 }
 

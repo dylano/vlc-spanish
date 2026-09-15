@@ -86,7 +86,7 @@ tangled into components.
 
 - **Who's practising** — name picker, plus a field to add a name. The choice is remembered in
   `localStorage`; a name that no longer exists on the server is ignored.
-- **Home** — due / new / total counts and three quick starts: due words, new words, misses.
+- **Home** — due / new / total counts (per word, see [Data](#data)) and three quick starts.
 - **Quiz** — one prompt at a time, typed answer, inline verdict, progress bar, and a summary
   listing what to look at again. Nouns are prompted with "include the article".
 - **Dictionary** — search both languages (accent-insensitive, so `timido` finds `tímido`), filter
@@ -108,6 +108,13 @@ existing blob, and work fine in production while being broken locally. `netlify/
 tracks existence separately for this reason, and there is a regression test for it.
 
 Progress is written once per session rather than after every card.
+
+**Words versus cards.** A 159-word dictionary holds up to 318 cards, because each word is scheduled
+separately in each direction. The home-screen totals are deliberately counted **per word**
+(`src/lib/counts.ts`): a word counts as new only when it has been practised in neither direction,
+and as due when either direction is ready. That matches what a session serves, since a mixed session
+asks each word at most once. Counting cards instead produces totals that exceed the dictionary size
+and a "new" count that ignores words drilled spanish → english.
 
 ## Working on the dictionary
 
