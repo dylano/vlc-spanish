@@ -215,6 +215,71 @@
   line-height: 1.2;
 }
 
+/* Matching. Two columns of ruled rows, Spanish in the serif like a headword and
+   English in the interface face like its gloss. The selection and the verdict
+   use the same margin bar as multiple choice. */
+.matchGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: 16px;
+  margin-top: 4px;
+}
+
+.matchColumn {
+  display: flex;
+  flex-direction: column;
+  border-top: 1px solid var(--rule);
+}
+
+.tile {
+  display: flex;
+  align-items: center;
+  min-height: 60px;
+  padding: 8px 8px 8px 12px;
+  border: none;
+  border-bottom: 1px solid var(--rule);
+  background: transparent;
+  color: var(--ink);
+  text-align: left;
+  cursor: pointer;
+  transition:
+    color 200ms ease,
+    background-color 150ms ease;
+}
+
+.tile:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+}
+
+.tileSpanish {
+  font-family: var(--serif);
+  font-size: 1.25rem;
+  line-height: 1.15;
+}
+
+.tileEnglish {
+  font-size: 0.9375rem;
+  line-height: 1.3;
+}
+
+.tileSelected {
+  box-shadow: inset 3px 0 0 var(--accent);
+  background: var(--card);
+}
+
+.tileWrong {
+  box-shadow: inset 3px 0 0 var(--wrong);
+  background: var(--card);
+  color: var(--wrong);
+}
+
+.tileMatched {
+  /* Faded text rather than opacity, so the row's hairline stays intact. */
+  color: color-mix(in srgb, var(--muted) 50%, transparent);
+  cursor: default;
+}
+
 .summary {
   padding-top: 12px;
   padding-bottom: 8px;
@@ -355,6 +420,10 @@
 }
 
 @container session (max-height: 40rem) {
+  .tile {
+    min-height: 48px;
+  }
+
   .options {
     margin-top: 18px;
   }

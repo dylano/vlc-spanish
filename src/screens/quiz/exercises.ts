@@ -8,4 +8,5 @@ import type { Exercise } from "../../lib/session.ts";
 export const EXERCISES: { id: Exercise; label: string; group: "Words" | "Sentences" }[] = [
   { id: "typed", label: "Type it", group: "Words" },
   { id: "choice", label: "Pick one", group: "Words" },
+  { id: "match", label: "Match pairs", group: "Words" },
 ];

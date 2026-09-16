@@ -1,5 +1,5 @@
 import type { IsoDate } from "./dates.ts";
-import { choiceOptions, type ChoiceOption } from "./choices.ts";
+import { choiceOptions, interchangeable, type ChoiceOption } from "./choices.ts";
 import { shuffle } from "./random.ts";
 import { isDue, sm2 } from "./scheduler.ts";
 import type { Direction, Entry, Progress, ProgressBlob } from "./schema.ts";
@@ -25,7 +25,7 @@ export function isDrillable(entry: Entry): boolean {
 export interface QuizConfig {
   size: number;
   direction: Direction | "mixed";
-  format: "typed" | "choice" | "flashcard" | "mixed";
+  format: Exercise | "mixed";
   tags?: string[];
   scope: "due" | "recent" | "misses" | "all";
 }
@@ -38,7 +38,7 @@ export const DEFAULT_CONFIG: QuizConfig = {
 };
 
 /** How a card is answered. */
-export type Exercise = "typed" | "choice";
+export type Exercise = "typed" | "choice" | "match";
 
 export interface Card {
   exercise: Exercise;
@@ -130,6 +130,101 @@ export interface BuildSessionOptions {
  * not drill the same words in the same sequence.
  */
 export function buildSession(options: BuildSessionOptions): Card[] {
+  const { entries, progress, config, random = Math.random } = options;
+  const selected = rankedCards(options).slice(0, config.size);
+  const directed = assignDirections(selected, options);
+
+  // Options are chosen last: what an option shows depends on the card's final
+  // direction, which balancing may have changed.
+  if (config.format !== "choice") return directed;
+  return directed.map((card) => ({
+    ...card,
+    exercise: "choice",
+    options: choiceOptions({ card, entries, progress, random }),
+  }));
+}
+
+/** Pairs in one matching round. */
+export const MATCH_ROUND_SIZE = 6;
+
+/** A matching round: several cards answered together on one screen. */
+export interface MatchRound {
+  exercise: "match";
+  cards: Card[];
+}
+
+/** One step of a session: a single card, or a matching round. */
+export type SessionItem = Card | MatchRound;
+
+export function isMatchRound(item: SessionItem): item is MatchRound {
+  return "cards" in item;
+}
+
+/**
+ * Build matching rounds. `config.size` counts words, so a size of 18 is three
+ * rounds of six.
+ *
+ * Each round starts from the highest-priority word left and fills up with words
+ * sharing one of its tags, so the pairs are confusable (six family words, not a
+ * noun, three adjectives and a verb), then with anything else. Two words that
+ * could stand in for each other never share a round: tapping "to be" would have
+ * two right answers. A round needs at least two pairs to be a round at all.
+ */
+export function buildMatchRounds(options: BuildSessionOptions): MatchRound[] {
+  const remaining = rankedCards(options);
+  const wanted = Math.max(1, Math.floor(options.config.size / MATCH_ROUND_SIZE));
+  const rounds: Card[][] = [];
+
+  while (rounds.length < wanted && remaining.length >= 2) {
+    const anchor = remaining.shift()!;
+    const round = [anchor];
+    const sharesTag = (card: Card) =>
+      card.entry.tags.some((tag) => anchor.entry.tags.includes(tag));
+
+    for (const fits of [sharesTag, () => true]) {
+      for (let i = 0; i < remaining.length && round.length < MATCH_ROUND_SIZE;) {
+        const candidate = remaining[i]!;
+        if (
+          fits(candidate) &&
+          round.every((member) => !interchangeable(member.entry, candidate.entry))
+        ) {
+          round.push(candidate);
+          remaining.splice(i, 1);
+        } else {
+          i++;
+        }
+      }
+    }
+
+    if (round.length < 2) break;
+    rounds.push(round);
+  }
+
+  // Directions are balanced across the whole session, then split back into rounds.
+  const directed = assignDirections(rounds.flat(), options);
+  let offset = 0;
+  return rounds.map((round) => {
+    const cards = directed
+      .slice(offset, offset + round.length)
+      .map((card): Card => ({ ...card, exercise: "match" }));
+    offset += round.length;
+    return { exercise: "match", cards };
+  });
+}
+
+function assignDirections(cards: Card[], options: BuildSessionOptions): Card[] {
+  const { progress, userId, config, today, random = Math.random } = options;
+  if (config.direction !== "mixed") return cards;
+  return balanceDirections(cards, random, (entry, direction) =>
+    progressFor(progress, userId, entry, direction, today),
+  );
+}
+
+/**
+ * Every card in scope, best first: due, then never seen, then the rest, each band
+ * shuffled, and at most one direction per word in a mixed session.
+ */
+function rankedCards(options: BuildSessionOptions): Card[] {
   const { entries, progress, userId, config, today, random = Math.random } = options;
   const index = glossIndex(entries);
 
@@ -162,23 +257,7 @@ export function buildSession(options: BuildSessionOptions): Card[] {
   }
 
   const ordered = [...shuffle(due, random), ...shuffle(unseen, random), ...shuffle(rest, random)];
-  const selected = dedupeByEntry(ordered, config).slice(0, config.size);
-
-  const directed =
-    config.direction === "mixed"
-      ? balanceDirections(selected, random, (entry, direction) =>
-          progressFor(progress, userId, entry, direction, today),
-        )
-      : selected;
-
-  // Options are chosen last: what an option shows depends on the card's final
-  // direction, which balancing may have changed.
-  if (config.format !== "choice") return directed;
-  return directed.map((card) => ({
-    ...card,
-    exercise: "choice",
-    options: choiceOptions({ card, entries, progress, random }),
-  }));
+  return dedupeByEntry(ordered, config);
 }
 
 function toCard(

@@ -60,7 +60,7 @@ src/lib/          pure logic, no React, thoroughly tested
   normalize.ts      text folding: case, accents, articles, "tímido/a" shorthand
   grade.ts          answer grading in both directions
   scheduler.ts      SM-2 spaced repetition behind a swappable Scheduler interface
-  session.ts        picks the cards for a quiz, and which english gloss to prompt with
+  session.ts        picks the cards for a quiz (and matching rounds), and which english gloss to prompt with
   choices.ts        the options for a multiple-choice card
   random.ts         seedable shuffle
   dates.ts          ISO calendar-date maths in whole local days
@@ -69,7 +69,7 @@ src/
   api.ts          typed client over the functions; validates every response
   app/            store (context + data loading), the bundled dictionary, and the shell
   screens/        one file per screen, each with a CSS module beside it
-    quiz/           one component per exercise (typed, multiple choice), and the list of them
+    quiz/           one component per exercise (typed, multiple choice, matching), and the list of them
                     (exercises.ts) the home screen offers; QuizScreen runs the session
 netlify/
   functions/      the /api routes: users and progress
@@ -111,6 +111,11 @@ tangled into components.
   and Enter moves on, on a computer. A wrong pick says what the picked word means. Started from
   Choose exercise on the home screen, or by URL: `/quiz?exercise=choice` (combines with `scope` and
   `tag`).
+- **Match pairs** — rounds of six: Spanish in one column, English in the other, each shuffled. Tap
+  a tile on either side, then its partner; a right pair locks, a wrong one flashes red and clears.
+  Chosen by name it is three rounds. A round draws from one tag where it can and never holds two
+  interchangeable words (a shared English gloss or headword). A word matched without ever being in
+  a wrong pair is a correct **recognition** answer; both words of a wrong pair count as missed.
 - **Dictionary** — search both languages (accent-insensitive, so `timido` finds `tímido`), filter
   by tag, read the notes.
 - **Settings** — switch user.
@@ -217,7 +222,7 @@ Phase 1 is complete. Working and deployed at
 
 Not built, in rough order of likely usefulness:
 
-- Matching and mixed-exercise sessions; the rest of the Phase 2 home screen (B2's row labels)
+- Mixed-exercise sessions; the rest of the Phase 2 home screen (B2's row labels)
 - Flashcards (parked: unclear how they fit alongside the Dictionary tab)
 - A progress screen: per-tag mastery, recent misses, session history
 - Conjugation drills driven by the `verb` metadata already in the dictionary (needs no API)

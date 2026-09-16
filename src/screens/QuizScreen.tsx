@@ -5,11 +5,40 @@ import { useStore } from "../app/store-context.ts";
 import { today } from "../lib/dates.ts";
 import { canonicalAnswer, type Grade } from "../lib/grade.ts";
 import { schedule } from "../lib/scheduler.ts";
-import { buildSession, DEFAULT_CONFIG, type Card, type QuizConfig } from "../lib/session.ts";
+import {
+  buildMatchRounds,
+  buildSession,
+  DEFAULT_CONFIG,
+  isMatchRound,
+  MATCH_ROUND_SIZE,
+  type Card,
+  type Exercise,
+  type QuizConfig,
+  type SessionItem,
+} from "../lib/session.ts";
 import ChoiceExercise from "./quiz/ChoiceExercise.tsx";
+import MatchExercise from "./quiz/MatchExercise.tsx";
 import { GRADE_OPTIONS, type Outcome } from "./quiz/shared.ts";
 import TypedExercise from "./quiz/TypedExercise.tsx";
 import styles from "./QuizScreen.module.css";
+
+/** What the summary says the learner did, by exercise. */
+const GIVEN_VERB: Record<Exercise, string> = {
+  typed: "you wrote",
+  choice: "you picked",
+  match: "you paired it with",
+};
+
+/** Words in a session chosen by name, when the URL does not say. */
+const DEFAULT_SIZE: Record<Exercise, number> = {
+  typed: DEFAULT_CONFIG.size,
+  choice: DEFAULT_CONFIG.size,
+  match: MATCH_ROUND_SIZE * 3,
+};
+
+function exerciseParam(value: string | null): Exercise {
+  return value === "choice" || value === "match" ? value : "typed";
+}
 
 const SCOPE_LABEL: Record<QuizConfig["scope"], string> = {
   due: "Review",
@@ -37,51 +66,53 @@ export default function QuizScreen() {
   const config = useMemo<QuizConfig>(() => {
     const scope = params.get("scope");
     const tag = params.get("tag");
+    const exercise = exerciseParam(params.get("exercise"));
     return {
       ...DEFAULT_CONFIG,
       scope:
         scope === "recent" || scope === "misses" || scope === "all" || scope === "due"
           ? scope
           : "due",
-      format: params.get("exercise") === "choice" ? "choice" : "typed",
+      format: exercise,
       tags: tag ? [tag] : undefined,
-      size: Number(params.get("size") ?? DEFAULT_CONFIG.size),
+      size: Number(params.get("size") ?? DEFAULT_SIZE[exercise]),
     };
   }, [params]);
 
   // Fixed when the screen opens: answering updates progress, and rebuilding
   // mid-session would reshuffle the cards under the user.
-  const cards = useMemo(
-    () =>
-      userId ? buildSession({ entries, progress, userId, config, today: today() }) : ([] as Card[]),
+  const items = useMemo((): SessionItem[] => {
+    if (!userId) return [];
+    const options = { entries, progress, userId, config, today: today() };
+    return config.format === "match" ? buildMatchRounds(options) : buildSession(options);
     // eslint-disable-next-line react-hooks/exhaustive-deps -- deliberately built once per session
-    [entries, userId, config],
-  );
+  }, [entries, userId, config]);
 
   const [index, setIndex] = useState(0);
   const [answered, setAnswered] = useState<Answered[]>([]);
 
-  const card = cards[index];
-  const finished = cards.length > 0 && index >= cards.length;
+  const item = items[index];
+  const finished = items.length > 0 && index >= items.length;
 
-  function done(answeredCard: Card, outcome: Outcome) {
-    recordResults([
-      {
-        entryId: answeredCard.entry.id,
-        direction: answeredCard.direction,
-        next: schedule(answeredCard.progress, outcome.grade.result, today(), outcome.strength),
-      },
-    ]);
+  /** Record one item's results — one card, or every card in a matching round. */
+  function done(results: { card: Card; outcome: Outcome }[]) {
+    recordResults(
+      results.map(({ card, outcome }) => ({
+        entryId: card.entry.id,
+        direction: card.direction,
+        next: schedule(card.progress, outcome.grade.result, today(), outcome.strength),
+      })),
+    );
     setAnswered((current) => [
       ...current,
-      { card: answeredCard, grade: outcome.grade, given: outcome.given },
+      ...results.map(({ card, outcome }) => ({ card, grade: outcome.grade, given: outcome.given })),
     ]);
     setIndex((current) => current + 1);
   }
 
   if (!userId) return <p>Choose a name first.</p>;
 
-  if (cards.length === 0) {
+  if (items.length === 0) {
     return (
       <SessionShell
         footer={
@@ -114,7 +145,7 @@ export default function QuizScreen() {
 
     return (
       <SessionShell
-        position={{ index: cards.length, total: cards.length }}
+        position={{ index: items.length, total: items.length }}
         label={SCOPE_LABEL[config.scope]}
         footer={
           <button
@@ -167,7 +198,7 @@ export default function QuizScreen() {
                       <span className={styles.missEn}>{item.card.entry.en[0]}</span>
                     </div>
                     <p className={styles.missGiven}>
-                      {item.card.exercise === "choice" ? "you picked" : "you wrote"}{" "}
+                      {GIVEN_VERB[item.card.exercise]}{" "}
                       {item.given.trim() === "" ? "nothing" : `‘${item.given.trim()}’`}
                     </p>
                   </li>
@@ -180,20 +211,29 @@ export default function QuizScreen() {
     );
   }
 
-  if (!card) return null;
+  if (!item) return null;
+
+  const position = { index, total: items.length };
+  const label = SCOPE_LABEL[config.scope];
+
+  if (isMatchRound(item)) {
+    return (
+      <MatchExercise key={index} round={item} position={position} label={label} onDone={done} />
+    );
+  }
 
   const shared = {
-    card,
-    position: { index, total: cards.length },
-    label: SCOPE_LABEL[config.scope],
+    card: item,
+    position,
+    label,
     onDone: (outcome: Outcome) => {
-      done(card, outcome);
+      done([{ card: item, outcome }]);
     },
   };
 
   // Typed cards deliberately share one unkeyed instance, so the input and the
-  // keyboard survive from card to card. Choice cards get a fresh instance each.
-  return card.exercise === "choice" ? (
+  // keyboard survive from card to card. Other exercises get a fresh instance each.
+  return item.exercise === "choice" ? (
     <ChoiceExercise key={index} {...shared} />
   ) : (
     <TypedExercise {...shared} />

@@ -31,11 +31,12 @@ export function optionText(entry: Entry, direction: Card["direction"]): string {
 }
 
 /**
- * Whether choosing this entry could also be a right answer, which would leave a
- * question with two correct options. Shared english glosses cover ser and estar
- * ("to be"); a shared headword covers deportista the adjective and the noun.
+ * Whether two entries could stand in for each other as answers: a shared english
+ * gloss (ser and estar are both "to be") or a shared headword (deportista the
+ * adjective and the noun). Two such entries can never be told apart in one
+ * multiple-choice question or one matching round.
  */
-function couldAlsoBeRight(target: Entry, candidate: Entry): boolean {
+export function interchangeable(target: Entry, candidate: Entry): boolean {
   if (normalize(candidate.es) === normalize(target.es)) return true;
   const glosses = new Set(target.en.map(normalize));
   return candidate.en.some((gloss) => glosses.has(normalize(gloss)));
@@ -90,7 +91,7 @@ export function choiceOptions({
   const ranked = shuffle(
     entries.filter(
       (candidate) =>
-        candidate.id !== target.id && eligible(candidate) && !couldAlsoBeRight(target, candidate),
+        candidate.id !== target.id && eligible(candidate) && !interchangeable(target, candidate),
     ),
     random,
   )

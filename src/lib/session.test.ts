@@ -1,7 +1,9 @@
 import { describe, expect, it } from "vite-plus/test";
 import { grade } from "./grade.ts";
 import {
+  buildMatchRounds,
   buildSession,
+  MATCH_ROUND_SIZE,
   confusableEntries,
   DEFAULT_CONFIG,
   glossIndex,
@@ -337,5 +339,93 @@ describe("excluding numbers", () => {
       random: seeded(13),
     });
     expect(cards).toHaveLength(0);
+  });
+});
+
+describe("matching rounds", () => {
+  const family = ["padre", "madre", "hijo", "hija", "abuelo", "abuela", "primo"].map((id) =>
+    word(id, [`${id} (en)`], ["family"]),
+  );
+  const traits = ["alto", "bajo", "rubio", "moreno", "guapo", "feo", "calvo"].map((id) =>
+    word(id, [`${id} (en)`], ["physical-traits"]),
+  );
+
+  function rounds(entries: Entry[], size: number, seed = 5) {
+    return buildMatchRounds({
+      entries,
+      progress: emptyProgress(),
+      userId: "dylan",
+      config: { ...DEFAULT_CONFIG, format: "match", size },
+      today: TODAY,
+      random: seeded(seed),
+    });
+  }
+
+  it("counts size in words: eighteen words is three rounds of six", () => {
+    const result = rounds(
+      [
+        ...family,
+        ...traits,
+        ...family.map((e) => ({ ...e, id: `${e.id}-x`, es: `${e.es}x`, en: [`${e.en[0]} x`] })),
+      ],
+      18,
+    );
+    expect(result).toHaveLength(3);
+    for (const round of result) expect(round.cards).toHaveLength(MATCH_ROUND_SIZE);
+  });
+
+  it("keeps each round to one tag when there are enough words", () => {
+    for (let seed = 1; seed <= 10; seed++) {
+      for (const round of rounds([...family, ...traits], 12, seed)) {
+        const tags = new Set(round.cards.map((card) => card.entry.tags[0]));
+        expect(tags.size).toBe(1);
+      }
+    }
+  });
+
+  it("never puts two interchangeable words in one round", () => {
+    const people = [
+      ser,
+      estar,
+      ...["ir", "tener", "hacer", "salir", "volver"].map((id) => ({
+        ...ser,
+        id,
+        es: id,
+        en: [`to ${id}`],
+      })),
+    ];
+    for (let seed = 1; seed <= 10; seed++) {
+      for (const round of rounds(people, 6, seed)) {
+        const ids = round.cards.map((card) => card.entry.id);
+        expect(ids.includes("ser") && ids.includes("estar")).toBe(false);
+      }
+    }
+  });
+
+  it("uses no word twice across the session", () => {
+    const ids = rounds([...family, ...traits], 12).flatMap((round) =>
+      round.cards.map((card) => card.entry.id),
+    );
+    expect(new Set(ids).size).toBe(ids.length);
+  });
+
+  it("makes a smaller last round rather than dropping words", () => {
+    const result = rounds(family.slice(0, 4), 18);
+    expect(result).toHaveLength(1);
+    expect(result[0]!.cards).toHaveLength(4);
+  });
+
+  it("makes no round from a single word", () => {
+    expect(rounds(family.slice(0, 1), 6)).toEqual([]);
+  });
+
+  it("marks every card as a matching card with a direction and progress", () => {
+    for (const round of rounds([...family, ...traits], 12)) {
+      expect(round.exercise).toBe("match");
+      for (const card of round.cards) {
+        expect(card.exercise).toBe("match");
+        expect(card.progress.direction).toBe(card.direction);
+      }
+    }
   });
 });
