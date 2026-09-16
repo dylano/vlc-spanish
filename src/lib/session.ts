@@ -43,6 +43,11 @@ export interface Card {
   prompt: string;
   /** Entries that share this prompt's gloss, so a near-miss can be explained. */
   confusableWith: Entry[];
+  /**
+   * The entry's hint, present only when the prompt is ambiguous without it. A
+   * hint on a word whose gloss is already unique would just be noise.
+   */
+  hint?: string;
 }
 
 /**
@@ -176,12 +181,14 @@ function toCard(
   index: Map<string, Entry[]>,
 ): Card {
   const prompt = promptGloss(entry, index);
+  const confusableWith = confusableEntries(entry, prompt, index);
   return {
     entry,
     direction,
     progress: progressFor(progress, userId, entry, direction, today),
     prompt,
-    confusableWith: confusableEntries(entry, prompt, index),
+    confusableWith,
+    hint: confusableWith.length > 0 ? entry.hint : undefined,
   };
 }
 

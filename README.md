@@ -199,7 +199,9 @@ Worth knowing before you change `grade.ts`, because the tests encode all of it:
 - **en→es**: the feminine or plural of the headword is accepted as correct. A missing accent is
   `hard` ("almost — check the accent"), and a `ñ` written as `n` is called out as its own case.
   Nouns are expected with their article; a missing article is `hard`, a wrong one is `wrong`, since
-  the article is how gender gets tested. An other-gender noun (`abuela` for `abuelo`) or a conjugated
+  the article is how gender gets tested. A noun's `article` field relaxes this for words Spanish
+  uses bare: `"none"` for months (answer shown as `enero`) and `"optional"` for days (shown as
+  `el lunes`). Either way the article is accepted but not asked for, and a wrong one is only `hard`. An other-gender noun (`abuela` for `abuelo`) or a conjugated
   verb (`me acuesto` for `acostarse`) is accepted but downgraded to `hard` rather than silently
   passing — they are different words than the prompt asked for.
 - **es→en**: a leading `to` or `the/a/an` is stripped before comparing, and any gloss listed in the
@@ -221,8 +223,10 @@ because the naive version of the rule gets a real case wrong:
    language rather than a fumbled key.
 
 Some English glosses are claimed by more than one word — `to be` is both `ser` and `estar`. The
-session builder prefers a gloss no other entry uses, and where none exists it passes the rival
-entries to `grade()` so answering `estar` for `ser` explains the difference instead of just failing.
+session builder prefers a gloss no other entry uses. Where none exists, the entry's `hint` is shown
+beside the grammar line (`verb · identity, traits, origin`) so the prompt says which word it wants,
+and the rival entries are passed to `grade()` so answering `estar` for `ser` explains the difference
+instead of just failing. The validator warns about any entry with no gloss of its own and no hint.
 
 Three results feed the scheduler: `correct` advances normally, `hard` advances with reduced ease,
 `wrong` lapses the card to tomorrow. A correct answer auto-advances after `CORRECT_PAUSE_MS`

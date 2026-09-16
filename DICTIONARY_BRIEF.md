@@ -47,11 +47,13 @@ interface EntryBase {
   tags: string[]; // from the list above
   added: string; // "2026-09-15" for every seed entry
   flagged?: string; // set when you are unsure; explain the uncertainty
+  hint?: string; // only when no gloss in `en` is unique to this entry (see below)
 }
 
 interface NounEntry extends EntryBase {
   pos: "noun";
   gender: "m" | "f"; // REQUIRED
+  article?: "required" | "optional" | "none"; // omit for ordinary nouns (see below)
   forms?: { f?: string; m?: string; pl?: string };
 }
 
@@ -126,6 +128,22 @@ or fully irregular (`ser`, `ir`, `tener`).
 differences, `ser`/`estar` nuance, a plural with its own meaning (`los abuelos` = grandparents),
 a word whose gender is surprising (`el día`, `la mano`). Skip notes that restate the translation.
 One or two sentences. Sentence case, no exclamation marks.
+
+**`hint`** — the quiz prompts with an English gloss, preferring one no other entry uses. When every
+gloss is shared, the prompt alone cannot say which word is meant: `ser` and `estar` are both only
+"to be". Give each such entry a short hint naming what sets it apart, lowercase, a few words:
+`"identity, traits, origin"` for `ser`, `"location, temporary states"` for `estar`. It is shown
+under the prompt only when the gloss is shared, so do not add one to entries that do not need it —
+adding a distinct gloss to `en` is usually the better fix when one exists.
+
+**`article`** — English → Spanish quizzes expect nouns with their article, because the article is
+how gender gets tested. Omit this field for ordinary nouns. Set it only for nouns Spanish normally
+uses without one:
+
+- `"none"` — used bare: months (`en enero`). Answers are accepted with or without the article, and
+  the answer is shown bare.
+- `"optional"` — either is natural: days of the week (`el lunes`, but `hoy es lunes`). Accepted
+  with or without, shown with the article.
 
 **`flagged`** — set it whenever you are guessing: an ambiguous headword, a form you are not certain
 of, a word whose class-intended sense is unclear. Flagged entries are surfaced for human review,
@@ -223,6 +241,7 @@ so flagging costs nothing and a silent wrong answer costs a lot. Do not flag ent
 - a verb whose `en` has no `to ...` gloss, or a non-verb whose `en` starts with `to `
 - `added` not in `YYYY-MM-DD` form
 - an entry with no tags
+- an entry with no English gloss of its own and no `hint`
 - an invented feminine on an invariable adjective (not auto-detected — get this right yourself)
 
 ## Delivering

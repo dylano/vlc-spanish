@@ -29,6 +29,7 @@ export interface GradeOptions {
    * en→es only. When true the prompt asked for the noun with its article, so a
    * bare noun is downgraded to "hard" and a wrong article counts as wrong.
    * When false the article is optional and a wrong article is only "hard".
+   * A noun's own `article` setting can relax this (see `articleRequired`).
    */
   requireArticle?: boolean;
   /**
@@ -150,6 +151,15 @@ export function spanishCandidates(entry: Entry): Candidate[] {
   return out;
 }
 
+/** Whether this entry, asked en→es, must be answered with its article. */
+export function articleRequired(entry: Entry, opts: GradeOptions = {}): boolean {
+  return (
+    opts.requireArticle === true &&
+    entry.pos === "noun" &&
+    (entry.article ?? "required") === "required"
+  );
+}
+
 /** The answer we display when the learner gets it wrong. */
 export function canonicalAnswer(
   entry: Entry,
@@ -157,7 +167,9 @@ export function canonicalAnswer(
   opts: GradeOptions = {},
 ): string {
   if (direction === "es→en") return entry.en[0]!;
-  if (entry.pos === "noun" && opts.requireArticle) {
+  // An optional article is still shown, since "el lunes" is the more useful
+  // thing to remember; only a noun used bare is displayed bare.
+  if (entry.pos === "noun" && opts.requireArticle && entry.article !== "none") {
     return `${articleFor(entry.gender)} ${entry.es}`;
   }
   return entry.es;
@@ -218,6 +230,7 @@ const SEVERITY_BY_KIND: Record<CandidateKind, number> = {
 
 function gradeSpanish(entry: Entry, answer: string, opts: GradeOptions): Grade {
   const expected = canonicalAnswer(entry, "en→es", opts);
+  const requireArticle = articleRequired(entry, opts);
   const match = findBestMatch(entry, answer);
 
   if (!match) {
@@ -272,11 +285,11 @@ function gradeSpanish(entry: Entry, answer: string, opts: GradeOptions): Grade {
   if (entry.pos === "noun") {
     const wanted = match.candidate.article;
     if (match.hadArticle && wanted && match.article !== wanted) {
-      result = worst(result, opts.requireArticle ? "wrong" : "hard");
+      result = worst(result, requireArticle ? "wrong" : "hard");
       notes.push(
         `${entry.es} is ${entry.gender === "m" ? "masculine" : "feminine"}: ${wanted} ${match.candidate.text}`,
       );
-    } else if (!match.hadArticle && opts.requireArticle && wanted) {
+    } else if (!match.hadArticle && requireArticle && wanted) {
       result = worst(result, "hard");
       notes.push(`right word, include the article: ${wanted} ${match.candidate.text}`);
     }

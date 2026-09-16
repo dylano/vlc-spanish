@@ -48,12 +48,26 @@ const entryBase = {
   added: isoDate,
   addedBy: z.string().trim().min(1).optional(),
   flagged: z.string().trim().min(1).optional(),
+  /**
+   * Disambiguates an english prompt that another entry shares: ser and estar are
+   * both only "to be". Shown under the prompt, and only when the gloss is shared.
+   */
+  hint: nonEmpty.optional(),
 };
+
+/**
+ * Whether an english → spanish quiz expects the article. Most nouns are asked
+ * with it, because the article is how gender gets tested; months are used bare
+ * (en enero), and days go either way (el lunes, hoy es lunes).
+ */
+export const ARTICLE_USAGE = ["required", "optional", "none"] as const;
+export type ArticleUsage = (typeof ARTICLE_USAGE)[number];
 
 export const nounEntrySchema = z.object({
   ...entryBase,
   pos: z.literal("noun"),
   gender: z.enum(["m", "f"]),
+  article: z.enum(ARTICLE_USAGE).optional(),
   forms: z
     .object({ f: nonEmpty.optional(), m: nonEmpty.optional(), pl: nonEmpty.optional() })
     .optional(),

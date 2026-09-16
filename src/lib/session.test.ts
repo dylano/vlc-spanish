@@ -255,6 +255,27 @@ describe("buildSession", () => {
       expect(card.confusableWith).toHaveLength(1);
     }
   });
+
+  it("carries the hint only when the prompt is shared", () => {
+    const cards = buildSession({
+      entries: [
+        { ...ser, hint: "identity, traits, origin" },
+        { ...estar, hint: "location, temporary states" },
+        { ...word("hoy", ["today"]), hint: "never needed" },
+      ],
+      progress: emptyProgress(),
+      userId: "dylan",
+      config: { ...DEFAULT_CONFIG, size: 3, direction: "en→es" },
+      today: TODAY,
+      random: seeded(10),
+    });
+    const hints = Object.fromEntries(cards.map((card) => [card.entry.id, card.hint]));
+    expect(hints).toEqual({
+      ser: "identity, traits, origin",
+      estar: "location, temporary states",
+      hoy: undefined,
+    });
+  });
 });
 
 describe("excluding numbers", () => {

@@ -11,6 +11,7 @@ import { readFileSync } from "node:fs";
 import process from "node:process";
 import { z } from "zod";
 import { dictionarySchema, entrySchema, type Entry } from "../src/lib/schema.ts";
+import { glossIndex } from "../src/lib/session.ts";
 import { slugify } from "../src/lib/slug.ts";
 
 const path = process.argv[2] ?? "data/dictionary.json";
@@ -74,6 +75,22 @@ for (const entry of entries) {
     warnings.push(`verb "${entry.id}" is marked reflexive but its first word does not end in -se`);
   }
   if (entry.flagged) warnings.push(`"${entry.id}" is flagged for review: ${entry.flagged}`);
+}
+
+// An english → spanish prompt is chosen from the glosses no other entry claims.
+// When there is none ("to be" for ser and estar), only a hint tells them apart.
+const glosses = glossIndex(entries);
+for (const entry of entries) {
+  const unique = entry.en.some((gloss) => glosses.get(gloss.trim().toLowerCase())?.length === 1);
+  if (!unique && !entry.hint) {
+    const rivals = glosses
+      .get(entry.en[0]!.trim().toLowerCase())!
+      .filter((other) => other.id !== entry.id)
+      .map((other) => other.id);
+    warnings.push(
+      `"${entry.id}" has no english gloss of its own (shared with ${rivals.join(", ")}); add a hint`,
+    );
+  }
 }
 
 const tags = [...new Set(entries.flatMap((entry) => entry.tags))].sort();

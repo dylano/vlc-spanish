@@ -979,6 +979,7 @@
       "id": "ser",
       "es": "ser",
       "en": ["to be"],
+      "hint": "identity, traits, origin",
       "pos": "verb",
       "verb": {
         "reflexive": false,
@@ -1000,6 +1001,7 @@
       "id": "estar",
       "es": "estar",
       "en": ["to be"],
+      "hint": "location, temporary states",
       "pos": "verb",
       "verb": {
         "reflexive": false,
@@ -1220,6 +1222,7 @@
       "en": ["Monday"],
       "pos": "noun",
       "gender": "m",
+      "article": "optional",
       "forms": {
         "pl": "lunes"
       },
@@ -1233,6 +1236,7 @@
       "en": ["Tuesday"],
       "pos": "noun",
       "gender": "m",
+      "article": "optional",
       "forms": {
         "pl": "martes"
       },
@@ -1245,6 +1249,7 @@
       "en": ["Wednesday"],
       "pos": "noun",
       "gender": "m",
+      "article": "optional",
       "forms": {
         "pl": "miércoles"
       },
@@ -1257,6 +1262,7 @@
       "en": ["Thursday"],
       "pos": "noun",
       "gender": "m",
+      "article": "optional",
       "forms": {
         "pl": "jueves"
       },
@@ -1269,6 +1275,7 @@
       "en": ["Friday"],
       "pos": "noun",
       "gender": "m",
+      "article": "optional",
       "forms": {
         "pl": "viernes"
       },
@@ -1281,6 +1288,7 @@
       "en": ["Saturday"],
       "pos": "noun",
       "gender": "m",
+      "article": "optional",
       "forms": {
         "pl": "sábados"
       },
@@ -1294,6 +1302,7 @@
       "en": ["Sunday"],
       "pos": "noun",
       "gender": "m",
+      "article": "optional",
       "forms": {
         "pl": "domingos"
       },
@@ -1306,6 +1315,7 @@
       "en": ["January"],
       "pos": "noun",
       "gender": "m",
+      "article": "none",
       "notes": "Months are lowercase. Dates go number first: el 15 de enero.",
       "tags": ["months"],
       "added": "2026-09-15"
@@ -1316,6 +1326,7 @@
       "en": ["February"],
       "pos": "noun",
       "gender": "m",
+      "article": "none",
       "tags": ["months"],
       "added": "2026-09-15"
     },
@@ -1325,6 +1336,7 @@
       "en": ["March"],
       "pos": "noun",
       "gender": "m",
+      "article": "none",
       "tags": ["months"],
       "added": "2026-09-15"
     },
@@ -1334,6 +1346,7 @@
       "en": ["April"],
       "pos": "noun",
       "gender": "m",
+      "article": "none",
       "tags": ["months"],
       "added": "2026-09-15"
     },
@@ -1343,6 +1356,7 @@
       "en": ["May"],
       "pos": "noun",
       "gender": "m",
+      "article": "none",
       "tags": ["months"],
       "added": "2026-09-15"
     },
@@ -1352,6 +1366,7 @@
       "en": ["June"],
       "pos": "noun",
       "gender": "m",
+      "article": "none",
       "tags": ["months"],
       "added": "2026-09-15"
     },
@@ -1361,6 +1376,7 @@
       "en": ["July"],
       "pos": "noun",
       "gender": "m",
+      "article": "none",
       "tags": ["months"],
       "added": "2026-09-15"
     },
@@ -1370,6 +1386,7 @@
       "en": ["August"],
       "pos": "noun",
       "gender": "m",
+      "article": "none",
       "tags": ["months"],
       "added": "2026-09-15"
     },
@@ -1379,6 +1396,7 @@
       "en": ["September"],
       "pos": "noun",
       "gender": "m",
+      "article": "none",
       "tags": ["months"],
       "added": "2026-09-15"
     },
@@ -1388,6 +1406,7 @@
       "en": ["October"],
       "pos": "noun",
       "gender": "m",
+      "article": "none",
       "tags": ["months"],
       "added": "2026-09-15"
     },
@@ -1397,6 +1416,7 @@
       "en": ["November"],
       "pos": "noun",
       "gender": "m",
+      "article": "none",
       "tags": ["months"],
       "added": "2026-09-15"
     },
@@ -1406,6 +1426,7 @@
       "en": ["December"],
       "pos": "noun",
       "gender": "m",
+      "article": "none",
       "tags": ["months"],
       "added": "2026-09-15"
     },

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vite-plus/test";
-import { grade } from "./grade.ts";
+import { articleRequired, grade } from "./grade.ts";
 import type { AdjEntry, Entry, NounEntry, NumberEntry, VerbEntry } from "./schema.ts";
 
 const base = { tags: ["test"], added: "2026-09-15" };
@@ -127,6 +127,57 @@ describe("en→es adjective forms", () => {
 
   it("rejects an invented feminine for an invariable adjective", () => {
     expect(grade(inteligente, "en→es", "inteligenta").result).toBe("wrong");
+  });
+});
+
+describe("nouns with their own article usage", () => {
+  const asked = { requireArticle: true };
+  const enero: NounEntry = {
+    ...base,
+    id: "enero",
+    es: "enero",
+    en: ["January"],
+    pos: "noun",
+    gender: "m",
+    article: "none",
+  };
+  const lunes: NounEntry = {
+    ...base,
+    id: "lunes",
+    es: "lunes",
+    en: ["Monday"],
+    pos: "noun",
+    gender: "m",
+    article: "optional",
+  };
+
+  it("does not ask for the article on a noun used bare", () => {
+    expect(articleRequired(enero, asked)).toBe(false);
+    expect(grade(enero, "en→es", "enero", asked)).toEqual({ result: "correct", expected: "enero" });
+  });
+
+  it("still accepts the article on a noun used bare", () => {
+    expect(grade(enero, "en→es", "el enero", asked).result).toBe("correct");
+  });
+
+  it("accepts an optional article either way, and shows it in the answer", () => {
+    expect(articleRequired(lunes, asked)).toBe(false);
+    expect(grade(lunes, "en→es", "lunes", asked)).toEqual({
+      result: "correct",
+      expected: "el lunes",
+    });
+    expect(grade(lunes, "en→es", "el lunes", asked).result).toBe("correct");
+  });
+
+  it("still notices a wrong article when one is optional", () => {
+    const result = grade(lunes, "en→es", "la lunes", asked);
+    expect(result.result).toBe("hard");
+    expect(result.note).toContain("masculine");
+  });
+
+  it("requires the article by default", () => {
+    expect(articleRequired(abuelo, asked)).toBe(true);
+    expect(articleRequired(abuelo)).toBe(false);
   });
 });
 

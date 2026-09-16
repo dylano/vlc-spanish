@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState, type FormEvent } from "react";
 import { useNavigate, useSearchParams } from "react-router";
 import { useStore } from "../app/store-context.ts";
 import { today } from "../lib/dates.ts";
-import { canonicalAnswer, grade, type Grade, type Result } from "../lib/grade.ts";
+import { articleRequired, canonicalAnswer, grade, type Grade, type Result } from "../lib/grade.ts";
 import { normalize } from "../lib/normalize.ts";
 import { schedule } from "../lib/scheduler.ts";
 import { buildSession, DEFAULT_CONFIG, type Card, type QuizConfig } from "../lib/session.ts";
@@ -251,7 +251,12 @@ export default function QuizScreen() {
   if (!card) return null;
 
   const asking = card.direction === "en→es" ? card.prompt : card.entry.es;
-  const grammar = card.direction === "en→es" ? grammarOf(card) : undefined;
+  // The hint shares the grammar line: it answers the same question — which
+  // word is meant — and "to be" alone cannot.
+  const grammar =
+    card.direction === "en→es"
+      ? [grammarOf(card), card.hint].filter(Boolean).join(" · ") || undefined
+      : undefined;
 
   // Echoing back a correct answer the user just typed is noise; the expected
   // form only earns its place when it differs from what they wrote.
@@ -329,7 +334,7 @@ export default function QuizScreen() {
                 <p className={styles.note}>{result.note}</p>
               ) : null}
             </div>
-          ) : card.direction === "en→es" && card.entry.pos === "noun" ? (
+          ) : card.direction === "en→es" && articleRequired(card.entry, GRADE_OPTIONS) ? (
             <p className={styles.hint}>Include the article</p>
           ) : null}
         </div>
