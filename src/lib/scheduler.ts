@@ -27,6 +27,23 @@ const HARD_MULTIPLIER_FLOOR = 1.2;
  */
 export const MAX_INTERVAL = 365;
 
+/**
+ * How an answer was given. Picking a word out of four (multiple choice, matching)
+ * is recognition; producing it from nothing (typing) is recall, and recall is
+ * the stronger evidence of knowing it.
+ */
+export type Strength = "recall" | "recognition";
+
+/**
+ * The furthest a correct recognition answer can schedule a word, in days.
+ *
+ * Without a limit, a run of easy multiple-choice wins would push a word out for
+ * weeks that the learner cannot yet produce. With it, a word known only by
+ * recognition keeps coming back weekly until it is recalled. The limit never
+ * shortens an interval already earned by recall.
+ */
+export const RECOGNITION_MAX_INTERVAL = 7;
+
 const EASE_DELTA: Record<Result, number> = {
   correct: 0.1,
   hard: -0.15,
@@ -40,8 +57,8 @@ function clampEase(ease: number): number {
 export interface Scheduler {
   /** A brand new card: due immediately. */
   create(userId: string, entryId: string, direction: Direction, today: IsoDate): Progress;
-  /** Advance a card after an answer. */
-  next(progress: Progress, result: Result, today: IsoDate): Progress;
+  /** Advance a card after an answer. `strength` defaults to recall. */
+  next(progress: Progress, result: Result, today: IsoDate, strength?: Strength): Progress;
 }
 
 export const sm2: Scheduler = {
@@ -58,8 +75,11 @@ export const sm2: Scheduler = {
     };
   },
 
-  next(progress, result, today) {
-    const ease = clampEase(progress.ease + EASE_DELTA[result]);
+  next(progress, result, today, strength = "recall") {
+    // A correct recognition answer is not evidence the word is getting easier to
+    // produce, so it leaves ease where it was.
+    const recognized = strength === "recognition" && result === "correct";
+    const ease = recognized ? progress.ease : clampEase(progress.ease + EASE_DELTA[result]);
 
     if (result === "wrong") {
       return {
@@ -76,13 +96,18 @@ export const sm2: Scheduler = {
 
     const reps = progress.reps + 1;
     let interval: number;
+    const multiplierEase = recognized ? progress.ease : ease;
     if (reps === 1) {
       interval = FIRST_INTERVAL;
     } else if (reps === 2) {
       interval = SECOND_INTERVAL;
     } else {
-      const multiplier = result === "correct" ? ease : Math.max(HARD_MULTIPLIER_FLOOR, ease - 0.6);
+      const multiplier =
+        result === "correct" ? multiplierEase : Math.max(HARD_MULTIPLIER_FLOOR, ease - 0.6);
       interval = Math.min(MAX_INTERVAL, Math.max(1, Math.round(progress.interval * multiplier)));
+    }
+    if (strength === "recognition") {
+      interval = Math.min(interval, Math.max(progress.interval, RECOGNITION_MAX_INTERVAL));
     }
 
     return {
@@ -98,8 +123,13 @@ export const sm2: Scheduler = {
 };
 
 /** Convenience binding to the default scheduler. */
-export function schedule(progress: Progress, result: Result, today: IsoDate): Progress {
-  return sm2.next(progress, result, today);
+export function schedule(
+  progress: Progress,
+  result: Result,
+  today: IsoDate,
+  strength: Strength = "recall",
+): Progress {
+  return sm2.next(progress, result, today, strength);
 }
 
 export function isDue(progress: Progress, today: IsoDate): boolean {

@@ -1,6 +1,14 @@
 import { describe, expect, it } from "vite-plus/test";
 import { addDays, daysBetween, toIsoDate } from "./dates.ts";
-import { EASE_FLOOR, EASE_START, isDue, MAX_INTERVAL, schedule, sm2 } from "./scheduler.ts";
+import {
+  EASE_FLOOR,
+  EASE_START,
+  isDue,
+  MAX_INTERVAL,
+  RECOGNITION_MAX_INTERVAL,
+  schedule,
+  sm2,
+} from "./scheduler.ts";
 import type { Progress } from "./schema.ts";
 
 const TODAY = "2026-09-15";
@@ -153,6 +161,59 @@ describe("wrong answers", () => {
     const card = schedule(newCard(), "wrong", TODAY);
     expect(card.lastResult).toBe("wrong");
     expect(card.lastSeen).toBe(TODAY);
+  });
+});
+
+describe("recognition answers", () => {
+  /** Answer correctly by recognition `n` times, advancing the clock each time. */
+  function recognize(card: Progress, n: number): Progress {
+    let current = card;
+    for (let i = 0; i < n; i++) current = schedule(current, "correct", current.due, "recognition");
+    return current;
+  }
+
+  it("follows the same early ladder as recall", () => {
+    const card = recognize(newCard(), 2);
+    expect(card.reps).toBe(2);
+    expect(card.interval).toBe(3);
+  });
+
+  it("never schedules a word further out than the recognition limit", () => {
+    const card = recognize(newCard(), 12);
+    expect(card.interval).toBe(RECOGNITION_MAX_INTERVAL);
+    expect(daysBetween(card.lastSeen!, card.due)).toBe(RECOGNITION_MAX_INTERVAL);
+  });
+
+  it("does not raise ease", () => {
+    expect(recognize(newCard(), 5).ease).toBe(EASE_START);
+  });
+
+  it("does not shorten an interval already earned by recall", () => {
+    const recalled = drill(newCard(), ["correct", "correct", "correct", "correct"]);
+    expect(recalled.interval).toBeGreaterThan(RECOGNITION_MAX_INTERVAL);
+    const after = schedule(recalled, "correct", recalled.due, "recognition");
+    expect(after.interval).toBe(recalled.interval);
+  });
+
+  it("lets recall carry a word past the limit afterwards", () => {
+    const card = recognize(newCard(), 6);
+    const recalled = schedule(card, "correct", card.due);
+    expect(recalled.interval).toBeGreaterThan(RECOGNITION_MAX_INTERVAL);
+  });
+
+  it("lapses a wrong recognition answer like any other", () => {
+    const card = recognize(newCard(), 4);
+    const missed = schedule(card, "wrong", card.due, "recognition");
+    expect(missed.interval).toBe(1);
+    expect(missed.lapses).toBe(1);
+    expect(missed.ease).toBeLessThan(card.ease);
+  });
+
+  it("defaults to recall", () => {
+    const card = drill(newCard(), ["correct", "correct"]);
+    expect(schedule(card, "correct", card.due)).toEqual(
+      schedule(card, "correct", card.due, "recall"),
+    );
   });
 });
 

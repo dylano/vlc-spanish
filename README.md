@@ -251,7 +251,11 @@ and the rival entries are passed to `grade()` so answering `estar` for `ser` exp
 instead of just failing. The validator warns about any entry with no gloss of its own and no hint.
 
 Three results feed the scheduler: `correct` advances normally, `hard` advances with reduced ease,
-`wrong` lapses the card to tomorrow. A correct answer auto-advances after `CORRECT_PAUSE_MS`
+`wrong` lapses the card to tomorrow. Answers also carry a strength. Typing is **recall**; picking the
+word out of a set (multiple choice, matching) is **recognition**, which is weaker evidence, so a
+correct recognition answer leaves ease alone and can never schedule a word more than
+`RECOGNITION_MAX_INTERVAL` (7) days out. It never shortens an interval already earned by recall, and a
+wrong recognition answer lapses the card like any other. A correct answer auto-advances after `CORRECT_PAUSE_MS`
 (550ms); anything else waits for the button, because there is something to read.
 
 ## Deploying
