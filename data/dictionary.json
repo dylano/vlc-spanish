@@ -2113,6 +2113,151 @@
       "notes": "Same form for both genders: el comercial, la comercial. Also the adjective 'commercial'.",
       "tags": ["professions"],
       "added": "2026-09-16"
+    },
+    {
+      "id": "universidad",
+      "es": "universidad",
+      "en": ["university", "college"],
+      "pos": "noun",
+      "gender": "f",
+      "forms": { "pl": "universidades" },
+      "notes": "Nouns ending in -dad are feminine: la universidad, la ciudad.",
+      "tags": ["workplaces"],
+      "added": "2026-09-16"
+    },
+    {
+      "id": "gimnasio",
+      "es": "gimnasio",
+      "en": ["gym", "gymnasium"],
+      "pos": "noun",
+      "gender": "m",
+      "forms": { "pl": "gimnasios" },
+      "tags": ["workplaces"],
+      "added": "2026-09-16"
+    },
+    {
+      "id": "laboratorio",
+      "es": "laboratorio",
+      "en": ["laboratory", "lab"],
+      "pos": "noun",
+      "gender": "m",
+      "forms": { "pl": "laboratorios" },
+      "tags": ["workplaces"],
+      "added": "2026-09-16"
+    },
+    {
+      "id": "hospital",
+      "es": "hospital",
+      "en": ["hospital"],
+      "pos": "noun",
+      "gender": "m",
+      "forms": { "pl": "hospitales" },
+      "tags": ["workplaces"],
+      "added": "2026-09-16"
+    },
+    {
+      "id": "periodico",
+      "es": "periódico",
+      "en": ["newspaper", "paper"],
+      "pos": "noun",
+      "gender": "m",
+      "forms": { "pl": "periódicos" },
+      "notes": "The newspaper itself and the company that makes it: trabaja en un periódico.",
+      "tags": ["workplaces"],
+      "added": "2026-09-16"
+    },
+    {
+      "id": "bar",
+      "es": "bar",
+      "en": ["bar", "café", "cafe", "pub"],
+      "pos": "noun",
+      "gender": "m",
+      "forms": { "pl": "bares" },
+      "notes": "In Spain a bar serves coffee and breakfast as much as drinks, so it is often closer to a café.",
+      "tags": ["workplaces"],
+      "added": "2026-09-16"
+    },
+    {
+      "id": "restaurante",
+      "es": "restaurante",
+      "en": ["restaurant"],
+      "pos": "noun",
+      "gender": "m",
+      "forms": { "pl": "restaurantes" },
+      "tags": ["workplaces"],
+      "added": "2026-09-16"
+    },
+    {
+      "id": "taller",
+      "es": "taller",
+      "en": ["workshop", "repair shop"],
+      "pos": "noun",
+      "gender": "m",
+      "forms": { "pl": "talleres" },
+      "tags": ["workplaces"],
+      "added": "2026-09-16"
+    },
+    {
+      "id": "banco",
+      "es": "banco",
+      "en": ["bank"],
+      "pos": "noun",
+      "gender": "m",
+      "forms": { "pl": "bancos" },
+      "tags": ["workplaces"],
+      "added": "2026-09-16"
+    },
+    {
+      "id": "tienda",
+      "es": "tienda",
+      "en": ["shop", "store"],
+      "pos": "noun",
+      "gender": "f",
+      "forms": { "pl": "tiendas" },
+      "tags": ["workplaces"],
+      "added": "2026-09-16"
+    },
+    {
+      "id": "supermercado",
+      "es": "supermercado",
+      "en": ["supermarket"],
+      "pos": "noun",
+      "gender": "m",
+      "forms": { "pl": "supermercados" },
+      "tags": ["workplaces"],
+      "added": "2026-09-16"
+    },
+    {
+      "id": "escuela",
+      "es": "escuela",
+      "en": ["school"],
+      "pos": "noun",
+      "gender": "f",
+      "forms": { "pl": "escuelas" },
+      "notes": "In Spain a primary or secondary school is usually 'el colegio' (el cole); escuela is common for specialist schools, as in escuela de idiomas.",
+      "tags": ["workplaces"],
+      "added": "2026-09-16"
+    },
+    {
+      "id": "despacho",
+      "es": "despacho",
+      "en": ["office", "study"],
+      "pos": "noun",
+      "gender": "m",
+      "forms": { "pl": "despachos" },
+      "notes": "One person's office, or a study at home; a larger shared office is 'la oficina'.",
+      "tags": ["workplaces"],
+      "added": "2026-09-16"
+    },
+    {
+      "id": "empresa",
+      "es": "empresa",
+      "en": ["company", "business", "firm"],
+      "pos": "noun",
+      "gender": "f",
+      "forms": { "pl": "empresas" },
+      "tags": ["workplaces"],
+      "added": "2026-09-16"
     }
   ]
 }
