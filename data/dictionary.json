@@ -1914,8 +1914,7 @@
       "forms": { "f": "dormilona", "pl": "dormilones" },
       "notes": "Used as an adjective or a noun: es muy dormilón. The accent drops in the feminine and plural.",
       "tags": ["character-traits"],
-      "added": "2026-09-16",
-      "flagged": "Typed as 'dormilión'; assumed the class word is 'dormilón'."
+      "added": "2026-09-16"
     },
     {
       "id": "sano",
@@ -1964,8 +1963,7 @@
       "forms": { "f": "comilona", "pl": "comilones" },
       "notes": "Someone who eats a lot. The accent drops in the feminine and plural.",
       "tags": ["character-traits"],
-      "added": "2026-09-16",
-      "flagged": "Typed as 'comiión'; assumed the class word is 'comilón'."
+      "added": "2026-09-16"
     },
     {
       "id": "deportista",

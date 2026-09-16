@@ -8,6 +8,7 @@ import { canonicalAnswer, type Grade } from "../lib/grade.ts";
 import { schedule } from "../lib/scheduler.ts";
 import {
   buildGapSession,
+  buildMistakeSession,
   buildMatchRounds,
   buildMixedSession,
   buildSession,
@@ -23,6 +24,7 @@ import {
 import ChoiceExercise from "./quiz/ChoiceExercise.tsx";
 import { EXERCISES } from "./quiz/exercises.ts";
 import MatchExercise from "./quiz/MatchExercise.tsx";
+import MistakeExercise from "./quiz/MistakeExercise.tsx";
 import { GRADE_OPTIONS, type Outcome } from "./quiz/shared.ts";
 import TypedExercise from "./quiz/TypedExercise.tsx";
 import styles from "./QuizScreen.module.css";
@@ -33,6 +35,7 @@ const GIVEN_VERB: Record<Exercise, string> = {
   choice: "you picked",
   match: "you paired it with",
   gap: "you wrote",
+  mistake: "you answered",
 };
 
 /** Words in a session, when the URL does not say. */
@@ -41,13 +44,18 @@ const DEFAULT_SIZE: Record<QuizConfig["format"], number> = {
   choice: DEFAULT_CONFIG.size,
   match: MATCH_ROUND_SIZE * 3,
   gap: DEFAULT_CONFIG.size,
+  mistake: DEFAULT_CONFIG.size,
   // Enough for a matching round alongside a run of single cards.
   mixed: 15,
 };
 
 /** A session asks with one exercise when the URL names it, and mixes them otherwise. */
 function formatParam(value: string | null): QuizConfig["format"] {
-  return value === "typed" || value === "choice" || value === "match" || value === "gap"
+  return value === "typed" ||
+    value === "choice" ||
+    value === "match" ||
+    value === "gap" ||
+    value === "mistake"
     ? value
     : "mixed";
 }
@@ -105,6 +113,7 @@ export default function QuizScreen() {
     if (config.format === "mixed") return buildMixedSession(options);
     if (config.format === "match") return buildMatchRounds(options);
     if (config.format === "gap") return buildGapSession(options);
+    if (config.format === "mistake") return buildMistakeSession(options);
     return buildSession(options);
     // eslint-disable-next-line react-hooks/exhaustive-deps -- deliberately built once per session
   }, [entries, userId, config, progressLoaded]);
@@ -163,7 +172,7 @@ export default function QuizScreen() {
         <section className={styles.empty}>
           <h1 className={styles.emptyTitle}>Nothing waiting</h1>
           <p className={styles.emptyBody}>
-            {config.format === "gap"
+            {config.format === "gap" || config.format === "mistake"
               ? `Sentences only use words you have already practiced. Practice at least ${MIN_SENTENCE_WORDS} words and they will appear.`
               : "There is nothing to practice in this set right now. Try another, or come back later."}
           </p>
@@ -282,9 +291,7 @@ export default function QuizScreen() {
 
   // Typed cards deliberately share one unkeyed instance, so the input and the
   // keyboard survive from card to card. Other exercises get a fresh instance each.
-  return item.exercise === "choice" ? (
-    <ChoiceExercise key={index} {...shared} />
-  ) : (
-    <TypedExercise {...shared} />
-  );
+  if (item.exercise === "choice") return <ChoiceExercise key={index} {...shared} />;
+  if (item.exercise === "mistake") return <MistakeExercise key={index} {...shared} />;
+  return <TypedExercise {...shared} />;
 }

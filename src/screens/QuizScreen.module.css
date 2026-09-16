@@ -104,6 +104,55 @@
   border-bottom-color: var(--wrong);
 }
 
+/* Spot the mistake: every word of the sentence is a button, drawn as plain
+   text. The found mistake gets the accent underline while its fix is typed; once
+   graded it is replaced by the correct text in the verdict colour. */
+.token {
+  display: inline;
+  padding: 0;
+  border: none;
+  background: transparent;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  border-radius: 2px;
+}
+
+.token:disabled {
+  cursor: default;
+}
+
+.token:not(:disabled):active {
+  background: var(--card);
+}
+
+.tokenFound {
+  background: var(--card);
+  box-shadow: inset 0 -2px 0 var(--accent);
+}
+
+.tokenWrongTap {
+  color: var(--muted);
+  text-decoration: line-through;
+  text-decoration-thickness: 1px;
+}
+
+/* The corrected word, once graded. */
+.fixCorrect {
+  color: var(--correct);
+  box-shadow: inset 0 -2px 0 var(--correct);
+}
+
+.fixHard {
+  color: var(--hard);
+  box-shadow: inset 0 -2px 0 var(--hard);
+}
+
+.fixWrong {
+  color: var(--ink);
+  box-shadow: inset 0 -2px 0 var(--wrong);
+}
+
 .divider {
   height: 1px;
   background: var(--rule);

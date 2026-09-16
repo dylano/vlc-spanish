@@ -247,6 +247,17 @@ function adjFill(entry: AdjEntry, gender: Gender | "mf", number: NumberKind): Fi
   return { entryId: entry.id, es, en: entry.en[0]!, gender, number };
 }
 
+/** The form of an adjective agreeing with a gender and number. */
+export function adjectiveForm(entry: AdjEntry, gender: Gender | "mf", number: NumberKind): string {
+  return adjFill(entry, gender, number).es;
+}
+
+/** A noun in a gender and number, or undefined when it has no such form. */
+export function nounForm(entry: NounEntry, gender: Gender, number: NumberKind): string | undefined {
+  if (entry.gender === "mf") return undefined;
+  return nounFill(entry, number, gender, () => 0)?.es;
+}
+
 const SPANISH_ARTICLE = {
   el: { m: { sg: "el", pl: "los" }, f: { sg: "la", pl: "las" } },
   un: { m: { sg: "un", pl: "unos" }, f: { sg: "una", pl: "unas" } },

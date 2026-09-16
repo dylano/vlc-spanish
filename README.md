@@ -63,15 +63,16 @@ src/lib/          pure logic, no React, thoroughly tested
   session.ts        picks the cards for a quiz (and matching rounds), and which english gloss to prompt with
   choices.ts        the options for a multiple-choice card
   random.ts         seedable shuffle
-  sentences/        sentence frames: renderer and checks (frames.ts), Spanish verb forms
-                    (conjugate.ts), English inflection (english.ts)
+  sentences/        sentence frames: renderer and checks (frames.ts), gaps (gap.ts), mistakes
+                    (mistake.ts), Spanish verb forms (conjugate.ts), English inflection (english.ts)
   dates.ts          ISO calendar-date maths in whole local days
   slug.ts           stable entry ids
 src/
   api.ts          typed client over the functions; validates every response
   app/            store (context + data loading), the bundled dictionary, and the shell
   screens/        one file per screen, each with a CSS module beside it
-    quiz/           one component per exercise (typed, multiple choice, matching), and the list of them
+    quiz/           one component per exercise (typed and gaps, multiple choice, matching, spot the
+                    mistake), and the list of them
                     (exercises.ts) the home screen offers; QuizScreen runs the session
 netlify/
   functions/      the /api routes: users and progress
@@ -133,6 +134,9 @@ tangled into components.
   type each word in the form the sentence needs. Enter writes into the current blank and moves to the
   next, a tap on a blank goes back to it, and Check grades them all. Shares the typed card's input, so the keyboard stays up
   between typed cards and gaps. See [Filling a gap](#filling-a-gap).
+- **Spot the mistake** — the English sentence as a cue, the Spanish with exactly one word broken.
+  Tap the broken word, then type what it should be. Tapping a word that is fine ends the card as a
+  miss and shows the mistake. See [Spotting a mistake](#spotting-a-mistake).
 - **Dictionary** — search both languages (accent-insensitive, so `timido` finds `tímido`), filter
   by tag, read the notes.
 - **Settings** — switch user.
@@ -296,6 +300,31 @@ word pinned in the slot. So a gap usually reviews a word that is due.
   adjective, where gender and number live. Each blank is graded against the sentence as shown, never
   against what was typed in the other blanks.
 
+## Spotting a mistake
+
+`src/lib/sentences/mistake.ts`. Like a gap, a mistake is aimed at a practiced, due word: the frame is
+rendered with that word pinned in a slot, and then **that slot** is broken in one of four ways, each
+only when the result really reads differently:
+
+| Kind                   | Example                          | Explanation shown                                        |
+| ---------------------- | -------------------------------- | -------------------------------------------------------- |
+| agreement (adjective)  | _Mi madre es tímido._            | madre is feminine singular, so tímida                    |
+| number (adjective)     | _Mis nietos son perezoso._       | nietos is masculine plural, so perezosos                 |
+| agreement (profession) | _Mi mujer es diseñador de moda._ | it describes mujer, who is female, so diseñadora de moda |
+| person (verb)          | _Mi primo os vestís a las seis._ | for primo it is se viste                                 |
+| article                | _Trabaja en una hospital._       | hospital is masculine: un hospital                       |
+
+Article swaps are never made on a common-gender noun (_la estudiante_ is fine) or on a contracted
+_al_/_del_, which has no article left to swap. The English cue is always shown: without it a verb in
+the wrong person can still be a grammatical sentence (_Vamos al trabajo_ for "I go to work").
+
+- **Tapping**: any word of the broken text finds it, including every word of a phrase (_os vestís_).
+- **The fix** (`gradeFix`): the corrected text, or just the one word that changed when only one did
+  (_hacemos_ for _hacemos la cama_). Only an accent wrong is `hard`; typing the mistake back is
+  `wrong` with its own note.
+- **Scheduling**: the broken word's `en→es` card, as a **recognition** answer — correcting a form
+  that is put in front of you is easier than producing it, so it is held to the 7-day limit.
+
 ## Status
 
 Phase 1 is complete. Working and deployed at
@@ -314,10 +343,11 @@ The first release of Phase 2 is built (not yet deployed at the time of writing):
 - A session frame sized to the space above the on-screen keyboard
 - The B2 home screen: Practice, Focus on new words, Remediation, Choose exercise
 - A per-exercise score in the summary of a mixed session
-- Sentence frames (31, about 25,000 sentences) and **Fill the gap**, in Practice and Choose exercise
+- Sentence frames (31, about 25,000 sentences), **Fill the gap** (one to three blanks) and **Spot
+  the mistake**, in Practice and Choose exercise
 
-Phase 2 continues with sentence exercises: **Spot the mistake** next (tap the wrong word, then type
-the fix), then Translate and possibly Answer a question. Sentences go straight
+Phase 2 continues with **Translate** (a whole English sentence into Spanish, graded word by word with
+a self-mark fallback) and possibly **Answer a question** (cued Q&A). Sentences go straight
 into Practice once built. Frames were chosen over a fixed sentence bank, which repeats too often, and
 over fully type-driven templates, which produce wrong English and odd combinations.
 
@@ -340,6 +370,7 @@ multiple choice 2, a matching round 1 — with three rules on top:
   raises the phone keyboard; alternating one card at a time would have it bouncing all session. On
   iOS a typed card that follows a tap exercise may need a tap on the answer line to bring the
   keyboard back, because iOS only opens it from a user gesture.
+- **Spot the mistake joins too** (weight 1) once sentences are possible.
 - **Gaps join once they are possible** (weight 2, nudged into runs with typed cards since both
   use the keyboard) — see [Filling a gap](#filling-a-gap).
 - **A matching round needs room**: at least six words left in the session and at least four words

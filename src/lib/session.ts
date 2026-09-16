@@ -3,6 +3,7 @@ import { choiceOptions, interchangeable, type ChoiceOption } from "./choices.ts"
 import { shuffle } from "./random.ts";
 import type { Frame, Glue } from "./sentences/frames.ts";
 import { gapTargets, renderGap, type Gap } from "./sentences/gap.ts";
+import { renderMistake, type Mistake } from "./sentences/mistake.ts";
 import { isDue, sm2 } from "./scheduler.ts";
 import type { Direction, Entry, Progress, ProgressBlob } from "./schema.ts";
 
@@ -40,7 +41,7 @@ export const DEFAULT_CONFIG: QuizConfig = {
 };
 
 /** How a card is answered. */
-export type Exercise = "typed" | "choice" | "match" | "gap";
+export type Exercise = "typed" | "choice" | "match" | "gap" | "mistake";
 
 export interface Card {
   exercise: Exercise;
@@ -66,6 +67,8 @@ export interface Card {
    * sentence.
    */
   blankCards?: Card[];
+  /** The broken sentence for a spot-the-mistake card. */
+  mistake?: Mistake;
 }
 
 /**
@@ -168,10 +171,13 @@ interface MadeGap {
  * drilling (numbers); the gap itself is always a practiced word, so filling it
  * doubles as review of a word that is due.
  */
-function gapMaker(
-  options: BuildSessionOptions,
-): ((remaining: Card[], maxWords: number, taken: Set<string>) => MadeGap | undefined) | undefined {
-  const { sentences, entries, progress, userId, today, random = Math.random } = options;
+/**
+ * What every sentence exercise needs, or undefined when this learner cannot have
+ * them yet: the render context limited to practiced words, and where each word
+ * can sit in a frame.
+ */
+function sentenceSetup(options: BuildSessionOptions) {
+  const { sentences, entries, progress, random = Math.random } = options;
   if (!sentences) return undefined;
 
   const practiced = (entry: Entry) => progress.entries[entry.id] !== undefined;
@@ -186,7 +192,16 @@ function gapMaker(
     random,
     eligible: (entry: Entry) => practiced(entry) || !isDrillable(entry),
   };
-  const targets = gapTargets(sentences.frames, context);
+  return { practiced, context, targets: gapTargets(sentences.frames, context) };
+}
+
+function gapMaker(
+  options: BuildSessionOptions,
+): ((remaining: Card[], maxWords: number, taken: Set<string>) => MadeGap | undefined) | undefined {
+  const { entries, progress, userId, today, random = Math.random } = options;
+  const setup = sentenceSetup(options);
+  if (!setup) return undefined;
+  const { practiced, context, targets } = setup;
   const index = glossIndex(entries);
 
   return (remaining, maxWords, taken) => {
@@ -218,6 +233,53 @@ function gapMaker(
     }
     return undefined;
   };
+}
+
+/**
+ * A function that takes the next word a mistake can be aimed at off a ranked
+ * list, or undefined when this learner cannot have sentence exercises yet.
+ */
+function mistakeMaker(
+  options: BuildSessionOptions,
+): ((remaining: Card[]) => { card: Card; mistake: Mistake } | undefined) | undefined {
+  const { progress, userId, today } = options;
+  const setup = sentenceSetup(options);
+  if (!setup) return undefined;
+  const { practiced, context, targets } = setup;
+
+  return (remaining) => {
+    for (let i = 0; i < Math.min(remaining.length, GAP_SCAN); i++) {
+      const card = remaining[i]!;
+      if (!practiced(card.entry) || !targets.has(card.entry.id)) continue;
+      const mistake = renderMistake(card.entry.id, targets, context);
+      if (!mistake) continue;
+      remaining.splice(i, 1);
+      // Fixing a Spanish sentence schedules the word's en→es card.
+      return {
+        card: {
+          ...card,
+          direction: "en→es",
+          progress: progressFor(progress, userId, card.entry, "en→es", today),
+        },
+        mistake,
+      };
+    }
+    return undefined;
+  };
+}
+
+/** A session of mistakes only. Empty when the learner cannot have sentences yet. */
+export function buildMistakeSession(options: BuildSessionOptions): Card[] {
+  const makeMistake = mistakeMaker(options);
+  if (!makeMistake) return [];
+  const remaining = rankedCards(options);
+  const plan: Planned[] = [];
+  while (plan.length < options.config.size) {
+    const next = makeMistake(remaining);
+    if (!next) break;
+    plan.push({ exercise: "mistake", ...next });
+  }
+  return finalize(plan, options) as Card[];
 }
 
 /** A session of gaps only. Empty when the learner cannot have sentences yet. */
@@ -278,6 +340,7 @@ export function isMatchRound(item: SessionItem): item is MatchRound {
 type Planned =
   | { exercise: "typed" | "choice"; card: Card }
   | ({ exercise: "gap" } & MadeGap)
+  | { exercise: "mistake"; card: Card; mistake: Mistake }
   | { exercise: "match"; cards: Card[] };
 
 /**
@@ -335,7 +398,13 @@ export function buildMatchRounds(options: BuildSessionOptions): MatchRound[] {
  * Typing is the strongest practice, so it leads; a matching round covers six
  * words at once, so it needs fewer turns to take its share.
  */
-export const MIX_WEIGHTS: Record<Exercise, number> = { typed: 3, choice: 2, match: 1, gap: 2 };
+export const MIX_WEIGHTS: Record<Exercise, number> = {
+  typed: 3,
+  choice: 2,
+  match: 1,
+  gap: 2,
+  mistake: 1,
+};
 
 /** The most steps of one exercise in a row, so a session keeps changing pace. */
 export const MAX_RUN = 3;
@@ -364,9 +433,11 @@ export function buildMixedSession(options: BuildSessionOptions): SessionItem[] {
   const random = options.random ?? Math.random;
   const remaining = rankedCards(options);
   const makeGap = gapMaker(options);
+  const makeMistake = mistakeMaker(options);
   let budget = Math.min(options.config.size, remaining.length);
   let roundsPossible = true;
   let gapsPossible = makeGap !== undefined;
+  let mistakesPossible = makeMistake !== undefined;
   const plan: Planned[] = [];
 
   while (budget > 0 && remaining.length > 0) {
@@ -383,6 +454,7 @@ export function buildMixedSession(options: BuildSessionOptions): SessionItem[] {
     if (last && run >= MAX_RUN) weights[last] = 0;
     if (!roundsPossible || budget < MATCH_ROUND_SIZE) weights.match = 0;
     if (!gapsPossible) weights.gap = 0;
+    if (!mistakesPossible) weights.mistake = 0;
 
     const exercise = weightedPick(weights, random);
     if (exercise === "gap") {
@@ -401,6 +473,16 @@ export function buildMixedSession(options: BuildSessionOptions): SessionItem[] {
         budget -= next.blankCards.length;
       } else {
         gapsPossible = false;
+      }
+      continue;
+    }
+    if (exercise === "mistake") {
+      const next = makeMistake?.(remaining);
+      if (next) {
+        plan.push({ exercise, ...next });
+        budget -= 1;
+      } else {
+        mistakesPossible = false;
       }
       continue;
     }
@@ -433,12 +515,19 @@ function finalize(plan: Planned[], options: BuildSessionOptions): SessionItem[] 
   const { entries, progress, random = Math.random } = options;
   // Gaps keep their direction: they are always answered in Spanish.
   const flat = plan.flatMap((step) =>
-    "cards" in step ? step.cards : step.exercise === "gap" ? [] : [step.card],
+    "cards" in step
+      ? step.cards
+      : step.exercise === "gap" || step.exercise === "mistake"
+        ? []
+        : [step.card],
   );
   const directed = assignDirections(flat, options);
 
   let offset = 0;
   return plan.map((step): SessionItem => {
+    if (step.exercise === "mistake") {
+      return { ...step.card, exercise: "mistake", mistake: step.mistake };
+    }
     if (step.exercise === "gap") {
       return {
         ...step.card,
