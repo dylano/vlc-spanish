@@ -83,13 +83,18 @@ export function spanishCandidates(entry: Entry): Candidate[] {
 
   switch (entry.pos) {
     case "noun": {
-      out.push({ text: entry.es, kind: "exact", article: articleFor(entry.gender) });
-      if (entry.forms?.pl) {
-        out.push({
-          text: entry.forms.pl,
-          kind: "inflection",
-          article: articleFor(entry.gender, true),
-        });
+      // A common-gender noun is the same word under either article, so it gets a
+      // candidate per article rather than an "other-gender" form.
+      const genders = entry.gender === "mf" ? (["m", "f"] as const) : [entry.gender];
+      for (const gender of genders) {
+        out.push({ text: entry.es, kind: "exact", article: articleFor(gender) });
+        if (entry.forms?.pl) {
+          out.push({
+            text: entry.forms.pl,
+            kind: "inflection",
+            article: articleFor(gender, true),
+          });
+        }
       }
       if (entry.forms?.f && entry.gender === "m") {
         out.push({
@@ -151,6 +156,12 @@ export function spanishCandidates(entry: Entry): Candidate[] {
   return out;
 }
 
+/** The grammar-line name for a noun's gender. */
+export function genderName(gender: "m" | "f" | "mf"): string {
+  if (gender === "mf") return "masculine or feminine";
+  return gender === "m" ? "masculine" : "feminine";
+}
+
 /** Whether this entry, asked en→es, must be answered with its article. */
 export function articleRequired(entry: Entry, opts: GradeOptions = {}): boolean {
   return (
@@ -170,7 +181,8 @@ export function canonicalAnswer(
   // An optional article is still shown, since "el lunes" is the more useful
   // thing to remember; only a noun used bare is displayed bare.
   if (entry.pos === "noun" && opts.requireArticle && entry.article !== "none") {
-    return `${articleFor(entry.gender)} ${entry.es}`;
+    const article = entry.gender === "mf" ? "el/la" : articleFor(entry.gender);
+    return `${article} ${entry.es}`;
   }
   return entry.es;
 }
@@ -209,10 +221,17 @@ function findBestMatch(entry: Entry, answer: string): Match | undefined {
         best = match;
         continue;
       }
-      // Prefer the closest relationship, then the better spelling.
+      // Prefer the closest relationship, then the better spelling, then the
+      // candidate whose article was the one given (el/la estudiante match both).
+      const sameKind = candidate.kind === best.candidate.kind;
       const better =
         SEVERITY_BY_KIND[candidate.kind] < SEVERITY_BY_KIND[best.candidate.kind] ||
-        (candidate.kind === best.candidate.kind && exactSpelling && !best.exactSpelling);
+        (sameKind && exactSpelling && !best.exactSpelling) ||
+        (sameKind &&
+          exactSpelling === best.exactSpelling &&
+          usesArticle &&
+          candidate.article === article &&
+          best.candidate.article !== article);
       if (better) best = match;
     }
   }
@@ -286,12 +305,17 @@ function gradeSpanish(entry: Entry, answer: string, opts: GradeOptions): Grade {
     const wanted = match.candidate.article;
     if (match.hadArticle && wanted && match.article !== wanted) {
       result = worst(result, requireArticle ? "wrong" : "hard");
+      // Name the gender of the form actually matched: "el camarera" is a mistake
+      // about camarera, which is feminine even though camarero is not.
+      const gender = entry.gender === "mf" ? "mf" : wanted === "el" || wanted === "los" ? "m" : "f";
       notes.push(
-        `${entry.es} is ${entry.gender === "m" ? "masculine" : "feminine"}: ${wanted} ${match.candidate.text}`,
+        `${match.candidate.text} is ${genderName(gender)}: ${wanted} ${match.candidate.text}`,
       );
     } else if (!match.hadArticle && requireArticle && wanted) {
       result = worst(result, "hard");
-      notes.push(`right word, include the article: ${wanted} ${match.candidate.text}`);
+      const shown =
+        entry.gender === "mf" ? (wanted === "el" || wanted === "la" ? "el/la" : "los/las") : wanted;
+      notes.push(`right word, include the article: ${shown} ${match.candidate.text}`);
     }
   }
 
@@ -334,16 +358,30 @@ function nearMiss(entry: Entry, answer: string, expected: string, opts: GradeOpt
   return { result: "wrong", expected, note: entry.notes };
 }
 
-function gradeEnglish(entry: Entry, answer: string): Grade {
+/**
+ * English answers accepted for a spanish prompt. The prompt shows only the
+ * headword, so when two entries share it (deportista the adjective and the
+ * noun) nothing tells the learner which is meant, and either meaning is right.
+ */
+function englishAnswers(entry: Entry, dictionary: Entry[] = []): string[] {
+  const headword = normalize(entry.es);
+  const homographs = dictionary.filter(
+    (other) => other.id !== entry.id && normalize(other.es) === headword,
+  );
+  return [...entry.en, ...homographs.flatMap((other) => other.en)];
+}
+
+function gradeEnglish(entry: Entry, answer: string, opts: GradeOptions): Grade {
   const expected = entry.en[0]!;
   const given = stripEnglishLead(normalize(answer));
+  const answers = englishAnswers(entry, opts.dictionary);
 
-  for (const accepted of entry.en) {
+  for (const accepted of answers) {
     const target = stripEnglishLead(normalize(accepted));
     if (given === target) return { result: "correct", expected };
   }
 
-  for (const accepted of entry.en) {
+  for (const accepted of answers) {
     const target = stripEnglishLead(normalize(accepted));
     if (differsOnlyByAccent(target, given)) {
       return { result: "hard", expected, note: `almost — ${accepted}` };
@@ -352,7 +390,7 @@ function gradeEnglish(entry: Entry, answer: string): Grade {
 
   // A single slipped keystroke in an english answer carries far less risk of
   // colliding with a different word than it does in spanish.
-  for (const accepted of entry.en) {
+  for (const accepted of answers) {
     const target = stripEnglishLead(normalize(accepted));
     if (given !== "" && editDistance(given, target, 1) <= 1) {
       return { result: "hard", expected, note: "almost — check the spelling" };
@@ -376,5 +414,7 @@ export function grade(
       note: entry.notes,
     };
   }
-  return direction === "en→es" ? gradeSpanish(entry, answer, opts) : gradeEnglish(entry, answer);
+  return direction === "en→es"
+    ? gradeSpanish(entry, answer, opts)
+    : gradeEnglish(entry, answer, opts);
 }

@@ -130,6 +130,40 @@ describe("en→es adjective forms", () => {
   });
 });
 
+describe("common-gender nouns", () => {
+  const asked = { requireArticle: true };
+  const estudiante: NounEntry = {
+    ...base,
+    id: "estudiante",
+    es: "estudiante",
+    en: ["student"],
+    pos: "noun",
+    gender: "mf",
+    forms: { pl: "estudiantes" },
+  };
+
+  it("accepts either article", () => {
+    expect(grade(estudiante, "en→es", "el estudiante", asked).result).toBe("correct");
+    expect(grade(estudiante, "en→es", "la estudiante", asked).result).toBe("correct");
+    expect(grade(estudiante, "en→es", "las estudiantes", asked).result).toBe("correct");
+  });
+
+  it("shows both articles in the answer", () => {
+    expect(grade(estudiante, "en→es", "la estudiante", asked).expected).toBe("el/la estudiante");
+    expect(grade(estudiante, "en→es", "el/la estudiante", asked).result).toBe("correct");
+  });
+
+  it("still asks for an article, naming both", () => {
+    const result = grade(estudiante, "en→es", "estudiante", asked);
+    expect(result.result).toBe("hard");
+    expect(result.note).toContain("el/la estudiante");
+  });
+
+  it("does not accept a plural article on the singular", () => {
+    expect(grade(estudiante, "en→es", "los estudiante", asked).result).toBe("wrong");
+  });
+});
+
 describe("nouns with their own article usage", () => {
   const asked = { requireArticle: true };
   const enero: NounEntry = {
@@ -206,6 +240,11 @@ describe("en→es nouns and articles", () => {
     expect(result.note).toContain("masculine");
   });
 
+  it("names the gender of the form given, not the headword", () => {
+    const result = grade(abuelo, "en→es", "el abuela", { requireArticle: true });
+    expect(result.note).toContain("abuela is feminine: la abuela");
+  });
+
   it("marks a wrong article only hard when gender was not being tested", () => {
     expect(grade(abuelo, "en→es", "la abuelo").result).toBe("hard");
   });
@@ -277,6 +316,32 @@ describe("en→es numbers", () => {
 });
 
 describe("es→en", () => {
+  it("accepts the meaning of another entry with the same headword", () => {
+    const sporty: AdjEntry = {
+      ...base,
+      id: "deportista",
+      es: "deportista",
+      en: ["sporty"],
+      pos: "adj",
+    };
+    const athlete: NounEntry = {
+      ...base,
+      id: "deportista-2",
+      es: "deportista",
+      en: ["athlete"],
+      pos: "noun",
+      gender: "mf",
+    };
+    const dictionary = [sporty, athlete, simpatico];
+    expect(grade(sporty, "es→en", "athlete", { dictionary })).toEqual({
+      result: "correct",
+      expected: "sporty",
+    });
+    expect(grade(athlete, "es→en", "sporty", { dictionary }).result).toBe("correct");
+    // Only a shared headword counts, not any word in the dictionary.
+    expect(grade(sporty, "es→en", "friendly", { dictionary }).result).toBe("wrong");
+  });
+
   it("accepts any listed english answer", () => {
     expect(grade(simpatico, "es→en", "friendly").result).toBe("correct");
     expect(grade(simpatico, "es→en", "likeable").result).toBe("correct");

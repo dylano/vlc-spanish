@@ -210,13 +210,15 @@ Worth knowing before you change `grade.ts`, because the tests encode all of it:
 - **en→es**: the feminine or plural of the headword is accepted as correct. A missing accent is
   `hard` ("almost — check the accent"), and a `ñ` written as `n` is called out as its own case.
   Nouns are expected with their article; a missing article is `hard`, a wrong one is `wrong`, since
-  the article is how gender gets tested. A noun's `article` field relaxes this for words Spanish
+  the article is how gender gets tested. A common-gender noun (`gender: "mf"`) accepts either
+  article and is shown as `el/la estudiante`. A noun's `article` field relaxes this for words Spanish
   uses bare: `"none"` for months (answer shown as `enero`) and `"optional"` for days (shown as
   `el lunes`). Either way the article is accepted but not asked for, and a wrong one is only `hard`. An other-gender noun (`abuela` for `abuelo`) or a conjugated
   verb (`me acuesto` for `acostarse`) is accepted but downgraded to `hard` rather than silently
   passing — they are different words than the prompt asked for.
 - **es→en**: a leading `to` or `the/a/an` is stripped before comparing, and any gloss listed in the
-  entry's `en` array counts.
+  entry's `en` array counts. So does a gloss of any other entry with the same headword: the prompt shows only
+  `deportista`, so `sporty` (the adjective) and `athlete` (the noun) are both right on either card.
 
 When nothing matches, three checks run in order before an answer is called wrong — each exists
 because the naive version of the rule gets a real case wrong:

@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import { useStore } from "../app/store-context.ts";
-import { articleFor, foldAccents } from "../lib/normalize.ts";
+import { canonicalAnswer } from "../lib/grade.ts";
+import { foldAccents } from "../lib/normalize.ts";
 import styles from "./DictionaryScreen.module.css";
 
 export default function DictionaryScreen() {
@@ -67,8 +68,7 @@ export default function DictionaryScreen() {
           <li key={entry.id} className={styles.entry}>
             <div className={styles.head}>
               <span className={styles.es}>
-                {entry.pos === "noun" ? `${articleFor(entry.gender)} ` : ""}
-                {entry.es}
+                {canonicalAnswer(entry, "en→es", { requireArticle: true })}
               </span>
               <span className={styles.grammar}>{entry.pos}</span>
             </div>

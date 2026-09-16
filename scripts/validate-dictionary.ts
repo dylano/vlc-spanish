@@ -108,6 +108,21 @@ console.log(
     .join(", ")}`,
 );
 
+// Same headword, different part of speech: legitimate (deportista is an
+// adjective and a noun), and grading accepts either meaning for the shared
+// spanish prompt. Listed so a new one is noticed, not warned about forever.
+const posByEs = new Map<string, string[]>();
+for (const entry of entries) {
+  const key = entry.es.trim().toLowerCase();
+  posByEs.set(key, [...(posByEs.get(key) ?? []), entry.pos]);
+}
+const homographs = [...posByEs]
+  .filter(([, pos]) => new Set(pos).size > 1)
+  .map(([es, pos]) => `${es} (${pos.join(", ")})`);
+if (homographs.length > 0) {
+  console.log(`shared headwords, either meaning accepted: ${homographs.join(", ")}`);
+}
+
 if (warnings.length > 0) {
   console.warn(`\n${warnings.length} warning(s):`);
   for (const warning of warnings) console.warn(`  ! ${warning}`);

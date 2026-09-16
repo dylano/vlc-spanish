@@ -12,7 +12,7 @@ against the schema below exactly. A validator is provided; output that does not 
 Roughly 100–150 entries covering an elementary Peninsular Spanish class, across these tags:
 
 `physical-traits`, `character-traits`, `family`, `frequency`, `times-of-day`,
-`daily-activities`, `verbs`, `days`, `months`, `numbers`
+`daily-activities`, `verbs`, `days`, `months`, `numbers`, `professions`
 
 Use exactly these tag strings. An entry may carry more than one tag. Add a new tag only if a word
 genuinely fits none of the above, and keep it kebab-case.
@@ -56,7 +56,7 @@ interface EntryBase {
 
 interface NounEntry extends EntryBase {
   pos: "noun";
-  gender: "m" | "f"; // REQUIRED
+  gender: "m" | "f" | "mf"; // REQUIRED; "mf" = one form, either article (el/la estudiante)
   article?: "required" | "optional" | "none"; // omit for ordinary nouns (see below)
   forms?: { f?: string; m?: string; pl?: string };
 }
@@ -107,7 +107,9 @@ The file is:
 **`id`** — slugify `es`: lowercase, fold accents to ASCII (`ñ` → `n`, `í` → `i`), non-alphanumeric
 runs become a single hyphen, no leading or trailing hyphen. `"a menudo"` → `"a-menudo"`,
 `"tímido"` → `"timido"`. If two entries would collide (e.g. two senses of `para`), suffix the second
-`-2`. Ids are permanent, so do not encode meaning or tags in them.
+`-2`. Ids are permanent, so do not encode meaning or tags in them. A word that is genuinely two parts
+of speech (`deportista`, sporty and athlete) is two entries with the same `es`; the app accepts
+either meaning when it prompts with the Spanish.
 
 **`en`** — every answer a learner could reasonably type, most natural first. This list is what
 grading accepts, so be generous: `["nice", "friendly", "likeable"]`, not just `["nice"]`. Verbs use
@@ -117,7 +119,10 @@ Do not include articles (`"the grandfather"` → just `"grandfather"`).
 **`forms`** — this drives grading, so accuracy matters more than completeness:
 
 - Nouns: `pl` always. `f` (or `m`) only for people/animals with a real other-gender counterpart
-  (`abuelo`/`abuela`). Never invent one for inanimate nouns — `la mesa` has no masculine.
+  (`abuelo`/`abuela`, `profesor`/`profesora`); the headword is the masculine. Never invent one for
+  inanimate nouns — `la mesa` has no masculine.
+- Nouns with one form for both genders (`el/la estudiante`, `periodista`, `deportista`) take
+  `gender: "mf"` and no `f`. Setting `"m"` would mark `la estudiante` as a gender mistake.
 - Adjectives: `f` only when the adjective actually varies. Omit `f` for `inteligente`, `alegre`,
   `feliz`, `fácil`. Getting this wrong makes the app accept nonsense like "inteligenta".
 - Verbs: present-tense forms for irregular or stem-changing verbs; for reflexives include the

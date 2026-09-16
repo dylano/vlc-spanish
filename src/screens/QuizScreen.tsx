@@ -2,7 +2,14 @@ import { useEffect, useMemo, useRef, useState, type FormEvent } from "react";
 import { useNavigate, useSearchParams } from "react-router";
 import { useStore } from "../app/store-context.ts";
 import { today } from "../lib/dates.ts";
-import { articleRequired, canonicalAnswer, grade, type Grade, type Result } from "../lib/grade.ts";
+import {
+  articleRequired,
+  canonicalAnswer,
+  genderName,
+  grade,
+  type Grade,
+  type Result,
+} from "../lib/grade.ts";
 import { normalize } from "../lib/normalize.ts";
 import { schedule } from "../lib/scheduler.ts";
 import { buildSession, DEFAULT_CONFIG, type Card, type QuizConfig } from "../lib/session.ts";
@@ -53,7 +60,7 @@ function grammarOf(card: Card): string | undefined {
   const { entry } = card;
   switch (entry.pos) {
     case "noun":
-      return `noun · ${entry.gender === "m" ? "masculine" : "feminine"}`;
+      return `noun · ${genderName(entry.gender)}`;
     case "verb": {
       const parts = ["verb"];
       if (entry.verb.reflexive) parts.push("reflexive");

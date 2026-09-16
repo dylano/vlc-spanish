@@ -66,7 +66,8 @@ export type ArticleUsage = (typeof ARTICLE_USAGE)[number];
 export const nounEntrySchema = z.object({
   ...entryBase,
   pos: z.literal("noun"),
-  gender: z.enum(["m", "f"]),
+  /** "mf" is common gender: one form taking either article (el/la estudiante). */
+  gender: z.enum(["m", "f", "mf"]),
   article: z.enum(ARTICLE_USAGE).optional(),
   forms: z
     .object({ f: nonEmpty.optional(), m: nonEmpty.optional(), pl: nonEmpty.optional() })

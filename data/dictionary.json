@@ -1983,6 +1983,136 @@
       "forms": { "pl": "intelectuales" },
       "tags": ["character-traits"],
       "added": "2026-09-16"
+    },
+    {
+      "id": "cientifico",
+      "es": "científico",
+      "en": ["scientist"],
+      "pos": "noun",
+      "gender": "m",
+      "forms": { "f": "científica", "pl": "científicos" },
+      "notes": "Also the adjective 'scientific'.",
+      "tags": ["professions"],
+      "added": "2026-09-16"
+    },
+    {
+      "id": "cocinero",
+      "es": "cocinero",
+      "en": ["cook", "chef"],
+      "pos": "noun",
+      "gender": "m",
+      "forms": { "f": "cocinera", "pl": "cocineros" },
+      "notes": "Anyone who cooks for a living; a head chef is 'el chef' or 'el jefe de cocina'.",
+      "tags": ["professions"],
+      "added": "2026-09-16"
+    },
+    {
+      "id": "estudiante",
+      "es": "estudiante",
+      "en": ["student"],
+      "pos": "noun",
+      "gender": "mf",
+      "forms": { "pl": "estudiantes" },
+      "notes": "Same form for both genders: el estudiante, la estudiante.",
+      "tags": ["professions"],
+      "added": "2026-09-16"
+    },
+    {
+      "id": "disenador-de-moda",
+      "es": "diseñador de moda",
+      "en": ["fashion designer", "designer"],
+      "pos": "noun",
+      "gender": "m",
+      "forms": { "f": "diseñadora de moda", "pl": "diseñadores de moda" },
+      "notes": "The feminine adds -a even though the masculine ends in a consonant: diseñadora.",
+      "tags": ["professions"],
+      "added": "2026-09-16"
+    },
+    {
+      "id": "periodista",
+      "es": "periodista",
+      "en": ["journalist", "reporter"],
+      "pos": "noun",
+      "gender": "mf",
+      "forms": { "pl": "periodistas" },
+      "notes": "Ends in -a but is masculine too: el periodista, la periodista.",
+      "tags": ["professions"],
+      "added": "2026-09-16"
+    },
+    {
+      "id": "profesor",
+      "es": "profesor",
+      "en": ["teacher", "professor", "lecturer"],
+      "pos": "noun",
+      "gender": "m",
+      "forms": { "f": "profesora", "pl": "profesores" },
+      "notes": "In Spain the everyday word for any teacher, not only a university professor. The feminine adds -a: profesora.",
+      "tags": ["professions"],
+      "added": "2026-09-16"
+    },
+    {
+      "id": "traductor",
+      "es": "traductor",
+      "en": ["translator"],
+      "pos": "noun",
+      "gender": "m",
+      "forms": { "f": "traductora", "pl": "traductores" },
+      "notes": "The feminine adds -a even though the masculine ends in a consonant: traductora.",
+      "tags": ["professions"],
+      "added": "2026-09-16"
+    },
+    {
+      "id": "enfermero",
+      "es": "enfermero",
+      "en": ["nurse"],
+      "pos": "noun",
+      "gender": "m",
+      "forms": { "f": "enfermera", "pl": "enfermeros" },
+      "tags": ["professions"],
+      "added": "2026-09-16"
+    },
+    {
+      "id": "camarero",
+      "es": "camarero",
+      "en": ["waiter", "waitress", "server"],
+      "pos": "noun",
+      "gender": "m",
+      "forms": { "f": "camarera", "pl": "camareros" },
+      "notes": "The word in Spain; 'mesero' is common in Latin America.",
+      "tags": ["professions"],
+      "added": "2026-09-16"
+    },
+    {
+      "id": "secretario",
+      "es": "secretario",
+      "en": ["secretary"],
+      "pos": "noun",
+      "gender": "m",
+      "forms": { "f": "secretaria", "pl": "secretarios" },
+      "tags": ["professions"],
+      "added": "2026-09-16"
+    },
+    {
+      "id": "deportista-2",
+      "es": "deportista",
+      "en": ["athlete", "sportsperson", "sportsman", "sportswoman"],
+      "pos": "noun",
+      "gender": "mf",
+      "forms": { "pl": "deportistas" },
+      "notes": "Same form for both genders: el deportista, la deportista. Also the adjective 'sporty', listed separately.",
+      "tags": ["professions"],
+      "added": "2026-09-16"
+    },
+    {
+      "id": "comercial",
+      "es": "comercial",
+      "en": ["salesperson", "sales rep", "sales representative", "salesman", "saleswoman"],
+      "pos": "noun",
+      "gender": "mf",
+      "forms": { "pl": "comerciales" },
+      "notes": "Same form for both genders: el comercial, la comercial. Also the adjective 'commercial'.",
+      "tags": ["professions"],
+      "added": "2026-09-16"
     }
   ]
 }
