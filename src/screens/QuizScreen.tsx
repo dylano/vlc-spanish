@@ -18,6 +18,7 @@ import {
   type SessionItem,
 } from "../lib/session.ts";
 import ChoiceExercise from "./quiz/ChoiceExercise.tsx";
+import { EXERCISES } from "./quiz/exercises.ts";
 import MatchExercise from "./quiz/MatchExercise.tsx";
 import { GRADE_OPTIONS, type Outcome } from "./quiz/shared.ts";
 import TypedExercise from "./quiz/TypedExercise.tsx";
@@ -44,12 +45,17 @@ function formatParam(value: string | null): QuizConfig["format"] {
   return value === "typed" || value === "choice" || value === "match" ? value : "mixed";
 }
 
+/** Header label: the home-screen row the session came from, in short. */
 const SCOPE_LABEL: Record<QuizConfig["scope"], string> = {
-  due: "Review",
+  due: "Practice",
   recent: "New words",
-  misses: "Misses",
+  misses: "Remediation",
   all: "Practice",
 };
+
+const EXERCISE_LABEL = Object.fromEntries(
+  EXERCISES.map((exercise) => [exercise.id, exercise.label]),
+) as Record<Exercise, string>;
 
 interface Answered {
   card: Card;
@@ -96,6 +102,10 @@ export default function QuizScreen() {
 
   const [index, setIndex] = useState(0);
   const [answered, setAnswered] = useState<Answered[]>([]);
+
+  // A session of one exercise is labelled with it; a mixed one with where it came from.
+  const label =
+    config.format === "mixed" ? SCOPE_LABEL[config.scope] : EXERCISE_LABEL[config.format];
 
   const item = items[index];
   const finished = items.length > 0 && index >= items.length;
@@ -148,11 +158,20 @@ export default function QuizScreen() {
     const hard = answered.filter((item) => item.grade.result === "hard").length;
     const wrong = answered.filter((item) => item.grade.result === "wrong").length;
     const misses = answered.filter((item) => item.grade.result !== "correct");
+    // Only worth showing when the session actually moved between exercises.
+    const byExercise = EXERCISES.map((exercise) => {
+      const done = answered.filter((item) => item.card.exercise === exercise.id);
+      return {
+        ...exercise,
+        total: done.length,
+        correct: done.filter((item) => item.grade.result === "correct").length,
+      };
+    }).filter((exercise) => exercise.total > 0);
 
     return (
       <SessionShell
         position={{ index: items.length, total: items.length }}
-        label={SCOPE_LABEL[config.scope]}
+        label={label}
         footer={
           <button
             type="button"
@@ -188,6 +207,19 @@ export default function QuizScreen() {
             ) : null}
           </p>
 
+          {byExercise.length > 1 ? (
+            <ul className={styles.breakdown}>
+              {byExercise.map((exercise) => (
+                <li key={exercise.id} className={styles.breakdownRow}>
+                  <span>{exercise.label}</span>
+                  <span className={styles.breakdownScore}>
+                    {exercise.correct} of {exercise.total}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          ) : null}
+
           {misses.length > 0 ? (
             <>
               <p className={styles.missHeading}>Worth another look</p>
@@ -220,7 +252,6 @@ export default function QuizScreen() {
   if (!item) return null;
 
   const position = { index, total: items.length };
-  const label = SCOPE_LABEL[config.scope];
 
   if (isMatchRound(item)) {
     return (

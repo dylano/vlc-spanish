@@ -100,13 +100,15 @@ tangled into components.
 
 - **Who's practicing** — name picker, plus a field to add a name. The choice is remembered in
   `localStorage`; a name that no longer exists on the server is ignored.
-- **Home** — Practice, plus narrowings to unseen words and misses (each shown only when it holds
-  something). Each of those is a **mixed** session that moves between the exercises. A folded
-  **Choose exercise** list starts the same kind of session using one exercise only; it names only
-  exercises that exist, and follows design option B2.
+- **Home** — **Practice**, plus **Focus on new words** and **Remediation** (words last answered
+  wrong), each shown only when it holds something. Each of those is a **mixed** session that moves
+  between the exercises. A folded **Choose exercise** list starts the same kind of session using one
+  exercise only; it names only exercises that exist. Layout and labels follow design option B2.
 - **Quiz** — one prompt at a time, typed answer, inline verdict, progress bar, and a summary
   listing what to look at again. Nouns are prompted with "include the article". A session is full
-  screen with no main nav; the × in the header ends it (every answer is already saved).
+  screen with no main nav; the × in the header ends it (every answer is already saved). The header
+  names the exercise for a single-exercise session, or the home row it came from for a mixed one.
+  The summary adds a score per exercise when the session used more than one.
 - **Multiple choice** — the same session with four options; touching one answers it, with no
   separate Check. A right answer moves on by itself, a miss waits for Next. Keys a–d or 1–4 answer
   and Enter moves on, on a computer. A wrong pick says what the picked word means. Started from
@@ -221,9 +223,20 @@ Phase 1 is complete. Working and deployed at
 - Dictionary browse and search, name picker, user switching
 - Installable PWA with offline caching of the app shell, which includes the dictionary
 
+The first release of Phase 2 is built (not yet deployed at the time of writing):
+
+- Three exercises — Type it, Pick one (multiple choice), Match pairs — and mixed sessions across them
+- Recognition answers (multiple choice, matching) scheduled more gently than typed recall
+- A session frame sized to the space above the on-screen keyboard
+- The B2 home screen: Practice, Focus on new words, Remediation, Choose exercise
+- A per-exercise score in the summary of a mixed session
+
+Phase 2 continues with sentence exercises. The intended approach is hand-written sentence frames
+whose slots draw from tags with exclusions, rather than a fixed sentence bank (too repetitive) or
+fully type-driven templates (which produce wrong English and odd combinations). None of it is built.
+
 Not built, in rough order of likely usefulness:
 
-- The rest of the Phase 2 home screen (B2's row labels) and a summary broken down by exercise
 - Flashcards (parked: unclear how they fit alongside the Dictionary tab)
 - A progress screen: per-tag mastery, recent misses, session history
 - Conjugation drills driven by the `verb` metadata already in the dictionary (needs no API)

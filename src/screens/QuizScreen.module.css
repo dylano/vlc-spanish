@@ -326,6 +326,28 @@
   color: var(--wrong);
 }
 
+/* Per-exercise scores for a mixed session: ruled rows, name left, score right. */
+.breakdown {
+  list-style: none;
+  padding: 0;
+  margin: 28px 0 0;
+  border-top: 1px solid var(--rule);
+}
+
+.breakdownRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--rule);
+  font-size: 0.875rem;
+}
+
+.breakdownScore {
+  font-variant-numeric: tabular-nums;
+  color: var(--muted);
+}
+
 .missHeading {
   font-size: var(--label-size);
   letter-spacing: var(--label-tracking);

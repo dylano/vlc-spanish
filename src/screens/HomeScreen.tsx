@@ -60,14 +60,14 @@ export default function HomeScreen() {
                 is worse than no option, and it saves explaining an empty count. */}
             {unseen > 0 ? (
               <Link to="/quiz?scope=recent" className={`${styles.action} ${styles.narrowing}`}>
-                Only words I have not seen
+                Focus on new words
                 <Chevron />
               </Link>
             ) : null}
 
             {missed > 0 ? (
               <Link to="/quiz?scope=misses" className={`${styles.action} ${styles.narrowing}`}>
-                Only ones I have got wrong
+                Remediation
                 <Chevron />
               </Link>
             ) : null}

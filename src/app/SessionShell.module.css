@@ -82,9 +82,14 @@
   cursor: pointer;
 }
 
+/* The scroll area reaches out into the side margins, so where a browser draws a
+   visible scrollbar it sits in the margin instead of over the right edge of the
+   text; the padding puts the content back in line with the header. */
 .body {
   flex: 1;
   min-height: 0;
+  margin-inline: -28px;
+  padding-inline: 28px;
   overflow-y: auto;
   scrollbar-width: thin;
   display: flex;
