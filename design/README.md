@@ -1,6 +1,7 @@
 # Design canvas
 
-Source artboards for the quiz screen designs, published as a Claude Design canvas.
+Source artboards for the quiz screen designs, published as a Claude Design canvas:
+<https://claude.ai/artifact/75hQU2j5LgsnYjdJsPpuZ8>
 
 Each `*.dc.html` file is one phone artboard (390×844); `canvas.json` positions them and holds the
 sticky notes. The seeded `spanish-vocab-quiz-screens.html` is generated from these and is gitignored

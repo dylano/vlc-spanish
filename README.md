@@ -219,8 +219,28 @@ Worth knowing before you change `grade.ts`, because the tests encode all of it:
 - **es→en**: a leading `to` or `the/a/an` is stripped before comparing, and any gloss listed in the
   entry's `en` array counts.
 
+When nothing matches, three checks run in order before an answer is called wrong — each exists
+because the naive version of the rule gets a real case wrong:
+
+1. **An article-only difference is a gender mistake**, not a slip: `lavarse las dientes` stays
+   `wrong`, since gender is the thing being tested.
+2. **An answer that is itself another headword is a confusion**, not a typo. The dictionary holds
+   six pairs one edit apart — `junio`/`julio`, `padre`/`madre`, `sesenta`/`setenta` — so forgiving
+   single-character slips blindly would mark a real mistake as nearly right. The feedback names what
+   you actually wrote instead.
+3. **Anything else within one edit is a typo** → `hard`, "check the spelling". The distance is
+   Damerau-Levenshtein, so a transposition costs one rather than two — swapped letters are the
+   commonest slip there is. Exception: an edit to the _last_ letter of a noun or adjective stays
+   `wrong`, because Spanish keeps gender and number there, and `inteligenta` is a claim about the
+   language rather than a fumbled key.
+
+Some English glosses are claimed by more than one word — `to be` is both `ser` and `estar`. The
+session builder prefers a gloss no other entry uses, and where none exists it passes the rival
+entries to `grade()` so answering `estar` for `ser` explains the difference instead of just failing.
+
 Three results feed the scheduler: `correct` advances normally, `hard` advances with reduced ease,
-`wrong` lapses the card to tomorrow.
+`wrong` lapses the card to tomorrow. A correct answer auto-advances after `CORRECT_PAUSE_MS`
+(550ms); anything else waits for the button, because there is something to read.
 
 ## Deploying
 
