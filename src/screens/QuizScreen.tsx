@@ -7,6 +7,7 @@ import { canonicalAnswer, type Grade } from "../lib/grade.ts";
 import { schedule } from "../lib/scheduler.ts";
 import {
   buildMatchRounds,
+  buildMixedSession,
   buildSession,
   DEFAULT_CONFIG,
   isMatchRound,
@@ -29,15 +30,18 @@ const GIVEN_VERB: Record<Exercise, string> = {
   match: "you paired it with",
 };
 
-/** Words in a session chosen by name, when the URL does not say. */
-const DEFAULT_SIZE: Record<Exercise, number> = {
+/** Words in a session, when the URL does not say. */
+const DEFAULT_SIZE: Record<QuizConfig["format"], number> = {
   typed: DEFAULT_CONFIG.size,
   choice: DEFAULT_CONFIG.size,
   match: MATCH_ROUND_SIZE * 3,
+  // Enough for a matching round alongside a run of single cards.
+  mixed: 15,
 };
 
-function exerciseParam(value: string | null): Exercise {
-  return value === "choice" || value === "match" ? value : "typed";
+/** A session asks with one exercise when the URL names it, and mixes them otherwise. */
+function formatParam(value: string | null): QuizConfig["format"] {
+  return value === "typed" || value === "choice" || value === "match" ? value : "mixed";
 }
 
 const SCOPE_LABEL: Record<QuizConfig["scope"], string> = {
@@ -66,16 +70,16 @@ export default function QuizScreen() {
   const config = useMemo<QuizConfig>(() => {
     const scope = params.get("scope");
     const tag = params.get("tag");
-    const exercise = exerciseParam(params.get("exercise"));
+    const format = formatParam(params.get("exercise"));
     return {
       ...DEFAULT_CONFIG,
       scope:
         scope === "recent" || scope === "misses" || scope === "all" || scope === "due"
           ? scope
           : "due",
-      format: exercise,
+      format,
       tags: tag ? [tag] : undefined,
-      size: Number(params.get("size") ?? DEFAULT_SIZE[exercise]),
+      size: Number(params.get("size") ?? DEFAULT_SIZE[format]),
     };
   }, [params]);
 
@@ -84,7 +88,9 @@ export default function QuizScreen() {
   const items = useMemo((): SessionItem[] => {
     if (!userId) return [];
     const options = { entries, progress, userId, config, today: today() };
-    return config.format === "match" ? buildMatchRounds(options) : buildSession(options);
+    if (config.format === "mixed") return buildMixedSession(options);
+    if (config.format === "match") return buildMatchRounds(options);
+    return buildSession(options);
     // eslint-disable-next-line react-hooks/exhaustive-deps -- deliberately built once per session
   }, [entries, userId, config]);
 

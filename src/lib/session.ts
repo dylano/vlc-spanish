@@ -130,22 +130,20 @@ export interface BuildSessionOptions {
  * not drill the same words in the same sequence.
  */
 export function buildSession(options: BuildSessionOptions): Card[] {
-  const { entries, progress, config, random = Math.random } = options;
-  const selected = rankedCards(options).slice(0, config.size);
-  const directed = assignDirections(selected, options);
-
-  // Options are chosen last: what an option shows depends on the card's final
-  // direction, which balancing may have changed.
-  if (config.format !== "choice") return directed;
-  return directed.map((card) => ({
-    ...card,
-    exercise: "choice",
-    options: choiceOptions({ card, entries, progress, random }),
-  }));
+  const { config } = options;
+  const exercise = config.format === "choice" ? "choice" : "typed";
+  const plan = rankedCards(options)
+    .slice(0, config.size)
+    .map((card): Planned => ({ exercise, card }));
+  // A plan of single cards finalizes to single cards.
+  return finalize(plan, options) as Card[];
 }
 
 /** Pairs in one matching round. */
 export const MATCH_ROUND_SIZE = 6;
+
+/** Fewer pairs than this and a round is not worth the screen. */
+const MATCH_ROUND_MIN = 4;
 
 /** A matching round: several cards answered together on one screen. */
 export interface MatchRound {
@@ -160,55 +158,153 @@ export function isMatchRound(item: SessionItem): item is MatchRound {
   return "cards" in item;
 }
 
+/** A step chosen but not yet given its direction or options. */
+type Planned = { exercise: "typed" | "choice"; card: Card } | { exercise: "match"; cards: Card[] };
+
 /**
- * Build matching rounds. `config.size` counts words, so a size of 18 is three
- * rounds of six.
+ * Take up to a round's worth of cards off the front of a ranked list.
  *
- * Each round starts from the highest-priority word left and fills up with words
+ * The round starts from the highest-priority word left and fills up with words
  * sharing one of its tags, so the pairs are confusable (six family words, not a
  * noun, three adjectives and a verb), then with anything else. Two words that
  * could stand in for each other never share a round: tapping "to be" would have
- * two right answers. A round needs at least two pairs to be a round at all.
+ * two right answers.
+ */
+function takeRound(remaining: Card[]): Card[] {
+  const anchor = remaining.shift();
+  if (!anchor) return [];
+  const round = [anchor];
+  const sharesTag = (card: Card) => card.entry.tags.some((tag) => anchor.entry.tags.includes(tag));
+
+  for (const fits of [sharesTag, () => true]) {
+    for (let i = 0; i < remaining.length && round.length < MATCH_ROUND_SIZE;) {
+      const candidate = remaining[i]!;
+      if (
+        fits(candidate) &&
+        round.every((member) => !interchangeable(member.entry, candidate.entry))
+      ) {
+        round.push(candidate);
+        remaining.splice(i, 1);
+      } else {
+        i++;
+      }
+    }
+  }
+  return round;
+}
+
+/**
+ * Build matching rounds only. `config.size` counts words, so a size of 18 is
+ * three rounds of six. A short last round is kept rather than dropping words,
+ * but a round needs at least two pairs.
  */
 export function buildMatchRounds(options: BuildSessionOptions): MatchRound[] {
   const remaining = rankedCards(options);
   const wanted = Math.max(1, Math.floor(options.config.size / MATCH_ROUND_SIZE));
-  const rounds: Card[][] = [];
+  const plan: Planned[] = [];
 
-  while (rounds.length < wanted && remaining.length >= 2) {
-    const anchor = remaining.shift()!;
-    const round = [anchor];
-    const sharesTag = (card: Card) =>
-      card.entry.tags.some((tag) => anchor.entry.tags.includes(tag));
+  while (plan.length < wanted && remaining.length >= 2) {
+    const cards = takeRound(remaining);
+    if (cards.length < 2) break;
+    plan.push({ exercise: "match", cards });
+  }
+  return finalize(plan, options) as MatchRound[];
+}
 
-    for (const fits of [sharesTag, () => true]) {
-      for (let i = 0; i < remaining.length && round.length < MATCH_ROUND_SIZE;) {
-        const candidate = remaining[i]!;
-        if (
-          fits(candidate) &&
-          round.every((member) => !interchangeable(member.entry, candidate.entry))
-        ) {
-          round.push(candidate);
-          remaining.splice(i, 1);
-        } else {
-          i++;
-        }
+/**
+ * How often each exercise is chosen for the next step of a mixed session.
+ * Typing is the strongest practice, so it leads; a matching round covers six
+ * words at once, so it needs fewer turns to take its share.
+ */
+export const MIX_WEIGHTS: Record<Exercise, number> = { typed: 3, choice: 2, match: 1 };
+
+/** The most steps of one exercise in a row, so a session keeps changing pace. */
+export const MAX_RUN = 3;
+
+function weightedPick<T extends string>(weights: Record<T, number>, random: () => number): T {
+  const entries = Object.entries(weights) as [T, number][];
+  const total = entries.reduce((sum, [, weight]) => sum + weight, 0);
+  let roll = random() * total;
+  for (const [key, weight] of entries) {
+    roll -= weight;
+    if (roll < 0 && weight > 0) return key;
+  }
+  return entries.find(([, weight]) => weight > 0)![0];
+}
+
+/**
+ * A session that moves between exercises: `config.size` words, spread across
+ * typed cards, multiple choice and matching rounds.
+ *
+ * Words are still taken in priority order (due, then new, then the rest); only
+ * the way each is asked varies. Typed cards are nudged into short runs, because
+ * every switch between typing and tapping drops or raises the phone's keyboard,
+ * and one-at-a-time alternation would have it bouncing all session.
+ */
+export function buildMixedSession(options: BuildSessionOptions): SessionItem[] {
+  const random = options.random ?? Math.random;
+  const remaining = rankedCards(options);
+  let budget = Math.min(options.config.size, remaining.length);
+  let roundsPossible = true;
+  const plan: Planned[] = [];
+
+  while (budget > 0 && remaining.length > 0) {
+    const last = plan.at(-1)?.exercise;
+    let run = 0;
+    for (let i = plan.length - 1; i >= 0 && plan[i]!.exercise === last; i--) run++;
+
+    const weights = { ...MIX_WEIGHTS };
+    if (last && run >= MAX_RUN) weights[last] = 0;
+    if (last === "typed" && run < MAX_RUN) weights.typed *= 2;
+    if (!roundsPossible || budget < MATCH_ROUND_SIZE) weights.match = 0;
+
+    const exercise = weightedPick(weights, random);
+    if (exercise === "match") {
+      const cards = takeRound(remaining);
+      if (cards.length >= MATCH_ROUND_MIN) {
+        plan.push({ exercise, cards });
+        budget -= cards.length;
+        continue;
       }
+      // Not enough distinct words for a real round: put them back, stop trying.
+      remaining.unshift(...cards);
+      roundsPossible = false;
+      continue;
     }
-
-    if (round.length < 2) break;
-    rounds.push(round);
+    plan.push({ exercise, card: remaining.shift()! });
+    budget -= 1;
   }
 
-  // Directions are balanced across the whole session, then split back into rounds.
-  const directed = assignDirections(rounds.flat(), options);
+  return finalize(plan, options);
+}
+
+/**
+ * Turn a plan into session items. Directions are balanced across every card in
+ * the session at once, then each step gets what depends on direction: options
+ * for multiple choice (what an option shows depends on it), and the exercise
+ * stamped on each card.
+ */
+function finalize(plan: Planned[], options: BuildSessionOptions): SessionItem[] {
+  const { entries, progress, random = Math.random } = options;
+  const flat = plan.flatMap((step) => ("cards" in step ? step.cards : [step.card]));
+  const directed = assignDirections(flat, options);
+
   let offset = 0;
-  return rounds.map((round) => {
-    const cards = directed
-      .slice(offset, offset + round.length)
-      .map((card): Card => ({ ...card, exercise: "match" }));
-    offset += round.length;
-    return { exercise: "match", cards };
+  return plan.map((step): SessionItem => {
+    if ("cards" in step) {
+      const cards = directed
+        .slice(offset, offset + step.cards.length)
+        .map((card): Card => ({ ...card, exercise: "match" }));
+      offset += step.cards.length;
+      return { exercise: "match", cards };
+    }
+    const card = directed[offset++]!;
+    if (step.exercise === "typed") return card;
+    return {
+      ...card,
+      exercise: "choice",
+      options: choiceOptions({ card, entries, progress, random }),
+    };
   });
 }
 

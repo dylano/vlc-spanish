@@ -101,8 +101,9 @@ tangled into components.
 - **Who's practicing** — name picker, plus a field to add a name. The choice is remembered in
   `localStorage`; a name that no longer exists on the server is ignored.
 - **Home** — Practice, plus narrowings to unseen words and misses (each shown only when it holds
-  something), and a folded **Choose exercise** list that starts the same session as Practice using
-  one exercise only. The list names only exercises that exist; it follows design option B2.
+  something). Each of those is a **mixed** session that moves between the exercises. A folded
+  **Choose exercise** list starts the same kind of session using one exercise only; it names only
+  exercises that exist, and follows design option B2.
 - **Quiz** — one prompt at a time, typed answer, inline verdict, progress bar, and a summary
   listing what to look at again. Nouns are prompted with "include the article". A session is full
   screen with no main nav; the × in the header ends it (every answer is already saved).
@@ -222,11 +223,28 @@ Phase 1 is complete. Working and deployed at
 
 Not built, in rough order of likely usefulness:
 
-- Mixed-exercise sessions; the rest of the Phase 2 home screen (B2's row labels)
+- The rest of the Phase 2 home screen (B2's row labels) and a summary broken down by exercise
 - Flashcards (parked: unclear how they fit alongside the Dictionary tab)
 - A progress screen: per-tag mastery, recent misses, session history
 - Conjugation drills driven by the `verb` metadata already in the dictionary (needs no API)
 - Offline answer queueing — quizzes read from cache offline, but results are not yet synced back
+
+## Mixed sessions
+
+A session started from Practice or a narrowing is built by `buildMixedSession` in
+`src/lib/session.ts`: 15 words by default, still taken in priority order (due, then new, then the
+rest), with only the way each is asked varying. Each step picks an exercise by weight — typed 3,
+multiple choice 2, a matching round 1 — with three rules on top:
+
+- **No more than three of one exercise in a row** (`MAX_RUN`), so the pace keeps changing.
+- **Typed cards are nudged into short runs.** Every switch between typing and tapping drops or
+  raises the phone keyboard; alternating one card at a time would have it bouncing all session. On
+  iOS a typed card that follows a tap exercise may need a tap on the answer line to bring the
+  keyboard back, because iOS only opens it from a user gesture.
+- **A matching round needs room**: at least six words left in the session and at least four words
+  that can share a round. Otherwise the planner stops offering rounds for that session.
+
+Directions are balanced across the whole session at once, then multiple-choice options are chosen.
 
 ## Multiple choice
 

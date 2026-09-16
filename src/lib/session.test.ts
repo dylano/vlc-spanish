@@ -2,7 +2,10 @@ import { describe, expect, it } from "vite-plus/test";
 import { grade } from "./grade.ts";
 import {
   buildMatchRounds,
+  buildMixedSession,
   buildSession,
+  isMatchRound,
+  MAX_RUN,
   MATCH_ROUND_SIZE,
   confusableEntries,
   DEFAULT_CONFIG,
@@ -427,5 +430,88 @@ describe("matching rounds", () => {
         expect(card.progress.direction).toBe(card.direction);
       }
     }
+  });
+});
+
+describe("mixed sessions", () => {
+  // Spread seeds apart so consecutive ones do not shuffle almost identically.
+  const spread = (seed: number) => seeded(seed * 2_654_435_761);
+  const tags = ["family", "physical-traits", "character-traits", "verbs"];
+  const pool: Entry[] = Array.from({ length: 48 }, (_, i) =>
+    word(`palabra${i}`, [`word ${i}`], [tags[i % tags.length]!]),
+  );
+
+  function mixed(entries: Entry[], size: number, seed: number) {
+    return buildMixedSession({
+      entries,
+      progress: emptyProgress(),
+      userId: "dylan",
+      config: { ...DEFAULT_CONFIG, format: "mixed", size },
+      today: TODAY,
+      random: spread(seed),
+    });
+  }
+
+  const wordsIn = (items: ReturnType<typeof mixed>) =>
+    items.flatMap((item) => (isMatchRound(item) ? item.cards : [item]));
+
+  it("covers exactly the requested number of words, each once", () => {
+    for (let seed = 1; seed <= 20; seed++) {
+      const ids = wordsIn(mixed(pool, 15, seed)).map((card) => card.entry.id);
+      expect(ids).toHaveLength(15);
+      expect(new Set(ids).size).toBe(15);
+    }
+  });
+
+  it("uses every exercise across sessions", () => {
+    const seen = new Set<string>();
+    for (let seed = 1; seed <= 20; seed++) {
+      for (const item of mixed(pool, 15, seed)) seen.add(item.exercise);
+    }
+    expect([...seen].sort()).toEqual(["choice", "match", "typed"]);
+  });
+
+  it("never runs one exercise more than the limit in a row", () => {
+    for (let seed = 1; seed <= 40; seed++) {
+      let run = 0;
+      let last = "";
+      for (const item of mixed(pool, 30, seed)) {
+        run = item.exercise === last ? run + 1 : 1;
+        last = item.exercise;
+        expect(run).toBeLessThanOrEqual(MAX_RUN);
+      }
+    }
+  });
+
+  it("gives multiple-choice cards options and leaves typed cards without", () => {
+    for (let seed = 1; seed <= 10; seed++) {
+      for (const item of mixed(pool, 15, seed)) {
+        if (isMatchRound(item)) continue;
+        if (item.exercise === "choice") expect(item.options?.length).toBeGreaterThan(1);
+        else expect(item.options).toBeUndefined();
+      }
+    }
+  });
+
+  it("makes no matching round from too few words", () => {
+    for (let seed = 1; seed <= 20; seed++) {
+      const items = mixed(pool.slice(0, 5), 15, seed);
+      expect(items.some(isMatchRound)).toBe(false);
+      expect(wordsIn(items)).toHaveLength(5);
+    }
+  });
+
+  it("still covers every word when the words cannot form a round", () => {
+    // Everything shares one gloss, so no two words can be paired in a round.
+    const clones = Array.from({ length: 8 }, (_, i) => word(`to-be-${i}`, ["to be"]));
+    for (let seed = 1; seed <= 10; seed++) {
+      const items = mixed(clones, 8, seed);
+      expect(items.some(isMatchRound)).toBe(false);
+      expect(wordsIn(items)).toHaveLength(8);
+    }
+  });
+
+  it("is reproducible from a seed", () => {
+    expect(mixed(pool, 15, 3)).toEqual(mixed(pool, 15, 3));
   });
 });
