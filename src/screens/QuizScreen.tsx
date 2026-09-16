@@ -1,47 +1,15 @@
-import { useEffect, useMemo, useRef, useState, type FormEvent } from "react";
+import { useMemo, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router";
 import SessionShell from "../app/SessionShell.tsx";
 import { useStore } from "../app/store-context.ts";
 import { today } from "../lib/dates.ts";
-import {
-  articleRequired,
-  canonicalAnswer,
-  genderName,
-  grade,
-  type Grade,
-  type Result,
-} from "../lib/grade.ts";
-import { normalize } from "../lib/normalize.ts";
+import { canonicalAnswer, type Grade } from "../lib/grade.ts";
 import { schedule } from "../lib/scheduler.ts";
 import { buildSession, DEFAULT_CONFIG, type Card, type QuizConfig } from "../lib/session.ts";
+import ChoiceExercise from "./quiz/ChoiceExercise.tsx";
+import { GRADE_OPTIONS, type Outcome } from "./quiz/shared.ts";
+import TypedExercise from "./quiz/TypedExercise.tsx";
 import styles from "./QuizScreen.module.css";
-
-/** Nouns are always asked with their article: the article is how gender is tested. */
-const GRADE_OPTIONS = { requireArticle: true };
-
-/**
- * How long a correct answer stays on screen before the next card. Long enough to
- * register that it landed, short enough that it never feels like waiting.
- */
-const CORRECT_PAUSE_MS = 550;
-
-const VERDICT: Record<Result, string> = {
-  correct: "Correct",
-  hard: "Almost",
-  wrong: "Not quite",
-};
-
-const ANSWER_STYLE: Record<Result, string> = {
-  correct: styles.answerCorrect!,
-  hard: styles.answerHard!,
-  wrong: styles.answerWrong!,
-};
-
-const VERDICT_STYLE: Record<Result, string> = {
-  correct: styles.verdictCorrect!,
-  hard: styles.verdictHard!,
-  wrong: styles.verdictWrong!,
-};
 
 const SCOPE_LABEL: Record<QuizConfig["scope"], string> = {
   due: "Review",
@@ -56,34 +24,15 @@ interface Answered {
   given: string;
 }
 
-/** Grammar line under the prompt, drawn from metadata the dictionary already has. */
-function grammarOf(card: Card): string | undefined {
-  const { entry } = card;
-  switch (entry.pos) {
-    case "noun":
-      return `noun · ${genderName(entry.gender)}${entry.number === "pl" ? " plural" : ""}`;
-    case "verb": {
-      const parts = ["verb"];
-      if (entry.verb.reflexive) parts.push("reflexive");
-      if (entry.verb.stemChange) parts.push(entry.verb.stemChange);
-      return parts.join(" · ");
-    }
-    case "adj":
-      return "adjective";
-    case "adv":
-      return "adverb";
-    case "number":
-      return "number";
-    default:
-      return undefined;
-  }
-}
-
+/**
+ * Runs one session: picks the cards, hands each to its exercise, records what
+ * happened, and shows the summary. How a card is asked and graded lives in the
+ * exercise components under ./quiz.
+ */
 export default function QuizScreen() {
   const { entries, progress, userId, recordResults } = useStore();
   const [params] = useSearchParams();
   const navigate = useNavigate();
-  const inputRef = useRef<HTMLInputElement>(null);
 
   const config = useMemo<QuizConfig>(() => {
     const scope = params.get("scope");
@@ -94,6 +43,7 @@ export default function QuizScreen() {
         scope === "recent" || scope === "misses" || scope === "all" || scope === "due"
           ? scope
           : "due",
+      format: params.get("exercise") === "choice" ? "choice" : "typed",
       tags: tag ? [tag] : undefined,
       size: Number(params.get("size") ?? DEFAULT_CONFIG.size),
     };
@@ -109,68 +59,24 @@ export default function QuizScreen() {
   );
 
   const [index, setIndex] = useState(0);
-  const [answer, setAnswer] = useState("");
-  const [result, setResult] = useState<Grade>();
   const [answered, setAnswered] = useState<Answered[]>([]);
-  const timer = useRef<ReturnType<typeof setTimeout>>(undefined);
-  const feedbackRef = useRef<HTMLDivElement>(null);
 
   const card = cards[index];
   const finished = cards.length > 0 && index >= cards.length;
 
-  useEffect(
-    () => () => {
-      clearTimeout(timer.current);
-    },
-    [],
-  );
-
-  // With the keyboard up the question area can be shorter than the question plus
-  // its feedback. Bring the verdict into view rather than leaving it below the fold.
-  useEffect(() => {
-    if (result) feedbackRef.current?.scrollIntoView({ block: "nearest" });
-  }, [result]);
-
-  function commit(graded: Grade, answeredCard: Card) {
-    clearTimeout(timer.current);
+  function done(answeredCard: Card, outcome: Outcome) {
     recordResults([
       {
         entryId: answeredCard.entry.id,
         direction: answeredCard.direction,
-        next: schedule(answeredCard.progress, graded.result, today()),
+        next: schedule(answeredCard.progress, outcome.grade.result, today(), outcome.strength),
       },
     ]);
-    setResult(undefined);
-    setAnswer("");
+    setAnswered((current) => [
+      ...current,
+      { card: answeredCard, grade: outcome.grade, given: outcome.given },
+    ]);
     setIndex((current) => current + 1);
-    // Cheap insurance: focus is normally never lost, but if something else took
-    // it, this call still sits inside the tap that triggered it.
-    inputRef.current?.focus();
-  }
-
-  function check(event: FormEvent) {
-    event.preventDefault();
-    if (!card || result) return;
-    const graded = grade(card.entry, card.direction, answer, {
-      ...GRADE_OPTIONS,
-      confusableWith: card.confusableWith,
-      dictionary: entries,
-    });
-    setResult(graded);
-    setAnswered((current) => [...current, { card, grade: graded, given: answer }]);
-
-    // A right answer needs no acknowledgement from the user - show it landed,
-    // then move on. Anything else is worth stopping to read.
-    if (graded.result === "correct") {
-      timer.current = setTimeout(() => {
-        commit(graded, card);
-      }, CORRECT_PAUSE_MS);
-    }
-  }
-
-  function advance() {
-    if (!result || !card) return;
-    commit(result, card);
   }
 
   if (!userId) return <p>Choose a name first.</p>;
@@ -261,7 +167,8 @@ export default function QuizScreen() {
                       <span className={styles.missEn}>{item.card.entry.en[0]}</span>
                     </div>
                     <p className={styles.missGiven}>
-                      you wrote {item.given.trim() === "" ? "nothing" : `‘${item.given.trim()}’`}
+                      {item.card.exercise === "choice" ? "you picked" : "you wrote"}{" "}
+                      {item.given.trim() === "" ? "nothing" : `‘${item.given.trim()}’`}
                     </p>
                   </li>
                 ))}
@@ -275,97 +182,20 @@ export default function QuizScreen() {
 
   if (!card) return null;
 
-  const asking = card.direction === "en→es" ? card.prompt : card.entry.es;
-  // The hint shares the grammar line: it answers the same question — which
-  // word is meant — and "to be" alone cannot.
-  const grammar =
-    card.direction === "en→es"
-      ? [grammarOf(card), card.hint].filter(Boolean).join(" · ") || undefined
-      : undefined;
+  const shared = {
+    card,
+    position: { index, total: cards.length },
+    label: SCOPE_LABEL[config.scope],
+    onDone: (outcome: Outcome) => {
+      done(card, outcome);
+    },
+  };
 
-  // Echoing back a correct answer the user just typed is noise; the expected
-  // form only earns its place when it differs from what they wrote.
-  const showExpected = result !== undefined && normalize(result.expected) !== normalize(answer);
-
-  return (
-    <SessionShell
-      position={{ index, total: cards.length }}
-      label={SCOPE_LABEL[config.scope]}
-      footer={
-        <button
-          type="submit"
-          form="answer-form"
-          className={styles.button}
-          // Stops the tap moving focus out of the input, which is what closes
-          // the keyboard. The click still fires; only the focus change is
-          // suppressed, so the keyboard stays up from the first card to the last.
-          onMouseDown={(event) => {
-            event.preventDefault();
-          }}
-        >
-          {result ? "Next" : "Check"}
-        </button>
-      }
-    >
-      <form
-        id="answer-form"
-        className={styles.question}
-        onSubmit={
-          result
-            ? (event) => {
-                event.preventDefault();
-                advance();
-              }
-            : check
-        }
-      >
-        <p className={styles.label}>
-          {card.direction === "en→es" ? "Say it in Spanish" : "Say it in English"}
-        </p>
-        <h1 className={styles.prompt}>{asking}</h1>
-        {grammar ? <p className={styles.grammar}>{grammar}</p> : null}
-
-        <div className={styles.divider} />
-
-        <label htmlFor="answer" className="visually-hidden">
-          Your answer
-        </label>
-        <input
-          id="answer"
-          ref={inputRef}
-          className={`${styles.answer} ${result ? ANSWER_STYLE[result.result] : ""}`}
-          value={answer}
-          onChange={(event) => {
-            // Frozen while the result is showing, but deliberately NOT
-            // readOnly: flipping that on a focused input dismisses the
-            // keyboard on iOS, which is what made it slide up and down
-            // between every card.
-            if (!result) setAnswer(event.target.value);
-          }}
-          enterKeyHint={result ? "next" : "go"}
-          inputMode="text"
-          autoComplete="off"
-          autoCapitalize="none"
-          autoCorrect="off"
-          spellCheck={false}
-          // eslint-disable-next-line jsx-a11y/no-autofocus -- a quiz is a single-purpose screen
-          autoFocus
-        />
-
-        {result ? (
-          <div ref={feedbackRef} className={styles.feedback} role="status">
-            <p className={`${styles.verdict} ${VERDICT_STYLE[result.result]}`}>
-              {VERDICT[result.result]}
-            </p>
-            {showExpected ? <p className={styles.expected}>{result.expected}</p> : null}
-            {result.note && result.result !== "correct" ? (
-              <p className={styles.note}>{result.note}</p>
-            ) : null}
-          </div>
-        ) : card.direction === "en→es" && articleRequired(card.entry, GRADE_OPTIONS) ? (
-          <p className={styles.hint}>Include the article</p>
-        ) : null}
-      </form>
-    </SessionShell>
+  // Typed cards deliberately share one unkeyed instance, so the input and the
+  // keyboard survive from card to card. Choice cards get a fresh instance each.
+  return card.exercise === "choice" ? (
+    <ChoiceExercise key={index} {...shared} />
+  ) : (
+    <TypedExercise {...shared} />
   );
 }

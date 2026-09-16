@@ -1,4 +1,6 @@
 import type { IsoDate } from "./dates.ts";
+import { choiceOptions, type ChoiceOption } from "./choices.ts";
+import { shuffle } from "./random.ts";
 import { isDue, sm2 } from "./scheduler.ts";
 import type { Direction, Entry, Progress, ProgressBlob } from "./schema.ts";
 
@@ -35,7 +37,11 @@ export const DEFAULT_CONFIG: QuizConfig = {
   scope: "due",
 };
 
+/** How a card is answered. */
+export type Exercise = "typed" | "choice";
+
 export interface Card {
+  exercise: Exercise;
   entry: Entry;
   direction: Direction;
   progress: Progress;
@@ -48,6 +54,8 @@ export interface Card {
    * hint on a word whose gloss is already unique would just be noise.
    */
   hint?: string;
+  /** The options for a multiple-choice card, in display order. */
+  options?: ChoiceOption[];
 }
 
 /**
@@ -105,16 +113,6 @@ function matchesTags(entry: Entry, tags: string[] | undefined): boolean {
   return entry.tags.some((tag) => tags.includes(tag));
 }
 
-/** Deterministic shuffle so sessions can be tested with a seeded generator. */
-function shuffle<T>(items: T[], random: () => number): T[] {
-  const out = [...items];
-  for (let i = out.length - 1; i > 0; i--) {
-    const j = Math.floor(random() * (i + 1));
-    [out[i], out[j]] = [out[j]!, out[i]!];
-  }
-  return out;
-}
-
 export interface BuildSessionOptions {
   entries: Entry[];
   progress: ProgressBlob;
@@ -166,10 +164,21 @@ export function buildSession(options: BuildSessionOptions): Card[] {
   const ordered = [...shuffle(due, random), ...shuffle(unseen, random), ...shuffle(rest, random)];
   const selected = dedupeByEntry(ordered, config).slice(0, config.size);
 
-  if (config.direction !== "mixed") return selected;
-  return balanceDirections(selected, random, (entry, direction) =>
-    progressFor(progress, userId, entry, direction, today),
-  );
+  const directed =
+    config.direction === "mixed"
+      ? balanceDirections(selected, random, (entry, direction) =>
+          progressFor(progress, userId, entry, direction, today),
+        )
+      : selected;
+
+  // Options are chosen last: what an option shows depends on the card's final
+  // direction, which balancing may have changed.
+  if (config.format !== "choice") return directed;
+  return directed.map((card) => ({
+    ...card,
+    exercise: "choice",
+    options: choiceOptions({ card, entries, progress, random }),
+  }));
 }
 
 function toCard(
@@ -183,6 +192,7 @@ function toCard(
   const prompt = promptGloss(entry, index);
   const confusableWith = confusableEntries(entry, prompt, index);
   return {
+    exercise: "typed",
     entry,
     direction,
     progress: progressFor(progress, userId, entry, direction, today),

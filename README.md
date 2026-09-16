@@ -61,12 +61,16 @@ src/lib/          pure logic, no React, thoroughly tested
   grade.ts          answer grading in both directions
   scheduler.ts      SM-2 spaced repetition behind a swappable Scheduler interface
   session.ts        picks the cards for a quiz, and which english gloss to prompt with
+  choices.ts        the options for a multiple-choice card
+  random.ts         seedable shuffle
   dates.ts          ISO calendar-date maths in whole local days
   slug.ts           stable entry ids
 src/
   api.ts          typed client over the functions; validates every response
   app/            store (context + data loading), the bundled dictionary, and the shell
   screens/        one file per screen, each with a CSS module beside it
+    quiz/           one component per exercise (typed, multiple choice), and the list of them
+                    (exercises.ts) the home screen offers; QuizScreen runs the session
 netlify/
   functions/      the /api routes: users and progress
   lib/            code shared between functions
@@ -96,10 +100,17 @@ tangled into components.
 
 - **Who's practicing** — name picker, plus a field to add a name. The choice is remembered in
   `localStorage`; a name that no longer exists on the server is ignored.
-- **Home** — due / new / total counts (per word, see [Data](#data)) and three quick starts.
+- **Home** — Practice, plus narrowings to unseen words and misses (each shown only when it holds
+  something), and a folded **Choose exercise** list that starts the same session as Practice using
+  one exercise only. The list names only exercises that exist; it follows design option B2.
 - **Quiz** — one prompt at a time, typed answer, inline verdict, progress bar, and a summary
   listing what to look at again. Nouns are prompted with "include the article". A session is full
   screen with no main nav; the × in the header ends it (every answer is already saved).
+- **Multiple choice** — the same session with four options; touching one answers it, with no
+  separate Check. A right answer moves on by itself, a miss waits for Next. Keys a–d or 1–4 answer
+  and Enter moves on, on a computer. A wrong pick says what the picked word means. Started from
+  Choose exercise on the home screen, or by URL: `/quiz?exercise=choice` (combines with `scope` and
+  `tag`).
 - **Dictionary** — search both languages (accent-insensitive, so `timido` finds `tímido`), filter
   by tag, read the notes.
 - **Settings** — switch user.
@@ -206,10 +217,25 @@ Phase 1 is complete. Working and deployed at
 
 Not built, in rough order of likely usefulness:
 
-- Multiple-choice and flashcard formats; mixed-format sessions
+- Matching and mixed-exercise sessions; the rest of the Phase 2 home screen (B2's row labels)
+- Flashcards (parked: unclear how they fit alongside the Dictionary tab)
 - A progress screen: per-tag mastery, recent misses, session history
 - Conjugation drills driven by the `verb` metadata already in the dictionary (needs no API)
 - Offline answer queueing — quizzes read from cache offline, but results are not yet synced back
+
+## Multiple choice
+
+`choices.ts` picks three distractors for each card. A good one is a word the learner could actually
+confuse with the answer, so candidates are ranked: same part of speech, then a shared tag, then (for
+nouns) the same gender and number so the article cannot give it away, then words already practised.
+Ties are shuffled, so the same question gets different distractors across sessions.
+
+Some words are never offered, because they would make a second right answer: anything sharing an
+English gloss with the answer (`ser` for `estar`) or sharing its headword (`deportista` the adjective
+for the noun). Numbers are kept out of ordinary questions, and a number asked by name gets number
+distractors. Two options never read the same.
+
+A correct pick is a **recognition** answer for the scheduler (see below), a wrong one lapses the card.
 
 ## Grading rules
 

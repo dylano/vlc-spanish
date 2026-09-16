@@ -145,6 +145,76 @@
   cursor: pointer;
 }
 
+/* Multiple choice. Each option is a ruled row like a dictionary line. Touching
+   one answers: the right option gets a green bar and a lighter ground, a wrong
+   pick a red bar and a strike-through. */
+.options {
+  display: flex;
+  flex-direction: column;
+  margin-top: 28px;
+  border-top: 1px solid var(--rule);
+}
+
+.option {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  min-height: 64px;
+  padding: 0 12px 0 0;
+  border: none;
+  border-bottom: 1px solid var(--rule);
+  background: transparent;
+  color: var(--ink);
+  text-align: left;
+  cursor: pointer;
+}
+
+.option:disabled {
+  cursor: default;
+}
+
+.option:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+}
+
+/* The bars are inset shadows rather than borders, so each row's hairline still
+   runs the full width. */
+.optionCorrect {
+  box-shadow: inset 3px 0 0 var(--correct);
+  background: var(--card);
+}
+
+.optionWrong {
+  box-shadow: inset 3px 0 0 var(--wrong);
+}
+
+.optionWrong .optionText {
+  color: var(--muted);
+  text-decoration: line-through;
+  text-decoration-thickness: 1px;
+}
+
+.optionIdle .optionText {
+  color: var(--muted);
+}
+
+.optionLetter {
+  flex: none;
+  width: 14px;
+  margin-left: 19px;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 0.9375rem;
+  color: var(--muted);
+}
+
+.optionText {
+  font-family: var(--serif);
+  font-size: 1.4375rem;
+  line-height: 1.2;
+}
+
 .summary {
   padding-top: 12px;
   padding-bottom: 8px;
@@ -281,6 +351,16 @@
 
   .expected {
     font-size: 1.625rem;
+  }
+}
+
+@container session (max-height: 40rem) {
+  .options {
+    margin-top: 18px;
+  }
+
+  .option {
+    min-height: 52px;
   }
 }
 

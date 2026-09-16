@@ -1,5 +1,7 @@
+import { useState } from "react";
 import { Link } from "react-router";
 import { useStore } from "../app/store-context.ts";
+import { EXERCISES } from "./quiz/exercises.ts";
 import styles from "./HomeScreen.module.css";
 
 const DATE_FORMAT: Intl.DateTimeFormatOptions = {
@@ -8,10 +10,10 @@ const DATE_FORMAT: Intl.DateTimeFormatOptions = {
   month: "long",
 };
 
-function Chevron() {
+function Chevron({ className = "" }: { className?: string }) {
   return (
     <svg
-      className={styles.chevron}
+      className={`${styles.chevron} ${className}`}
       width="20"
       height="20"
       viewBox="0 0 20 20"
@@ -29,6 +31,7 @@ function Chevron() {
 
 export default function HomeScreen() {
   const { users, userId, counts, ready } = useStore();
+  const [choosing, setChoosing] = useState(false);
   const user = users.find((candidate) => candidate.id === userId);
 
   if (!ready) return <p>Loading…</p>;
@@ -68,10 +71,50 @@ export default function HomeScreen() {
                 <Chevron />
               </Link>
             ) : null}
+
+            {/* The rows above choose which words; this chooses how they are asked.
+                Folded by default so the common taps stay the big ones. */}
+            <button
+              type="button"
+              className={`${styles.action} ${styles.disclosure} ${choosing ? styles.disclosureOpen : ""}`}
+              aria-expanded={choosing}
+              aria-controls="exercises"
+              onClick={() => {
+                setChoosing((open) => !open);
+              }}
+            >
+              Choose exercise
+              <Chevron className={choosing ? styles.chevronUp : styles.chevronDown} />
+            </button>
           </div>
         ) : (
           <p className={styles.nothing}>Nothing to practice right now. Come back later.</p>
         )}
+
+        {canPractice && choosing ? (
+          <div id="exercises">
+            {(["Words", "Sentences"] as const).map((group) => {
+              const members = EXERCISES.filter((exercise) => exercise.group === group);
+              if (members.length === 0) return null;
+              return (
+                <section key={group}>
+                  <p className={styles.groupLabel}>{group}</p>
+                  <div className={styles.exerciseGrid}>
+                    {members.map((exercise) => (
+                      <Link
+                        key={exercise.id}
+                        to={`/quiz?scope=due&exercise=${exercise.id}`}
+                        className={styles.exercise}
+                      >
+                        {exercise.label}
+                      </Link>
+                    ))}
+                  </div>
+                </section>
+              );
+            })}
+          </div>
+        ) : null}
       </div>
     </section>
   );
