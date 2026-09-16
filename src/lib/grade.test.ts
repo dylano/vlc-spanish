@@ -130,6 +130,38 @@ describe("en→es adjective forms", () => {
   });
 });
 
+describe("nouns whose headword is plural", () => {
+  const asked = { requireArticle: true };
+  const hermanos: NounEntry = {
+    ...base,
+    id: "hermanos",
+    es: "hermanos",
+    en: ["siblings"],
+    pos: "noun",
+    gender: "m",
+    number: "pl",
+  };
+
+  it("takes the plural article", () => {
+    expect(grade(hermanos, "en→es", "los hermanos", asked)).toEqual({
+      result: "correct",
+      expected: "los hermanos",
+    });
+  });
+
+  it("marks a singular article as a mistake, naming the plural one", () => {
+    const result = grade(hermanos, "en→es", "el hermanos", asked);
+    expect(result.result).toBe("wrong");
+    expect(result.note).toContain("los hermanos");
+  });
+
+  it("asks for the plural article when it is missing", () => {
+    const result = grade(hermanos, "en→es", "hermanos", asked);
+    expect(result.result).toBe("hard");
+    expect(result.note).toContain("los hermanos");
+  });
+});
+
 describe("common-gender nouns", () => {
   const asked = { requireArticle: true };
   const estudiante: NounEntry = {

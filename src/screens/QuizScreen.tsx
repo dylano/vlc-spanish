@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState, type FormEvent } from "react";
 import { useNavigate, useSearchParams } from "react-router";
+import SessionShell from "../app/SessionShell.tsx";
 import { useStore } from "../app/store-context.ts";
 import { today } from "../lib/dates.ts";
 import {
@@ -60,7 +61,7 @@ function grammarOf(card: Card): string | undefined {
   const { entry } = card;
   switch (entry.pos) {
     case "noun":
-      return `noun · ${genderName(entry.gender)}`;
+      return `noun · ${genderName(entry.gender)}${entry.number === "pl" ? " plural" : ""}`;
     case "verb": {
       const parts = ["verb"];
       if (entry.verb.reflexive) parts.push("reflexive");
@@ -112,6 +113,7 @@ export default function QuizScreen() {
   const [result, setResult] = useState<Grade>();
   const [answered, setAnswered] = useState<Answered[]>([]);
   const timer = useRef<ReturnType<typeof setTimeout>>(undefined);
+  const feedbackRef = useRef<HTMLDivElement>(null);
 
   const card = cards[index];
   const finished = cards.length > 0 && index >= cards.length;
@@ -122,6 +124,12 @@ export default function QuizScreen() {
     },
     [],
   );
+
+  // With the keyboard up the question area can be shorter than the question plus
+  // its feedback. Bring the verdict into view rather than leaving it below the fold.
+  useEffect(() => {
+    if (result) feedbackRef.current?.scrollIntoView({ block: "nearest" });
+  }, [result]);
 
   function commit(graded: Grade, answeredCard: Card) {
     clearTimeout(timer.current);
@@ -169,21 +177,26 @@ export default function QuizScreen() {
 
   if (cards.length === 0) {
     return (
-      <section className={styles.empty}>
-        <h1 className={styles.emptyTitle}>Nothing waiting</h1>
-        <p className={styles.emptyBody}>
-          There is nothing to practice in this set right now. Try another, or come back later.
-        </p>
-        <button
-          type="button"
-          className={styles.button}
-          onClick={() => {
-            void navigate("/");
-          }}
-        >
-          Back
-        </button>
-      </section>
+      <SessionShell
+        footer={
+          <button
+            type="button"
+            className={styles.button}
+            onClick={() => {
+              void navigate("/");
+            }}
+          >
+            Back
+          </button>
+        }
+      >
+        <section className={styles.empty}>
+          <h1 className={styles.emptyTitle}>Nothing waiting</h1>
+          <p className={styles.emptyBody}>
+            There is nothing to practice in this set right now. Try another, or come back later.
+          </p>
+        </section>
+      </SessionShell>
     );
   }
 
@@ -194,64 +207,69 @@ export default function QuizScreen() {
     const misses = answered.filter((item) => item.grade.result !== "correct");
 
     return (
-      <section className={styles.summary}>
-        <p className={styles.label}>Session complete</p>
-        <p className={styles.score}>
-          <span className={styles.scoreValue}>{correct}</span>
-          <span className={styles.scoreTotal}>of {answered.length}</span>
-        </p>
+      <SessionShell
+        position={{ index: cards.length, total: cards.length }}
+        label={SCOPE_LABEL[config.scope]}
+        footer={
+          <button
+            type="button"
+            className={styles.button}
+            onClick={() => {
+              void navigate("/");
+            }}
+          >
+            Done
+          </button>
+        }
+      >
+        <section className={styles.summary}>
+          <p className={styles.label}>Session complete</p>
+          <p className={styles.score}>
+            <span className={styles.scoreValue}>{correct}</span>
+            <span className={styles.scoreTotal}>of {answered.length}</span>
+          </p>
 
-        <p className={styles.tally}>
-          <span>
-            <span className={styles.dotCorrect}>●</span> {correct} correct
-          </span>
-          {hard > 0 ? (
+          <p className={styles.tally}>
             <span>
-              <span className={styles.dotHard}>●</span> {hard} almost
+              <span className={styles.dotCorrect}>●</span> {correct} correct
             </span>
-          ) : null}
-          {wrong > 0 ? (
-            <span>
-              <span className={styles.dotWrong}>●</span> {wrong} missed
-            </span>
-          ) : null}
-        </p>
+            {hard > 0 ? (
+              <span>
+                <span className={styles.dotHard}>●</span> {hard} almost
+              </span>
+            ) : null}
+            {wrong > 0 ? (
+              <span>
+                <span className={styles.dotWrong}>●</span> {wrong} missed
+              </span>
+            ) : null}
+          </p>
 
-        {misses.length > 0 ? (
-          <>
-            <p className={styles.missHeading}>Worth another look</p>
-            <ul className={styles.missList}>
-              {misses.map((item) => (
-                <li key={`${item.card.entry.id}-${item.card.direction}`} className={styles.miss}>
-                  <div className={styles.missTop}>
-                    {/* Always the Spanish headword on the left and the English on
-                        the right, whichever way round the card was asked -
-                        otherwise an es→en miss prints the same text twice. */}
-                    <span className={styles.missEs}>
-                      {canonicalAnswer(item.card.entry, "en→es", GRADE_OPTIONS)}
-                    </span>
-                    <span className={styles.missEn}>{item.card.entry.en[0]}</span>
-                  </div>
-                  <p className={styles.missGiven}>
-                    you wrote {item.given.trim() === "" ? "nothing" : `‘${item.given.trim()}’`}
-                  </p>
-                </li>
-              ))}
-            </ul>
-          </>
-        ) : null}
-
-        <div className={styles.spacer} />
-        <button
-          type="button"
-          className={styles.button}
-          onClick={() => {
-            void navigate("/");
-          }}
-        >
-          Done
-        </button>
-      </section>
+          {misses.length > 0 ? (
+            <>
+              <p className={styles.missHeading}>Worth another look</p>
+              <ul className={styles.missList}>
+                {misses.map((item) => (
+                  <li key={`${item.card.entry.id}-${item.card.direction}`} className={styles.miss}>
+                    <div className={styles.missTop}>
+                      {/* Always the Spanish headword on the left and the English on
+                          the right, whichever way round the card was asked -
+                          otherwise an es→en miss prints the same text twice. */}
+                      <span className={styles.missEs}>
+                        {canonicalAnswer(item.card.entry, "en→es", GRADE_OPTIONS)}
+                      </span>
+                      <span className={styles.missEn}>{item.card.entry.en[0]}</span>
+                    </div>
+                    <p className={styles.missGiven}>
+                      you wrote {item.given.trim() === "" ? "nothing" : `‘${item.given.trim()}’`}
+                    </p>
+                  </li>
+                ))}
+              </ul>
+            </>
+          ) : null}
+        </section>
+      </SessionShell>
     );
   }
 
@@ -270,84 +288,13 @@ export default function QuizScreen() {
   const showExpected = result !== undefined && normalize(result.expected) !== normalize(answer);
 
   return (
-    <section className={styles.screen}>
-      <div className={styles.progress} aria-hidden="true">
-        {cards.map((item, position) => (
-          <div
-            key={`${item.entry.id}-${item.direction}`}
-            className={`${styles.segment} ${position < index ? styles.segmentDone : ""}`}
-          />
-        ))}
-      </div>
-      <p className={styles.meta}>
-        <span>
-          {index + 1} of {cards.length}
-        </span>
-        <span>{SCOPE_LABEL[config.scope]}</span>
-      </p>
-
-      <form
-        className={styles.form}
-        onSubmit={
-          result
-            ? (event) => {
-                event.preventDefault();
-                advance();
-              }
-            : check
-        }
-      >
-        <div className={styles.question}>
-          <p className={styles.label}>
-            {card.direction === "en→es" ? "Say it in Spanish" : "Say it in English"}
-          </p>
-          <h1 className={styles.prompt}>{asking}</h1>
-          {grammar ? <p className={styles.grammar}>{grammar}</p> : null}
-
-          <div className={styles.divider} />
-
-          <label htmlFor="answer" className="visually-hidden">
-            Your answer
-          </label>
-          <input
-            id="answer"
-            ref={inputRef}
-            className={`${styles.answer} ${result ? ANSWER_STYLE[result.result] : ""}`}
-            value={answer}
-            onChange={(event) => {
-              // Frozen while the result is showing, but deliberately NOT
-              // readOnly: flipping that on a focused input dismisses the
-              // keyboard on iOS, which is what made it slide up and down
-              // between every card.
-              if (!result) setAnswer(event.target.value);
-            }}
-            enterKeyHint={result ? "next" : "go"}
-            inputMode="text"
-            autoComplete="off"
-            autoCapitalize="none"
-            autoCorrect="off"
-            spellCheck={false}
-            // eslint-disable-next-line jsx-a11y/no-autofocus -- a quiz is a single-purpose screen
-            autoFocus
-          />
-
-          {result ? (
-            <div className={styles.feedback} role="status">
-              <p className={`${styles.verdict} ${VERDICT_STYLE[result.result]}`}>
-                {VERDICT[result.result]}
-              </p>
-              {showExpected ? <p className={styles.expected}>{result.expected}</p> : null}
-              {result.note && result.result !== "correct" ? (
-                <p className={styles.note}>{result.note}</p>
-              ) : null}
-            </div>
-          ) : card.direction === "en→es" && articleRequired(card.entry, GRADE_OPTIONS) ? (
-            <p className={styles.hint}>Include the article</p>
-          ) : null}
-        </div>
-
+    <SessionShell
+      position={{ index, total: cards.length }}
+      label={SCOPE_LABEL[config.scope]}
+      footer={
         <button
           type="submit"
+          form="answer-form"
           className={styles.button}
           // Stops the tap moving focus out of the input, which is what closes
           // the keyboard. The click still fires; only the focus change is
@@ -358,7 +305,67 @@ export default function QuizScreen() {
         >
           {result ? "Next" : "Check"}
         </button>
+      }
+    >
+      <form
+        id="answer-form"
+        className={styles.question}
+        onSubmit={
+          result
+            ? (event) => {
+                event.preventDefault();
+                advance();
+              }
+            : check
+        }
+      >
+        <p className={styles.label}>
+          {card.direction === "en→es" ? "Say it in Spanish" : "Say it in English"}
+        </p>
+        <h1 className={styles.prompt}>{asking}</h1>
+        {grammar ? <p className={styles.grammar}>{grammar}</p> : null}
+
+        <div className={styles.divider} />
+
+        <label htmlFor="answer" className="visually-hidden">
+          Your answer
+        </label>
+        <input
+          id="answer"
+          ref={inputRef}
+          className={`${styles.answer} ${result ? ANSWER_STYLE[result.result] : ""}`}
+          value={answer}
+          onChange={(event) => {
+            // Frozen while the result is showing, but deliberately NOT
+            // readOnly: flipping that on a focused input dismisses the
+            // keyboard on iOS, which is what made it slide up and down
+            // between every card.
+            if (!result) setAnswer(event.target.value);
+          }}
+          enterKeyHint={result ? "next" : "go"}
+          inputMode="text"
+          autoComplete="off"
+          autoCapitalize="none"
+          autoCorrect="off"
+          spellCheck={false}
+          // eslint-disable-next-line jsx-a11y/no-autofocus -- a quiz is a single-purpose screen
+          autoFocus
+        />
+
+        {result ? (
+          <div ref={feedbackRef} className={styles.feedback} role="status">
+            <p className={`${styles.verdict} ${VERDICT_STYLE[result.result]}`}>
+              {VERDICT[result.result]}
+            </p>
+            {showExpected ? <p className={styles.expected}>{result.expected}</p> : null}
+            {result.note && result.result !== "correct" ? (
+              <p className={styles.note}>{result.note}</p>
+            ) : null}
+          </div>
+        ) : card.direction === "en→es" && articleRequired(card.entry, GRADE_OPTIONS) ? (
+          <p className={styles.hint}>Include the article</p>
+        ) : null}
       </form>
-    </section>
+    </SessionShell>
   );
 }

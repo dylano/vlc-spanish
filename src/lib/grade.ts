@@ -86,8 +86,9 @@ export function spanishCandidates(entry: Entry): Candidate[] {
       // A common-gender noun is the same word under either article, so it gets a
       // candidate per article rather than an "other-gender" form.
       const genders = entry.gender === "mf" ? (["m", "f"] as const) : [entry.gender];
+      const plural = entry.number === "pl";
       for (const gender of genders) {
-        out.push({ text: entry.es, kind: "exact", article: articleFor(gender) });
+        out.push({ text: entry.es, kind: "exact", article: articleFor(gender, plural) });
         if (entry.forms?.pl) {
           out.push({
             text: entry.forms.pl,
@@ -181,7 +182,9 @@ export function canonicalAnswer(
   // An optional article is still shown, since "el lunes" is the more useful
   // thing to remember; only a noun used bare is displayed bare.
   if (entry.pos === "noun" && opts.requireArticle && entry.article !== "none") {
-    const article = entry.gender === "mf" ? "el/la" : articleFor(entry.gender);
+    const plural = entry.number === "pl";
+    const article =
+      entry.gender === "mf" ? (plural ? "los/las" : "el/la") : articleFor(entry.gender, plural);
     return `${article} ${entry.es}`;
   }
   return entry.es;

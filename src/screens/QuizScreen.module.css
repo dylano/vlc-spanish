@@ -1,60 +1,12 @@
-.screen {
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-}
-
-/* Ten hairline segments rather than a filling bar: quieter, and it shows the
-   shape of the session at a glance. */
-.progress {
-  display: flex;
-  gap: 4px;
-  margin-bottom: 14px;
-}
-
-.segment {
-  height: 3px;
-  flex: 1;
-  background: var(--rule);
-}
-
-.segmentDone {
-  background: var(--accent);
-}
-
-.meta {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  font-size: var(--label-size);
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--muted);
-}
-
-.card {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-}
-
-/* The form owns the remaining height so the button can sit at the bottom while
-   the question stays optically centred above it. */
-.form {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-}
-
-/* Anchored to the top rather than centred: revealing the feedback grows this
-   block, and a centred one would shift the prompt upward at the exact moment
-   the reader is comparing it against the answer. */
+/* Top-anchored rather than centred: revealing the feedback grows this block,
+   and a centred one would shift the prompt upward at the exact moment the reader
+   is comparing it against the answer. The top space is a share of the session
+   frame, not the screen, so it shrinks when the keyboard takes half the height. */
 .question {
-  flex: 1;
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
-  padding-top: clamp(24px, 9vh, 80px);
+  padding-top: clamp(8px, 9cqh, 80px);
+  padding-bottom: 8px;
 }
 
 .label {
@@ -181,7 +133,7 @@
 .button {
   display: block;
   width: 100%;
-  min-height: 56px;
+  min-height: 52px;
   border: none;
   border-radius: 6px;
   background: var(--accent);
@@ -194,9 +146,8 @@
 }
 
 .summary {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
+  padding-top: 12px;
+  padding-bottom: 8px;
 }
 
 .score {
@@ -283,10 +234,6 @@
   margin: 4px 0 0;
 }
 
-.spacer {
-  flex: 1;
-}
-
 .empty {
   flex: 1;
   display: flex;
@@ -305,4 +252,48 @@
 .emptyBody {
   color: var(--muted);
   margin: 0 0 28px;
+}
+
+/* Compact layouts for a short frame, which in practice means the keyboard is up
+   on a phone. The prompt stays the largest thing on screen, just less so. */
+@container session (max-height: 36rem) {
+  .label {
+    margin-bottom: 10px;
+  }
+
+  .prompt {
+    font-size: 2.75rem;
+  }
+
+  .divider {
+    margin-top: 20px;
+  }
+
+  .answer {
+    font-size: 1.625rem;
+    padding: 12px 0 10px;
+  }
+
+  .answer:focus,
+  .answer:focus-visible {
+    padding-bottom: 9px;
+  }
+
+  .expected {
+    font-size: 1.625rem;
+  }
+}
+
+@container session (max-height: 26rem) {
+  .prompt {
+    font-size: 2.25rem;
+  }
+
+  .grammar {
+    font-size: 0.9375rem;
+  }
+
+  .divider {
+    margin-top: 12px;
+  }
 }

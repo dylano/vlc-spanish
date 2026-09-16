@@ -69,6 +69,12 @@ export const nounEntrySchema = z.object({
   /** "mf" is common gender: one form taking either article (el/la estudiante). */
   gender: z.enum(["m", "f", "mf"]),
   article: z.enum(ARTICLE_USAGE).optional(),
+  /**
+   * "pl" for an entry whose headword is itself plural (los padres, los hermanos):
+   * a word with its own meaning in the plural, listed separately from the
+   * singular. It takes los/las and has no `forms.pl`.
+   */
+  number: z.enum(["sg", "pl"]).optional(),
   forms: z
     .object({ f: nonEmpty.optional(), m: nonEmpty.optional(), pl: nonEmpty.optional() })
     .optional(),

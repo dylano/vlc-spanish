@@ -58,6 +58,7 @@ interface NounEntry extends EntryBase {
   pos: "noun";
   gender: "m" | "f" | "mf"; // REQUIRED; "mf" = one form, either article (el/la estudiante)
   article?: "required" | "optional" | "none"; // omit for ordinary nouns (see below)
+  number?: "pl"; // only when the headword itself is plural: los padres, los hermanos
   forms?: { f?: string; m?: string; pl?: string };
 }
 
@@ -121,6 +122,9 @@ Do not include articles (`"the grandfather"` → just `"grandfather"`).
 - Nouns: `pl` always. `f` (or `m`) only for people/animals with a real other-gender counterpart
   (`abuelo`/`abuela`, `profesor`/`profesora`); the headword is the masculine. Never invent one for
   inanimate nouns — `la mesa` has no masculine.
+- A plural with its own meaning (`los padres` = parents, `los hermanos` = siblings) can be its own
+  entry. Give it `number: "pl"` and no `pl` form; without the marker it is graded with `el`, and
+  `los padres` is marked wrong. The validator warns about a noun with no `pl` and no marker.
 - Nouns with one form for both genders (`el/la estudiante`, `periodista`, `deportista`) take
   `gender: "mf"` and no `f`. Setting `"m"` would mark `la estudiante` as a gender mistake.
 - Adjectives: `f` only when the adjective actually varies. Omit `f` for `inteligente`, `alegre`,

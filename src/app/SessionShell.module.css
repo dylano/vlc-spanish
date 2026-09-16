@@ -1,0 +1,104 @@
+/* Applied to <html> while a session is open, so iOS has no document to scroll
+   when it reveals the focused input. */
+.locked,
+.locked body {
+  overflow: hidden;
+  overscroll-behavior: none;
+}
+
+/* Fixed to the visual viewport: height and offset are set inline from
+   useVisualViewport. 100dvh is only the fallback before the first measurement. */
+.frame {
+  position: fixed;
+  inset: 0 0 auto;
+  height: 100dvh;
+  background: var(--paper);
+  display: flex;
+  justify-content: center;
+}
+
+/* A size container, so exercises can compact themselves when the keyboard
+   leaves little room: @container session (max-height: …). */
+.column {
+  container: session / size;
+  width: 100%;
+  max-width: 30rem;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: max(20px, env(safe-area-inset-top)) 28px 0;
+}
+
+.header {
+  flex: none;
+}
+
+/* One hairline segment per item rather than a filling bar: quieter, and it
+   shows the shape of the session at a glance. */
+.progress {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 6px;
+}
+
+.segment {
+  height: 3px;
+  flex: 1;
+  background: var(--rule);
+}
+
+.segmentDone {
+  background: var(--accent);
+}
+
+.meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  min-height: 44px;
+  font-size: var(--label-size);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.metaEnd {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* 44px hit area, drawn small: leaving a session is available, not advertised. */
+.close {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  margin-right: -13px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+}
+
+.body {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  display: flex;
+  flex-direction: column;
+}
+
+.footer {
+  flex: none;
+  padding-top: 12px;
+  padding-bottom: calc(16px + env(safe-area-inset-bottom));
+}
+
+/* With the keyboard up the home indicator is underneath it, so its inset is
+   just wasted height. */
+.frame[data-obscured] .footer {
+  padding-bottom: 12px;
+}

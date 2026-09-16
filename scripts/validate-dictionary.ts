@@ -74,6 +74,21 @@ for (const entry of entries) {
   if (entry.pos === "verb" && entry.verb.reflexive && !/se$/.test(entry.es.split(/\s+/)[0] ?? "")) {
     warnings.push(`verb "${entry.id}" is marked reflexive but its first word does not end in -se`);
   }
+  // Every singular noun has a plural form, so a missing one usually means the
+  // headword is itself plural and needs marking, or it would be graded with el/la.
+  if (
+    entry.pos === "noun" &&
+    entry.number !== "pl" &&
+    !entry.forms?.pl &&
+    entry.article !== "none"
+  ) {
+    warnings.push(
+      `noun "${entry.id}" has no forms.pl; add one, or set number: "pl" if the headword is plural`,
+    );
+  }
+  if (entry.pos === "noun" && entry.number === "pl" && entry.forms?.pl) {
+    warnings.push(`noun "${entry.id}" is marked plural but also lists forms.pl`);
+  }
   if (entry.flagged) warnings.push(`"${entry.id}" is flagged for review: ${entry.flagged}`);
 }
 

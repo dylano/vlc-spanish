@@ -313,6 +313,7 @@
       "en": ["parents"],
       "pos": "noun",
       "gender": "m",
+      "number": "pl",
       "notes": "Masculine plural covering both parents.",
       "tags": ["family"],
       "added": "2026-09-15"
@@ -351,6 +352,7 @@
       "en": ["grandparents"],
       "pos": "noun",
       "gender": "m",
+      "number": "pl",
       "tags": ["family"],
       "added": "2026-09-15"
     },
@@ -374,6 +376,7 @@
       "en": ["siblings", "brothers and sisters", "brothers"],
       "pos": "noun",
       "gender": "m",
+      "number": "pl",
       "tags": ["family"],
       "added": "2026-09-15"
     },

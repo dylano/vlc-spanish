@@ -45,9 +45,11 @@ function Gate() {
 
   return (
     <Routes>
+      {/* Outside the shell: a session is full screen, sized to the space above
+          the keyboard, with no main nav. */}
+      <Route path="quiz" element={<QuizScreen />} />
       <Route element={<AppShell />}>
         <Route index element={<HomeScreen />} />
-        <Route path="quiz" element={<QuizScreen />} />
         <Route path="dictionary" element={<DictionaryScreen />} />
         <Route path="settings" element={<SettingsScreen />} />
         <Route path="*" element={<HomeScreen />} />

@@ -76,6 +76,18 @@ data/
   dictionary.json          the dictionary, bundled into the app at build time
 ```
 
+### Sessions and the on-screen keyboard
+
+Every exercise runs inside `src/app/SessionShell.tsx`, which is sized to the **visual viewport**
+(`useVisualViewport.ts`), not the page. iOS Safari does not resize the layout when the keyboard opens
+and ignores the `interactive-widget` viewport hint, so anything laid out against `100dvh` ends up
+behind the keyboard. The shell is fixed to the visible area instead: header at the top, the action
+button directly above the keyboard, and the question between them, scrolling only if it cannot fit.
+It also locks document scrolling while open, so iOS has nothing to scroll when it reveals the input.
+
+The shell is a CSS size container named `session`; exercises compact themselves with
+`@container session (max-height: …)` rather than media queries, which only see the full screen.
+
 `src/lib` deliberately has no React or network code in it. The grading and scheduling rules are the
 part of this app most worth getting right, so they are pure functions with tests rather than logic
 tangled into components.
@@ -86,7 +98,8 @@ tangled into components.
   `localStorage`; a name that no longer exists on the server is ignored.
 - **Home** — due / new / total counts (per word, see [Data](#data)) and three quick starts.
 - **Quiz** — one prompt at a time, typed answer, inline verdict, progress bar, and a summary
-  listing what to look at again. Nouns are prompted with "include the article".
+  listing what to look at again. Nouns are prompted with "include the article". A session is full
+  screen with no main nav; the × in the header ends it (every answer is already saved).
 - **Dictionary** — search both languages (accent-insensitive, so `timido` finds `tímido`), filter
   by tag, read the notes.
 - **Settings** — switch user.
@@ -194,11 +207,6 @@ Phase 1 is complete. Working and deployed at
 Not built, in rough order of likely usefulness:
 
 - Multiple-choice and flashcard formats; mixed-format sessions
-- **A quiz layout that survives the on-screen keyboard.** The keyboard now stays up for a whole
-  session, which is what you want — but it halves the usable height, and the screen is currently
-  laid out for the full viewport with the button pinned to the bottom. Worth solving alongside the
-  new formats rather than patching the typed screen alone. iOS Safari does not support the viewport
-  `interactive-widget` hint, so the layout cannot rely on being resized.
 - A progress screen: per-tag mastery, recent misses, session history
 - Conjugation drills driven by the `verb` metadata already in the dictionary (needs no API)
 - Offline answer queueing — quizzes read from cache offline, but results are not yet synced back
@@ -211,7 +219,8 @@ Worth knowing before you change `grade.ts`, because the tests encode all of it:
   `hard` ("almost — check the accent"), and a `ñ` written as `n` is called out as its own case.
   Nouns are expected with their article; a missing article is `hard`, a wrong one is `wrong`, since
   the article is how gender gets tested. A common-gender noun (`gender: "mf"`) accepts either
-  article and is shown as `el/la estudiante`. A noun's `article` field relaxes this for words Spanish
+  article and is shown as `el/la estudiante`. A noun whose headword is itself plural
+  (`number: "pl"`, as in `los hermanos` for siblings) takes `los`/`las`. A noun's `article` field relaxes this for words Spanish
   uses bare: `"none"` for months (answer shown as `enero`) and `"optional"` for days (shown as
   `el lunes`). Either way the article is accepted but not asked for, and a wrong one is only `hard`. An other-gender noun (`abuela` for `abuelo`) or a conjugated
   verb (`me acuesto` for `acostarse`) is accepted but downgraded to `hard` rather than silently
