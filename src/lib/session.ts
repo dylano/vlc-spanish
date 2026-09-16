@@ -96,7 +96,7 @@ function progressFor(
 function matchesTags(entry: Entry, tags: string[] | undefined): boolean {
   if (!tags || tags.length === 0) return isDrillable(entry);
   // Asking for a tag by name overrides the exclusion, so numbers remain
-  // practisable on purpose even though they never turn up by accident.
+  // practicable on purpose even though they never turn up by accident.
   return entry.tags.some((tag) => tags.includes(tag));
 }
 

@@ -27,7 +27,7 @@ export default function WhoScreen() {
   return (
     <section className={styles.screen}>
       <p className={styles.label}>Spanish vocab</p>
-      <h1 className={styles.title}>Who is practising?</h1>
+      <h1 className={styles.title}>Who is practicing?</h1>
       <p className={styles.subtitle}>Each name keeps its own progress.</p>
 
       {users.length === 0 ? (

@@ -2,8 +2,7 @@ import { z } from "zod";
 
 /**
  * Single source of truth for dictionary data. Used for runtime validation in the
- * app, in the import script, and — via `z.toJSONSchema()` — as the structured
- * output schema handed to the Claude API in /api/enrich.
+ * app, in the functions, and in the dictionary scripts.
  */
 
 export const POS = [
@@ -141,7 +140,7 @@ export type Progress = z.infer<typeof progressSchema>;
 /**
  * `progress/<userId>` blob: entryId -> direction -> Progress.
  *
- * The inner record is a *partial* record: a word is usually practised in one
+ * The inner record is a *partial* record: a word is usually practiced in one
  * direction before the other, so requiring both keys (which `z.record` with an
  * enum key does) would reject ordinary data.
  */

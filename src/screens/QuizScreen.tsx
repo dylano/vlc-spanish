@@ -165,7 +165,7 @@ export default function QuizScreen() {
       <section className={styles.empty}>
         <h1 className={styles.emptyTitle}>Nothing waiting</h1>
         <p className={styles.emptyBody}>
-          There is nothing to practise in this set right now. Try another, or come back later.
+          There is nothing to practice in this set right now. Try another, or come back later.
         </p>
         <button
           type="button"

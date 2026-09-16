@@ -26,7 +26,7 @@ describe("countWords", () => {
     expect(counts).toEqual({ total: 3, due: 0, unseen: 3, missed: 0 });
   });
 
-  it("stops counting a word as new once it is practised in either direction", () => {
+  it("stops counting a word as new once it is practiced in either direction", () => {
     // Regression: only en→es was checked, so a word drilled spanish → english
     // stayed in the "new" total forever.
     const counts = countWords(
@@ -131,7 +131,7 @@ describe("countWords", () => {
 });
 
 describe("counts and sessions agree", () => {
-  it("does not count numbers as words waiting to be practised", () => {
+  it("does not count numbers as words waiting to be practiced", () => {
     const five: Entry = {
       id: "cinco",
       es: "cinco",

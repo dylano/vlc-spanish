@@ -9,7 +9,7 @@ import { isDrillable } from "./session.ts";
  * Everything here is counted **per word**, not per card. Scheduling tracks a
  * word separately in each direction, so a 159-word dictionary holds up to 318
  * cards — mixing the two units produced a "new" count that ignored words
- * practised in the es→en direction.
+ * practiced in the es→en direction.
  *
  * Per-word also matches what a session actually serves: a mixed session asks
  * each word at most once.
@@ -19,7 +19,7 @@ export interface Counts {
   total: number;
   /** Words with at least one direction ready to review. */
   due: number;
-  /** Words never practised in either direction. */
+  /** Words never practiced in either direction. */
   unseen: number;
   /** Words whose most recent answer was wrong, in either direction. */
   missed: number;

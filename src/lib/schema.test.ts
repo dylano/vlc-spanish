@@ -13,7 +13,7 @@ const progress = {
 };
 
 describe("progressBlobSchema", () => {
-  it("accepts an entry practised in only one direction", () => {
+  it("accepts an entry practiced in only one direction", () => {
     const result = progressBlobSchema.safeParse({
       userId: "dylan",
       entries: { abuelo: { "en→es": progress } },
@@ -21,7 +21,7 @@ describe("progressBlobSchema", () => {
     expect(result.success).toBe(true);
   });
 
-  it("accepts an entry practised in both directions", () => {
+  it("accepts an entry practiced in both directions", () => {
     const result = progressBlobSchema.safeParse({
       userId: "dylan",
       entries: {

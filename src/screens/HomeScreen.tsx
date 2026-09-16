@@ -36,7 +36,7 @@ export default function HomeScreen() {
   const { due, unseen, missed } = counts;
   // A practice session already tops itself up with new words, so it is worth
   // starting whenever anything at all is left to do.
-  const canPractise = due + unseen > 0;
+  const canPractice = due + unseen > 0;
 
   return (
     <section className={styles.screen}>
@@ -46,7 +46,7 @@ export default function HomeScreen() {
       <h1 className={styles.greeting}>Hola{user ? `, ${user.displayName}` : ""}</h1>
 
       <div className={styles.actions}>
-        {canPractise ? (
+        {canPractice ? (
           <div className={styles.list}>
             <Link to="/quiz?scope=due" className={`${styles.action} ${styles.primary}`}>
               Practice
@@ -70,7 +70,7 @@ export default function HomeScreen() {
             ) : null}
           </div>
         ) : (
-          <p className={styles.nothing}>Nothing to practise right now. Come back later.</p>
+          <p className={styles.nothing}>Nothing to practice right now. Come back later.</p>
         )}
       </div>
     </section>

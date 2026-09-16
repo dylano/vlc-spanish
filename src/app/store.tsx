@@ -67,7 +67,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (!userId) return;
     let cancelled = false;
-    // Same as above: progress is fetched for whoever is practising.
+    // Same as above: progress is fetched for whoever is practicing.
     // oxlint-disable-next-line react/set-state-in-effect
     void api
       .fetchProgress(userId)

@@ -84,7 +84,7 @@ tangled into components.
 
 ## Screens
 
-- **Who's practising** — name picker, plus a field to add a name. The choice is remembered in
+- **Who's practicing** — name picker, plus a field to add a name. The choice is remembered in
   `localStorage`; a name that no longer exists on the server is ignored.
 - **Home** — due / new / total counts (per word, see [Data](#data)) and three quick starts.
 - **Quiz** — one prompt at a time, typed answer, inline verdict, progress bar, and a summary
@@ -96,7 +96,7 @@ tangled into components.
 ## Data
 
 One shared dictionary, tagged by class section. Progress is per person, per entry, and per direction
-(`en→es` and `es→en` are separate cards, and a word is normally practised in one direction before
+(`en→es` and `es→en` are separate cards, and a word is normally practiced in one direction before
 the other). Identity is a name picked from a list — no passwords, no email. Everything lives in
 Netlify Blobs as a handful of JSON blobs.
 
@@ -118,7 +118,7 @@ deliver.
 
 **Words versus cards.** A 159-word dictionary holds up to 318 cards, because each word is scheduled
 separately in each direction. The home-screen totals are deliberately counted **per word**
-(`src/lib/counts.ts`): a word counts as new only when it has been practised in neither direction,
+(`src/lib/counts.ts`): a word counts as new only when it has been practiced in neither direction,
 and as due when either direction is ready. That matches what a session serves, since a mixed session
 asks each word at most once. Counting cards instead produces totals that exceed the dictionary size
 and a "new" count that ignores words drilled spanish → english.
@@ -160,6 +160,11 @@ the whole dictionary. The output tells you which ids were added versus updated.
 
 `--url` defaults to `http://localhost:8888` (a `netlify dev` session), so **the production url is not
 optional — leave it off and you will quietly import into your local store instead.**
+
+The import goes through `POST /api/entries`, which is **unauthenticated on purpose**. Anyone who
+found it could add or overwrite entries, but it costs nothing to call and cannot delete, and the
+file in git is the recovery path. Adding a secret would bring back the environment variables this
+app otherwise does without.
 
 ### Pulling production back down
 
@@ -204,7 +209,6 @@ Not built, in rough order of likely usefulness:
 - A progress screen: per-tag mastery, recent misses, session history
 - Conjugation drills driven by the `verb` metadata already in the dictionary (needs no API)
 - Offline answer queueing — quizzes read from cache offline, but results are not yet synced back
-- Sentence practice, which is the one feature that would need the Claude API back
 
 ## Grading rules
 
@@ -248,15 +252,5 @@ Hosted on Netlify at `vlc-spanish.netlify.app`, deployed from the GitHub repo. T
 property of the Netlify site, not something in `netlify.toml` — it is set at creation
 (`netlify sites:create --name vlc-spanish`) or in the Netlify UI.
 
-Environment variables live in Netlify, never in the repo. See `.env.example` for the list.
-`ANTHROPIC_API_KEY` is used only inside functions and must never reach the client — do not prefix it
-with `VITE_`, which would bundle it into the browser build. `FAMILY_SECRET` gates the Claude-backed
-endpoints and exists to protect the API bill rather than the users.
-
-Local development with working functions needs the Netlify CLI:
-
-```sh
-netlify dev        # serves the app and the functions together on :8888, with a local Blobs store
-```
-
-Plain `vp dev` serves the frontend only; `/api/*` will 404.
+There are no environment variables to set: the app calls no paid APIs and holds no secrets. For
+local development see [Develop on :8888](#develop-on-8888-not-5173).

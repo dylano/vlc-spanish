@@ -6,14 +6,14 @@ export default function SettingsScreen() {
   const { users, userId, chooseUser, entries, counts, progress } = useStore();
 
   const sections = useMemo(() => new Set(entries.flatMap((entry) => entry.tags)).size, [entries]);
-  const practised = Object.keys(progress.entries).length;
+  const practiced = Object.keys(progress.entries).length;
 
   return (
     <section className={styles.screen}>
       <h1 className={styles.title}>Settings</h1>
 
       <div className={styles.section}>
-        <p className={styles.label}>Who is practising</p>
+        <p className={styles.label}>Who is practicing</p>
         <div className={styles.list}>
           {users.map((user) => (
             <button
@@ -25,7 +25,7 @@ export default function SettingsScreen() {
               }}
             >
               <span className={styles.personName}>{user.displayName}</span>
-              {user.id === userId ? <span className={styles.current}>Practising</span> : null}
+              {user.id === userId ? <span className={styles.current}>Practicing</span> : null}
             </button>
           ))}
         </div>
@@ -43,8 +43,8 @@ export default function SettingsScreen() {
             <span className={styles.factValue}>{sections}</span>
           </div>
           <div className={styles.fact}>
-            <span className={styles.factLabel}>You have practised</span>
-            <span className={styles.factValue}>{practised}</span>
+            <span className={styles.factLabel}>You have practiced</span>
+            <span className={styles.factValue}>{practiced}</span>
           </div>
         </div>
         <p className={styles.note}>
