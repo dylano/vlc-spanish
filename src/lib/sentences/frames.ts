@@ -86,6 +86,22 @@ export interface Segment {
   article?: boolean;
 }
 
+/** What a filled slot needs for grading a gap in it. */
+export interface SlotDetail {
+  /**
+   * Every Spanish text that answers for this slot: the one shown, plus the same
+   * slot filled with any word sharing its English (comer and almorzar are both
+   * "to have lunch", so either is right for "I have lunch").
+   */
+  accepts: string[];
+  gender?: "m" | "f" | "mf";
+  number?: "sg" | "pl";
+  /** For an adjective or agreeing noun, the slot it agrees with; for a verb, its subject slot. */
+  agreesWith?: string;
+  /** For a verb, the person it is conjugated in. */
+  subject?: Subject;
+}
+
 export interface RenderedSentence {
   frameId: string;
   es: string;
@@ -93,6 +109,8 @@ export interface RenderedSentence {
   segments: Segment[];
   /** Slot name → entry id, for every slot filled from the dictionary. */
   fills: Record<string, string>;
+  /** Slot name → grading detail, for every slot filled from the dictionary. */
+  slots: Record<string, SlotDetail>;
   subject?: Subject;
 }
 
@@ -100,7 +118,7 @@ export interface RenderContext {
   dictionary: Entry[];
   glue: Glue;
   random: () => number;
-  /** Which entries sentences may use, e.g. only words already practised. Defaults to all. */
+  /** Which entries sentences may use, e.g. only words already practiced. Defaults to all. */
   eligible?: (entry: Entry) => boolean;
 }
 
@@ -251,8 +269,21 @@ function capitalizeFirst(text: string): string {
     : text.slice(0, index) + text[index]!.toUpperCase() + text.slice(index + 1);
 }
 
-/** Render one sentence from a frame, or undefined if its slots cannot all be filled. */
-export function renderFrame(frame: Frame, context: RenderContext): RenderedSentence | undefined {
+function sharesGloss(a: Entry, b: Entry): boolean {
+  const glosses = new Set(a.en.map((gloss) => gloss.trim().toLowerCase()));
+  return b.en.some((gloss) => glosses.has(gloss.trim().toLowerCase()));
+}
+
+/**
+ * Render one sentence from a frame, or undefined if its slots cannot all be
+ * filled. `fixed` pins slots to particular entries — how a gap is aimed at the
+ * word being practiced.
+ */
+export function renderFrame(
+  frame: Frame,
+  context: RenderContext,
+  fixed: Record<string, string> = {},
+): RenderedSentence | undefined {
   const { random, dictionary, glue } = context;
   const filled = new Map<string, Filled>();
   const used = new Set<string>();
@@ -268,7 +299,10 @@ export function renderFrame(frame: Frame, context: RenderContext): RenderedSente
       const item = pick(glue.groups[slot.group] ?? [], random);
       result = item ? { es: item.es, en: item.en } : undefined;
     } else {
-      for (const entry of shuffled(slotCandidates(slot, context), random)) {
+      const candidates = slotCandidates(slot, context).filter(
+        (entry) => fixed[name] === undefined || entry.id === fixed[name],
+      );
+      for (const entry of shuffled(candidates, random)) {
         if (used.has(entry.id)) continue;
         result = fillSlot(slot, entry, filled, subject, dictionary, random);
         if (result) break;
@@ -285,12 +319,44 @@ export function renderFrame(frame: Frame, context: RenderContext): RenderedSente
   const fills = Object.fromEntries(
     [...filled].flatMap(([name, fill]) => (fill.entryId ? [[name, fill.entryId]] : [])),
   );
+
+  const slots: Record<string, SlotDetail> = {};
+  for (const [name, slot] of Object.entries(frame.slots)) {
+    const fill = filled.get(name)!;
+    if (slot.kind === "glue" || !fill.entryId) continue;
+    const target = dictionary.find((entry) => entry.id === fill.entryId)!;
+    const accepts = new Set([fill.es]);
+    for (const alternative of slotCandidates(slot, { dictionary })) {
+      if (alternative.id === target.id || !sharesGloss(target, alternative)) continue;
+      // Same context, same gender: only the word changes.
+      const other =
+        slot.kind === "noun" && alternative.pos === "noun"
+          ? nounFill(
+              alternative,
+              slot.number,
+              fill.gender === "f" ? "f" : fill.gender === "m" ? "m" : undefined,
+              random,
+            )
+          : fillSlot(slot, alternative, filled, subject, dictionary, random);
+      if (other) accepts.add(other.es);
+    }
+    const detail: SlotDetail = { accepts: [...accepts], gender: fill.gender, number: fill.number };
+    if (slot.kind === "adj" || (slot.kind === "noun" && slot.agree)) detail.agreesWith = slot.agree;
+    if (slot.kind === "verb") {
+      const who = subjectOf(slot.subject, filled, subject);
+      detail.subject = who?.subject;
+      if (frame.slots[slot.subject]?.kind === "noun") detail.agreesWith = slot.subject;
+    }
+    slots[name] = detail;
+  }
+
   return {
     frameId: frame.id,
     es: segments.map((segment) => segment.text).join(""),
     en,
     segments,
     fills,
+    slots,
     subject,
   };
 

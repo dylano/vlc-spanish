@@ -9,6 +9,12 @@ export interface Store {
   users: User[];
   userId?: string;
   progress: ProgressBlob;
+  /**
+   * Whether `progress` is the current user's real progress rather than the empty
+   * placeholder shown while it loads. Anything built once from progress — a quiz
+   * session — must wait for this.
+   */
+  progressLoaded: boolean;
   chooseUser: (userId: string) => void;
   addUser: (displayName: string) => Promise<void>;
   recordResults: (results: { entryId: string; direction: Direction; next: Progress }[]) => void;

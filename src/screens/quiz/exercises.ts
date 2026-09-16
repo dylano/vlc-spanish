@@ -9,4 +9,5 @@ export const EXERCISES: { id: Exercise; label: string; group: "Words" | "Sentenc
   { id: "typed", label: "Type it", group: "Words" },
   { id: "choice", label: "Pick one", group: "Words" },
   { id: "match", label: "Match pairs", group: "Words" },
+  { id: "gap", label: "Fill the gap", group: "Sentences" },
 ];

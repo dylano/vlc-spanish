@@ -98,6 +98,10 @@ It also locks document scrolling while open, so iOS has nothing to scroll when i
 The shell is a CSS size container named `session`; exercises compact themselves with
 `@container session (max-height: …)` rather than media queries, which only see the full screen.
 
+A session is only built once the learner's progress has loaded (`progressLoaded` in the store).
+Building it earlier — a reload on the quiz page — would treat every word as never practiced and
+freeze that into the session.
+
 `src/lib` deliberately has no React or network code in it. The grading and scheduling rules are the
 part of this app most worth getting right, so they are pure functions with tests rather than logic
 tangled into components.
@@ -125,6 +129,10 @@ tangled into components.
   Chosen by name it is three rounds. A round draws from one tag where it can and never holds two
   interchangeable words (a shared English gloss or headword). A word matched without ever being in
   a wrong pair is a correct **recognition** answer; both words of a wrong pair count as missed.
+- **Fill the gap** — the English sentence as a cue, the Spanish with one to three words blanked;
+  type each word in the form the sentence needs. Enter writes into the current blank and moves to the
+  next, a tap on a blank goes back to it, and Check grades them all. Shares the typed card's input, so the keyboard stays up
+  between typed cards and gaps. See [Filling a gap](#filling-a-gap).
 - **Dictionary** — search both languages (accent-insensitive, so `timido` finds `tímido`), filter
   by tag, read the notes.
 - **Settings** — switch user.
@@ -263,6 +271,31 @@ The validator catches structural problems; only reading `render:frames` output c
 that are grammatical but odd. Read it whenever frames change **or words are added**, since new
 words in a tag flow straight into the frames that draw on it.
 
+## Filling a gap
+
+`src/lib/sentences/gap.ts`. A gap is aimed at a word: the planner walks the session's priority
+order, takes the first word some frame can blank (`frame.cloze`), and renders that frame with the
+word pinned in the slot. So a gap usually reviews a word that is due.
+
+- **Sentences only use practiced words** — any word with a progress row, plus words kept out of
+  drilling (numbers). Gaps appear only once `MIN_SENTENCE_WORDS` (15) drillable words have been
+  practiced; before that "Fill the gap" explains why it is empty.
+- **Several blanks**: a gap gets 1 blank half the time, 2 most of the rest, 3 occasionally
+  (`BLANK_ODDS`), limited by how many slots the frame lists in `cloze`. The first blank is the word
+  the gap was aimed at; the others are further practiced words in the sentence not already used this
+  session. Each blank is its own card (`blankCards`), graded and scheduled on its own, and each counts
+  as a word toward the session size.
+- **Scheduling**: a gap is always answered in Spanish, so every blank schedules its word's `en→es`
+  card as a typed (**recall**) answer, whichever direction the session balanced it to.
+- **Grading** (`gradeGap`): the form the sentence needs is correct, and so is the same slot filled
+  with any word sharing its English (_almuerzo_ for "I have lunch" where the sentence used _comer_).
+  Only an accent wrong is `hard`. **The right word in the wrong form is `wrong`**, since agreement and
+  conjugation are what a gap tests, with a note naming the rule: "madre is feminine, so tímida", "for
+  nosotros it is comemos". Another dictionary word is `wrong` too (_padre_ for _madre_ is one letter
+  away but a different word). A one-letter slip otherwise is `hard`, except at the end of a noun or
+  adjective, where gender and number live. Each blank is graded against the sentence as shown, never
+  against what was typed in the other blanks.
+
 ## Status
 
 Phase 1 is complete. Working and deployed at
@@ -281,10 +314,10 @@ The first release of Phase 2 is built (not yet deployed at the time of writing):
 - A session frame sized to the space above the on-screen keyboard
 - The B2 home screen: Practice, Focus on new words, Remediation, Choose exercise
 - A per-exercise score in the summary of a mixed session
+- Sentence frames (31, about 25,000 sentences) and **Fill the gap**, in Practice and Choose exercise
 
-Phase 2 continues with sentence exercises, in this order: the frame engine and data (built — see
-[Sentence frames](#sentence-frames), no screens yet), **Fill the gap**, **Spot the mistake** (tap the
-wrong word, then type the fix), then Translate and possibly Answer a question. Sentences go straight
+Phase 2 continues with sentence exercises: **Spot the mistake** next (tap the wrong word, then type
+the fix), then Translate and possibly Answer a question. Sentences go straight
 into Practice once built. Frames were chosen over a fixed sentence bank, which repeats too often, and
 over fully type-driven templates, which produce wrong English and odd combinations.
 
@@ -307,6 +340,8 @@ multiple choice 2, a matching round 1 — with three rules on top:
   raises the phone keyboard; alternating one card at a time would have it bouncing all session. On
   iOS a typed card that follows a tap exercise may need a tap on the answer line to bring the
   keyboard back, because iOS only opens it from a user gesture.
+- **Gaps join once they are possible** (weight 2, nudged into runs with typed cards since both
+  use the keyboard) — see [Filling a gap](#filling-a-gap).
 - **A matching round needs room**: at least six words left in the session and at least four words
   that can share a round. Otherwise the planner stops offering rounds for that session.
 
@@ -316,7 +351,7 @@ Directions are balanced across the whole session at once, then multiple-choice o
 
 `choices.ts` picks three distractors for each card. A good one is a word the learner could actually
 confuse with the answer, so candidates are ranked: same part of speech, then a shared tag, then (for
-nouns) the same gender and number so the article cannot give it away, then words already practised.
+nouns) the same gender and number so the article cannot give it away, then words already practiced.
 Ties are shuffled, so the same question gets different distractors across sessions.
 
 Some words are never offered, because they would make a second right answer: anything sharing an

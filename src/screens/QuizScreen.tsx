@@ -1,17 +1,20 @@
 import { useMemo, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router";
 import SessionShell from "../app/SessionShell.tsx";
+import { sentences } from "../app/sentences.ts";
 import { useStore } from "../app/store-context.ts";
 import { today } from "../lib/dates.ts";
 import { canonicalAnswer, type Grade } from "../lib/grade.ts";
 import { schedule } from "../lib/scheduler.ts";
 import {
+  buildGapSession,
   buildMatchRounds,
   buildMixedSession,
   buildSession,
   DEFAULT_CONFIG,
   isMatchRound,
   MATCH_ROUND_SIZE,
+  MIN_SENTENCE_WORDS,
   type Card,
   type Exercise,
   type QuizConfig,
@@ -29,6 +32,7 @@ const GIVEN_VERB: Record<Exercise, string> = {
   typed: "you wrote",
   choice: "you picked",
   match: "you paired it with",
+  gap: "you wrote",
 };
 
 /** Words in a session, when the URL does not say. */
@@ -36,13 +40,16 @@ const DEFAULT_SIZE: Record<QuizConfig["format"], number> = {
   typed: DEFAULT_CONFIG.size,
   choice: DEFAULT_CONFIG.size,
   match: MATCH_ROUND_SIZE * 3,
+  gap: DEFAULT_CONFIG.size,
   // Enough for a matching round alongside a run of single cards.
   mixed: 15,
 };
 
 /** A session asks with one exercise when the URL names it, and mixes them otherwise. */
 function formatParam(value: string | null): QuizConfig["format"] {
-  return value === "typed" || value === "choice" || value === "match" ? value : "mixed";
+  return value === "typed" || value === "choice" || value === "match" || value === "gap"
+    ? value
+    : "mixed";
 }
 
 /** Header label: the home-screen row the session came from, in short. */
@@ -69,7 +76,7 @@ interface Answered {
  * exercise components under ./quiz.
  */
 export default function QuizScreen() {
-  const { entries, progress, userId, recordResults } = useStore();
+  const { entries, progress, progressLoaded, userId, recordResults } = useStore();
   const [params] = useSearchParams();
   const navigate = useNavigate();
 
@@ -89,16 +96,18 @@ export default function QuizScreen() {
     };
   }, [params]);
 
-  // Fixed when the screen opens: answering updates progress, and rebuilding
-  // mid-session would reshuffle the cards under the user.
+  // Fixed once progress has loaded: answering updates progress, and rebuilding
+  // mid-session would reshuffle the cards under the user. Building before it has
+  // loaded — a reload on this page — would treat every word as never practiced.
   const items = useMemo((): SessionItem[] => {
-    if (!userId) return [];
-    const options = { entries, progress, userId, config, today: today() };
+    if (!userId || !progressLoaded) return [];
+    const options = { entries, progress, userId, config, today: today(), sentences };
     if (config.format === "mixed") return buildMixedSession(options);
     if (config.format === "match") return buildMatchRounds(options);
+    if (config.format === "gap") return buildGapSession(options);
     return buildSession(options);
     // eslint-disable-next-line react-hooks/exhaustive-deps -- deliberately built once per session
-  }, [entries, userId, config]);
+  }, [entries, userId, config, progressLoaded]);
 
   const [index, setIndex] = useState(0);
   const [answered, setAnswered] = useState<Answered[]>([]);
@@ -128,6 +137,14 @@ export default function QuizScreen() {
 
   if (!userId) return <p>Choose a name first.</p>;
 
+  if (!progressLoaded) {
+    return (
+      <SessionShell>
+        <p className={styles.label}>Loading…</p>
+      </SessionShell>
+    );
+  }
+
   if (items.length === 0) {
     return (
       <SessionShell
@@ -146,7 +163,9 @@ export default function QuizScreen() {
         <section className={styles.empty}>
           <h1 className={styles.emptyTitle}>Nothing waiting</h1>
           <p className={styles.emptyBody}>
-            There is nothing to practice in this set right now. Try another, or come back later.
+            {config.format === "gap"
+              ? `Sentences only use words you have already practiced. Practice at least ${MIN_SENTENCE_WORDS} words and they will appear.`
+              : "There is nothing to practice in this set right now. Try another, or come back later."}
           </p>
         </section>
       </SessionShell>
@@ -259,14 +278,7 @@ export default function QuizScreen() {
     );
   }
 
-  const shared = {
-    card: item,
-    position,
-    label,
-    onDone: (outcome: Outcome) => {
-      done([{ card: item, outcome }]);
-    },
-  };
+  const shared = { card: item, position, label, onDone: done };
 
   // Typed cards deliberately share one unkeyed instance, so the input and the
   // keyboard survive from card to card. Other exercises get a fresh instance each.

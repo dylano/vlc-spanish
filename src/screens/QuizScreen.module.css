@@ -35,6 +35,75 @@
   margin: 0;
 }
 
+/* Fill the gap: the English as a quiet cue above, the Spanish sentence as the
+   prompt, and the gap drawn as a line to write on — the same ruled line as the
+   answer field below it. */
+.gapEnglish {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 1.1875rem;
+  line-height: 1.35;
+  color: var(--muted);
+  margin: 0 0 12px;
+  text-wrap: pretty;
+}
+
+.gapSentence {
+  font-family: var(--serif);
+  font-size: 2.25rem;
+  font-weight: 400;
+  line-height: 1.25;
+  margin: 0;
+  text-wrap: pretty;
+}
+
+/* A blank is a button, so a tap goes back to it; it still has to read as a line
+   in the sentence, so every button default is undone. */
+.blank {
+  display: inline-block;
+  padding: 0 2px;
+  border: none;
+  border-bottom: 2px solid var(--rule);
+  background: transparent;
+  font: inherit;
+  line-height: 1.05;
+  color: var(--muted);
+  text-align: left;
+  cursor: pointer;
+}
+
+/* Only an empty blank needs room; a filled one is as wide as its word, so the
+   sentence closes up around it. */
+.blankEmpty {
+  min-width: 3.5em;
+}
+
+.blank:disabled {
+  cursor: default;
+}
+
+/* The blank the input is writing into. */
+.blankActive {
+  border-bottom-color: var(--accent);
+  color: var(--ink);
+  background: var(--card);
+}
+
+.blankCorrect {
+  color: var(--correct);
+  border-bottom-color: var(--correct);
+}
+
+.blankHard {
+  color: var(--hard);
+  border-bottom-color: var(--hard);
+}
+
+.blankWrong {
+  color: var(--ink);
+  border-bottom-color: var(--wrong);
+}
+
 .divider {
   height: 1px;
   background: var(--rule);
@@ -414,6 +483,15 @@
 /* Compact layouts for a short frame, which in practice means the keyboard is up
    on a phone. The prompt stays the largest thing on screen, just less so. */
 @container session (max-height: 36rem) {
+  .gapSentence {
+    font-size: 1.75rem;
+  }
+
+  .gapEnglish {
+    font-size: 1.0625rem;
+    margin-bottom: 8px;
+  }
+
   .label {
     margin-bottom: 10px;
   }

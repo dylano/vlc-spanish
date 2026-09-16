@@ -60,7 +60,8 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       ? storedUserId
       : undefined;
 
-  const progress = userId && loadedProgress.userId === userId ? loadedProgress : EMPTY_PROGRESS;
+  const progressLoaded = userId !== undefined && loadedProgress.userId === userId;
+  const progress = progressLoaded ? loadedProgress : EMPTY_PROGRESS;
 
   useEffect(() => {
     if (!userId) return;
@@ -129,6 +130,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       users,
       userId,
       progress,
+      progressLoaded,
       chooseUser,
       addUser: addUserAction,
       recordResults,
@@ -141,6 +143,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       users,
       userId,
       progress,
+      progressLoaded,
       chooseUser,
       addUserAction,
       recordResults,

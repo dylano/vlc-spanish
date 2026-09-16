@@ -68,7 +68,7 @@
           "exclude": ["castano", "comilon", "dormilon"]
         }
       },
-      "cloze": ["b", "a"]
+      "cloze": ["b", "a", "n"]
     },
     {
       "id": "family-plural-trait",
@@ -347,7 +347,7 @@
           "subject": "n"
         }
       },
-      "cloze": ["v", "f"]
+      "cloze": ["v", "f", "n"]
     },
     {
       "id": "routine-lunch-at-time",
@@ -435,7 +435,7 @@
           "subject": "n"
         }
       },
-      "cloze": ["v", "f"]
+      "cloze": ["v", "f", "n"]
     },
     {
       "id": "routine-after-work-at-time",
@@ -523,7 +523,7 @@
           "subject": "n"
         }
       },
-      "cloze": ["v", "f"]
+      "cloze": ["v", "f", "n"]
     },
     {
       "id": "routine-night-at-time",
@@ -611,7 +611,7 @@
           "subject": "n"
         }
       },
-      "cloze": ["v", "f"]
+      "cloze": ["v", "f", "n"]
     },
     {
       "id": "sport-how-often",
@@ -676,7 +676,7 @@
           "exclude": ["periodico", "empresa", "despacho", "laboratorio", "taller"]
         }
       },
-      "cloze": ["v", "w"]
+      "cloze": ["v", "w", "d"]
     },
     {
       "id": "have-relatives",

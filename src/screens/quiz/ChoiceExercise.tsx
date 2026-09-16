@@ -55,7 +55,7 @@ export default function ChoiceExercise({ card, position, label, onDone }: Exerci
   function finish() {
     if (!graded || !picked) return;
     clearTimeout(timer.current);
-    onDone({ grade: graded, given: picked.text, strength: "recognition" });
+    onDone([{ card, outcome: { grade: graded, given: picked.text, strength: "recognition" } }]);
   }
 
   function choose(index: number) {
@@ -64,11 +64,16 @@ export default function ChoiceExercise({ card, position, label, onDone }: Exerci
     setSelected(index);
     if (option.correct) {
       timer.current = setTimeout(() => {
-        onDone({
-          grade: { result: "correct", expected: option.text },
-          given: option.text,
-          strength: "recognition",
-        });
+        onDone([
+          {
+            card,
+            outcome: {
+              grade: { result: "correct", expected: option.text },
+              given: option.text,
+              strength: "recognition",
+            },
+          },
+        ]);
       }, CORRECT_PAUSE_MS);
     }
   }

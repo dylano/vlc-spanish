@@ -31,7 +31,8 @@ export interface ExerciseProps {
   /** Header state for the session frame. */
   position: { index: number; total: number };
   label: string;
-  onDone: (outcome: Outcome) => void;
+  /** One result per word answered: one for most cards, one per blank for a gap. */
+  onDone: (results: { card: Card; outcome: Outcome }[]) => void;
 }
 
 /** Grammar line under the prompt, drawn from metadata the dictionary already has. */

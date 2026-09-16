@@ -18,7 +18,7 @@ export interface ChoiceOption {
  * Distractor preference, highest first. A good distractor is a word the learner
  * could plausibly confuse with the answer: the same part of speech from the same
  * class section, and for nouns the same gender and number, so the article cannot
- * give the answer away. Words already practised beat unseen ones, so the choice
+ * give the answer away. Words already practiced beat unseen ones, so the choice
  * is between things half-known rather than one familiar word and three strangers.
  */
 const WEIGHT = { pos: 8, tag: 4, agreement: 2, seen: 1 } as const;

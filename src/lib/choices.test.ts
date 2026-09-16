@@ -138,7 +138,7 @@ describe("multiple-choice options", () => {
     expect(seen.size).toBe(5);
   });
 
-  it("prefers words the learner has already practised", () => {
+  it("prefers words the learner has already practiced", () => {
     const progress: ProgressBlob = {
       userId: "dylan",
       entries: { madre: {}, tia: {}, prima: {} },
