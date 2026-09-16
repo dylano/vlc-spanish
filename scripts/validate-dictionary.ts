@@ -89,6 +89,11 @@ for (const entry of entries) {
   if (entry.pos === "noun" && entry.number === "pl" && entry.forms?.pl) {
     warnings.push(`noun "${entry.id}" is marked plural but also lists forms.pl`);
   }
+  if (entry.pos === "noun" && entry.forms?.f && !entry.enF) {
+    warnings.push(
+      `noun "${entry.id}" has forms.f but no enF, so sentences only use it in the masculine`,
+    );
+  }
   if (entry.flagged) warnings.push(`"${entry.id}" is flagged for review: ${entry.flagged}`);
 }
 

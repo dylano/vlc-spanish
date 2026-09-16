@@ -1,0 +1,706 @@
+{
+  "version": 1,
+  "frames": [
+    {
+      "id": "family-is-trait",
+      "grammar": ["ser-trait", "adj-agreement"],
+      "es": "Mi {n} es {a}.",
+      "en": "My {n} is {a}.",
+      "slots": {
+        "n": {
+          "kind": "noun",
+          "tags": ["family"],
+          "number": "sg",
+          "exclude": ["mujer"]
+        },
+        "a": {
+          "kind": "adj",
+          "tags": ["physical-traits", "character-traits"],
+          "agree": "n",
+          "exclude": ["castano", "comilon", "dormilon"]
+        }
+      },
+      "cloze": ["a", "n"]
+    },
+    {
+      "id": "family-is-very-trait",
+      "grammar": ["ser-trait", "adj-agreement"],
+      "es": "Mi {n} es muy {a}.",
+      "en": "My {n} is very {a}.",
+      "slots": {
+        "n": {
+          "kind": "noun",
+          "tags": ["family"],
+          "number": "sg",
+          "exclude": ["mujer"]
+        },
+        "a": {
+          "kind": "adj",
+          "tags": ["physical-traits", "character-traits"],
+          "agree": "n",
+          "exclude": ["castano", "comilon", "dormilon", "calvo", "normal"]
+        }
+      },
+      "cloze": ["a"]
+    },
+    {
+      "id": "family-two-traits",
+      "grammar": ["ser-trait", "adj-agreement"],
+      "es": "Mi {n} es {a} y {b}.",
+      "en": "My {n} is {a} and {b}.",
+      "slots": {
+        "n": {
+          "kind": "noun",
+          "tags": ["family"],
+          "number": "sg",
+          "exclude": ["mujer"]
+        },
+        "a": {
+          "kind": "adj",
+          "tags": ["physical-traits", "character-traits"],
+          "agree": "n",
+          "exclude": ["castano", "comilon", "dormilon"]
+        },
+        "b": {
+          "kind": "adj",
+          "tags": ["physical-traits", "character-traits"],
+          "agree": "n",
+          "exclude": ["castano", "comilon", "dormilon"]
+        }
+      },
+      "cloze": ["b", "a"]
+    },
+    {
+      "id": "family-plural-trait",
+      "grammar": ["ser-trait", "adj-agreement", "plural"],
+      "es": "Mis {n} son {a}.",
+      "en": "My {n} are {a}.",
+      "slots": {
+        "n": {
+          "kind": "noun",
+          "tags": ["family"],
+          "number": "pl",
+          "exclude": ["madre", "mujer", "marido", "padre", "abuelo", "hermano"]
+        },
+        "a": {
+          "kind": "adj",
+          "tags": ["physical-traits", "character-traits"],
+          "agree": "n",
+          "exclude": ["castano", "comilon", "dormilon"]
+        }
+      },
+      "cloze": ["a", "n"]
+    },
+    {
+      "id": "family-profession",
+      "grammar": ["profession-no-article", "noun-gender"],
+      "es": "Mi {n} es {p}.",
+      "en": "My {n} is {p:a}.",
+      "slots": {
+        "n": {
+          "kind": "noun",
+          "tags": ["family"],
+          "number": "sg",
+          "exclude": ["mujer"]
+        },
+        "p": {
+          "kind": "noun",
+          "tags": ["professions"],
+          "agree": "n"
+        }
+      },
+      "cloze": ["p"]
+    },
+    {
+      "id": "family-wants-to-be",
+      "grammar": ["profession-no-article", "noun-gender"],
+      "es": "Mi {n} quiere ser {p}.",
+      "en": "My {n} wants to be {p:a}.",
+      "slots": {
+        "n": {
+          "kind": "noun",
+          "tags": ["family"],
+          "number": "sg",
+          "exclude": ["mujer"]
+        },
+        "p": {
+          "kind": "noun",
+          "tags": ["professions"],
+          "agree": "n"
+        }
+      },
+      "cloze": ["p"]
+    },
+    {
+      "id": "profession-is-trait",
+      "grammar": ["ser-trait", "adj-agreement", "articles"],
+      "es": "{p:el} es muy {a}.",
+      "en": "{p:the} is very {a}.",
+      "slots": {
+        "p": {
+          "kind": "noun",
+          "tags": ["professions"]
+        },
+        "a": {
+          "kind": "adj",
+          "tags": ["character-traits"],
+          "agree": "p",
+          "exclude": ["comilon", "dormilon"]
+        }
+      },
+      "cloze": ["a", "p"]
+    },
+    {
+      "id": "family-works-at",
+      "grammar": ["articles", "verb-conjugation"],
+      "es": "Mi {n} trabaja en {w:un}.",
+      "en": "My {n} works at {w:a}.",
+      "slots": {
+        "n": {
+          "kind": "noun",
+          "tags": ["family"],
+          "number": "sg",
+          "exclude": ["mujer"]
+        },
+        "w": {
+          "kind": "noun",
+          "tags": ["workplaces"]
+        }
+      },
+      "cloze": ["w"]
+    },
+    {
+      "id": "family-plural-work-at",
+      "grammar": ["articles", "verb-conjugation", "plural"],
+      "es": "Mis {n} trabajan en {w:un}.",
+      "en": "My {n} work at {w:a}.",
+      "slots": {
+        "n": {
+          "kind": "noun",
+          "tags": ["family"],
+          "number": "pl",
+          "exclude": ["madre", "mujer", "marido", "padre", "abuelo", "hermano"]
+        },
+        "w": {
+          "kind": "noun",
+          "tags": ["workplaces"]
+        }
+      },
+      "cloze": ["w"]
+    },
+    {
+      "id": "profession-works-at",
+      "grammar": ["articles"],
+      "es": "{p:el} trabaja en {w:un}.",
+      "en": "{p:the} works at {w:a}.",
+      "slots": {
+        "p": {
+          "kind": "noun",
+          "tags": ["professions"]
+        },
+        "w": {
+          "kind": "noun",
+          "tags": ["workplaces"]
+        }
+      },
+      "cloze": ["p", "w"]
+    },
+    {
+      "id": "family-is-at-workplace",
+      "grammar": ["ser-estar", "articles"],
+      "es": "Mi {n} está en {w:el}.",
+      "en": "My {n} is at {w:the}.",
+      "slots": {
+        "n": {
+          "kind": "noun",
+          "tags": ["family"],
+          "number": "sg",
+          "exclude": ["mujer"]
+        },
+        "w": {
+          "kind": "noun",
+          "tags": ["workplaces"],
+          "exclude": ["periodico"]
+        }
+      },
+      "cloze": ["w"]
+    },
+    {
+      "id": "routine-morning-at-time",
+      "grammar": ["verb-conjugation", "reflexive-routine"],
+      "subjects": ["yo", "tu", "nosotros", "vosotros", "ellos"],
+      "es": "{v} {t}.",
+      "en": "{S} {v} {t}.",
+      "slots": {
+        "v": {
+          "kind": "verb",
+          "ids": [
+            "levantarse",
+            "ducharse",
+            "desayunar",
+            "vestirse",
+            "hacer-la-cama",
+            "lavarse-los-dientes",
+            "ir-al-trabajo",
+            "llegar-al-trabajo"
+          ],
+          "subject": "@"
+        },
+        "t": {
+          "kind": "glue",
+          "group": "morning-times"
+        }
+      },
+      "cloze": ["v"]
+    },
+    {
+      "id": "family-morning-at-time",
+      "grammar": ["verb-conjugation", "reflexive-routine", "third-person"],
+      "es": "Mi {n} {v} {t}.",
+      "en": "My {n} {v} {t}.",
+      "slots": {
+        "n": {
+          "kind": "noun",
+          "tags": ["family"],
+          "number": "sg",
+          "exclude": ["mujer"]
+        },
+        "v": {
+          "kind": "verb",
+          "ids": [
+            "levantarse",
+            "ducharse",
+            "desayunar",
+            "vestirse",
+            "hacer-la-cama",
+            "lavarse-los-dientes",
+            "ir-al-trabajo",
+            "llegar-al-trabajo"
+          ],
+          "subject": "n"
+        },
+        "t": {
+          "kind": "glue",
+          "group": "morning-times"
+        }
+      },
+      "cloze": ["v"]
+    },
+    {
+      "id": "routine-morning-frequency",
+      "grammar": ["verb-conjugation", "frequency", "time-of-day"],
+      "subjects": ["yo", "tu", "nosotros", "vosotros", "ellos"],
+      "es": "{f} {v} por la mañana.",
+      "en": "{S} {f} {v} in the morning.",
+      "slots": {
+        "f": {
+          "kind": "word",
+          "tags": ["frequency"],
+          "pos": "adv"
+        },
+        "v": {
+          "kind": "verb",
+          "ids": [
+            "levantarse",
+            "ducharse",
+            "desayunar",
+            "vestirse",
+            "hacer-la-cama",
+            "lavarse-los-dientes",
+            "ir-al-trabajo",
+            "llegar-al-trabajo"
+          ],
+          "subject": "@"
+        }
+      },
+      "cloze": ["v", "f"]
+    },
+    {
+      "id": "family-morning-frequency",
+      "grammar": ["verb-conjugation", "frequency", "time-of-day", "third-person"],
+      "es": "Mi {n} {f} {v} por la mañana.",
+      "en": "My {n} {f} {v} in the morning.",
+      "slots": {
+        "n": {
+          "kind": "noun",
+          "tags": ["family"],
+          "number": "sg",
+          "exclude": ["mujer"]
+        },
+        "f": {
+          "kind": "word",
+          "tags": ["frequency"],
+          "pos": "adv"
+        },
+        "v": {
+          "kind": "verb",
+          "ids": [
+            "levantarse",
+            "ducharse",
+            "desayunar",
+            "vestirse",
+            "hacer-la-cama",
+            "lavarse-los-dientes",
+            "ir-al-trabajo",
+            "llegar-al-trabajo"
+          ],
+          "subject": "n"
+        }
+      },
+      "cloze": ["v", "f"]
+    },
+    {
+      "id": "routine-lunch-at-time",
+      "grammar": ["verb-conjugation", "reflexive-routine"],
+      "subjects": ["yo", "tu", "nosotros", "vosotros", "ellos"],
+      "es": "{v} {t}.",
+      "en": "{S} {v} {t}.",
+      "slots": {
+        "v": {
+          "kind": "verb",
+          "ids": ["comer", "almorzar"],
+          "subject": "@"
+        },
+        "t": {
+          "kind": "glue",
+          "group": "lunch-times"
+        }
+      },
+      "cloze": ["v"]
+    },
+    {
+      "id": "family-lunch-at-time",
+      "grammar": ["verb-conjugation", "reflexive-routine", "third-person"],
+      "es": "Mi {n} {v} {t}.",
+      "en": "My {n} {v} {t}.",
+      "slots": {
+        "n": {
+          "kind": "noun",
+          "tags": ["family"],
+          "number": "sg",
+          "exclude": ["mujer"]
+        },
+        "v": {
+          "kind": "verb",
+          "ids": ["comer", "almorzar"],
+          "subject": "n"
+        },
+        "t": {
+          "kind": "glue",
+          "group": "lunch-times"
+        }
+      },
+      "cloze": ["v"]
+    },
+    {
+      "id": "routine-lunch-frequency",
+      "grammar": ["verb-conjugation", "frequency", "time-of-day"],
+      "subjects": ["yo", "tu", "nosotros", "vosotros", "ellos"],
+      "es": "{f} {v} al mediodía.",
+      "en": "{S} {f} {v} at midday.",
+      "slots": {
+        "f": {
+          "kind": "word",
+          "tags": ["frequency"],
+          "pos": "adv"
+        },
+        "v": {
+          "kind": "verb",
+          "ids": ["comer", "almorzar"],
+          "subject": "@"
+        }
+      },
+      "cloze": ["v", "f"]
+    },
+    {
+      "id": "family-lunch-frequency",
+      "grammar": ["verb-conjugation", "frequency", "time-of-day", "third-person"],
+      "es": "Mi {n} {f} {v} al mediodía.",
+      "en": "My {n} {f} {v} at midday.",
+      "slots": {
+        "n": {
+          "kind": "noun",
+          "tags": ["family"],
+          "number": "sg",
+          "exclude": ["mujer"]
+        },
+        "f": {
+          "kind": "word",
+          "tags": ["frequency"],
+          "pos": "adv"
+        },
+        "v": {
+          "kind": "verb",
+          "ids": ["comer", "almorzar"],
+          "subject": "n"
+        }
+      },
+      "cloze": ["v", "f"]
+    },
+    {
+      "id": "routine-after-work-at-time",
+      "grammar": ["verb-conjugation", "reflexive-routine"],
+      "subjects": ["yo", "tu", "nosotros", "vosotros", "ellos"],
+      "es": "{v} {t}.",
+      "en": "{S} {v} {t}.",
+      "slots": {
+        "v": {
+          "kind": "verb",
+          "ids": ["salir-del-trabajo", "hacer-deporte"],
+          "subject": "@"
+        },
+        "t": {
+          "kind": "glue",
+          "group": "after-work-times"
+        }
+      },
+      "cloze": ["v"]
+    },
+    {
+      "id": "family-after-work-at-time",
+      "grammar": ["verb-conjugation", "reflexive-routine", "third-person"],
+      "es": "Mi {n} {v} {t}.",
+      "en": "My {n} {v} {t}.",
+      "slots": {
+        "n": {
+          "kind": "noun",
+          "tags": ["family"],
+          "number": "sg",
+          "exclude": ["mujer"]
+        },
+        "v": {
+          "kind": "verb",
+          "ids": ["salir-del-trabajo", "hacer-deporte"],
+          "subject": "n"
+        },
+        "t": {
+          "kind": "glue",
+          "group": "after-work-times"
+        }
+      },
+      "cloze": ["v"]
+    },
+    {
+      "id": "routine-after-work-frequency",
+      "grammar": ["verb-conjugation", "frequency", "time-of-day"],
+      "subjects": ["yo", "tu", "nosotros", "vosotros", "ellos"],
+      "es": "{f} {v} por la tarde.",
+      "en": "{S} {f} {v} in the afternoon.",
+      "slots": {
+        "f": {
+          "kind": "word",
+          "tags": ["frequency"],
+          "pos": "adv"
+        },
+        "v": {
+          "kind": "verb",
+          "ids": ["salir-del-trabajo", "hacer-deporte"],
+          "subject": "@"
+        }
+      },
+      "cloze": ["v", "f"]
+    },
+    {
+      "id": "family-after-work-frequency",
+      "grammar": ["verb-conjugation", "frequency", "time-of-day", "third-person"],
+      "es": "Mi {n} {f} {v} por la tarde.",
+      "en": "My {n} {f} {v} in the afternoon.",
+      "slots": {
+        "n": {
+          "kind": "noun",
+          "tags": ["family"],
+          "number": "sg",
+          "exclude": ["mujer"]
+        },
+        "f": {
+          "kind": "word",
+          "tags": ["frequency"],
+          "pos": "adv"
+        },
+        "v": {
+          "kind": "verb",
+          "ids": ["salir-del-trabajo", "hacer-deporte"],
+          "subject": "n"
+        }
+      },
+      "cloze": ["v", "f"]
+    },
+    {
+      "id": "routine-night-at-time",
+      "grammar": ["verb-conjugation", "reflexive-routine"],
+      "subjects": ["yo", "tu", "nosotros", "vosotros", "ellos"],
+      "es": "{v} {t}.",
+      "en": "{S} {v} {t}.",
+      "slots": {
+        "v": {
+          "kind": "verb",
+          "ids": ["cenar", "acostarse"],
+          "subject": "@"
+        },
+        "t": {
+          "kind": "glue",
+          "group": "night-times"
+        }
+      },
+      "cloze": ["v"]
+    },
+    {
+      "id": "family-night-at-time",
+      "grammar": ["verb-conjugation", "reflexive-routine", "third-person"],
+      "es": "Mi {n} {v} {t}.",
+      "en": "My {n} {v} {t}.",
+      "slots": {
+        "n": {
+          "kind": "noun",
+          "tags": ["family"],
+          "number": "sg",
+          "exclude": ["mujer"]
+        },
+        "v": {
+          "kind": "verb",
+          "ids": ["cenar", "acostarse"],
+          "subject": "n"
+        },
+        "t": {
+          "kind": "glue",
+          "group": "night-times"
+        }
+      },
+      "cloze": ["v"]
+    },
+    {
+      "id": "routine-night-frequency",
+      "grammar": ["verb-conjugation", "frequency", "time-of-day"],
+      "subjects": ["yo", "tu", "nosotros", "vosotros", "ellos"],
+      "es": "{f} {v} por la noche.",
+      "en": "{S} {f} {v} at night.",
+      "slots": {
+        "f": {
+          "kind": "word",
+          "tags": ["frequency"],
+          "pos": "adv"
+        },
+        "v": {
+          "kind": "verb",
+          "ids": ["cenar", "acostarse"],
+          "subject": "@"
+        }
+      },
+      "cloze": ["v", "f"]
+    },
+    {
+      "id": "family-night-frequency",
+      "grammar": ["verb-conjugation", "frequency", "time-of-day", "third-person"],
+      "es": "Mi {n} {f} {v} por la noche.",
+      "en": "My {n} {f} {v} at night.",
+      "slots": {
+        "n": {
+          "kind": "noun",
+          "tags": ["family"],
+          "number": "sg",
+          "exclude": ["mujer"]
+        },
+        "f": {
+          "kind": "word",
+          "tags": ["frequency"],
+          "pos": "adv"
+        },
+        "v": {
+          "kind": "verb",
+          "ids": ["cenar", "acostarse"],
+          "subject": "n"
+        }
+      },
+      "cloze": ["v", "f"]
+    },
+    {
+      "id": "sport-how-often",
+      "grammar": ["verb-conjugation", "frequency"],
+      "subjects": ["yo", "tu", "nosotros", "vosotros", "ellos"],
+      "es": "{v} {f}.",
+      "en": "{S} {v} {f}.",
+      "slots": {
+        "v": {
+          "kind": "verb",
+          "ids": ["hacer-deporte"],
+          "subject": "@"
+        },
+        "f": {
+          "kind": "word",
+          "tags": ["frequency"],
+          "pos": "phrase"
+        }
+      },
+      "cloze": ["f", "v"]
+    },
+    {
+      "id": "days-routine",
+      "grammar": ["days", "verb-conjugation"],
+      "subjects": ["yo", "tu", "nosotros", "vosotros", "ellos"],
+      "es": "Los {d} {v}.",
+      "en": "On {d} {S} {v}.",
+      "slots": {
+        "d": {
+          "kind": "noun",
+          "tags": ["days"],
+          "number": "pl"
+        },
+        "v": {
+          "kind": "verb",
+          "ids": ["hacer-deporte", "ir-al-trabajo", "salir-del-trabajo"],
+          "subject": "@"
+        }
+      },
+      "cloze": ["v", "d"]
+    },
+    {
+      "id": "days-go-to-workplace",
+      "grammar": ["days", "contraction", "verb-conjugation"],
+      "subjects": ["yo", "tu", "nosotros", "vosotros", "ellos"],
+      "es": "Los {d} {v} a {w:el}.",
+      "en": "On {d} {S} {v} to {w:the}.",
+      "slots": {
+        "d": {
+          "kind": "noun",
+          "tags": ["days"],
+          "number": "pl"
+        },
+        "v": {
+          "kind": "verb",
+          "ids": ["ir"],
+          "subject": "@"
+        },
+        "w": {
+          "kind": "noun",
+          "tags": ["workplaces"],
+          "exclude": ["periodico", "empresa", "despacho", "laboratorio", "taller"]
+        }
+      },
+      "cloze": ["v", "w"]
+    },
+    {
+      "id": "have-relatives",
+      "grammar": ["tener", "plural", "noun-gender"],
+      "subjects": ["yo", "tu", "nosotros", "vosotros", "ellos"],
+      "es": "{v} {num} {n}.",
+      "en": "{S} {v} {num} {n}.",
+      "slots": {
+        "v": {
+          "kind": "verb",
+          "ids": ["tener"],
+          "subject": "@"
+        },
+        "num": {
+          "kind": "word",
+          "ids": ["dos", "tres", "cuatro"]
+        },
+        "n": {
+          "kind": "noun",
+          "ids": ["hermano", "primo", "hijo", "sobrino", "nieto", "tio"],
+          "number": "pl"
+        }
+      },
+      "cloze": ["n", "v"]
+    }
+  ]
+}

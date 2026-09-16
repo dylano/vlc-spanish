@@ -1,0 +1,136 @@
+{
+  "words": [
+    "mi",
+    "mis",
+    "tu",
+    "tus",
+    "su",
+    "sus",
+    "nuestro",
+    "nuestra",
+    "muy",
+    "bastante",
+    "y",
+    "e",
+    "pero",
+    "también",
+    "no",
+    "a",
+    "al",
+    "de",
+    "del",
+    "en",
+    "con",
+    "el",
+    "la",
+    "los",
+    "las",
+    "un",
+    "una",
+    "unos",
+    "unas",
+    "que"
+  ],
+  "groups": {
+    "morning-times": [
+      {
+        "es": "a las seis",
+        "en": "at six"
+      },
+      {
+        "es": "a las seis y media",
+        "en": "at half past six"
+      },
+      {
+        "es": "a las siete",
+        "en": "at seven"
+      },
+      {
+        "es": "a las siete y media",
+        "en": "at half past seven"
+      },
+      {
+        "es": "a las ocho",
+        "en": "at eight"
+      },
+      {
+        "es": "a las ocho y media",
+        "en": "at half past eight"
+      },
+      {
+        "es": "a las nueve",
+        "en": "at nine"
+      }
+    ],
+    "lunch-times": [
+      {
+        "es": "a la una",
+        "en": "at one"
+      },
+      {
+        "es": "a la una y media",
+        "en": "at half past one"
+      },
+      {
+        "es": "a las dos",
+        "en": "at two"
+      },
+      {
+        "es": "a las dos y media",
+        "en": "at half past two"
+      },
+      {
+        "es": "a las tres",
+        "en": "at three"
+      }
+    ],
+    "after-work-times": [
+      {
+        "es": "a las cinco",
+        "en": "at five"
+      },
+      {
+        "es": "a las cinco y media",
+        "en": "at half past five"
+      },
+      {
+        "es": "a las seis",
+        "en": "at six"
+      },
+      {
+        "es": "a las seis y media",
+        "en": "at half past six"
+      },
+      {
+        "es": "a las siete",
+        "en": "at seven"
+      }
+    ],
+    "night-times": [
+      {
+        "es": "a las nueve",
+        "en": "at nine"
+      },
+      {
+        "es": "a las nueve y media",
+        "en": "at half past nine"
+      },
+      {
+        "es": "a las diez",
+        "en": "at ten"
+      },
+      {
+        "es": "a las diez y media",
+        "en": "at half past ten"
+      },
+      {
+        "es": "a las once",
+        "en": "at eleven"
+      },
+      {
+        "es": "a las doce",
+        "en": "at twelve"
+      }
+    ]
+  }
+}

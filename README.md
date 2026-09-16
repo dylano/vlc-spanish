@@ -63,6 +63,8 @@ src/lib/          pure logic, no React, thoroughly tested
   session.ts        picks the cards for a quiz (and matching rounds), and which english gloss to prompt with
   choices.ts        the options for a multiple-choice card
   random.ts         seedable shuffle
+  sentences/        sentence frames: renderer and checks (frames.ts), Spanish verb forms
+                    (conjugate.ts), English inflection (english.ts)
   dates.ts          ISO calendar-date maths in whole local days
   slug.ts           stable entry ids
 src/
@@ -76,8 +78,12 @@ netlify/
   lib/            code shared between functions
 scripts/
   validate-dictionary.ts   schema check with warnings, exits non-zero on error; gates the build
+  validate-frames.ts       frame and glue checks against the dictionary; gates the build
+  render-frames.ts         prints sample sentences from every frame, for reading through
 data/
   dictionary.json          the dictionary, bundled into the app at build time
+  frames.json              sentence frames
+  glue.json                function words and phrases (clock times) sentences may use
 ```
 
 ### Sessions and the on-screen keyboard
@@ -212,6 +218,51 @@ in sync by hand, with a public write path and a `--url` flag that silently impor
 store if you forgot it. A stale `dictionary` key may still exist in the production `vocab` store; the
 app no longer reads it (`netlify blobs:delete vocab dictionary` removes it).
 
+## Sentence frames
+
+Sentence exercises draw on `data/frames.json`: hand-written sentence patterns whose slots are filled
+from the dictionary. The frame supplies the word order in both languages; the renderer
+(`src/lib/sentences/frames.ts`) supplies only what the dictionary data makes reliable:
+
+```json
+{
+  "id": "family-is-trait",
+  "es": "Mi {n} es {a}.",
+  "en": "My {n} is {a}.",
+  "slots": {
+    "n": { "kind": "noun", "tags": ["family"], "number": "sg", "exclude": ["mujer"] },
+    "a": { "kind": "adj", "tags": ["physical-traits", "character-traits"], "agree": "n" }
+  },
+  "cloze": ["a", "n"]
+}
+```
+
+- **Slots** select entries by `tags`, `ids` and `exclude`. Kinds: `noun` (with `number`, and `agree`
+  to take another noun's gender — _Mi hermana es enfermera_), `adj` (agrees with a noun slot), `verb`
+  (`subject` is a fixed person, `"@"` for the frame's `subjects`, or a noun slot), `word` (adverbs,
+  phrases, numbers as-is) and `glue` (a group in `data/glue.json`).
+- **Placeholders**: `{slot}`, plus `{slot:el}` / `{slot:un}` for a Spanish article and `{slot:the}` /
+  `{slot:a}` for an English one; `{S}` is the subject pronoun. `vosotros` renders as "you (plural)".
+- **The renderer handles** gender and number agreement, verb forms (stored forms, then regular
+  endings, then a multi-word verb's first word through its own entry), articles, `a el → al` /
+  `de el → del`, `y → e` before an _i_ sound, English third-person _-s_ and irregulars, _one's_ →
+  _his/her/..._, English plurals and _a/an_. A person noun is put in the feminine only if it has
+  `enF`, the English for its feminine form.
+- **Words whose English is a noun** (_comilón_ "big eater", _dormilón_ "sleepyhead") are excluded
+  from trait frames: "My son is very big eater" is what including them produces.
+- **Word pairings are the frame's job.** Routines are split by time of day so morning activities get
+  morning times — without that the renderer happily produces _desayunamos por la tarde_.
+
+```sh
+vp run validate:frames                     # schema, placeholders, vocabulary, every slot fillable
+vp run render:frames -- --per 12           # sample sentences from every frame
+vp run render:frames -- --frame days-routine --per 40
+```
+
+The validator catches structural problems; only reading `render:frames` output catches sentences
+that are grammatical but odd. Read it whenever frames change **or words are added**, since new
+words in a tag flow straight into the frames that draw on it.
+
 ## Status
 
 Phase 1 is complete. Working and deployed at
@@ -231,9 +282,11 @@ The first release of Phase 2 is built (not yet deployed at the time of writing):
 - The B2 home screen: Practice, Focus on new words, Remediation, Choose exercise
 - A per-exercise score in the summary of a mixed session
 
-Phase 2 continues with sentence exercises. The intended approach is hand-written sentence frames
-whose slots draw from tags with exclusions, rather than a fixed sentence bank (too repetitive) or
-fully type-driven templates (which produce wrong English and odd combinations). None of it is built.
+Phase 2 continues with sentence exercises, in this order: the frame engine and data (built — see
+[Sentence frames](#sentence-frames), no screens yet), **Fill the gap**, **Spot the mistake** (tap the
+wrong word, then type the fix), then Translate and possibly Answer a question. Sentences go straight
+into Practice once built. Frames were chosen over a fixed sentence bank, which repeats too often, and
+over fully type-driven templates, which produce wrong English and odd combinations.
 
 Not built, in rough order of likely usefulness:
 

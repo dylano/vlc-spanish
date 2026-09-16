@@ -75,6 +75,13 @@ export const nounEntrySchema = z.object({
    * singular. It takes los/las and has no `forms.pl`.
    */
   number: z.enum(["sg", "pl"]).optional(),
+  /**
+   * English for the feminine form in `forms.f`, most natural first: hermana →
+   * ["sister"]. Sentences use it when they put a person in the feminine, so a
+   * noun with `forms.f` but no `enF` is only ever used in the masculine. Repeat
+   * `en` when the English does not change (profesora → teacher).
+   */
+  enF: z.array(nonEmpty).min(1).optional(),
   forms: z
     .object({ f: nonEmpty.optional(), m: nonEmpty.optional(), pl: nonEmpty.optional() })
     .optional(),

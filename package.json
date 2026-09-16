@@ -5,11 +5,13 @@
   "type": "module",
   "scripts": {
     "dev": "vp dev --host",
-    "build": "node scripts/validate-dictionary.ts && tsc -b && vp build",
+    "build": "node scripts/validate-dictionary.ts && node scripts/validate-frames.ts && tsc -b && vp build",
     "lint": "vp lint",
     "preview": "vp preview",
     "prepare": "vp config",
-    "validate:dictionary": "node scripts/validate-dictionary.ts"
+    "validate:dictionary": "node scripts/validate-dictionary.ts",
+    "validate:frames": "node scripts/validate-frames.ts",
+    "render:frames": "node scripts/render-frames.ts"
   },
   "dependencies": {
     "@netlify/blobs": "^11.1.0",

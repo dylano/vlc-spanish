@@ -177,7 +177,7 @@
     {
       "id": "cerrado",
       "es": "cerrado",
-      "en": ["closed", "reserved", "closed-off"],
+      "en": ["reserved", "closed", "closed-off"],
       "pos": "adj",
       "forms": {
         "f": "cerrada",
@@ -284,6 +284,7 @@
       "id": "padre",
       "es": "padre",
       "en": ["father", "dad"],
+      "enF": ["mother", "mum", "mom"],
       "pos": "noun",
       "gender": "m",
       "forms": {
@@ -322,6 +323,7 @@
       "id": "hijo",
       "es": "hijo",
       "en": ["son"],
+      "enF": ["daughter"],
       "pos": "noun",
       "gender": "m",
       "forms": {
@@ -336,6 +338,7 @@
       "id": "abuelo",
       "es": "abuelo",
       "en": ["grandfather", "grandpa"],
+      "enF": ["grandmother", "grandma"],
       "pos": "noun",
       "gender": "m",
       "forms": {
@@ -360,6 +363,7 @@
       "id": "hermano",
       "es": "hermano",
       "en": ["brother"],
+      "enF": ["sister"],
       "pos": "noun",
       "gender": "m",
       "forms": {
@@ -384,6 +388,7 @@
       "id": "sobrino",
       "es": "sobrino",
       "en": ["nephew"],
+      "enF": ["niece"],
       "pos": "noun",
       "gender": "m",
       "forms": {
@@ -397,6 +402,7 @@
       "id": "primo",
       "es": "primo",
       "en": ["cousin"],
+      "enF": ["cousin"],
       "pos": "noun",
       "gender": "m",
       "forms": {
@@ -410,6 +416,7 @@
       "id": "nieto",
       "es": "nieto",
       "en": ["grandson", "grandchild"],
+      "enF": ["granddaughter", "grandchild"],
       "pos": "noun",
       "gender": "m",
       "forms": {
@@ -438,6 +445,7 @@
       "id": "marido",
       "es": "marido",
       "en": ["husband"],
+      "enF": ["wife"],
       "pos": "noun",
       "gender": "m",
       "forms": {
@@ -451,6 +459,7 @@
       "id": "tio",
       "es": "tío",
       "en": ["uncle"],
+      "enF": ["aunt"],
       "pos": "noun",
       "gender": "m",
       "forms": {
@@ -1991,6 +2000,7 @@
       "id": "cientifico",
       "es": "científico",
       "en": ["scientist"],
+      "enF": ["scientist"],
       "pos": "noun",
       "gender": "m",
       "forms": { "f": "científica", "pl": "científicos" },
@@ -2002,6 +2012,7 @@
       "id": "cocinero",
       "es": "cocinero",
       "en": ["cook", "chef"],
+      "enF": ["cook", "chef"],
       "pos": "noun",
       "gender": "m",
       "forms": { "f": "cocinera", "pl": "cocineros" },
@@ -2024,6 +2035,7 @@
       "id": "disenador-de-moda",
       "es": "diseñador de moda",
       "en": ["fashion designer", "designer"],
+      "enF": ["fashion designer", "designer"],
       "pos": "noun",
       "gender": "m",
       "forms": { "f": "diseñadora de moda", "pl": "diseñadores de moda" },
@@ -2046,6 +2058,7 @@
       "id": "profesor",
       "es": "profesor",
       "en": ["teacher", "professor", "lecturer"],
+      "enF": ["teacher", "professor", "lecturer"],
       "pos": "noun",
       "gender": "m",
       "forms": { "f": "profesora", "pl": "profesores" },
@@ -2057,6 +2070,7 @@
       "id": "traductor",
       "es": "traductor",
       "en": ["translator"],
+      "enF": ["translator"],
       "pos": "noun",
       "gender": "m",
       "forms": { "f": "traductora", "pl": "traductores" },
@@ -2068,6 +2082,7 @@
       "id": "enfermero",
       "es": "enfermero",
       "en": ["nurse"],
+      "enF": ["nurse"],
       "pos": "noun",
       "gender": "m",
       "forms": { "f": "enfermera", "pl": "enfermeros" },
@@ -2078,6 +2093,7 @@
       "id": "camarero",
       "es": "camarero",
       "en": ["waiter", "waitress", "server"],
+      "enF": ["waitress", "server"],
       "pos": "noun",
       "gender": "m",
       "forms": { "f": "camarera", "pl": "camareros" },
@@ -2089,6 +2105,7 @@
       "id": "secretario",
       "es": "secretario",
       "en": ["secretary"],
+      "enF": ["secretary"],
       "pos": "noun",
       "gender": "m",
       "forms": { "f": "secretaria", "pl": "secretarios" },
@@ -2261,6 +2278,15 @@
       "forms": { "pl": "empresas" },
       "tags": ["workplaces"],
       "added": "2026-09-16"
+    },
+    {
+      "id": "trabajar",
+      "es": "trabajar",
+      "en": ["to work"],
+      "pos": "verb",
+      "verb": { "reflexive": false, "regular": true },
+      "tags": ["verbs", "workplaces"],
+      "added": "2026-09-17"
     }
   ]
 }

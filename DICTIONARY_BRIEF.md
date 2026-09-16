@@ -59,6 +59,7 @@ interface NounEntry extends EntryBase {
   gender: "m" | "f" | "mf"; // REQUIRED; "mf" = one form, either article (el/la estudiante)
   article?: "required" | "optional" | "none"; // omit for ordinary nouns (see below)
   number?: "pl"; // only when the headword itself is plural: los padres, los hermanos
+  enF?: string[]; // English for forms.f, most natural first; required alongside forms.f
   forms?: { f?: string; m?: string; pl?: string };
 }
 
@@ -122,6 +123,9 @@ Do not include articles (`"the grandfather"` → just `"grandfather"`).
 - Nouns: `pl` always. `f` (or `m`) only for people/animals with a real other-gender counterpart
   (`abuelo`/`abuela`, `profesor`/`profesora`); the headword is the masculine. Never invent one for
   inanimate nouns — `la mesa` has no masculine.
+- Whenever a noun has `f`, give `enF`: the English for the feminine form (`hermano` → `enF:
+["sister"]`). Sentences use it to put a person in the feminine; repeat the English when it does not
+  change (`profesor` → `enF: ["teacher", "professor"]`).
 - A plural with its own meaning (`los padres` = parents, `los hermanos` = siblings) can be its own
   entry. Give it `number: "pl"` and no `pl` form; without the marker it is graded with `el`, and
   `los padres` is marked wrong. The validator warns about a noun with no `pl` and no marker.
