@@ -1,4 +1,8 @@
-# Brief: generating the seed dictionary
+# Brief: writing dictionary entries
+
+The spec for entries in `data/dictionary.json`. Claude Code works from it directly in this repo;
+it began as the brief for a separate chat agent that generated the seed dictionary, which is why it
+is written as instructions.
 
 You are producing `data/dictionary.json` for a Spanish vocabulary app. Output must validate
 against the schema below exactly. A validator is provided; output that does not pass is not done.

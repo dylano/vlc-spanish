@@ -4,9 +4,9 @@ A vocabulary drilling app for an elementary Peninsular Spanish class. One shared
 family, per-person spaced-repetition progress, and typed quizzes that grade the way a teacher would —
 accepting the feminine form, noticing a missing accent, insisting on the article.
 
-Dictionary entries are authored **outside** the app — a Claude chat agent follows
-[DICTIONARY_BRIEF.md](DICTIONARY_BRIEF.md), the entries go into `data/dictionary.json`, and a
-deploy ships them — the file is bundled into the app. The app itself does the dictionary, the scheduling, and the
+Dictionary entries are authored **outside** the app — Claude Code writes them into
+`data/dictionary.json` following [DICTIONARY_BRIEF.md](DICTIONARY_BRIEF.md), and a deploy ships
+them, since the file is bundled into the app. The app itself does the dictionary, the scheduling, and the
 drilling, and never calls the Claude API. That is a deliberate decision (see
 [Working on the dictionary](#working-on-the-dictionary)): it means no API key, no billing, and no
 public endpoint that can spend money.
@@ -127,15 +127,26 @@ and a "new" count that ignores words drilled spanish → english.
 build time** (`src/app/dictionary.ts`). There is no copy of it in Netlify Blobs and no import step:
 publishing words means committing the file and pushing, and the Netlify deploy ships them.
 
-There is no way to add words from inside the app — that is deliberate. New words come from a Claude
-chat agent following [DICTIONARY_BRIEF.md](DICTIONARY_BRIEF.md) and get pasted into
-`data/dictionary.json`. This keeps the dictionary version controlled and reviewable, and it means
+There is no way to add words from inside the app — that is deliberate. New words are written into
+`data/dictionary.json` by Claude Code in this repo, following
+[DICTIONARY_BRIEF.md](DICTIONARY_BRIEF.md). This keeps the dictionary version controlled and reviewable, and it means
 the deployed site has no endpoint that writes words at all.
 
 ### Adding words
 
-1. Paste the new entries into the `entries` array in `data/dictionary.json`.
-2. Resolve anything the agent marked `flagged` — check the spelling or sense against the class list,
+1. Give Claude Code the class list, in the form used so far:
+
+   ```
+   INPUT - character traits
+   dormilón/ona, sano/a, perezoso/a, trabajador/a, deportista, intelectual
+   ```
+
+   The header names the section, which becomes the tag; `/a` shorthand gives the feminine form. It
+   writes the entries, runs the checks below plus ones the validator cannot do (English glosses
+   shared with existing words, headwords one letter apart, sample answers through the grader), and
+   marks anything it had to guess as `flagged`.
+
+2. Resolve anything marked `flagged` — check the spelling or sense against the class list,
    then delete the `flagged` field. Fix spellings **before** committing: `id` is derived from the
    headword, and progress is keyed by `id`.
 3. Validate:
