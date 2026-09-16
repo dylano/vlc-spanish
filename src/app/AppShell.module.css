@@ -14,7 +14,14 @@
   padding-block: 56px 24px;
 }
 
+/* Sticky rather than fixed: on a short screen it still sits at the bottom of the
+   page, and on a long one (the dictionary) it stays reachable without scrolling
+   to the end. It needs its own background so rows scroll behind it, not through. */
 .nav {
+  position: sticky;
+  bottom: 0;
+  z-index: 1;
+  background: var(--paper);
   display: flex;
   gap: 28px;
   padding-block: 18px;
