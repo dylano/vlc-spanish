@@ -5,13 +5,11 @@
   "type": "module",
   "scripts": {
     "dev": "vp dev --host",
-    "build": "tsc -b && vp build",
+    "build": "node scripts/validate-dictionary.ts && tsc -b && vp build",
     "lint": "vp lint",
     "preview": "vp preview",
     "prepare": "vp config",
-    "validate:dictionary": "node scripts/validate-dictionary.ts",
-    "import:dictionary": "node scripts/import-dictionary.ts",
-    "export:dictionary": "node scripts/export-dictionary.ts"
+    "validate:dictionary": "node scripts/validate-dictionary.ts"
   },
   "dependencies": {
     "@netlify/blobs": "^11.1.0",

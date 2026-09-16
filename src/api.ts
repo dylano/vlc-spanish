@@ -1,11 +1,4 @@
-import {
-  dictionarySchema,
-  progressBlobSchema,
-  usersBlobSchema,
-  type Dictionary,
-  type ProgressBlob,
-  type User,
-} from "./lib/schema.ts";
+import { progressBlobSchema, usersBlobSchema, type ProgressBlob, type User } from "./lib/schema.ts";
 
 /**
  * Typed client over the Netlify functions. Every response is validated with the
@@ -55,10 +48,6 @@ async function request(path: string, init?: RequestInit): Promise<unknown> {
   }
 
   return body;
-}
-
-export async function fetchDictionary(): Promise<Dictionary> {
-  return dictionarySchema.parse(await request("/api/dictionary"));
 }
 
 export async function fetchUsers(): Promise<User[]> {

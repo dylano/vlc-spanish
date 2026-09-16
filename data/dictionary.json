@@ -1872,6 +1872,96 @@
       "notes": "No article: mil, not 'un mil'. Does not change for gender.",
       "tags": ["numbers"],
       "added": "2026-09-15"
+    },
+    {
+      "id": "dormilon",
+      "es": "dormilón",
+      "en": ["sleepyhead", "sleepy", "fond of sleeping"],
+      "pos": "adj",
+      "forms": { "f": "dormilona", "pl": "dormilones" },
+      "notes": "Used as an adjective or a noun: es muy dormilón. The accent drops in the feminine and plural.",
+      "tags": ["character-traits"],
+      "added": "2026-09-16",
+      "flagged": "Typed as 'dormilión'; assumed the class word is 'dormilón'."
+    },
+    {
+      "id": "sano",
+      "es": "sano",
+      "en": ["healthy", "fit", "wholesome"],
+      "pos": "adj",
+      "forms": { "f": "sana", "pl": "sanos" },
+      "notes": "As a trait, someone with healthy habits; 'estar sano' is to be in good health right now.",
+      "tags": ["character-traits"],
+      "added": "2026-09-16"
+    },
+    {
+      "id": "perezoso",
+      "es": "perezoso",
+      "en": ["lazy"],
+      "pos": "adj",
+      "forms": { "f": "perezosa", "pl": "perezosos" },
+      "tags": ["character-traits"],
+      "added": "2026-09-16"
+    },
+    {
+      "id": "fiestero",
+      "es": "fiestero",
+      "en": ["party-loving", "party animal", "fond of partying"],
+      "pos": "adj",
+      "forms": { "f": "fiestera", "pl": "fiesteros" },
+      "notes": "Colloquial; also used as a noun (un fiestero).",
+      "tags": ["character-traits"],
+      "added": "2026-09-16"
+    },
+    {
+      "id": "trabajador",
+      "es": "trabajador",
+      "en": ["hard-working", "hardworking", "industrious"],
+      "pos": "adj",
+      "forms": { "f": "trabajadora", "pl": "trabajadores" },
+      "notes": "The feminine adds -a even though the masculine ends in a consonant. Also the noun 'worker'.",
+      "tags": ["character-traits"],
+      "added": "2026-09-16"
+    },
+    {
+      "id": "comilon",
+      "es": "comilón",
+      "en": ["big eater", "glutton", "greedy eater"],
+      "pos": "adj",
+      "forms": { "f": "comilona", "pl": "comilones" },
+      "notes": "Someone who eats a lot. The accent drops in the feminine and plural.",
+      "tags": ["character-traits"],
+      "added": "2026-09-16",
+      "flagged": "Typed as 'comiión'; assumed the class word is 'comilón'."
+    },
+    {
+      "id": "deportista",
+      "es": "deportista",
+      "en": ["sporty", "athletic"],
+      "pos": "adj",
+      "forms": { "pl": "deportistas" },
+      "notes": "Same form for both genders despite ending in -a: un chico deportista, una chica deportista. Also the noun 'athlete'.",
+      "tags": ["character-traits"],
+      "added": "2026-09-16"
+    },
+    {
+      "id": "casero",
+      "es": "casero",
+      "en": ["home-loving", "homebody", "stay-at-home"],
+      "pos": "adj",
+      "forms": { "f": "casera", "pl": "caseros" },
+      "notes": "Of a person, a homebody. Of things it means homemade (comida casera); as a noun, el casero is a landlord.",
+      "tags": ["character-traits"],
+      "added": "2026-09-16"
+    },
+    {
+      "id": "intelectual",
+      "es": "intelectual",
+      "en": ["intellectual"],
+      "pos": "adj",
+      "forms": { "pl": "intelectuales" },
+      "tags": ["character-traits"],
+      "added": "2026-09-16"
     }
   ]
 }

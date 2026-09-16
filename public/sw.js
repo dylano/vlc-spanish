@@ -3,13 +3,13 @@
  *
  * Hand-written rather than generated, because the caching rules here are few and
  * specific: the built assets are content-hashed and immutable, the app shell must
- * survive going offline, and the dictionary should stay readable on a train.
+ * survive going offline. The dictionary is bundled into the app, so caching the
+ * build output is what keeps it readable on a train.
  */
 
-const VERSION = "v2";
+const VERSION = "v3";
 const SHELL_CACHE = `shell-${VERSION}`;
 const ASSET_CACHE = `assets-${VERSION}`;
-const DATA_CACHE = `data-${VERSION}`;
 
 const SHELL_URLS = [
   "/",
@@ -31,7 +31,7 @@ self.addEventListener("install", (event) => {
 });
 
 self.addEventListener("activate", (event) => {
-  const keep = new Set([SHELL_CACHE, ASSET_CACHE, DATA_CACHE]);
+  const keep = new Set([SHELL_CACHE, ASSET_CACHE]);
   event.waitUntil(
     caches
       .keys()
@@ -69,22 +69,6 @@ async function handleAsset(request) {
   return response;
 }
 
-/** Dictionary reads: serve the network when it is there, the cache when it is not. */
-async function handleDictionary(request) {
-  try {
-    const response = await fetch(request);
-    if (response.ok) {
-      const cache = await caches.open(DATA_CACHE);
-      await cache.put(request, response.clone());
-    }
-    return response;
-  } catch {
-    const cached = await caches.match(request, { cacheName: DATA_CACHE });
-    if (cached) return cached;
-    throw new Error("offline and no cached dictionary");
-  }
-}
-
 self.addEventListener("fetch", (event) => {
   const { request } = event;
   if (request.method !== "GET") return;
@@ -101,10 +85,5 @@ self.addEventListener("fetch", (event) => {
   // so both are safe to serve cache-first.
   if (url.pathname.startsWith("/assets/") || url.pathname.startsWith("/fonts/")) {
     event.respondWith(handleAsset(request));
-    return;
-  }
-
-  if (url.pathname === "/api/dictionary") {
-    event.respondWith(handleDictionary(request));
   }
 });

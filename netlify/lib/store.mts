@@ -1,16 +1,12 @@
 import { getStore, type Store } from "@netlify/blobs";
 import {
-  dictionarySchema,
   progressBlobSchema,
   usersBlobSchema,
-  type Dictionary,
-  type Entry,
   type ProgressBlob,
   type UsersBlob,
 } from "../../src/lib/schema.ts";
 
 export const STORE_NAME = "vocab";
-export const DICTIONARY_KEY = "dictionary";
 export const USERS_KEY = "users";
 
 export function progressKey(userId: string): string {
@@ -18,14 +14,12 @@ export function progressKey(userId: string): string {
 }
 
 /**
- * Strong consistency: this is a low-traffic family app, and someone adding a word
- * then immediately seeing it missing on refresh is far worse than a slower read.
+ * Strong consistency: this is a low-traffic family app, and a finished session
+ * missing its progress on refresh is far worse than a slower read.
  */
 export function vocabStore(): Store {
   return getStore(STORE_NAME, { consistency: "strong" });
 }
-
-export const EMPTY_DICTIONARY: Dictionary = { version: 1, entries: [] };
 
 interface Versioned<T> {
   data: T;
@@ -44,15 +38,6 @@ async function readVersioned<T>(
   const result = await store.getWithMetadata(key, { type: "json" });
   if (!result?.data) return { data: fallback, exists: false };
   return { data: parse(result.data), etag: result.etag, exists: true };
-}
-
-export function readDictionary(store: Store): Promise<Versioned<Dictionary>> {
-  return readVersioned(
-    store,
-    DICTIONARY_KEY,
-    (raw) => dictionarySchema.parse(raw),
-    EMPTY_DICTIONARY,
-  );
 }
 
 export function readUsers(store: Store): Promise<Versioned<UsersBlob>> {
@@ -100,15 +85,4 @@ export async function updateBlob<T>(
     if (modified) return next;
   }
   throw new ConflictError();
-}
-
-/** Merge entries into a dictionary by id: existing ids are replaced, new ones appended. */
-export function upsertEntries(dictionary: Dictionary, incoming: Entry[]): Dictionary {
-  const byId = new Map(dictionary.entries.map((entry) => [entry.id, entry]));
-  for (const entry of incoming) byId.set(entry.id, entry);
-  return {
-    version: 1,
-    updatedAt: new Date().toISOString(),
-    entries: [...byId.values()].sort((a, b) => a.id.localeCompare(b.id)),
-  };
 }

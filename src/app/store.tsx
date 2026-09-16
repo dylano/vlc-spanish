@@ -1,8 +1,9 @@
 import { useCallback, useEffect, useMemo, useState, type ReactNode } from "react";
 import * as api from "../api.ts";
 import { today } from "../lib/dates.ts";
-import type { Direction, Entry, Progress, ProgressBlob, User } from "../lib/schema.ts";
+import type { Direction, Progress, ProgressBlob, User } from "../lib/schema.ts";
 import { countWords } from "../lib/counts.ts";
+import { entries } from "./dictionary.ts";
 import { StoreContext, type Store } from "./store-context.ts";
 
 const USER_KEY = "vlc-spanish:user";
@@ -30,16 +31,13 @@ const EMPTY_PROGRESS: ProgressBlob = { userId: "", entries: {} };
 export function StoreProvider({ children }: { children: ReactNode }) {
   const [ready, setReady] = useState(false);
   const [error, setError] = useState<string>();
-  const [entries, setEntries] = useState<Entry[]>([]);
   const [users, setUsers] = useState<User[]>([]);
   const [storedUserId, setStoredUserId] = useState<string | undefined>(readStoredUser);
   const [loadedProgress, setLoadedProgress] = useState<ProgressBlob>(EMPTY_PROGRESS);
 
   const reload = useCallback(async () => {
     try {
-      const [dictionary, userList] = await Promise.all([api.fetchDictionary(), api.fetchUsers()]);
-      setEntries(dictionary.entries);
-      setUsers(userList);
+      setUsers(await api.fetchUsers());
       setError(undefined);
     } catch (cause) {
       setError(cause instanceof Error ? cause.message : "Something went wrong");
@@ -121,7 +119,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     [userId],
   );
 
-  const counts = useMemo(() => countWords(entries, progress, today()), [entries, progress]);
+  const counts = useMemo(() => countWords(entries, progress, today()), [progress]);
 
   const value = useMemo<Store>(
     () => ({
@@ -140,7 +138,6 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     [
       ready,
       error,
-      entries,
       users,
       userId,
       progress,

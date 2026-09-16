@@ -5,8 +5,8 @@ family, per-person spaced-repetition progress, and typed quizzes that grade the 
 accepting the feminine form, noticing a missing accent, insisting on the article.
 
 Dictionary entries are authored **outside** the app — a Claude chat agent follows
-[DICTIONARY_BRIEF.md](DICTIONARY_BRIEF.md), the entries go into `data/dictionary.json`, and an
-import script pushes them live. The app itself does the dictionary, the scheduling, and the
+[DICTIONARY_BRIEF.md](DICTIONARY_BRIEF.md), the entries go into `data/dictionary.json`, and a
+deploy ships them — the file is bundled into the app. The app itself does the dictionary, the scheduling, and the
 drilling, and never calls the Claude API. That is a deliberate decision (see
 [Working on the dictionary](#working-on-the-dictionary)): it means no API key, no billing, and no
 public endpoint that can spend money.
@@ -42,7 +42,7 @@ Run `vp install` after pulling. `vp check` and `vp test` should both pass before
 :5173 and puts the functions in front of it on **:8888**.
 
 Opening **:5173** directly gives you the frontend with no `/api/*` routes. That fails in a confusing
-way rather than an obvious one: Vite's SPA fallback answers `/api/dictionary` with **200 and the
+way rather than an obvious one: Vite's SPA fallback answers `/api/users` with **200 and the
 index.html page**, not a 404, so the app receives a web page where it expects JSON. The app shows a
 red "could not load your words" banner saying the server returned a page instead of data. If you see
 that, you are on the wrong port.
@@ -65,17 +65,15 @@ src/lib/          pure logic, no React, thoroughly tested
   slug.ts           stable entry ids
 src/
   api.ts          typed client over the functions; validates every response
-  app/            store (context + data loading) and the shell with its nav
+  app/            store (context + data loading), the bundled dictionary, and the shell
   screens/        one file per screen, each with a CSS module beside it
 netlify/
-  functions/      the /api routes
+  functions/      the /api routes: users and progress
   lib/            code shared between functions
 scripts/
-  validate-dictionary.ts   schema check with warnings, exits non-zero on error
-  import-dictionary.ts     file -> live store
-  export-dictionary.ts     live store -> file
+  validate-dictionary.ts   schema check with warnings, exits non-zero on error; gates the build
 data/
-  dictionary.json          the dictionary
+  dictionary.json          the dictionary, bundled into the app at build time
 ```
 
 `src/lib` deliberately has no React or network code in it. The grading and scheduling rules are the
@@ -97,8 +95,8 @@ tangled into components.
 
 One shared dictionary, tagged by class section. Progress is per person, per entry, and per direction
 (`en→es` and `es→en` are separate cards, and a word is normally practiced in one direction before
-the other). Identity is a name picked from a list — no passwords, no email. Everything lives in
-Netlify Blobs as a handful of JSON blobs.
+the other). Identity is a name picked from a list — no passwords, no email. The dictionary ships
+with the app; users and progress live in Netlify Blobs as a handful of JSON blobs.
 
 Shared blobs are written with ETag conditional writes (read → merge → write, retry on mismatch) so
 two people writing at once cannot clobber each other. One trap worth knowing: **the local
@@ -125,78 +123,62 @@ and a "new" count that ignores words drilled spanish → english.
 
 ## Working on the dictionary
 
-`data/dictionary.json` is the source of truth, and it lives in git. The live copy in Netlify Blobs
-is what the app reads. They are separate: **editing the file changes nothing in production until you
-import it.**
+`data/dictionary.json` is the source of truth, it lives in git, and it is **bundled into the app at
+build time** (`src/app/dictionary.ts`). There is no copy of it in Netlify Blobs and no import step:
+publishing words means committing the file and pushing, and the Netlify deploy ships them.
 
 There is no way to add words from inside the app — that is deliberate. New words come from a Claude
-chat agent following [DICTIONARY_BRIEF.md](DICTIONARY_BRIEF.md), get pasted into
-`data/dictionary.json`, and are imported from a terminal. This keeps the dictionary version
-controlled and reviewable, and it means the deployed site has no endpoint that costs money to call.
+chat agent following [DICTIONARY_BRIEF.md](DICTIONARY_BRIEF.md) and get pasted into
+`data/dictionary.json`. This keeps the dictionary version controlled and reviewable, and it means
+the deployed site has no endpoint that writes words at all.
 
-Three commands, all of which take an optional path and an optional `--url`:
+### Adding words
 
-```sh
-vp run validate:dictionary            # check the file against the schema
-vp run import:dictionary              # file  -> live store   (upsert by id)
-vp run export:dictionary              # live store -> file
-```
+1. Paste the new entries into the `entries` array in `data/dictionary.json`.
+2. Resolve anything the agent marked `flagged` — check the spelling or sense against the class list,
+   then delete the `flagged` field. Fix spellings **before** committing: `id` is derived from the
+   headword, and progress is keyed by `id`.
+3. Validate:
 
-### Propagating hand-edited words to production
+   ```sh
+   vp run validate:dictionary
+   ```
 
-After editing `data/dictionary.json` by hand (or dropping in a file from a dictionary-generating
-agent):
+   Errors fail it; warnings (flagged entries, ids that are not the slug of the headword, a verb with
+   no "to …" gloss) are for you to read. The same script runs first in the Netlify build, so a file
+   that does not validate fails the deploy rather than reaching the app. `vp test` also parses the
+   bundled file.
 
-```sh
-vp run validate:dictionary data/dictionary.json
-vp run import:dictionary data/dictionary.json --url https://vlc-spanish.netlify.app
-```
-
-Validate first — the import re-validates and refuses a bad file, but the validator gives better
-errors and adds warnings the import does not. Import is an **upsert by `id`**: entries whose ids
-already exist are replaced, new ids are appended, and nothing is ever deleted. That makes it safe to
-re-run, and it means you can import a small file containing only the words you changed rather than
-the whole dictionary. The output tells you which ids were added versus updated.
-
-`--url` defaults to `http://localhost:8888` (a `netlify dev` session), so **the production url is not
-optional — leave it off and you will quietly import into your local store instead.**
-
-The import goes through `POST /api/entries`, which is **unauthenticated on purpose**. Anyone who
-found it could add or overwrite entries, but it costs nothing to call and cannot delete, and the
-file in git is the recovery path. Adding a secret would bring back the environment variables this
-app otherwise does without.
-
-### Pulling production back down
-
-Nothing writes words to production except the import script, so the file should already match. Use
-export to check that, or to recover the dictionary if the local file is ever lost:
-
-```sh
-vp run export:dictionary data/dictionary.json
-git diff data/dictionary.json      # review what the family added
-```
-
-Export defaults to production, writes sorted and pretty-printed, and validates before writing. The
-round trip is lossless: export then import is a no-op.
+4. Optionally check them in `netlify dev` — a restart is not needed, the file hot-reloads.
+5. Commit and push. The words are live when the deploy finishes.
 
 ### Deleting or renaming
 
-Neither script deletes. Because `id` is the primary key, **changing a headword's spelling and
-re-importing creates a second entry** rather than renaming the first — the old id is still there.
-To genuinely remove or rename an entry: export, edit the file, then overwrite the blob directly with
-the Netlify CLI (`netlify blobs:set vocab dictionary --input data/dictionary.json`). Progress is
-keyed by entry id and is stored separately, so a deleted word leaves behind orphaned progress rows;
-they are harmless and ignored when scheduling.
+Edit or remove the entry and deploy; the file replaces the old dictionary wholesale. Progress is
+keyed by entry id and stored separately, so **changing an id orphans that word's progress** — the
+word starts again as new. Orphaned progress rows are harmless and ignored when scheduling. Correcting
+the `es` text without touching the `id` keeps progress intact, at the cost of an id that no longer
+matches the headword (the validator warns).
+
+### Why not Blobs
+
+Until September 2026 the dictionary lived in Netlify Blobs, pushed there by an import script through
+an unauthenticated `POST /api/entries`. That design came from the original plan for in-app word
+adding. Once words were only ever authored in git, the Blobs copy was a second source of truth kept
+in sync by hand, with a public write path and a `--url` flag that silently imported into the local
+store if you forgot it. A stale `dictionary` key may still exist in the production `vocab` store; the
+app no longer reads it (`netlify blobs:delete vocab dictionary` removes it).
 
 ## Status
 
 Phase 1 is complete. Working and deployed at
 [vlc-spanish.netlify.app](https://vlc-spanish.netlify.app):
 
-- The dictionary, users, and per-person progress, stored in Netlify Blobs behind four functions
+- The dictionary, bundled into the app from `data/dictionary.json`
+- Users and per-person progress, stored in Netlify Blobs behind two functions
 - Typed quizzes with SM-2 scheduling, graded per the rules below
 - Dictionary browse and search, name picker, user switching
-- Installable PWA with offline caching of the app shell and dictionary
+- Installable PWA with offline caching of the app shell, which includes the dictionary
 
 Not built, in rough order of likely usefulness:
 

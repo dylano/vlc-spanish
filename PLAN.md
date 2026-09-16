@@ -3,7 +3,8 @@
 > **Superseded in part.** This is the original brief, kept for its data model and grading rules.
 > The Claude API integration is not being built: no `/api/enrich`, no `/api/sentences`, no Add-words
 > screen, no family passphrase, no `ANTHROPIC_API_KEY`, no `.env`. Dictionary entries are authored
-> outside the app (see [DICTIONARY_BRIEF.md](DICTIONARY_BRIEF.md)) and imported from a terminal.
+> outside the app (see [DICTIONARY_BRIEF.md](DICTIONARY_BRIEF.md)) and bundled into the build from
+> `data/dictionary.json`; there is no dictionary blob, `/api/dictionary`, or `/api/entries`.
 > Where this document and the [README](README.md) disagree, the README is current.
 
 This document briefs a Claude Code agent on building a vocabulary-learning app for Doliver and his family. It captures the decisions made so far in a chat with Claude, the data model, and a phased plan. Treat it as the starting point for a collaboration, not a rigid contract: open decisions are listed at the end and should be confirmed with Doliver before scaffolding.
