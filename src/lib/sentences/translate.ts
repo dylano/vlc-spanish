@@ -1,3 +1,4 @@
+import { normalize } from "../normalize.ts";
 import { shuffle } from "../random.ts";
 import { renderFrame, type Frame, type RenderContext, type RenderedSentence } from "./frames.ts";
 
@@ -8,6 +9,16 @@ import { renderFrame, type Frame, type RenderContext, type RenderedSentence } fr
  */
 export interface Translation {
   sentence: RenderedSentence;
+}
+
+/**
+ * Whether a translation is exactly the one the sentence was rendered from,
+ * ignoring only capitals, spacing and the closing punctuation. This is not
+ * grading — a different translation can be just as right — only a way to say
+ * "that is exactly it" when it is. Accents count: a missing one is not a match.
+ */
+export function matchesTranslation(given: string, translation: Translation): boolean {
+  return normalize(given) !== "" && normalize(given) === normalize(translation.sentence.es);
 }
 
 /** A sentence containing an entry, or undefined when no frame can hold it with the words available. */

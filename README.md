@@ -126,7 +126,10 @@ tangled into components.
   miss and shows the mistake. See [Spotting a mistake](#spotting-a-mistake).
 - **Translate** — an English sentence to put into Spanish. **Not graded**: a sentence has too many
   valid translations to mark one wrong, so after Submit the learner's version and the sentence it was
-  rendered from ("One way to say it") sit one above the other to compare by eye. Nothing is
+  rendered from ("One way to say it") sit one above the other to compare by eye. The one verdict it gives
+  is **Correct** for an exact match with that version, ignoring capitals, spacing and the closing
+  full stop but not accents (`matchesTranslation`); anything else gets no verdict, since it may be
+  just as right. Nothing is
   scheduled, and the summary counts these as "translated" apart from the score. Enter submits.
 - **Dictionary** — search both languages (accent-insensitive, so `timido` finds `tímido`), filter
   by tag, read the notes.

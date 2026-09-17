@@ -203,6 +203,17 @@
   padding-top: 18px;
 }
 
+/* Doubled selectors: .verdict and .compareYours come later in this file and
+   would otherwise win on margin and colour. */
+.compare .compareVerdict {
+  margin-bottom: 14px;
+}
+
+/* An exact match: the learner's version reads as confirmed, not muted. */
+.compareYours.compareExact {
+  color: var(--correct);
+}
+
 .compareLabel {
   font-size: var(--label-size);
   letter-spacing: var(--label-tracking);

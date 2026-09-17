@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import SessionShell from "../../app/SessionShell.tsx";
+import { matchesTranslation } from "../../lib/sentences/translate.ts";
 import styles from "../QuizScreen.module.css";
 import type { ExerciseProps } from "./shared.ts";
 
@@ -7,7 +8,8 @@ import type { ExerciseProps } from "./shared.ts";
  * Translate a whole sentence into Spanish. Nothing is graded — a sentence has
  * too many valid translations to mark one wrong — so after submitting, the
  * learner's version and the sentence it was rendered from sit one above the
- * other to compare by eye. Nothing is scheduled either.
+ * other to compare by eye. Nothing is scheduled either. The one exception to "no
+ * verdict" is an exact match, which says Correct.
  *
  * Mounted fresh for each card (the parent keys it).
  */
@@ -15,6 +17,7 @@ export default function TranslateExercise({ card, position, label, onDone }: Exe
   const sentence = card.translation!.sentence;
   const [answer, setAnswer] = useState("");
   const [submitted, setSubmitted] = useState(false);
+  const exact = matchesTranslation(answer, card.translation!);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const compareRef = useRef<HTMLDivElement>(null);
 
@@ -67,8 +70,17 @@ export default function TranslateExercise({ card, position, label, onDone }: Exe
 
         {submitted ? (
           <div ref={compareRef} className={styles.compare} role="status">
+            {/* Only an exact match earns a verdict; anything else is left to the
+                learner's own comparison, since it may be just as right. */}
+            {exact ? (
+              <p className={`${styles.verdict} ${styles.verdictCorrect} ${styles.compareVerdict}`}>
+                Correct
+              </p>
+            ) : null}
             <p className={styles.compareLabel}>You wrote</p>
-            <p className={styles.compareYours}>{answer.trim() || "—"}</p>
+            <p className={`${styles.compareYours} ${exact ? styles.compareExact : ""}`}>
+              {answer.trim() || "—"}
+            </p>
             <p className={styles.compareLabel}>One way to say it</p>
             <p className={styles.compareModel}>{sentence.es}</p>
           </div>
