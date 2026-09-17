@@ -81,8 +81,13 @@ export default function TranslateExercise({ card, position, label, onDone }: Exe
             <p className={`${styles.compareYours} ${exact ? styles.compareExact : ""}`}>
               {answer.trim() || "—"}
             </p>
-            <p className={styles.compareLabel}>One way to say it</p>
-            <p className={styles.compareModel}>{sentence.es}</p>
+            {/* An exact match would only repeat the same sentence. */}
+            {exact ? null : (
+              <>
+                <p className={styles.compareLabel}>One way to say it</p>
+                <p className={styles.compareModel}>{sentence.es}</p>
+              </>
+            )}
           </div>
         ) : (
           <>
