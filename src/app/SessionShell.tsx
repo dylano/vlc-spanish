@@ -4,7 +4,11 @@ import styles from "./SessionShell.module.css";
 import { useVisualViewport } from "./useVisualViewport.ts";
 
 interface SessionShellProps {
-  /** Zero-based position in the session, or undefined for screens outside it. */
+  /**
+   * How many words of the session are done and how many it has, or undefined for
+   * screens outside a session. Counted in words so a matching round or a gap with
+   * several blanks advances the bar by as many words as it holds.
+   */
   position?: { index: number; total: number };
   /** Small-caps label on the right of the counter: the exercise being asked, or on the summary where the session came from. */
   label?: string;

@@ -65,6 +65,8 @@ export default function SettingsScreen() {
       </div>
 
       <div className={styles.spacer} />
+      {/* Which deployment this is, for telling builds apart. */}
+      <p className={styles.version}>Version {__COMMIT__}</p>
     </section>
   );
 }

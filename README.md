@@ -103,8 +103,10 @@ tangled into components.
 - **Quiz** — one prompt at a time, typed answer, inline verdict, progress bar, and a summary
   listing what to look at again. Nouns are prompted with "include the article". A session is full
   screen with no main nav; the × in the header ends it (every answer is already saved). The header
-  names the current exercise in the accent colour, and each card opens with a bold instruction
-  line ("Type the missing word", "Find the wrong word") — in a mixed session the exercise changes
+  names the current exercise in the accent colour. The progress bar and the "4 of 15" counter count
+  **words**, not steps — a matching round advances it by four and a two-blank gap by two — so a
+  Practice session always reads 15; counting steps made the same session anywhere from 4 to 15 long.
+  Each card opens with a bold instruction line ("Type the missing word", "Find the wrong word") — in a mixed session the exercise changes
   from card to card, and a muted label was too easy to miss.
   The summary adds a score per exercise when the session used more than one.
 - **Multiple choice** — the same session with four options; touching one answers it, with no
@@ -112,9 +114,9 @@ tangled into components.
   and Enter moves on, on a computer. A wrong pick says what the picked word means. Started from
   Choose exercise on the home screen, or by URL: `/quiz?exercise=choice` (combines with `scope` and
   `tag`).
-- **Match pairs** — rounds of six: Spanish in one column, English in the other, each shuffled. Tap
+- **Match pairs** — rounds of four: Spanish in one column, English in the other, each shuffled. Tap
   a tile on either side, then its partner; a right pair locks, a wrong one flashes red and clears.
-  Chosen by name it is three rounds. A round draws from one tag where it can and never holds two
+  Chosen by name it is four rounds. Rounds were six pairs until that felt tedious to finish. A round draws from one tag where it can and never holds two
   interchangeable words (a shared English gloss or headword). A word matched without ever being in
   a wrong pair is a correct **recognition** answer; both words of a wrong pair count as missed.
 - **Fill the gap** — the English sentence as a cue, the Spanish with one to three words blanked;
@@ -134,6 +136,9 @@ tangled into components.
 - **Dictionary** — search both languages (accent-insensitive, so `timido` finds `tímido`), filter
   by tag, read the notes.
 - **Settings** — your name (editable) and how much you have practiced. No other users, no switching.
+  A quiet footer shows the **version**: the commit the build came from (`COMMIT_REF` on Netlify, `git
+rev-parse` locally, marked "+ local changes" when the tree is dirty), injected as `__COMMIT__` by
+  `define` in `vite.config.ts`.
 
 ## Data
 
@@ -394,19 +399,28 @@ with the reserved share.
 
 A session started from Practice or a narrowing is built by `buildMixedSession` in
 `src/lib/session.ts`: 15 words by default, taken in the order described in
-[Choosing words](#choosing-words), with only the way each is asked varying. Each step picks an exercise by weight — typed 3,
-multiple choice 2, a matching round 1 — with three rules on top:
+[Choosing words](#choosing-words), with only the way each is asked varying. Each step picks an exercise by weight (`MIX_WEIGHTS`): Fill
+the gap 3, Spot the mistake 2, typed 2, Translate 1, Pick one 1, a matching round 1. Sentence
+exercises lead because they test words in context, which is worth more than rote recall; with a third
+of practiced words due they make up about half of a session's words. Rules on top:
 
-- **No more than three of one exercise in a row** (`MAX_RUN`), so the pace keeps changing.
+- **At most two Pick one cards and one matching round per session** (`MAX_PER_SESSION`). Pick one is
+  recognition among four options, easy enough that more feels like filler (before the cap a third of
+  sessions had three or more). A matching round is several words at once, so two of them took most of a
+  fifteen-word session, sometimes back to back.
+
+- **No more than three of one exercise in a row** (`MAX_RUN`), so the pace keeps changing — unless
+  nothing else is left to offer (Pick one used up, no room for a round, no sentences), when typing
+  continues rather than the session stopping.
 - **Typed cards are nudged into short runs.** Every switch between typing and tapping drops or
   raises the phone keyboard; alternating one card at a time would have it bouncing all session. On
   iOS a typed card that follows a tap exercise may need a tap on the answer line to bring the
   keyboard back, because iOS only opens it from a user gesture.
-- **Spot the mistake joins too** (weight 1) once sentences are possible, and **Translate** at weight
-  0.6 — about one card in fifteen, since it schedules nothing.
-- **Gaps join once they are possible** (weight 2, nudged into runs with typed cards since both
-  use the keyboard) — see [Filling a gap](#filling-a-gap).
-- **A matching round needs room**: at least six words left in the session and at least four words
+- **Spot the mistake and Translate join** once sentences are possible, like gaps.
+- **Gaps join once they are possible**, nudged into runs with typed cards since both use the
+  keyboard — see [Filling a gap](#filling-a-gap). Sentences in Practice only use due words, so right
+  after practicing, with nothing due, a Practice session has none.
+- **A matching round needs room**: at least four words left in the session and at least three words
   that can share a round. Otherwise the planner stops offering rounds for that session.
 
 Directions are balanced across the whole session at once, then multiple-choice options are chosen.

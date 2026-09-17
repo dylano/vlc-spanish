@@ -26,7 +26,7 @@ function spanishOf(card: Card): string {
 }
 
 /**
- * Pair six Spanish words with their English. Tap a tile on either side, then its
+ * Pair four Spanish words with their English. Tap a tile on either side, then its
  * partner on the other. A right pair locks; a wrong pair flashes and clears.
  *
  * A word counts as known only if it was matched without ever being part of a

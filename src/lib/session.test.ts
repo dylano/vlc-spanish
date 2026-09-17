@@ -5,6 +5,7 @@ import {
   buildMixedSession,
   buildSession,
   isMatchRound,
+  MAX_PER_SESSION,
   MAX_RUN,
   NEW_WORD_EVERY,
   MATCH_ROUND_SIZE,
@@ -347,10 +348,10 @@ describe("excluding numbers", () => {
 });
 
 describe("matching rounds", () => {
-  const family = ["padre", "madre", "hijo", "hija", "abuelo", "abuela", "primo"].map((id) =>
-    word(id, [`${id} (en)`], ["family"]),
+  const family = ["padre", "madre", "hijo", "hija", "abuelo", "abuela", "primo", "prima"].map(
+    (id) => word(id, [`${id} (en)`], ["family"]),
   );
-  const traits = ["alto", "bajo", "rubio", "moreno", "guapo", "feo", "calvo"].map((id) =>
+  const traits = ["alto", "bajo", "rubio", "moreno", "guapo", "feo", "calvo", "delgado"].map((id) =>
     word(id, [`${id} (en)`], ["physical-traits"]),
   );
 
@@ -365,22 +366,23 @@ describe("matching rounds", () => {
     });
   }
 
-  it("counts size in words: eighteen words is three rounds of six", () => {
+  it("counts size in words: sixteen words is four rounds of four", () => {
     const result = rounds(
       [
         ...family,
         ...traits,
         ...family.map((e) => ({ ...e, id: `${e.id}-x`, es: `${e.es}x`, en: [`${e.en[0]} x`] })),
       ],
-      18,
+      16,
     );
-    expect(result).toHaveLength(3);
+    expect(result).toHaveLength(4);
     for (const round of result) expect(round.cards).toHaveLength(MATCH_ROUND_SIZE);
   });
 
   it("keeps each round to one tag when there are enough words", () => {
     for (let seed = 1; seed <= 10; seed++) {
-      for (const round of rounds([...family, ...traits], 12, seed)) {
+      // Eight words per tag: two rounds of four can always stay within one tag.
+      for (const round of rounds([...family, ...traits], 8, seed)) {
         const tags = new Set(round.cards.map((card) => card.entry.tags[0]));
         expect(tags.size).toBe(1);
       }
@@ -472,14 +474,21 @@ describe("mixed sessions", () => {
     expect([...seen].sort()).toEqual(["choice", "match", "typed"]);
   });
 
-  it("never runs one exercise more than the limit in a row", () => {
+  it("never runs one exercise more than the limit in a row while there is an alternative", () => {
     for (let seed = 1; seed <= 40; seed++) {
       let run = 0;
       let last = "";
+      let choices = 0;
       for (const item of mixed(pool, 30, seed)) {
         run = item.exercise === last ? run + 1 : 1;
         last = item.exercise;
-        expect(run).toBeLessThanOrEqual(MAX_RUN);
+        if (item.exercise === "choice") choices++;
+        // Past the limit only typing may continue, and only once Pick one is
+        // used up (these words have no sentences, and a round needs room).
+        if (run > MAX_RUN) {
+          expect(item.exercise).toBe("typed");
+          expect(choices).toBe(MAX_PER_SESSION.choice);
+        }
       }
     }
   });
@@ -496,9 +505,9 @@ describe("mixed sessions", () => {
 
   it("makes no matching round from too few words", () => {
     for (let seed = 1; seed <= 20; seed++) {
-      const items = mixed(pool.slice(0, 5), 15, seed);
+      const items = mixed(pool.slice(0, MATCH_ROUND_SIZE - 1), 15, seed);
       expect(items.some(isMatchRound)).toBe(false);
-      expect(wordsIn(items)).toHaveLength(5);
+      expect(wordsIn(items)).toHaveLength(MATCH_ROUND_SIZE - 1);
     }
   });
 
@@ -509,6 +518,23 @@ describe("mixed sessions", () => {
       const items = mixed(clones, 8, seed);
       expect(items.some(isMatchRound)).toBe(false);
       expect(wordsIn(items)).toHaveLength(8);
+    }
+  });
+
+  it("never holds more than one matching round", () => {
+    for (let seed = 1; seed <= 60; seed++) {
+      expect(mixed(pool, 30, seed).filter(isMatchRound).length).toBeLessThanOrEqual(
+        MAX_PER_SESSION.match!,
+      );
+    }
+  });
+
+  it("never holds more Pick one cards than the cap", () => {
+    for (let seed = 1; seed <= 60; seed++) {
+      const choices = mixed(pool, 30, seed).filter(
+        (item) => !isMatchRound(item) && item.exercise === "choice",
+      ).length;
+      expect(choices).toBeLessThanOrEqual(MAX_PER_SESSION.choice!);
     }
   });
 

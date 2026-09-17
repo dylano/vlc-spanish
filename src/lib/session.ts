@@ -395,11 +395,14 @@ export function buildSession(options: BuildSessionOptions): Card[] {
   return finalize(plan, options) as Card[];
 }
 
-/** Pairs in one matching round. */
-export const MATCH_ROUND_SIZE = 6;
+/**
+ * Pairs in one matching round. Four rather than six: six felt tedious to finish,
+ * and in a fifteen-word Practice session a six-pair round was 40% of it.
+ */
+export const MATCH_ROUND_SIZE = 4;
 
 /** Fewer pairs than this and a round is not worth the screen. */
-const MATCH_ROUND_MIN = 4;
+const MATCH_ROUND_MIN = 3;
 
 /** A matching round: several cards answered together on one screen. */
 export interface MatchRound {
@@ -426,7 +429,7 @@ type Planned =
  * Take up to a round's worth of cards off the front of a ranked list.
  *
  * The round starts from the highest-priority word left and fills up with words
- * sharing one of its tags, so the pairs are confusable (six family words, not a
+ * sharing one of its tags, so the pairs are confusable (four family words, not a
  * noun, three adjectives and a verb), then with anything else. Two words that
  * could stand in for each other never share a round: tapping "to be" would have
  * two right answers.
@@ -455,8 +458,8 @@ function takeRound(remaining: Card[]): Card[] {
 }
 
 /**
- * Build matching rounds only. `config.size` counts words, so a size of 18 is
- * three rounds of six. A short last round is kept rather than dropping words,
+ * Build matching rounds only. `config.size` counts words, so a size of 16 is
+ * four rounds of four. A short last round is kept rather than dropping words,
  * but a round needs at least two pairs.
  */
 export function buildMatchRounds(options: BuildSessionOptions): MatchRound[] {
@@ -474,18 +477,29 @@ export function buildMatchRounds(options: BuildSessionOptions): MatchRound[] {
 
 /**
  * How often each exercise is chosen for the next step of a mixed session.
- * Typing is the strongest practice, so it leads; a matching round covers six
+ * Typing is the strongest practice, so it leads; a matching round covers four
  * words at once, so it needs fewer turns to take its share.
  */
 export const MIX_WEIGHTS: Record<Exercise, number> = {
-  typed: 3,
-  choice: 2,
+  typed: 2,
+  // The easiest exercise: kept light, and capped below.
+  choice: 1,
   match: 1,
-  gap: 2,
-  mistake: 1,
-  // Ungraded, so it schedules nothing: about one card in fifteen, no more.
-  translate: 0.6,
+  // Sentences test words in context, which is more worth practicing than rote
+  // recall, so they lead the mix whenever there are due words to build them from.
+  gap: 3,
+  mistake: 2,
+  // Ungraded, so it schedules nothing; still worth a regular appearance.
+  translate: 1,
 };
+
+/**
+ * The most of an exercise one mixed session may hold. Pick one is recognition
+ * among four options — easy enough that more than a couple per session feels
+ * like filler. A matching round is several words at once, so two of them take
+ * most of a fifteen-word session.
+ */
+export const MAX_PER_SESSION: Partial<Record<Exercise, number>> = { choice: 2, match: 1 };
 
 /** The most steps of one exercise in a row, so a session keeps changing pace. */
 export const MAX_RUN = 3;
@@ -535,10 +549,16 @@ export function buildMixedSession(options: BuildSessionOptions): SessionItem[] {
       weights.gap *= 2;
     }
     if (last && run >= MAX_RUN) weights[last] = 0;
+    for (const [capped, limit] of Object.entries(MAX_PER_SESSION) as [Exercise, number][]) {
+      if (plan.filter((step) => step.exercise === capped).length >= limit) weights[capped] = 0;
+    }
     if (!roundsPossible || budget < MATCH_ROUND_SIZE) weights.match = 0;
     if (!gapsPossible) weights.gap = 0;
     if (!mistakesPossible) weights.mistake = 0;
     if (!translationsPossible) weights.translate = 0;
+    // The run limit varies the pace; it must never leave nothing to ask. When every
+    // other exercise is capped or unavailable, typing continues.
+    if (Object.values(weights).every((weight) => weight === 0)) weights.typed = 1;
 
     const exercise = weightedPick(weights, random);
     const taken = new Set(

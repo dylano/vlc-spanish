@@ -47,7 +47,7 @@ const GIVEN_VERB: Record<Exercise, string> = {
 const DEFAULT_SIZE: Record<QuizConfig["format"], number> = {
   typed: DEFAULT_CONFIG.size,
   choice: DEFAULT_CONFIG.size,
-  match: MATCH_ROUND_SIZE * 3,
+  match: MATCH_ROUND_SIZE * 4,
   gap: DEFAULT_CONFIG.size,
   mistake: DEFAULT_CONFIG.size,
   translate: DEFAULT_CONFIG.size,
@@ -56,6 +56,12 @@ const DEFAULT_SIZE: Record<QuizConfig["format"], number> = {
 };
 
 /** A session asks with one exercise when the URL names it, and mixes them otherwise. */
+/** How many words a session step covers. */
+function wordsIn(item: SessionItem): number {
+  if (isMatchRound(item)) return item.cards.length;
+  return item.blankCards?.length ?? 1;
+}
+
 function formatParam(value: string | null): QuizConfig["format"] {
   return value === "typed" ||
     value === "choice" ||
@@ -132,6 +138,15 @@ export default function QuizScreen() {
   // names its own exercise, so a mixed session always shows which one is up.
   const label =
     config.format === "mixed" ? SCOPE_LABEL[config.scope] : EXERCISE_LABEL[config.format];
+
+  // Progress is counted in words, not steps: a matching round is four words and a
+  // gap may have several blanks. Counting steps made the bar of a 15-word
+  // session anywhere from 4 to 15 segments long.
+  const wordsBefore = items.reduce<number[]>(
+    (starts, current, position) => [...starts, (starts[position] ?? 0) + wordsIn(current)],
+    [0],
+  );
+  const totalWords = wordsBefore[items.length] ?? 0;
 
   const item = items[index];
   const finished = items.length > 0 && index >= items.length;
@@ -216,7 +231,7 @@ export default function QuizScreen() {
 
     return (
       <SessionShell
-        position={{ index: items.length, total: items.length }}
+        position={{ index: totalWords, total: totalWords }}
         label={label}
         footer={
           <button
@@ -309,7 +324,7 @@ export default function QuizScreen() {
 
   if (!item) return null;
 
-  const position = { index, total: items.length };
+  const position = { index: wordsBefore[index] ?? 0, total: totalWords };
 
   if (isMatchRound(item)) {
     return (

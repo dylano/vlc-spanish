@@ -98,3 +98,13 @@
 .spacer {
   flex: 1;
 }
+
+.version {
+  margin: 28px 0 0;
+  font-size: 0.75rem;
+  letter-spacing: 0.04em;
+  font-variant-numeric: tabular-nums;
+  color: var(--muted);
+  opacity: 0.7;
+  user-select: all;
+}
