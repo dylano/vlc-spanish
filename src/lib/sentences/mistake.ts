@@ -14,7 +14,7 @@ import {
 } from "./frames.ts";
 
 /*
- * Spot the mistake: a correct rendered sentence with exactly one slot broken in
+ * Find the Mistake: a correct rendered sentence with exactly one slot broken in
  * a way that is unambiguously wrong. Every kind of break changes a form the
  * sentence itself decides — agreement, person, article — so the English cue plus
  * the rest of the Spanish always show that it is wrong and what it should be.

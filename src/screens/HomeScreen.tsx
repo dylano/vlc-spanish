@@ -49,7 +49,7 @@ export default function HomeScreen() {
         {canPractice ? (
           <div className={styles.list}>
             <Link to="/quiz?scope=due" className={`${styles.action} ${styles.primary}`}>
-              Practice
+              General practice
               <Chevron />
             </Link>
 
@@ -64,29 +64,32 @@ export default function HomeScreen() {
 
             {missed > 0 ? (
               <Link to="/quiz?scope=misses" className={`${styles.action} ${styles.narrowing}`}>
-                Remediation
+                Focus on problem words
                 <Chevron />
               </Link>
             ) : null}
-
-            {/* The rows above choose which words; this chooses how they are asked.
-                Folded by default so the common taps stay the big ones. */}
-            <button
-              type="button"
-              className={`${styles.action} ${styles.disclosure} ${choosing ? styles.disclosureOpen : ""}`}
-              aria-expanded={choosing}
-              aria-controls="exercises"
-              onClick={() => {
-                setChoosing((open) => !open);
-              }}
-            >
-              Choose exercise
-              <Chevron className={choosing ? styles.chevronUp : styles.chevronDown} />
-            </button>
           </div>
         ) : (
           <p className={styles.nothing}>Nothing to practice right now. Come back later.</p>
         )}
+
+        {/* Set apart from the rows above on purpose: those are ways to practice,
+            this is a control that changes how the words are asked. Folded by
+            default so the common taps stay the big ones. */}
+        {canPractice ? (
+          <button
+            type="button"
+            className={`${styles.disclosure} ${choosing ? styles.disclosureOpen : ""}`}
+            aria-expanded={choosing}
+            aria-controls="exercises"
+            onClick={() => {
+              setChoosing((open) => !open);
+            }}
+          >
+            Select specific exercise mode
+            <Chevron className={choosing ? styles.chevronUp : styles.chevronDown} />
+          </button>
+        ) : null}
 
         {canPractice && choosing ? (
           <div id="exercises">

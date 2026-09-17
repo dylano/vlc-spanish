@@ -483,7 +483,7 @@ describe("mixed sessions", () => {
         run = item.exercise === last ? run + 1 : 1;
         last = item.exercise;
         if (item.exercise === "choice") choices++;
-        // Past the limit only typing may continue, and only once Pick one is
+        // Past the limit only typing may continue, and only once Multiple Choice is
         // used up (these words have no sentences, and a round needs room).
         if (run > MAX_RUN) {
           expect(item.exercise).toBe("typed");
@@ -529,7 +529,7 @@ describe("mixed sessions", () => {
     }
   });
 
-  it("never holds more Pick one cards than the cap", () => {
+  it("never holds more Multiple Choice cards than the cap", () => {
     for (let seed = 1; seed <= 60; seed++) {
       const choices = mixed(pool, 30, seed).filter(
         (item) => !isMatchRound(item) && item.exercise === "choice",

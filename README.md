@@ -96,10 +96,12 @@ tangled into components.
 ## Screens
 
 - **Welcome** — first start only: asks for a name, which the home screen greets.
-- **Home** — **Practice**, plus **Focus on new words** and **Remediation** (words last answered
-  wrong), each shown only when it holds something. Each of those is a **mixed** session that moves
-  between the exercises. A folded **Choose exercise** list starts the same kind of session using one
-  exercise only; it names only exercises that exist. Layout and labels follow design option B2.
+- **Home** — **General practice**, plus **Focus on new words** and **Focus on problem words** (words
+  last answered wrong), each shown only when it holds something. Each of those is a **mixed** session
+  that moves between the exercises. Below them, set well apart and styled as a small toggle rather
+  than a fourth row — it changes how words are asked, not which — **Select specific exercise mode**
+  unfolds the list of exercises; each starts the same kind of session using that exercise only. The
+  list names only exercises that exist.
 - **Quiz** — one prompt at a time, typed answer, inline verdict, progress bar, and a summary
   listing what to look at again. Nouns are prompted with "include the article". A session is full
   screen with no main nav; the × in the header ends it (every answer is already saved). The header
@@ -108,22 +110,25 @@ tangled into components.
   Practice session always reads 15; counting steps made the same session anywhere from 4 to 15 long.
   Each card opens with a bold instruction line ("Type the missing word", "Find the wrong word") — in a mixed session the exercise changes
   from card to card, and a muted label was too easy to miss.
+  Exercise names, grouped as on the home screen: Words — **Translate** (typed), **Multiple Choice**,
+  **Match Pairs**; Sentences — **Translate**, **Fill in the Blank**, **Find the Mistake**. Both groups
+  have a Translate; the prompt (one word or a sentence) tells them apart.
   The summary adds a score per exercise when the session used more than one.
-- **Multiple choice** — the same session with four options; touching one answers it, with no
+- **Multiple Choice** — the same session with four options; touching one answers it, with no
   separate Check. A right answer moves on by itself, a miss waits for Next. Keys a–d or 1–4 answer
   and Enter moves on, on a computer. A wrong pick says what the picked word means. Started from
-  Choose exercise on the home screen, or by URL: `/quiz?exercise=choice` (combines with `scope` and
+  Select specific exercise mode on the home screen, or by URL: `/quiz?exercise=choice` (combines with `scope` and
   `tag`).
-- **Match pairs** — rounds of four: Spanish in one column, English in the other, each shuffled. Tap
+- **Match Pairs** — rounds of four: Spanish in one column, English in the other, each shuffled. Tap
   a tile on either side, then its partner; a right pair locks, a wrong one flashes red and clears.
   Chosen by name it is four rounds. Rounds were six pairs until that felt tedious to finish. A round draws from one tag where it can and never holds two
   interchangeable words (a shared English gloss or headword). A word matched without ever being in
   a wrong pair is a correct **recognition** answer; both words of a wrong pair count as missed.
-- **Fill the gap** — the English sentence as a cue, the Spanish with one to three words blanked;
+- **Fill in the Blank** — the English sentence as a cue, the Spanish with one to three words blanked;
   type each word in the form the sentence needs. Enter writes into the current blank and moves to the
   next, a tap on a blank goes back to it, and Check grades them all. Shares the typed card's input, so the keyboard stays up
   between typed cards and gaps. See [Filling a gap](#filling-a-gap).
-- **Spot the mistake** — the English sentence as a cue, the Spanish with exactly one word broken.
+- **Find the Mistake** — the English sentence as a cue, the Spanish with exactly one word broken.
   Tap the broken word, then type what it should be. Tapping a word that is fine ends the card as a
   miss and shows the mistake. See [Spotting a mistake](#spotting-a-mistake).
 - **Translate** — an English sentence to put into Spanish. **Not graded**: a sentence has too many
@@ -294,10 +299,10 @@ word pinned in the slot. So a gap usually reviews a word that is due.
 - **Sentences only use practiced words** — any word with a progress row, plus words kept out of
   drilling (numbers). In a mixed session a sentence exercise is aimed only at a word that is **due**,
   so Practice never re-asks words just practiced. A session of one sentence exercise chosen by name
-  (Fill the gap, Spot the mistake, Translate) prefers due words but falls back to any practiced word:
+  (Fill in the Blank, Find the Mistake, Translate) prefers due words but falls back to any practiced word:
   right after practicing nothing is due, and without the fallback those sessions came up empty with
   a misleading "not enough words". Gaps appear only once `MIN_SENTENCE_WORDS` (15) drillable words have been
-  practiced; before that "Fill the gap" explains why it is empty.
+  practiced; before that "Fill in the Blank" explains why it is empty.
 - **Several blanks**: a gap gets 1 blank half the time, 2 most of the rest, 3 occasionally
   (`BLANK_ODDS`), limited by how many slots the frame lists in `cloze`. The first blank is the word
   the gap was aimed at; the others are further practiced words in the sentence not already used this
@@ -352,14 +357,15 @@ Phase 1 is complete. Working and deployed at
 
 The first release of Phase 2 is built (not yet deployed at the time of writing):
 
-- Three exercises — Type it, Pick one (multiple choice), Match pairs — and mixed sessions across them
+- Three exercises — Translate (typed), Multiple Choice, Match Pairs — and mixed sessions across them
 - Recognition answers (multiple choice, matching) scheduled more gently than typed recall
 - A session frame sized to the space above the on-screen keyboard
-- The B2 home screen: Practice, Focus on new words, Remediation, Choose exercise
+- The home screen: General practice, Focus on new words, Focus on problem words, and a folded
+  Select specific exercise mode
 - A per-exercise score in the summary of a mixed session
 - Single-user and fully static: name on first start, progress in local storage, no server
-- Sentence frames (31, about 25,000 sentences), **Fill the gap** (one to three blanks), **Spot
-  the mistake** and **Translate** (ungraded), in Practice and Choose exercise
+- Sentence frames (31, about 25,000 sentences), **Fill in the Blank** (one to three blanks), **Find
+  the Mistake** and **Translate** (ungraded), in General practice and Select specific exercise mode
 
 Still open: not repeating a frame within a session, a progress screen, and possibly **Answer a
 question** (cued Q&A) or **Odd one out**. Translate was deliberately left ungraded rather than graded
@@ -397,26 +403,26 @@ with the reserved share.
 
 ## Mixed sessions
 
-A session started from Practice or a narrowing is built by `buildMixedSession` in
+A session started from General practice or a Focus row is built by `buildMixedSession` in
 `src/lib/session.ts`: 15 words by default, taken in the order described in
 [Choosing words](#choosing-words), with only the way each is asked varying. Each step picks an exercise by weight (`MIX_WEIGHTS`): Fill
-the gap 3, Spot the mistake 2, typed 2, Translate 1, Pick one 1, a matching round 1. Sentence
+in the Blank 3, Find the Mistake 2, word Translate (typed) 2, sentence Translate 1, Multiple Choice 1, a matching round 1. Sentence
 exercises lead because they test words in context, which is worth more than rote recall; with a third
 of practiced words due they make up about half of a session's words. Rules on top:
 
-- **At most two Pick one cards and one matching round per session** (`MAX_PER_SESSION`). Pick one is
+- **At most two Multiple Choice cards and one matching round per session** (`MAX_PER_SESSION`). Multiple Choice is
   recognition among four options, easy enough that more feels like filler (before the cap a third of
   sessions had three or more). A matching round is several words at once, so two of them took most of a
   fifteen-word session, sometimes back to back.
 
 - **No more than three of one exercise in a row** (`MAX_RUN`), so the pace keeps changing — unless
-  nothing else is left to offer (Pick one used up, no room for a round, no sentences), when typing
+  nothing else is left to offer (Multiple Choice used up, no room for a round, no sentences), when typing
   continues rather than the session stopping.
 - **Typed cards are nudged into short runs.** Every switch between typing and tapping drops or
   raises the phone keyboard; alternating one card at a time would have it bouncing all session. On
   iOS a typed card that follows a tap exercise may need a tap on the answer line to bring the
   keyboard back, because iOS only opens it from a user gesture.
-- **Spot the mistake and Translate join** once sentences are possible, like gaps.
+- **Find the Mistake and Translate join** once sentences are possible, like gaps.
 - **Gaps join once they are possible**, nudged into runs with typed cards since both use the
   keyboard — see [Filling a gap](#filling-a-gap). Sentences in Practice only use due words, so right
   after practicing, with nothing due, a Practice session has none.

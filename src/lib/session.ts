@@ -494,7 +494,7 @@ export const MIX_WEIGHTS: Record<Exercise, number> = {
 };
 
 /**
- * The most of an exercise one mixed session may hold. Pick one is recognition
+ * The most of an exercise one mixed session may hold. Multiple Choice is recognition
  * among four options — easy enough that more than a couple per session feels
  * like filler. A matching round is several words at once, so two of them take
  * most of a fifteen-word session.

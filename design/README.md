@@ -24,8 +24,9 @@ Delete the superseded ones when Phase 2 lands, rather than letting them drift.
 
 A second page, **Phase 2 home**, holds the chosen home screen for Phase 2's exercises
 (`HomeOptionB2`, closed, and `HomeOptionB2Open`): Practice, Focus on new words, Remediation, and a
-folding Choose exercise list grouped under Words and Sentences. It replaces `Home.dc.html` once
-built.
+folding Choose exercise list grouped under Words and Sentences. It is built; the app has since renamed
+the rows (General practice, Focus on problem words, Select specific exercise mode) and set the
+exercise toggle apart from the list, so the app is authoritative.
 
 ## Changing the design
 

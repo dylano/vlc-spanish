@@ -60,7 +60,7 @@ export const frameSchema = z.object({
   es: z.string().min(1),
   en: z.string().min(1),
   slots: z.record(z.string(), slotSchema),
-  /** Slots worth blanking in Fill the gap, most useful first. */
+  /** Slots worth blanking in Fill in the Blank, most useful first. */
   cloze: z.array(z.string()).min(1),
 });
 export type Frame = z.infer<typeof frameSchema>;

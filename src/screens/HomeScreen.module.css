@@ -70,18 +70,31 @@
   transform: rotate(-90deg);
 }
 
-/* A row like the narrowings above it, but a button that unfolds in place. */
+/* Not another row of the list: a small-caps toggle, set well apart, that
+   unfolds the exercise list in place. */
 .disclosure {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
   width: 100%;
-  min-height: 64px;
+  min-height: 48px;
+  margin-top: 40px;
   padding: 0;
   border: none;
-  border-bottom: 1px solid var(--rule);
   background: transparent;
-  font-size: 1.25rem;
+  font-family: var(--sans);
+  font-size: var(--label-size);
+  letter-spacing: var(--label-tracking);
+  text-transform: uppercase;
   color: var(--muted);
   text-align: left;
   cursor: pointer;
+}
+
+.disclosure .chevron {
+  width: 16px;
+  height: 16px;
 }
 
 .disclosureOpen {

@@ -57,7 +57,7 @@
   margin: 0;
 }
 
-/* Fill the gap: the English as a quiet cue above, the Spanish sentence as the
+/* Fill in the Blank: the English as a quiet cue above, the Spanish sentence as the
    prompt, and the gap drawn as a line to write on — the same ruled line as the
    answer field below it. */
 .gapEnglish {
@@ -126,7 +126,7 @@
   border-bottom-color: var(--wrong);
 }
 
-/* Spot the mistake: every word of the sentence is a button, drawn as plain
+/* Find the Mistake: every word of the sentence is a button, drawn as plain
    text. The found mistake gets the accent underline while its fix is typed; once
    graded it is replaced by the correct text in the verdict colour. */
 .token {

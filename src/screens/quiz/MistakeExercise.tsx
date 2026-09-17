@@ -26,7 +26,7 @@ const VERDICT_STYLE: Record<Result, string> = {
 type Phase = "find" | "fix" | "done";
 
 /**
- * Spot the mistake: one word of the Spanish is wrong. Tap it, then type what it
+ * Find the Mistake: one word of the Spanish is wrong. Tap it, then type what it
  * should be. Tapping a word that is fine ends the card — finding the mistake is
  * half of what is being practiced.
  *

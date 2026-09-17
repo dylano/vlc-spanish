@@ -55,13 +55,13 @@ const DEFAULT_SIZE: Record<QuizConfig["format"], number> = {
   mixed: 15,
 };
 
-/** A session asks with one exercise when the URL names it, and mixes them otherwise. */
 /** How many words a session step covers. */
 function wordsIn(item: SessionItem): number {
   if (isMatchRound(item)) return item.cards.length;
   return item.blankCards?.length ?? 1;
 }
 
+/** A session asks with one exercise when the URL names it, and mixes them otherwise. */
 function formatParam(value: string | null): QuizConfig["format"] {
   return value === "typed" ||
     value === "choice" ||
@@ -75,10 +75,10 @@ function formatParam(value: string | null): QuizConfig["format"] {
 
 /** Header label: the home-screen row the session came from, in short. */
 const SCOPE_LABEL: Record<QuizConfig["scope"], string> = {
-  due: "Practice",
+  due: "General practice",
   recent: "New words",
-  misses: "Remediation",
-  all: "Practice",
+  misses: "Problem words",
+  all: "General practice",
 };
 
 const EXERCISE_LABEL = Object.fromEntries(
