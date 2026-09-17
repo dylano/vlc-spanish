@@ -24,6 +24,8 @@ export interface Outcome {
   /** What they answered, as shown back in the session summary. */
   given: string;
   strength: Strength;
+  /** Not graded (a translation): nothing is scheduled and the summary does not score it. */
+  ungraded?: boolean;
 }
 
 export interface ExerciseProps {

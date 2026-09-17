@@ -10,12 +10,14 @@ import { schedule } from "../lib/scheduler.ts";
 import {
   buildGapSession,
   buildMistakeSession,
+  buildTranslateSession,
   buildMatchRounds,
   buildMixedSession,
   buildSession,
   DEFAULT_CONFIG,
   isMatchRound,
   MATCH_ROUND_SIZE,
+  isDrillable,
   MIN_SENTENCE_WORDS,
   type Card,
   type Exercise,
@@ -26,6 +28,7 @@ import ChoiceExercise from "./quiz/ChoiceExercise.tsx";
 import { EXERCISES } from "./quiz/exercises.ts";
 import MatchExercise from "./quiz/MatchExercise.tsx";
 import MistakeExercise from "./quiz/MistakeExercise.tsx";
+import TranslateExercise from "./quiz/TranslateExercise.tsx";
 import { GRADE_OPTIONS, type Outcome } from "./quiz/shared.ts";
 import TypedExercise from "./quiz/TypedExercise.tsx";
 import styles from "./QuizScreen.module.css";
@@ -37,6 +40,7 @@ const GIVEN_VERB: Record<Exercise, string> = {
   match: "you paired it with",
   gap: "you wrote",
   mistake: "you answered",
+  translate: "you wrote",
 };
 
 /** Words in a session, when the URL does not say. */
@@ -46,6 +50,7 @@ const DEFAULT_SIZE: Record<QuizConfig["format"], number> = {
   match: MATCH_ROUND_SIZE * 3,
   gap: DEFAULT_CONFIG.size,
   mistake: DEFAULT_CONFIG.size,
+  translate: DEFAULT_CONFIG.size,
   // Enough for a matching round alongside a run of single cards.
   mixed: 15,
 };
@@ -56,7 +61,8 @@ function formatParam(value: string | null): QuizConfig["format"] {
     value === "choice" ||
     value === "match" ||
     value === "gap" ||
-    value === "mistake"
+    value === "mistake" ||
+    value === "translate"
     ? value
     : "mixed";
 }
@@ -77,6 +83,7 @@ interface Answered {
   card: Card;
   grade: Grade;
   given: string;
+  ungraded?: boolean;
 }
 
 /**
@@ -113,6 +120,7 @@ export default function QuizScreen() {
     if (config.format === "match") return buildMatchRounds(options);
     if (config.format === "gap") return buildGapSession(options);
     if (config.format === "mistake") return buildMistakeSession(options);
+    if (config.format === "translate") return buildTranslateSession(options);
     return buildSession(options);
     // eslint-disable-next-line react-hooks/exhaustive-deps -- deliberately built once per session
   }, [entries, config]);
@@ -130,21 +138,41 @@ export default function QuizScreen() {
 
   /** Record one item's results — one card, or every card in a matching round. */
   function done(results: { card: Card; outcome: Outcome }[]) {
+    // An ungraded answer (a translation) leaves the word's schedule alone.
     recordResults(
-      results.map(({ card, outcome }) => ({
-        entryId: card.entry.id,
-        direction: card.direction,
-        next: schedule(card.progress, outcome.grade.result, today(), outcome.strength),
-      })),
+      results
+        .filter(({ outcome }) => !outcome.ungraded)
+        .map(({ card, outcome }) => ({
+          entryId: card.entry.id,
+          direction: card.direction,
+          next: schedule(card.progress, outcome.grade.result, today(), outcome.strength),
+        })),
     );
     setAnswered((current) => [
       ...current,
-      ...results.map(({ card, outcome }) => ({ card, grade: outcome.grade, given: outcome.given })),
+      ...results.map(({ card, outcome }) => ({
+        card,
+        grade: outcome.grade,
+        given: outcome.given,
+        ungraded: outcome.ungraded,
+      })),
     ]);
     setIndex((current) => current + 1);
   }
 
   if (items.length === 0) {
+    const sentenceExercise =
+      config.format === "gap" || config.format === "mistake" || config.format === "translate";
+    const practicedWords = entries.filter(
+      (entry) => isDrillable(entry) && progress.entries[entry.id] !== undefined,
+    ).length;
+    // Say why only when it is actually the reason: with enough words practiced,
+    // an empty sentence session means no frame fits them, not too few words.
+    const emptyMessage = !sentenceExercise
+      ? "There is nothing to practice in this set right now. Try another, or come back later."
+      : practicedWords < MIN_SENTENCE_WORDS
+        ? `Sentences only use words you have already practiced. You have practiced ${practicedWords}; at ${MIN_SENTENCE_WORDS} they will appear.`
+        : "None of the sentences fit the words you have practiced yet. Practice words from more sections and they will appear.";
     return (
       <SessionShell
         footer={
@@ -161,27 +189,27 @@ export default function QuizScreen() {
       >
         <section className={styles.empty}>
           <h1 className={styles.emptyTitle}>Nothing waiting</h1>
-          <p className={styles.emptyBody}>
-            {config.format === "gap" || config.format === "mistake"
-              ? `Sentences only use words you have already practiced. Practice at least ${MIN_SENTENCE_WORDS} words and they will appear.`
-              : "There is nothing to practice in this set right now. Try another, or come back later."}
-          </p>
+          <p className={styles.emptyBody}>{emptyMessage}</p>
         </section>
       </SessionShell>
     );
   }
 
   if (finished) {
-    const correct = answered.filter((item) => item.grade.result === "correct").length;
-    const hard = answered.filter((item) => item.grade.result === "hard").length;
-    const wrong = answered.filter((item) => item.grade.result === "wrong").length;
-    const misses = answered.filter((item) => item.grade.result !== "correct");
+    // Translations are not graded, so they are counted apart from the score.
+    const graded = answered.filter((item) => !item.ungraded);
+    const translated = answered.length - graded.length;
+    const correct = graded.filter((item) => item.grade.result === "correct").length;
+    const hard = graded.filter((item) => item.grade.result === "hard").length;
+    const wrong = graded.filter((item) => item.grade.result === "wrong").length;
+    const misses = graded.filter((item) => item.grade.result !== "correct");
     // Only worth showing when the session actually moved between exercises.
     const byExercise = EXERCISES.map((exercise) => {
       const done = answered.filter((item) => item.card.exercise === exercise.id);
       return {
         ...exercise,
         total: done.length,
+        ungraded: done.some((item) => item.ungraded),
         correct: done.filter((item) => item.grade.result === "correct").length,
       };
     }).filter((exercise) => exercise.total > 0);
@@ -204,26 +232,36 @@ export default function QuizScreen() {
       >
         <section className={styles.summary}>
           <p className={styles.label}>Session complete</p>
-          <p className={styles.score}>
-            <span className={styles.scoreValue}>{correct}</span>
-            <span className={styles.scoreTotal}>of {answered.length}</span>
-          </p>
+          {graded.length > 0 ? (
+            <p className={styles.score}>
+              <span className={styles.scoreValue}>{correct}</span>
+              <span className={styles.scoreTotal}>of {graded.length}</span>
+            </p>
+          ) : (
+            <p className={styles.score}>
+              <span className={styles.scoreValue}>{translated}</span>
+              <span className={styles.scoreTotal}>translated</span>
+            </p>
+          )}
 
-          <p className={styles.tally}>
-            <span>
-              <span className={styles.dotCorrect}>●</span> {correct} correct
-            </span>
-            {hard > 0 ? (
+          {graded.length > 0 ? (
+            <p className={styles.tally}>
               <span>
-                <span className={styles.dotHard}>●</span> {hard} almost
+                <span className={styles.dotCorrect}>●</span> {correct} correct
               </span>
-            ) : null}
-            {wrong > 0 ? (
-              <span>
-                <span className={styles.dotWrong}>●</span> {wrong} missed
-              </span>
-            ) : null}
-          </p>
+              {hard > 0 ? (
+                <span>
+                  <span className={styles.dotHard}>●</span> {hard} almost
+                </span>
+              ) : null}
+              {wrong > 0 ? (
+                <span>
+                  <span className={styles.dotWrong}>●</span> {wrong} missed
+                </span>
+              ) : null}
+              {translated > 0 ? <span>{translated} translated</span> : null}
+            </p>
+          ) : null}
 
           {byExercise.length > 1 ? (
             <ul className={styles.breakdown}>
@@ -231,7 +269,9 @@ export default function QuizScreen() {
                 <li key={exercise.id} className={styles.breakdownRow}>
                   <span>{exercise.label}</span>
                   <span className={styles.breakdownScore}>
-                    {exercise.correct} of {exercise.total}
+                    {exercise.ungraded
+                      ? `${exercise.total} translated`
+                      : `${exercise.correct} of ${exercise.total}`}
                   </span>
                 </li>
               ))}
@@ -289,5 +329,6 @@ export default function QuizScreen() {
   // keyboard survive from card to card. Other exercises get a fresh instance each.
   if (item.exercise === "choice") return <ChoiceExercise key={index} {...shared} />;
   if (item.exercise === "mistake") return <MistakeExercise key={index} {...shared} />;
+  if (item.exercise === "translate") return <TranslateExercise key={index} {...shared} />;
   return <TypedExercise {...shared} />;
 }

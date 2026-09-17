@@ -4,8 +4,10 @@ import { sentences } from "../../app/sentences.ts";
 import { normalize } from "../normalize.ts";
 import type { ProgressBlob } from "../schema.ts";
 import {
+  buildGapSession,
   buildMistakeSession,
   buildMixedSession,
+  buildTranslateSession,
   DEFAULT_CONFIG,
   isDrillable,
   isMatchRound,
@@ -178,5 +180,110 @@ describe("sessions with mistakes", () => {
       }
     }
     expect(count).toBeGreaterThan(0);
+  });
+});
+
+describe("sessions with translations", () => {
+  const all: ProgressBlob = { userId: "dylan", entries: {} };
+  for (const e of entries.filter(isDrillable)) {
+    all.entries[e.id] = {
+      "en→es": {
+        userId: "dylan",
+        entryId: e.id,
+        direction: "en→es",
+        due: "2026-09-17",
+        interval: 1,
+        ease: 2.5,
+        reps: 1,
+        lapses: 0,
+      },
+    };
+  }
+  const options = (seed: number, format: "translate" | "mixed", progress = all) => ({
+    entries,
+    progress,
+    userId: "dylan",
+    config: { ...DEFAULT_CONFIG, format, size: 15, scope: "all" as const },
+    today: "2026-09-17",
+    random: seeded(seed),
+    sentences,
+  });
+
+  it("builds sentences that contain the card's own word, from practiced words only", () => {
+    for (let seed = 1; seed <= 10; seed++) {
+      const cards = buildTranslateSession(options(seed, "translate"));
+      expect(cards.length).toBeGreaterThan(0);
+      for (const card of cards) {
+        expect(card.exercise).toBe("translate");
+        const fills = Object.values(card.translation!.sentence.fills);
+        expect(fills).toContain(card.entry.id);
+        for (const id of fills) {
+          const used = entries.find((e) => e.id === id)!;
+          expect(all.entries[id] !== undefined || !isDrillable(used)).toBe(true);
+        }
+      }
+    }
+  });
+
+  it("offers none before enough words have been practiced", () => {
+    expect(
+      buildTranslateSession(options(1, "translate", { userId: "dylan", entries: {} })),
+    ).toEqual([]);
+  });
+
+  it("appears in Practice, but rarely", () => {
+    let translations = 0;
+    let items = 0;
+    for (let seed = 1; seed <= 40; seed++) {
+      for (const item of buildMixedSession(options(seed, "mixed"))) {
+        items++;
+        if (!isMatchRound(item) && item.exercise === "translate") translations++;
+      }
+    }
+    expect(translations).toBeGreaterThan(0);
+    expect(translations / items).toBeLessThan(0.15);
+  });
+});
+
+describe("sentence sessions right after practicing", () => {
+  // Eighty words practiced today: nothing is due until tomorrow.
+  const justPracticed: ProgressBlob = { userId: "dylan", entries: {} };
+  for (const e of entries.filter(isDrillable).slice(0, 80)) {
+    justPracticed.entries[e.id] = {
+      "en→es": {
+        userId: "dylan",
+        entryId: e.id,
+        direction: "en→es",
+        due: "2026-09-18",
+        interval: 1,
+        ease: 2.5,
+        reps: 1,
+        lapses: 0,
+      },
+    };
+  }
+  const options = (format: "gap" | "mistake" | "translate" | "mixed", seed = 1) => ({
+    entries,
+    progress: justPracticed,
+    userId: "dylan",
+    config: { ...DEFAULT_CONFIG, format, scope: "due" as const, size: 10 },
+    today: "2026-09-17",
+    random: seeded(seed),
+    sentences,
+  });
+
+  it("still builds a session of one sentence exercise, from words practiced earlier", () => {
+    expect(buildTranslateSession(options("translate")).length).toBe(10);
+    expect(buildMistakeSession(options("mistake")).length).toBe(10);
+    expect(buildGapSession(options("gap")).length).toBeGreaterThan(0);
+  });
+
+  it("does not bring words just practiced back into Practice as sentences", () => {
+    for (let seed = 1; seed <= 10; seed++) {
+      for (const item of buildMixedSession(options("mixed", seed))) {
+        if (isMatchRound(item)) continue;
+        expect(["gap", "mistake", "translate"]).not.toContain(item.exercise);
+      }
+    }
   });
 });

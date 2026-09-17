@@ -89,6 +89,17 @@ export function renderGap(
       sentence.segments.findIndex((part) => part.slot === name && !part.article);
     if (chosen.some((name) => position(name) < 0)) continue;
 
+    // Always leave some Spanish showing: a sentence that is nothing but blanks
+    // ("___ ___.") gives the learner only the English to go on. Drop extra blanks
+    // until at least one word outside them remains.
+    const showsSpanish = () =>
+      sentence.segments.some(
+        (part) =>
+          /\p{L}/u.test(part.text) && !(part.slot && !part.article && chosen.includes(part.slot)),
+      );
+    while (chosen.length > 1 && !showsSpanish()) chosen.pop();
+    if (!showsSpanish()) continue;
+
     return {
       sentence,
       blanks: chosen

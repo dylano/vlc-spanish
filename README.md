@@ -52,7 +52,8 @@ src/lib/          pure logic, no React, thoroughly tested
   choices.ts        the options for a multiple-choice card
   random.ts         seedable shuffle
   sentences/        sentence frames: renderer and checks (frames.ts), gaps (gap.ts), mistakes
-                    (mistake.ts), Spanish verb forms (conjugate.ts), English inflection (english.ts)
+                    (mistake.ts), translations (translate.ts), Spanish verb forms (conjugate.ts),
+                    English inflection (english.ts)
   dates.ts          ISO calendar-date maths in whole local days
   slug.ts           stable entry ids
 src/
@@ -60,7 +61,7 @@ src/
                   data, and the shells
   screens/        one file per screen, each with a CSS module beside it
     quiz/           one component per exercise (typed and gaps, multiple choice, matching, spot the
-                    mistake), and the list of them
+                    mistake, translate), and the list of them
                     (exercises.ts) the home screen offers; QuizScreen runs the session
 scripts/
   validate-dictionary.ts   schema check with warnings, exits non-zero on error; gates the build
@@ -123,6 +124,10 @@ tangled into components.
 - **Spot the mistake** — the English sentence as a cue, the Spanish with exactly one word broken.
   Tap the broken word, then type what it should be. Tapping a word that is fine ends the card as a
   miss and shows the mistake. See [Spotting a mistake](#spotting-a-mistake).
+- **Translate** — an English sentence to put into Spanish. **Not graded**: a sentence has too many
+  valid translations to mark one wrong, so after Submit the learner's version and the sentence it was
+  rendered from ("One way to say it") sit one above the other to compare by eye. Nothing is
+  scheduled, and the summary counts these as "translated" apart from the score. Enter submits.
 - **Dictionary** — search both languages (accent-insensitive, so `timido` finds `tímido`), filter
   by tag, read the notes.
 - **Settings** — your name (editable) and how much you have practiced. No other users, no switching.
@@ -279,7 +284,11 @@ order, takes the first word some frame can blank (`frame.cloze`), and renders th
 word pinned in the slot. So a gap usually reviews a word that is due.
 
 - **Sentences only use practiced words** — any word with a progress row, plus words kept out of
-  drilling (numbers). Gaps appear only once `MIN_SENTENCE_WORDS` (15) drillable words have been
+  drilling (numbers). In a mixed session a sentence exercise is aimed only at a word that is **due**,
+  so Practice never re-asks words just practiced. A session of one sentence exercise chosen by name
+  (Fill the gap, Spot the mistake, Translate) prefers due words but falls back to any practiced word:
+  right after practicing nothing is due, and without the fallback those sessions came up empty with
+  a misleading "not enough words". Gaps appear only once `MIN_SENTENCE_WORDS` (15) drillable words have been
   practiced; before that "Fill the gap" explains why it is empty.
 - **Several blanks**: a gap gets 1 blank half the time, 2 most of the rest, 3 occasionally
   (`BLANK_ODDS`), limited by how many slots the frame lists in `cloze`. The first blank is the word
@@ -341,11 +350,12 @@ The first release of Phase 2 is built (not yet deployed at the time of writing):
 - The B2 home screen: Practice, Focus on new words, Remediation, Choose exercise
 - A per-exercise score in the summary of a mixed session
 - Single-user and fully static: name on first start, progress in local storage, no server
-- Sentence frames (31, about 25,000 sentences), **Fill the gap** (one to three blanks) and **Spot
-  the mistake**, in Practice and Choose exercise
+- Sentence frames (31, about 25,000 sentences), **Fill the gap** (one to three blanks), **Spot
+  the mistake** and **Translate** (ungraded), in Practice and Choose exercise
 
-Phase 2 continues with **Translate** (a whole English sentence into Spanish, graded word by word with
-a self-mark fallback) and possibly **Answer a question** (cued Q&A). Sentences go straight
+Still open: not repeating a frame within a session, a progress screen, and possibly **Answer a
+question** (cued Q&A) or **Odd one out**. Translate was deliberately left ungraded rather than graded
+word by word with a self-mark. Sentences go straight
 into Practice once built. Frames were chosen over a fixed sentence bank, which repeats too often, and
 over fully type-driven templates, which produce wrong English and odd combinations.
 
@@ -389,7 +399,8 @@ multiple choice 2, a matching round 1 — with three rules on top:
   raises the phone keyboard; alternating one card at a time would have it bouncing all session. On
   iOS a typed card that follows a tap exercise may need a tap on the answer line to bring the
   keyboard back, because iOS only opens it from a user gesture.
-- **Spot the mistake joins too** (weight 1) once sentences are possible.
+- **Spot the mistake joins too** (weight 1) once sentences are possible, and **Translate** at weight
+  0.6 — about one card in fifteen, since it schedules nothing.
 - **Gaps join once they are possible** (weight 2, nudged into runs with typed cards since both
   use the keyboard) — see [Filling a gap](#filling-a-gap).
 - **A matching round needs room**: at least six words left in the session and at least four words

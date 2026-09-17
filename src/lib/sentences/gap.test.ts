@@ -145,6 +145,20 @@ describe("gaps with several blanks", () => {
     }
   });
 
+  it("always leaves some Spanish showing", () => {
+    // sport-how-often is "{v} {f}." — blanking both would leave only a full stop.
+    for (let seed = 1; seed <= 30; seed++) {
+      const gap = renderGap("hacer-deporte", targets, context(seed), 3);
+      if (!gap) continue;
+      const blanked = new Set(gap.blanks.map((blank) => blank.slot));
+      const visible = gap.sentence.segments
+        .filter((part) => !(part.slot && !part.article && blanked.has(part.slot)))
+        .map((part) => part.text)
+        .join("");
+      expect(visible).toMatch(/\p{L}/u);
+    }
+  });
+
   it("never blanks more than the frame offers", () => {
     for (let seed = 1; seed <= 20; seed++) {
       const gap = renderGap("cenar", targets, context(seed), 3);

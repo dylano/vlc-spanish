@@ -11,4 +11,5 @@ export const EXERCISES: { id: Exercise; label: string; group: "Words" | "Sentenc
   { id: "match", label: "Match pairs", group: "Words" },
   { id: "gap", label: "Fill the gap", group: "Sentences" },
   { id: "mistake", label: "Spot the mistake", group: "Sentences" },
+  { id: "translate", label: "Translate", group: "Sentences" },
 ];
