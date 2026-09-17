@@ -76,6 +76,13 @@ export const sm2: Scheduler = {
   },
 
   next(progress, result, today, strength = "recall") {
+    // Answered right before it was due (a sentence reaching for an already
+    // practiced word, say): the answer is noted but the schedule stays put. Minutes
+    // after learning a word, a right answer is no evidence it will last three days.
+    if (result !== "wrong" && !isDue(progress, today)) {
+      return { ...progress, lastResult: result, lastSeen: today };
+    }
+
     // A correct recognition answer is not evidence the word is getting easier to
     // produce, so it leaves ease where it was.
     const recognized = strength === "recognition" && result === "correct";

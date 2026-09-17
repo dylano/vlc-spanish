@@ -297,11 +297,15 @@ order, takes the first word some frame can blank (`frame.cloze`), and renders th
 word pinned in the slot. So a gap usually reviews a word that is due.
 
 - **Sentences only use practiced words** — any word with a progress row, plus words kept out of
-  drilling (numbers). In a mixed session a sentence exercise is aimed only at a word that is **due**,
-  so Practice never re-asks words just practiced. A session of one sentence exercise chosen by name
-  (Fill in the Blank, Find the Mistake, Translate) prefers due words but falls back to any practiced word:
-  right after practicing nothing is due, and without the fallback those sessions came up empty with
-  a misleading "not enough words". Gaps appear only once `MIN_SENTENCE_WORDS` (15) drillable words have been
+  drilling (numbers). A sentence exercise is aimed first at a word whose `en→es` card is **due** (a
+  sentence is answered in Spanish, so that is the card it reviews), then at any other practiced word,
+  the longest unseen first. Without that fallback a new learner saw no sentences until the day after
+  their first practice, and none whenever their due words ran out; sentences are the more engaging
+  exercises, so waiting a day for them risked the quiz looking too simple to keep at. In a mixed
+  session at most `MAX_EARLY_SENTENCES` (4) sentences go to words that are not due, because each takes
+  the place of a new word (uncapped, a simulated learner had 31 words practiced after day one instead
+  of 43 with the cap, and late in a day up to 9 of 15 words went to early reviews). A right answer on a word
+  that is not due leaves its schedule alone — see the scheduler notes. Gaps appear only once `MIN_SENTENCE_WORDS` (15) drillable words have been
   practiced; before that "Fill in the Blank" explains why it is empty.
 - **Several blanks**: a gap gets 1 blank half the time, 2 most of the rest, 3 occasionally
   (`BLANK_ODDS`), limited by how many slots the frame lists in `cloze`. The first blank is the word
@@ -424,8 +428,8 @@ of practiced words due they make up about half of a session's words. Rules on to
   keyboard back, because iOS only opens it from a user gesture.
 - **Find the Mistake and Translate join** once sentences are possible, like gaps.
 - **Gaps join once they are possible**, nudged into runs with typed cards since both use the
-  keyboard — see [Filling a gap](#filling-a-gap). Sentences in Practice only use due words, so right
-  after practicing, with nothing due, a Practice session has none.
+  keyboard — see [Filling a gap](#filling-a-gap). With nothing due they still appear, up to four aimed
+  at words practiced earlier (see [Filling a gap](#filling-a-gap)).
 - **A matching round needs room**: at least four words left in the session and at least three words
   that can share a round. Otherwise the planner stops offering rounds for that session.
 
@@ -489,7 +493,10 @@ Three results feed the scheduler: `correct` advances normally, `hard` advances w
 word out of a set (multiple choice, matching) is **recognition**, which is weaker evidence, so a
 correct recognition answer leaves ease alone and can never schedule a word more than
 `RECOGNITION_MAX_INTERVAL` (7) days out. It never shortens an interval already earned by recall, and a
-wrong recognition answer lapses the card like any other. A correct answer auto-advances after `CORRECT_PAUSE_MS`
+wrong recognition answer lapses the card like any other. **An answer before the card is due** (a
+sentence reaching for a word practiced earlier) records the result and the day but, when right, leaves
+the schedule alone: minutes after learning a word, a right answer is no evidence it will last three
+days, and advancing on it pushed words out early. A wrong early answer lapses the card as usual. A correct answer auto-advances after `CORRECT_PAUSE_MS`
 (550ms); anything else waits for the button, because there is something to read.
 
 ## Deploying

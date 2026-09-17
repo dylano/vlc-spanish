@@ -217,6 +217,21 @@ describe("recognition answers", () => {
   });
 });
 
+describe("answers before the due date", () => {
+  it("leaves the schedule alone on a right answer", () => {
+    const card = schedule(newCard(), "correct", TODAY);
+    const early = schedule(card, "correct", TODAY);
+    expect(early).toEqual({ ...card, lastResult: "correct", lastSeen: TODAY });
+  });
+
+  it("still counts a miss", () => {
+    const card = drill(newCard(), ["correct", "correct"]);
+    const missed = schedule(card, "wrong", TODAY);
+    expect(missed.lapses).toBe(1);
+    expect(missed.due).toBe(addDays(TODAY, 1));
+  });
+});
+
 describe("card identity", () => {
   it("keeps the card's identity fields across scheduling", () => {
     const card = schedule(newCard(), "correct", TODAY);

@@ -11,6 +11,7 @@ import {
   DEFAULT_CONFIG,
   isDrillable,
   isMatchRound,
+  MAX_EARLY_SENTENCES,
 } from "../session.ts";
 import { gapTargets } from "./gap.ts";
 import { gradeFix, mistakeTokens, renderMistake, type Mistake } from "./mistake.ts";
@@ -246,9 +247,10 @@ describe("sessions with translations", () => {
 });
 
 describe("sentence sessions right after practicing", () => {
-  // Eighty words practiced today: nothing is due until tomorrow.
+  // Eighty words practiced recently, half today and half two days ago: nothing is
+  // due until tomorrow.
   const justPracticed: ProgressBlob = { userId: "dylan", entries: {} };
-  for (const e of entries.filter(isDrillable).slice(0, 80)) {
+  for (const [position, e] of entries.filter(isDrillable).slice(0, 80).entries()) {
     justPracticed.entries[e.id] = {
       "en→es": {
         userId: "dylan",
@@ -259,6 +261,7 @@ describe("sentence sessions right after practicing", () => {
         ease: 2.5,
         reps: 1,
         lapses: 0,
+        lastSeen: position % 2 === 0 ? "2026-09-15" : "2026-09-17",
       },
     };
   }
@@ -278,12 +281,22 @@ describe("sentence sessions right after practicing", () => {
     expect(buildGapSession(options("gap")).length).toBeGreaterThan(0);
   });
 
-  it("does not bring words just practiced back into Practice as sentences", () => {
+  it("still has sentences in General practice, aimed at the words seen longest ago", () => {
+    let sentenceItems = 0;
+    let seenToday = 0;
     for (let seed = 1; seed <= 10; seed++) {
+      let inSession = 0;
       for (const item of buildMixedSession(options("mixed", seed))) {
-        if (isMatchRound(item)) continue;
-        expect(["gap", "mistake", "translate"]).not.toContain(item.exercise);
+        if (isMatchRound(item) || !["gap", "mistake", "translate"].includes(item.exercise))
+          continue;
+        sentenceItems++;
+        // Nothing is due, so every sentence is an early review, and those are capped.
+        expect(++inSession).toBeLessThanOrEqual(MAX_EARLY_SENTENCES);
+        if (justPracticed.entries[item.entry.id]?.["en→es"]?.lastSeen === "2026-09-17") seenToday++;
       }
     }
+    expect(sentenceItems).toBeGreaterThan(20);
+    // Forty words from two days ago cover a session's sentences before today's are reached.
+    expect(seenToday).toBe(0);
   });
 });

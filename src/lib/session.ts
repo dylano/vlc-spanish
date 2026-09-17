@@ -179,15 +179,17 @@ interface MadeGap {
  * them yet: the render context limited to practiced words, and where each word
  * can sit in a frame.
  */
-function sentenceSetup(options: BuildSessionOptions, fallBack: boolean) {
+function sentenceSetup(options: BuildSessionOptions) {
   const { sentences, entries, progress, today, random = Math.random } = options;
   if (!sentences) return undefined;
 
   const practiced = (entry: Entry) => progress.entries[entry.id] !== undefined;
-  const due = (entry: Entry) =>
-    Object.values(progress.entries[entry.id] ?? {}).some(
-      (record) => record && isDue(record, today),
-    );
+  // A sentence is answered in Spanish, so it reviews the en→es card; a word
+  // counts as due for a sentence only when that card is (or has never been seen).
+  const due = (entry: Entry) => {
+    const record = progress.entries[entry.id]?.["en→es"];
+    return !record || isDue(record, today);
+  };
   if (
     entries.filter((entry) => isDrillable(entry) && practiced(entry)).length < MIN_SENTENCE_WORDS
   ) {
@@ -200,16 +202,20 @@ function sentenceSetup(options: BuildSessionOptions, fallBack: boolean) {
     eligible: (entry: Entry) => practiced(entry) || !isDrillable(entry),
   };
   const targets = gapTargets(sentences.frames, context);
-  // Every practiced word a sentence can hold, due ones first. A session of one
-  // sentence exercise, chosen by name, falls back to these when its own list has
-  // none: right after practicing nothing is due, and that list holds only words
-  // never practiced. A mixed session does not — reviewing words early there would
-  // bring back the words just practiced, which is exactly what felt repetitive.
-  const fallback = fallBack
-    ? rankedCards({ ...options, config: { ...options.config, scope: "all" } }).filter(
-        (card) => practiced(card.entry) && targets.has(card.entry.id),
-      )
-    : [];
+  // Every other practiced word a sentence can hold, the longest unseen first.
+  // Aimed at only due words, a new learner saw no sentences until the day after
+  // their first practice, and none again whenever their due words ran out. The
+  // scheduler leaves a right answer on a word that is not due alone, so these
+  // reviews cannot push a word ahead early.
+  const lastSeen = (card: Card) =>
+    Object.values(progress.entries[card.entry.id] ?? {})
+      .map((record) => record?.lastSeen ?? "")
+      .reduce((latest, seen) => (seen > latest ? seen : latest), "");
+  const fallback = rankedCards({ ...options, config: { ...options.config, scope: "all" } })
+    .filter((card) => practiced(card.entry) && targets.has(card.entry.id))
+    .map((card) => ({ card, seen: lastSeen(card) }))
+    .sort((a, b) => a.seen.localeCompare(b.seen))
+    .map(({ card }) => card);
   return { practiced, due, context, targets, fallback };
 }
 
@@ -217,15 +223,15 @@ type SentenceSetup = NonNullable<ReturnType<typeof sentenceSetup>>;
 
 /**
  * The words a sentence exercise may be aimed at, best first: due words still in
- * the session's list, then (for a session chosen by name) any other practiced
- * word not yet used in this session. A word that is only in the list for its
- * other direction is not due, and a sentence about it would be an early review. Only usable words count toward the limit,
+ * the session's list, then any other practiced word not yet used in this
+ * session, the longest unseen first. Only usable words count toward the limit,
  * so a list that opens with forty new words does not hide the practiced ones.
  */
 function* sentenceCandidates(
   remaining: Card[],
   taken: Set<string>,
   setup: SentenceSetup,
+  dueOnly = false,
 ): Generator<{ card: Card; queued: boolean }> {
   let tried = 0;
   const offered = new Set<string>();
@@ -235,6 +241,7 @@ function* sentenceCandidates(
     offered.add(card.entry.id);
     yield { card, queued: true };
   }
+  if (dueOnly) return;
   for (const card of setup.fallback) {
     if (taken.has(card.entry.id) || offered.has(card.entry.id)) continue;
     if (tried++ >= GAP_SCAN) return;
@@ -249,15 +256,21 @@ function removeWord(remaining: Card[], entryId: string): void {
 
 function gapMaker(
   options: BuildSessionOptions,
-  fallBack = false,
-): ((remaining: Card[], maxWords: number, taken: Set<string>) => MadeGap | undefined) | undefined {
+):
+  | ((
+      remaining: Card[],
+      maxWords: number,
+      taken: Set<string>,
+      dueOnly?: boolean,
+    ) => (MadeGap & { early: boolean }) | undefined)
+  | undefined {
   const { entries, progress, userId, today, random = Math.random } = options;
-  const setup = sentenceSetup(options, fallBack);
+  const setup = sentenceSetup(options);
   if (!setup) return undefined;
   const { practiced, context, targets } = setup;
   const index = glossIndex(entries);
 
-  return (remaining, maxWords, taken) => {
+  return (remaining, maxWords, taken, dueOnly = false) => {
     const roll = random();
     const wanted = Math.min(maxWords, BLANK_ODDS.find(([, odds]) => roll < odds)![0]);
     // Further blanks must be practiced words not already used this session.
@@ -266,7 +279,7 @@ function gapMaker(
       return !!entry && practiced(entry) && isDrillable(entry) && !taken.has(id);
     };
 
-    for (const { card } of sentenceCandidates(remaining, taken, setup)) {
+    for (const { card, queued } of sentenceCandidates(remaining, taken, setup, dueOnly)) {
       const gap = renderGap(card.entry.id, targets, context, wanted, canBlank);
       if (!gap) continue;
 
@@ -280,7 +293,7 @@ function gapMaker(
         return toCard(entry, "en→es", progress, userId, today, index);
       });
       const primary = blankCards.find((blank) => blank.entry.id === card.entry.id)!;
-      return { card: primary, gap, blankCards };
+      return { card: primary, gap, blankCards, early: !queued };
     }
     return undefined;
   };
@@ -298,15 +311,20 @@ function sentenceMaker<T>(
     targets: Map<string, { frame: Frame; slot: string }[]>,
     context: SentenceSetup["context"],
   ) => T | undefined,
-  fallBack = false,
-): ((remaining: Card[], taken: Set<string>) => { card: Card; made: T } | undefined) | undefined {
+):
+  | ((
+      remaining: Card[],
+      taken: Set<string>,
+      dueOnly?: boolean,
+    ) => { card: Card; made: T; early: boolean } | undefined)
+  | undefined {
   const { progress, userId, today } = options;
-  const setup = sentenceSetup(options, fallBack);
+  const setup = sentenceSetup(options);
   if (!setup) return undefined;
   const { context, targets } = setup;
 
-  return (remaining, taken) => {
-    for (const { card } of sentenceCandidates(remaining, taken, setup)) {
+  return (remaining, taken, dueOnly = false) => {
+    for (const { card, queued } of sentenceCandidates(remaining, taken, setup, dueOnly)) {
       const made = render(card.entry.id, targets, context);
       if (!made) continue;
       removeWord(remaining, card.entry.id);
@@ -318,6 +336,7 @@ function sentenceMaker<T>(
           progress: progressFor(progress, userId, card.entry, "en→es", today),
         },
         made,
+        early: !queued,
       };
     }
     return undefined;
@@ -331,8 +350,8 @@ function buildSentenceSession<K extends "mistake" | "translate">(
 ): Card[] {
   const make =
     exercise === "mistake"
-      ? sentenceMaker(options, renderMistake, true)
-      : sentenceMaker(options, renderTranslation, true);
+      ? sentenceMaker(options, renderMistake)
+      : sentenceMaker(options, renderTranslation);
   if (!make) return [];
   const remaining = rankedCards(options);
   const plan: Planned[] = [];
@@ -362,7 +381,7 @@ export function buildTranslateSession(options: BuildSessionOptions): Card[] {
 
 /** A session of gaps only. Empty when the learner cannot have sentences yet. */
 export function buildGapSession(options: BuildSessionOptions): Card[] {
-  const makeGap = gapMaker(options, true);
+  const makeGap = gapMaker(options);
   if (!makeGap) return [];
   const remaining = rankedCards(options);
   const plan: Planned[] = [];
@@ -371,7 +390,8 @@ export function buildGapSession(options: BuildSessionOptions): Card[] {
   while (words < options.config.size) {
     const next = makeGap(remaining, options.config.size - words, taken);
     if (!next) break;
-    plan.push({ exercise: "gap", ...next });
+    const { early: _early, ...made } = next;
+    plan.push({ exercise: "gap", ...made });
     for (const blank of next.blankCards) taken.add(blank.entry.id);
     words += next.blankCards.length;
   }
@@ -486,7 +506,7 @@ export const MIX_WEIGHTS: Record<Exercise, number> = {
   choice: 1,
   match: 1,
   // Sentences test words in context, which is more worth practicing than rote
-  // recall, so they lead the mix whenever there are due words to build them from.
+  // recall, so they lead the mix from the first session with enough practiced words.
   gap: 3,
   mistake: 2,
   // Ungraded, so it schedules nothing; still worth a regular appearance.
@@ -503,6 +523,15 @@ export const MAX_PER_SESSION: Partial<Record<Exercise, number>> = { choice: 2, m
 
 /** The most steps of one exercise in a row, so a session keeps changing pace. */
 export const MAX_RUN = 3;
+
+/**
+ * The most sentence exercises in one mixed session aimed at a word that is not
+ * due. They keep sentences in a session when few words are due (a new learner's
+ * first day), but each takes the place of a new word: uncapped, a simulated
+ * learner had 31 words practiced after day one rather than 60, and late in a
+ * day up to 9 of 15 words went to early reviews.
+ */
+export const MAX_EARLY_SENTENCES = 4;
 
 function weightedPick<T extends string>(weights: Record<T, number>, random: () => number): T {
   const entries = Object.entries(weights) as [T, number][];
@@ -536,6 +565,7 @@ export function buildMixedSession(options: BuildSessionOptions): SessionItem[] {
   let mistakesPossible = makeMistake !== undefined;
   let translationsPossible = makeTranslation !== undefined;
   const plan: Planned[] = [];
+  let early = 0;
 
   while (budget > 0 && remaining.length > 0) {
     const last = plan.at(-1)?.exercise;
@@ -570,10 +600,13 @@ export function buildMixedSession(options: BuildSessionOptions): SessionItem[] {
             : [step.card.entry.id],
       ),
     );
+    const dueOnly = early >= MAX_EARLY_SENTENCES;
     if (exercise === "gap") {
-      const next = makeGap?.(remaining, budget, taken);
+      const next = makeGap?.(remaining, budget, taken, dueOnly);
       if (next) {
-        plan.push({ exercise, ...next });
+        const { early: wasEarly, ...made } = next;
+        if (wasEarly) early++;
+        plan.push({ exercise, ...made });
         budget -= next.blankCards.length;
       } else {
         gapsPossible = false;
@@ -581,8 +614,9 @@ export function buildMixedSession(options: BuildSessionOptions): SessionItem[] {
       continue;
     }
     if (exercise === "translate") {
-      const next = makeTranslation?.(remaining, taken);
+      const next = makeTranslation?.(remaining, taken, dueOnly);
       if (next) {
+        if (next.early) early++;
         plan.push({ exercise, card: next.card, translation: next.made });
         budget -= 1;
       } else {
@@ -591,8 +625,9 @@ export function buildMixedSession(options: BuildSessionOptions): SessionItem[] {
       continue;
     }
     if (exercise === "mistake") {
-      const next = makeMistake?.(remaining, taken);
+      const next = makeMistake?.(remaining, taken, dueOnly);
       if (next) {
+        if (next.early) early++;
         plan.push({ exercise, card: next.card, mistake: next.made });
         budget -= 1;
       } else {
