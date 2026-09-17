@@ -102,7 +102,9 @@ tangled into components.
 - **Quiz** — one prompt at a time, typed answer, inline verdict, progress bar, and a summary
   listing what to look at again. Nouns are prompted with "include the article". A session is full
   screen with no main nav; the × in the header ends it (every answer is already saved). The header
-  names the exercise for a single-exercise session, or the home row it came from for a mixed one.
+  names the current exercise in the accent colour, and each card opens with a bold instruction
+  line ("Type the missing word", "Find the wrong word") — in a mixed session the exercise changes
+  from card to card, and a muted label was too easy to miss.
   The summary adds a score per exercise when the session used more than one.
 - **Multiple choice** — the same session with four options; touching one answers it, with no
   separate Check. A right answer moves on by itself, a miss waits for Next. Keys a–d or 1–4 answer
@@ -252,7 +254,9 @@ from the dictionary. The frame supplies the word order in both languages; the re
   endings, then a multi-word verb's first word through its own entry), articles, `a el → al` /
   `de el → del`, `y → e` before an _i_ sound, English third-person _-s_ and irregulars, _one's_ →
   _his/her/..._, English plurals and _a/an_. A person noun is put in the feminine only if it has
-  `enF`, the English for its feminine form.
+  `enF`, the English for its feminine form. For a person slot whose gender is free, the gender is
+  decided first (50/50) and then a word that can take it is chosen; deciding per word let the
+  always-masculine plurals (_los padres_, _los abuelos_) tip sentences to about 60% masculine.
 - **Words whose English is a noun** (_comilón_ "big eater", _dormilón_ "sleepyhead") are excluded
   from trait frames: "My son is very big eater" is what including them produces.
 - **Word pairings are the frame's job.** Routines are split by time of day so morning activities get
@@ -352,11 +356,32 @@ Not built, in rough order of likely usefulness:
 - Conjugation drills driven by the `verb` metadata already in the dictionary (needs no API)
 - Offline answer queueing — quizzes read from cache offline, but results are not yet synced back
 
+## Choosing words
+
+Every session draws words from `rankedCards` in `src/lib/session.ts`, which sorts them into four
+bands:
+
+1. **Due** — reviews whose date has come.
+2. **New** — words never practiced in **either** direction, each offered in one direction only.
+3. **Other direction** — the unpracticed direction of a word already met. It is not new to the
+   learner, so it waits until there are no new words left rather than taking their place.
+4. **Rest** — everything else, only for sessions that ask for all words.
+
+Due and new are interleaved so that **every third card is a new word** (`NEW_WORD_EVERY`) while any
+remain; with nothing due, a session is all new words. "Focus on new words" takes new words first,
+then other directions.
+
+Why the reserved share: a word answered today comes back tomorrow, then in three days, so without it
+the previous day's words fill every session and new words stop arriving after the first day. A
+simulation of two 15-word sessions a day showed 50 of 150 words practiced after ten days with due
+words strictly first (and many "new" slots taken by other directions of words just seen), and 108
+with the reserved share.
+
 ## Mixed sessions
 
 A session started from Practice or a narrowing is built by `buildMixedSession` in
-`src/lib/session.ts`: 15 words by default, still taken in priority order (due, then new, then the
-rest), with only the way each is asked varying. Each step picks an exercise by weight — typed 3,
+`src/lib/session.ts`: 15 words by default, taken in the order described in
+[Choosing words](#choosing-words), with only the way each is asked varying. Each step picks an exercise by weight — typed 3,
 multiple choice 2, a matching round 1 — with three rules on top:
 
 - **No more than three of one exercise in a row** (`MAX_RUN`), so the pace keeps changing.

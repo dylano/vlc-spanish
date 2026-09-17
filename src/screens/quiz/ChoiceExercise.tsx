@@ -134,7 +134,7 @@ export default function ChoiceExercise({ card, position, label, onDone }: Exerci
       }
     >
       <div className={styles.question}>
-        <p className={styles.label}>Which one means</p>
+        <p className={styles.instruction}>Which one means</p>
         <h1 className={styles.prompt}>{promptText(card)}</h1>
         {detail ? <p className={styles.grammar}>{detail}</p> : null}
 

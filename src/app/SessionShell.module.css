@@ -68,6 +68,13 @@
   gap: 6px;
 }
 
+/* Which exercise is up. In a mixed session this changes from card to card, so it
+   is the one piece of the header drawn in the accent rather than muted. */
+.exercise {
+  color: var(--accent);
+  font-weight: 600;
+}
+
 /* 44px hit area, drawn small: leaving a session is available, not advertised. */
 .close {
   display: grid;

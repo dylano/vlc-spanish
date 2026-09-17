@@ -6,6 +6,7 @@ import {
   buildSession,
   isMatchRound,
   MAX_RUN,
+  NEW_WORD_EVERY,
   MATCH_ROUND_SIZE,
   confusableEntries,
   DEFAULT_CONFIG,
@@ -513,5 +514,94 @@ describe("mixed sessions", () => {
 
   it("is reproducible from a seed", () => {
     expect(mixed(pool, 15, 3)).toEqual(mixed(pool, 15, 3));
+  });
+});
+
+describe("new words versus reviews", () => {
+  const spread = (seed: number) => seeded(seed * 2_654_435_761);
+  const words = Array.from({ length: 40 }, (_, i) => word(`w${i}`, [`word ${i}`]));
+  const reviewed = words.slice(0, 20);
+  const brandNew = new Set(words.slice(20).map((w) => w.id));
+
+  // Twenty words met before and all due today, in both directions.
+  const progress = withProgress(
+    reviewed.flatMap((w) => [
+      [w, "en→es", { due: TODAY, reps: 1 }],
+      [w, "es→en", { due: TODAY, reps: 1 }],
+    ]) as [Entry, Direction, { due: string; reps: number }][],
+  );
+
+  function session(seed: number, extra: Partial<typeof DEFAULT_CONFIG> = {}, prog = progress) {
+    return buildSession({
+      entries: words,
+      progress: prog,
+      userId: "dylan",
+      config: { ...DEFAULT_CONFIG, size: 15, ...extra },
+      today: TODAY,
+      random: spread(seed),
+    });
+  }
+
+  it("keeps every third card for a new word even when plenty is due", () => {
+    for (let seed = 1; seed <= 10; seed++) {
+      const cards = session(seed);
+      const fresh = cards.filter((card) => brandNew.has(card.entry.id)).length;
+      expect(fresh).toBe(Math.floor(15 / NEW_WORD_EVERY));
+      cards.forEach((card, position) => {
+        expect(brandNew.has(card.entry.id)).toBe(position % NEW_WORD_EVERY === NEW_WORD_EVERY - 1);
+      });
+    }
+  });
+
+  it("is all new words when nothing is due", () => {
+    for (const card of session(1, {}, emptyProgress())) expect(card.progress.reps).toBe(0);
+    expect(session(1, {}, emptyProgress())).toHaveLength(15);
+  });
+
+  it("does not let the other direction of a met word take a new word's place", () => {
+    // Twenty words met in one direction only, none due: their other direction is unseen.
+    const oneWay = withProgress(
+      reviewed.map((w) => [w, "en→es", { due: "2026-12-01", reps: 3 }]) as [
+        Entry,
+        Direction,
+        { due: string; reps: number },
+      ][],
+    );
+    for (let seed = 1; seed <= 10; seed++) {
+      const ids = session(seed, {}, oneWay).map((card) => card.entry.id);
+      expect(ids.every((id) => brandNew.has(id))).toBe(true);
+    }
+  });
+
+  it("falls back to the other direction once there are no new words", () => {
+    const allMetOneWay = withProgress(
+      words.map((w) => [w, "en→es", { due: "2026-12-01", reps: 3 }]) as [
+        Entry,
+        Direction,
+        { due: string; reps: number },
+      ][],
+    );
+    const cards = session(1, { direction: "es→en" }, allMetOneWay);
+    expect(cards).toHaveLength(15);
+  });
+
+  it("offers a brand-new word in only one direction", () => {
+    for (let seed = 1; seed <= 10; seed++) {
+      const ids = session(seed, { scope: "recent" }).map((card) => card.entry.id);
+      expect(new Set(ids).size).toBe(ids.length);
+    }
+  });
+
+  it("gives Focus on new words brand-new words before other directions", () => {
+    const oneWay = withProgress(
+      reviewed.map((w) => [w, "en→es", { due: "2026-12-01", reps: 3 }]) as [
+        Entry,
+        Direction,
+        { due: string; reps: number },
+      ][],
+    );
+    const cards = session(2, { scope: "recent", size: 25 }, oneWay);
+    const firstOther = cards.findIndex((card) => !brandNew.has(card.entry.id));
+    expect(firstOther).toBe(20);
   });
 });

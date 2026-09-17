@@ -120,7 +120,8 @@ export default function QuizScreen() {
   const [index, setIndex] = useState(0);
   const [answered, setAnswered] = useState<Answered[]>([]);
 
-  // A session of one exercise is labelled with it; a mixed one with where it came from.
+  // The summary is labelled with where the session came from. Each item's header
+  // names its own exercise, so a mixed session always shows which one is up.
   const label =
     config.format === "mixed" ? SCOPE_LABEL[config.scope] : EXERCISE_LABEL[config.format];
 
@@ -272,11 +273,17 @@ export default function QuizScreen() {
 
   if (isMatchRound(item)) {
     return (
-      <MatchExercise key={index} round={item} position={position} label={label} onDone={done} />
+      <MatchExercise
+        key={index}
+        round={item}
+        position={position}
+        label={EXERCISE_LABEL.match}
+        onDone={done}
+      />
     );
   }
 
-  const shared = { card: item, position, label, onDone: done };
+  const shared = { card: item, position, label: EXERCISE_LABEL[item.exercise], onDone: done };
 
   // Typed cards deliberately share one unkeyed instance, so the input and the
   // keyboard survive from card to card. Other exercises get a fresh instance each.

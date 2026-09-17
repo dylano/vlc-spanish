@@ -313,9 +313,22 @@ export function renderFrame(
       const candidates = slotCandidates(slot, context).filter(
         (entry) => fixed[name] === undefined || entry.id === fixed[name],
       );
-      for (const entry of shuffled(candidates, random)) {
-        if (used.has(entry.id)) continue;
-        result = fillSlot(slot, entry, filled, subject, dictionary, random);
+      // For a person whose gender is free, decide the gender first and then find
+      // a word that can take it. Deciding per word instead lets words that are
+      // always masculine (los padres) tip whole frames toward the masculine.
+      const gender: Gender | undefined =
+        slot.kind === "noun" && !slot.agree && candidates.some(canBeEitherGender)
+          ? random() < 0.5
+            ? "f"
+            : "m"
+          : undefined;
+      const attempts: (Gender | undefined)[] = gender ? [gender, undefined] : [undefined];
+      for (const wanted of attempts) {
+        for (const entry of shuffled(candidates, random)) {
+          if (used.has(entry.id)) continue;
+          result = fillSlot(slot, entry, filled, subject, dictionary, random, wanted);
+          if (result) break;
+        }
         if (result) break;
       }
     }
@@ -390,6 +403,12 @@ function subjectOf(
   return { subject: noun.number === "pl" ? "ellos" : "el", gender: noun.gender ?? "m" };
 }
 
+/** A noun that can be put in either gender: common gender, or a masculine with an English feminine. */
+function canBeEitherGender(entry: Entry): boolean {
+  if (entry.pos !== "noun") return false;
+  return entry.gender === "mf" || (entry.gender === "m" && !!entry.forms?.f && !!entry.enF);
+}
+
 function fillSlot(
   slot: Exclude<Slot, { kind: "glue" }>,
   entry: Entry,
@@ -397,11 +416,13 @@ function fillSlot(
   frameSubject: Subject | undefined,
   dictionary: Entry[],
   random: () => number,
+  /** For a noun that does not agree with another slot, the gender decided for it. */
+  gender?: Gender,
 ): Filled | undefined {
   switch (slot.kind) {
     case "noun": {
       if (entry.pos !== "noun") return undefined;
-      const target = slot.agree ? filled.get(slot.agree)?.gender : undefined;
+      const target = slot.agree ? filled.get(slot.agree)?.gender : gender;
       const wanted = target === "mf" ? undefined : target;
       return nounFill(entry, slot.number, wanted, random);
     }

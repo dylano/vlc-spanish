@@ -562,8 +562,22 @@ function assignDirections(cards: Card[], options: BuildSessionOptions): Card[] {
 }
 
 /**
- * Every card in scope, best first: due, then never seen, then the rest, each band
- * shuffled, and at most one direction per word in a mixed session.
+ * The share of a session given to brand-new words while any remain: every third
+ * card. Without a reserved share, yesterday's words — all due again the next day —
+ * fill every session and new words stop arriving after the first day.
+ */
+export const NEW_WORD_EVERY = 3;
+
+/**
+ * Every card in scope, best first, at most one direction per word in a mixed
+ * session.
+ *
+ * Four bands. **Due** cards are reviews. **New** words have never been practiced
+ * in either direction. **Other direction** is the unpracticed direction of a word
+ * already met — not new to the learner, so it waits until there are no new words
+ * to offer rather than taking their place. **Rest** is everything else, for
+ * sessions that ask for all words. Due and new are interleaved so that every
+ * third card is a new word; a session with nothing due is all new words.
  */
 function rankedCards(options: BuildSessionOptions): Card[] {
   const { entries, progress, userId, config, today, random = Math.random } = options;
@@ -574,31 +588,65 @@ function rankedCards(options: BuildSessionOptions): Card[] {
     config.direction === "mixed" ? ["en→es", "es→en"] : [config.direction];
 
   const due: Card[] = [];
-  const unseen: Card[] = [];
+  const fresh: Card[] = [];
+  const otherDirection: Card[] = [];
   const rest: Card[] = [];
 
   for (const entry of pool) {
+    const record = progress.entries[entry.id];
+    const metBefore = record !== undefined && Object.keys(record).length > 0;
+    // A brand-new word is offered in one direction only, so it takes one slot.
+    const freshDirection = pick(directions, random);
+
     for (const direction of directions) {
       const card = toCard(entry, direction, progress, userId, today, index);
-      const seen = progress.entries[entry.id]?.[direction];
+      const seen = record?.[direction];
 
       if (config.scope === "misses") {
         // Matches the home-screen count: the most recent answer was wrong.
         if (seen?.lastResult === "wrong") rest.push(card);
         continue;
       }
-      if (config.scope === "recent") {
-        if (!seen) unseen.push(card);
+      if (!metBefore) {
+        if (direction === freshDirection) fresh.push(card);
         continue;
       }
-      if (!seen) unseen.push(card);
-      else if (isDue(seen, today)) due.push(card);
+      if (!seen) {
+        otherDirection.push(card);
+        continue;
+      }
+      if (config.scope === "recent") continue;
+      if (isDue(seen, today)) due.push(card);
       else if (config.scope === "all") rest.push(card);
     }
   }
 
-  const ordered = [...shuffle(due, random), ...shuffle(unseen, random), ...shuffle(rest, random)];
+  const ordered =
+    config.scope === "recent"
+      ? [...shuffle(fresh, random), ...shuffle(otherDirection, random)]
+      : [
+          ...interleaveNew(dedupeByEntry(shuffle(due, random), config), shuffle(fresh, random)),
+          ...shuffle(otherDirection, random),
+          ...shuffle(rest, random),
+        ];
   return dedupeByEntry(ordered, config);
+}
+
+function pick<T>(items: readonly T[], random: () => number): T {
+  return items[Math.floor(random() * items.length)]!;
+}
+
+/** Reviews with a new word in every third place, each list continuing once the other runs out. */
+function interleaveNew(reviews: Card[], fresh: Card[]): Card[] {
+  const out: Card[] = [];
+  let r = 0;
+  let f = 0;
+  while (r < reviews.length || f < fresh.length) {
+    const newTurn = out.length % NEW_WORD_EVERY === NEW_WORD_EVERY - 1;
+    if (f < fresh.length && (newTurn || r >= reviews.length)) out.push(fresh[f++]!);
+    else out.push(reviews[r++]!);
+  }
+  return out;
 }
 
 function toCard(

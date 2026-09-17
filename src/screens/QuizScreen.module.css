@@ -17,6 +17,28 @@
   margin: 0 0 18px;
 }
 
+/* What to do with the card. Heavier than the other labels on the screen, with a
+   short accent rule in front, so a change of exercise mid-session is noticed. */
+.instruction {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink);
+  margin: 0 0 18px;
+}
+
+.instruction::before {
+  content: "";
+  flex: none;
+  width: 18px;
+  height: 2px;
+  background: var(--accent);
+}
+
 .prompt {
   font-family: var(--serif);
   font-size: 3.5rem;
@@ -532,6 +554,10 @@
 /* Compact layouts for a short frame, which in practice means the keyboard is up
    on a phone. The prompt stays the largest thing on screen, just less so. */
 @container session (max-height: 36rem) {
+  .instruction {
+    margin-bottom: 10px;
+  }
+
   .gapSentence {
     font-size: 1.75rem;
   }

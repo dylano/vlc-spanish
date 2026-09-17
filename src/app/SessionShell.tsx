@@ -6,7 +6,7 @@ import { useVisualViewport } from "./useVisualViewport.ts";
 interface SessionShellProps {
   /** Zero-based position in the session, or undefined for screens outside it. */
   position?: { index: number; total: number };
-  /** Small-caps label on the right of the counter, e.g. which words are being drilled. */
+  /** Small-caps label on the right of the counter: the exercise being asked, or on the summary where the session came from. */
   label?: string;
   /** Pinned below the scrolling body; stays directly above the keyboard. */
   footer?: ReactNode;
@@ -60,7 +60,7 @@ export default function SessionShell({ position, label, footer, children }: Sess
                 : ""}
             </span>
             <span className={styles.metaEnd}>
-              {label ? <span>{label}</span> : null}
+              {label ? <span className={styles.exercise}>{label}</span> : null}
               <button
                 type="button"
                 className={styles.close}

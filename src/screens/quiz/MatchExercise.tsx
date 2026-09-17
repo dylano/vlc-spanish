@@ -134,7 +134,7 @@ export default function MatchExercise({ round, position, label, onDone }: MatchE
   return (
     <SessionShell position={position} label={label}>
       <div className={styles.question}>
-        <h1 className={styles.label}>Match the pairs</h1>
+        <h1 className={styles.instruction}>Tap a word, then its partner</h1>
 
         <div className={styles.matchGrid}>
           {(["es", "en"] as const).map((side) => (

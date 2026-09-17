@@ -151,7 +151,7 @@ export default function MistakeExercise({ card, position, label, onDone }: Exerc
   return (
     <SessionShell position={position} label={label} footer={footer}>
       <form id="mistake-form" className={styles.question} onSubmit={submit}>
-        <p className={styles.label}>Spot the mistake</p>
+        <p className={styles.instruction}>Find the wrong word</p>
         <p className={styles.gapEnglish}>{mistake.sentence.en}</p>
         <h1 className={styles.gapSentence}>{rendered}</h1>
         {phase !== "done" ? (

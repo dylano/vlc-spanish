@@ -185,7 +185,9 @@ export default function TypedExercise({ card, position, label, onDone }: Exercis
       <form id="answer-form" className={styles.question} onSubmit={submit}>
         {card.gap ? (
           <>
-            <p className={styles.label}>Fill the {slots > 1 ? "gaps" : "gap"}</p>
+            <p className={styles.instruction}>
+              {slots > 1 ? "Type the missing words" : "Type the missing word"}
+            </p>
             <p className={styles.gapEnglish}>{card.gap.sentence.en}</p>
             <h1 className={styles.gapSentence}>
               {card.gap.sentence.segments.map((segment, segmentIndex) => {
@@ -223,7 +225,7 @@ export default function TypedExercise({ card, position, label, onDone }: Exercis
           </>
         ) : (
           <>
-            <p className={styles.label}>
+            <p className={styles.instruction}>
               {card.direction === "en→es" ? "Say it in Spanish" : "Say it in English"}
             </p>
             <h1 className={styles.prompt}>{promptText(card)}</h1>

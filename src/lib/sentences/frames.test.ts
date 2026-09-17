@@ -147,6 +147,23 @@ describe("rendering", () => {
     );
   });
 
+  it("gives a free person slot an even chance of being feminine, whatever the words", () => {
+    // padre can only be masculine (no enF) and hermano can be either: choosing
+    // per word would make only a quarter of these sentences feminine.
+    const f = frame({
+      es: "Mi {n} es {a}.",
+      en: "My {n} is {a}.",
+      slots: {
+        n: { kind: "noun", ids: ["padre", "hermano"] },
+        a: { kind: "adj", ids: ["timido"], agree: "n" },
+      },
+    });
+    const sentences = renderMany(f, 400);
+    const feminine = sentences.filter((s) => s.slots.n!.gender === "f").length / sentences.length;
+    expect(feminine).toBeGreaterThan(0.4);
+    expect(feminine).toBeLessThan(0.6);
+  });
+
   it("never puts a noun in the feminine without English for it", () => {
     const f = frame({
       es: "Mi {n} es {a}.",
