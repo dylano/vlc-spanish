@@ -1,6 +1,5 @@
 import { NavLink, Outlet } from "react-router";
 import styles from "./AppShell.module.css";
-import { useStore } from "./store-context.ts";
 
 const TABS = [
   { to: "/", label: "Home", end: true },
@@ -9,12 +8,9 @@ const TABS = [
 ];
 
 export default function AppShell() {
-  const { error } = useStore();
-
   return (
     <div className={styles.shell}>
       <main className={styles.main}>
-        {error ? <p className={styles.error}>{error}</p> : null}
         <Outlet />
       </main>
       <nav className={styles.nav} aria-label="Main">

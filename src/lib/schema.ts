@@ -179,14 +179,3 @@ export const progressBlobSchema = z.object({
 });
 
 export type ProgressBlob = z.infer<typeof progressBlobSchema>;
-
-export const userSchema = z.object({
-  id: slug,
-  displayName: nonEmpty,
-  createdAt: z.iso.datetime(),
-});
-
-export type User = z.infer<typeof userSchema>;
-
-export const usersBlobSchema = z.object({ users: z.array(userSchema) });
-export type UsersBlob = z.infer<typeof usersBlobSchema>;

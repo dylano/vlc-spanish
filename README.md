@@ -1,15 +1,18 @@
 # Spanish vocab
 
-A vocabulary drilling app for an elementary Peninsular Spanish class. One shared dictionary for the
-family, per-person spaced-repetition progress, and typed quizzes that grade the way a teacher would —
-accepting the feminine form, noticing a missing accent, insisting on the article.
+A vocabulary drilling app for an elementary Peninsular Spanish class: one dictionary, spaced-repetition
+progress, and quizzes that grade the way a teacher would — accepting the feminine form, noticing a
+missing accent, insisting on the article.
+
+It is a **single-user, fully static app**. There is no server and no account: the learner gives a
+name on first start, and their progress lives in the browser's local storage on that device.
 
 Dictionary entries are authored **outside** the app — Claude Code writes them into
 `data/dictionary.json` following [DICTIONARY_BRIEF.md](DICTIONARY_BRIEF.md), and a deploy ships
 them, since the file is bundled into the app. The app itself does the dictionary, the scheduling, and the
 drilling, and never calls the Claude API. That is a deliberate decision (see
 [Working on the dictionary](#working-on-the-dictionary)): it means no API key, no billing, and no
-public endpoint that can spend money.
+public endpoint at all.
 
 See [PLAN.md](PLAN.md) for the original spec. Where this README and PLAN.md disagree, this README is
 current — notably PLAN.md §6 describes an in-app "add words" flow that is not being built.
@@ -21,42 +24,27 @@ current — notably PLAN.md §6 describes an in-app "add words" flow that is not
 - **react-router** in declarative mode
 - **zod** as the single source of truth for data shapes — runtime validation and TS types both
   derive from `src/lib/schema.ts`
-- **Netlify Functions + Netlify Blobs** for the shared store
+- **Netlify** static hosting; no functions, no storage
 - Plain CSS with CSS modules. No Tailwind, no CSS-in-JS.
 
 ## Commands
 
 ```sh
-netlify dev                 # THE ONE TO USE: app + functions + local Blobs, on :8888
+vp dev                      # dev server on :5173
 vp test                     # run tests once
 vp test watch               # watch mode
 vp check --fix              # format, lint, and type check
 vp build                    # production build to dist/
+vp preview                  # serve the production build
 ```
 
 Run `vp install` after pulling. `vp check` and `vp test` should both pass before committing.
-
-### Develop on :8888, not :5173
-
-`netlify dev` is the only way to run the whole app locally. It starts (or adopts) the Vite server on
-:5173 and puts the functions in front of it on **:8888**.
-
-Opening **:5173** directly gives you the frontend with no `/api/*` routes. That fails in a confusing
-way rather than an obvious one: Vite's SPA fallback answers `/api/users` with **200 and the
-index.html page**, not a 404, so the app receives a web page where it expects JSON. The app shows a
-red "could not load your words" banner saying the server returned a page instead of data. If you see
-that, you are on the wrong port.
-
-Hot reloading works normally through :8888. If you stop the :5173 server while `netlify dev` is
-running, :8888 loses its frontend — restart both, or let `netlify dev` start Vite itself.
-
-The same gap applies to `vp preview`, which serves the built assets with no functions.
 
 ## Layout
 
 ```
 src/lib/          pure logic, no React, thoroughly tested
-  schema.ts         zod schemas and types for Entry, Dictionary, Progress, User
+  schema.ts         zod schemas and types for Entry, Dictionary, Progress
   normalize.ts      text folding: case, accents, articles, "tímido/a" shorthand
   grade.ts          answer grading in both directions
   scheduler.ts      SM-2 spaced repetition behind a swappable Scheduler interface
@@ -68,15 +56,12 @@ src/lib/          pure logic, no React, thoroughly tested
   dates.ts          ISO calendar-date maths in whole local days
   slug.ts           stable entry ids
 src/
-  api.ts          typed client over the functions; validates every response
-  app/            store (context + data loading), the bundled dictionary, and the shell
+  app/            store (context), local storage (local.ts), the bundled dictionary and sentence
+                  data, and the shells
   screens/        one file per screen, each with a CSS module beside it
     quiz/           one component per exercise (typed and gaps, multiple choice, matching, spot the
                     mistake), and the list of them
                     (exercises.ts) the home screen offers; QuizScreen runs the session
-netlify/
-  functions/      the /api routes: users and progress
-  lib/            code shared between functions
 scripts/
   validate-dictionary.ts   schema check with warnings, exits non-zero on error; gates the build
   validate-frames.ts       frame and glue checks against the dictionary; gates the build
@@ -99,9 +84,9 @@ It also locks document scrolling while open, so iOS has nothing to scroll when i
 The shell is a CSS size container named `session`; exercises compact themselves with
 `@container session (max-height: …)` rather than media queries, which only see the full screen.
 
-A session is only built once the learner's progress has loaded (`progressLoaded` in the store).
-Building it earlier — a reload on the quiz page — would treat every word as never practiced and
-freeze that into the session.
+A session is built from progress once, when the quiz screen opens, and kept fixed while it runs.
+Progress is read from local storage synchronously on first render, so a session can never start from
+empty progress by mistake.
 
 `src/lib` deliberately has no React or network code in it. The grading and scheduling rules are the
 part of this app most worth getting right, so they are pure functions with tests rather than logic
@@ -109,8 +94,7 @@ tangled into components.
 
 ## Screens
 
-- **Who's practicing** — name picker, plus a field to add a name. The choice is remembered in
-  `localStorage`; a name that no longer exists on the server is ignored.
+- **Welcome** — first start only: asks for a name, which the home screen greets.
 - **Home** — **Practice**, plus **Focus on new words** and **Remediation** (words last answered
   wrong), each shown only when it holds something. Each of those is a **mixed** session that moves
   between the exercises. A folded **Choose exercise** list starts the same kind of session using one
@@ -139,23 +123,33 @@ tangled into components.
   miss and shows the mistake. See [Spotting a mistake](#spotting-a-mistake).
 - **Dictionary** — search both languages (accent-insensitive, so `timido` finds `tímido`), filter
   by tag, read the notes.
-- **Settings** — switch user.
+- **Settings** — your name (editable) and how much you have practiced. No other users, no switching.
 
 ## Data
 
-One shared dictionary, tagged by class section. Progress is per person, per entry, and per direction
-(`en→es` and `es→en` are separate cards, and a word is normally practiced in one direction before
-the other). Identity is a name picked from a list — no passwords, no email. The dictionary ships
-with the app; users and progress live in Netlify Blobs as a handful of JSON blobs.
+The dictionary ships with the app (see [Working on the dictionary](#working-on-the-dictionary)).
+Everything else lives in the browser's **local storage** (`src/app/local.ts`), under two keys:
 
-Shared blobs are written with ETag conditional writes (read → merge → write, retry on mismatch) so
-two people writing at once cannot clobber each other. One trap worth knowing: **the local
-`netlify dev` Blobs store returns no ETags at all**, while production does. Code that treats a
-missing ETag as "the blob does not exist" will write with `onlyIfNew`, fail forever against an
-existing blob, and work fine in production while being broken locally. `netlify/lib/store.mts`
-tracks existence separately for this reason, and there is a regression test for it.
+- `vlc-spanish:name` — the name given on first start.
+- `vlc-spanish:progress` — one scheduling record per entry per direction (`en→es` and `es→en` are
+  separate cards, and a word is normally practiced in one direction before the other). It is saved
+  whenever an answer is recorded, so leaving mid-session loses nothing.
 
-Progress is written once per session rather than after every card.
+The progress records still carry a `userId`, from when the app had several users on a server; it is
+always `"me"` (`LOCAL_USER`), which keeps the schema valid without a migration.
+
+What local storage means in practice:
+
+- **Progress belongs to one browser on one device.** A phone and a laptop are separate learners.
+- **Browsers may clear it.** Safari deletes storage for sites not visited in seven days unless the app
+  is installed to the home screen. The app asks for persistent storage on start
+  (`navigator.storage.persist()`), which browsers are free to refuse.
+- **Unreadable data starts empty** rather than breaking the app, as does blocked storage (private
+  windows): the session still works, it is just not remembered.
+
+Until September 2026 users and progress lived in Netlify Blobs behind two unauthenticated
+functions. They were removed to make the app single-user with nothing stored remotely; production
+progress was deliberately not migrated.
 
 **Numbers are in the dictionary but not in the drill.** They were a third of the entries, which
 crowded out the words that carry meaning, so `isDrillable` in `src/lib/session.ts` holds back
@@ -210,13 +204,13 @@ the deployed site has no endpoint that writes words at all.
    that does not validate fails the deploy rather than reaching the app. `vp test` also parses the
    bundled file.
 
-4. Optionally check them in `netlify dev` — a restart is not needed, the file hot-reloads.
+4. Optionally check them in `vp dev` — a restart is not needed, the file hot-reloads.
 5. Commit and push. The words are live when the deploy finishes.
 
 ### Deleting or renaming
 
 Edit or remove the entry and deploy; the file replaces the old dictionary wholesale. Progress is
-keyed by entry id and stored separately, so **changing an id orphans that word's progress** — the
+keyed by entry id and stored on each device, so **changing an id orphans that word's progress** — the
 word starts again as new. Orphaned progress rows are harmless and ignored when scheduling. Correcting
 the `es` text without touching the `id` keeps progress intact, at the cost of an id that no longer
 matches the headword (the validator warns).
@@ -227,8 +221,7 @@ Until September 2026 the dictionary lived in Netlify Blobs, pushed there by an i
 an unauthenticated `POST /api/entries`. That design came from the original plan for in-app word
 adding. Once words were only ever authored in git, the Blobs copy was a second source of truth kept
 in sync by hand, with a public write path and a `--url` flag that silently imported into the local
-store if you forgot it. A stale `dictionary` key may still exist in the production `vocab` store; the
-app no longer reads it (`netlify blobs:delete vocab dictionary` removes it).
+store if you forgot it.
 
 ## Sentence frames
 
@@ -331,9 +324,9 @@ Phase 1 is complete. Working and deployed at
 [vlc-spanish.netlify.app](https://vlc-spanish.netlify.app):
 
 - The dictionary, bundled into the app from `data/dictionary.json`
-- Users and per-person progress, stored in Netlify Blobs behind two functions
+- Progress in local storage (originally users and progress in Netlify Blobs; removed)
 - Typed quizzes with SM-2 scheduling, graded per the rules below
-- Dictionary browse and search, name picker, user switching
+- Dictionary browse and search
 - Installable PWA with offline caching of the app shell, which includes the dictionary
 
 The first release of Phase 2 is built (not yet deployed at the time of writing):
@@ -343,6 +336,7 @@ The first release of Phase 2 is built (not yet deployed at the time of writing):
 - A session frame sized to the space above the on-screen keyboard
 - The B2 home screen: Practice, Focus on new words, Remediation, Choose exercise
 - A per-exercise score in the summary of a mixed session
+- Single-user and fully static: name on first start, progress in local storage, no server
 - Sentence frames (31, about 25,000 sentences), **Fill the gap** (one to three blanks) and **Spot
   the mistake**, in Practice and Choose exercise
 
@@ -445,5 +439,9 @@ Hosted on Netlify at `vlc-spanish.netlify.app`, deployed from the GitHub repo. T
 property of the Netlify site, not something in `netlify.toml` — it is set at creation
 (`netlify sites:create --name vlc-spanish`) or in the Netlify UI.
 
-There are no environment variables to set: the app calls no paid APIs and holds no secrets. For
-local development see [Develop on :8888](#develop-on-8888-not-5173).
+The site is fully static: `pnpm run build` validates the dictionary and frames, type-checks and
+builds to `dist/`. There are no functions and no environment variables.
+
+If the old Netlify Blobs store still holds data from the multi-user version (`users`,
+`progress/dylan`, `dictionary` in the `vocab` store), nothing reads it; with the CLI linked to the site
+(`netlify link`) it can be removed with `netlify blobs:delete vocab <key>`.

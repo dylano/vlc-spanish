@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router";
 import SessionShell from "../app/SessionShell.tsx";
+import { LOCAL_USER } from "../app/local.ts";
 import { sentences } from "../app/sentences.ts";
 import { useStore } from "../app/store-context.ts";
 import { today } from "../lib/dates.ts";
@@ -84,7 +85,7 @@ interface Answered {
  * exercise components under ./quiz.
  */
 export default function QuizScreen() {
-  const { entries, progress, progressLoaded, userId, recordResults } = useStore();
+  const { entries, progress, recordResults } = useStore();
   const [params] = useSearchParams();
   const navigate = useNavigate();
 
@@ -104,19 +105,17 @@ export default function QuizScreen() {
     };
   }, [params]);
 
-  // Fixed once progress has loaded: answering updates progress, and rebuilding
-  // mid-session would reshuffle the cards under the user. Building before it has
-  // loaded — a reload on this page — would treat every word as never practiced.
+  // Fixed when the screen opens: answering updates progress, and rebuilding
+  // mid-session would reshuffle the cards under the user.
   const items = useMemo((): SessionItem[] => {
-    if (!userId || !progressLoaded) return [];
-    const options = { entries, progress, userId, config, today: today(), sentences };
+    const options = { entries, progress, userId: LOCAL_USER, config, today: today(), sentences };
     if (config.format === "mixed") return buildMixedSession(options);
     if (config.format === "match") return buildMatchRounds(options);
     if (config.format === "gap") return buildGapSession(options);
     if (config.format === "mistake") return buildMistakeSession(options);
     return buildSession(options);
     // eslint-disable-next-line react-hooks/exhaustive-deps -- deliberately built once per session
-  }, [entries, userId, config, progressLoaded]);
+  }, [entries, config]);
 
   const [index, setIndex] = useState(0);
   const [answered, setAnswered] = useState<Answered[]>([]);
@@ -142,16 +141,6 @@ export default function QuizScreen() {
       ...results.map(({ card, outcome }) => ({ card, grade: outcome.grade, given: outcome.given })),
     ]);
     setIndex((current) => current + 1);
-  }
-
-  if (!userId) return <p>Choose a name first.</p>;
-
-  if (!progressLoaded) {
-    return (
-      <SessionShell>
-        <p className={styles.label}>Loading…</p>
-      </SessionShell>
-    );
   }
 
   if (items.length === 0) {

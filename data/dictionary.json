@@ -794,8 +794,7 @@
       },
       "notes": "Literally 'to wash the teeth'. Spanish uses 'los dientes', not 'mis dientes'; the reflexive pronoun already says whose.",
       "tags": ["daily-activities", "verbs"],
-      "added": "2026-09-15",
-      "flagged": "Multi-word reflexive: the headword ends in 'dientes', not '-se', so the validator's reflexive check may need to allow this."
+      "added": "2026-09-15"
     },
     {
       "id": "vestirse",

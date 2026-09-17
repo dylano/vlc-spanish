@@ -41,10 +41,3 @@
 .navLink[aria-current="page"] {
   color: var(--ink);
 }
-
-.error {
-  padding: 14px 0;
-  border-top: 1px solid var(--wrong);
-  color: var(--wrong);
-  margin-bottom: 16px;
-}

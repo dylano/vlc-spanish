@@ -5,6 +5,8 @@
 > screen, no family passphrase, no `ANTHROPIC_API_KEY`, no `.env`. Dictionary entries are authored
 > outside the app (see [DICTIONARY_BRIEF.md](DICTIONARY_BRIEF.md)) and bundled into the build from
 > `data/dictionary.json`; there is no dictionary blob, `/api/dictionary`, or `/api/entries`.
+> The app has since become **single-user and fully static**: no users, no functions, no Blobs;
+> progress lives in local storage.
 > Where this document and the [README](README.md) disagree, the README is current.
 
 This document briefs a Claude Code agent on building a vocabulary-learning app for Doliver and his family. It captures the decisions made so far in a chat with Claude, the data model, and a phased plan. Treat it as the starting point for a collaboration, not a rigid contract: open decisions are listed at the end and should be confirmed with Doliver before scaffolding.

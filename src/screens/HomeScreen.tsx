@@ -30,11 +30,8 @@ function Chevron({ className = "" }: { className?: string }) {
 }
 
 export default function HomeScreen() {
-  const { users, userId, counts, ready } = useStore();
+  const { name, counts } = useStore();
   const [choosing, setChoosing] = useState(false);
-  const user = users.find((candidate) => candidate.id === userId);
-
-  if (!ready) return <p>Loading…</p>;
 
   const { due, unseen, missed } = counts;
   // A practice session already tops itself up with new words, so it is worth
@@ -46,7 +43,7 @@ export default function HomeScreen() {
       <p className={styles.date}>
         {new Intl.DateTimeFormat(undefined, DATE_FORMAT).format(new Date())}
       </p>
-      <h1 className={styles.greeting}>Hola{user ? `, ${user.displayName}` : ""}</h1>
+      <h1 className={styles.greeting}>Hola{name ? `, ${name}` : ""}</h1>
 
       <div className={styles.actions}>
         {canPractice ? (

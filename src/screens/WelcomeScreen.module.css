@@ -28,30 +28,6 @@
   margin: 0 0 34px;
 }
 
-.names {
-  border-top: 1px solid var(--rule);
-  margin-bottom: 28px;
-}
-
-.name {
-  display: block;
-  width: 100%;
-  min-height: 68px;
-  padding: 0;
-  border: none;
-  border-bottom: 1px solid var(--rule);
-  background: transparent;
-  color: var(--ink);
-  font-family: var(--serif);
-  font-size: 1.75rem;
-  text-align: left;
-  cursor: pointer;
-}
-
-.name:hover {
-  color: var(--accent);
-}
-
 .addRow {
   display: flex;
   gap: 8px;
@@ -98,11 +74,6 @@
 .addButton:disabled {
   opacity: 0.4;
   cursor: default;
-}
-
-.error {
-  color: var(--wrong);
-  margin-top: 12px;
 }
 
 .spacer {
