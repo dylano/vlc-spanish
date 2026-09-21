@@ -140,11 +140,16 @@ tangled into components.
   just as right. Nothing is
   scheduled, and the summary counts these as "translated" apart from the score. Enter submits.
 - **Dictionary** — search both languages (accent-insensitive, so `timido` finds `tímido`), filter
-  by tag, read the notes. Search (`src/lib/search.ts`) matches any form a learner might type: the
+  by tag, read the notes. The tags fold behind a small-caps **Categories** toggle (option 2 on the
+  "Dictionary Category Filter" canvas): wrapped in full they took seven rows and pushed the results
+  behind the phone keyboard. Picking one folds the grid away and shows the tag as a pill with an ×
+  beside the toggle, which clears it. Search (`src/lib/search.ts`) matches any form a learner might type: the
   feminine and plural (`hermana`, `zapatos`, `estas`), every present-tense verb form (`prefiero`), and
   the English for those (`sister`, `these`). A leading article is ignored (`la mesa`, `the table`), as
   are apostrophes; `ñ` stays distinct from `n`. Exact matches come first, then words starting with
-  the query, then any containing it.
+  the query, then any containing it. Forms the card does not show (a feminine, a plural, a conjugation)
+  match only whole or from the start of a word, and verb forms are indexed without their reflexive
+  pronoun, so `nos` does not list every reflexive verb or every plural ending in -nos.
 - **Settings** — your name (editable) and how much you have practiced. No other users, no switching.
   A quiet footer shows the **version**: the commit the build came from (`COMMIT_REF` on Netlify, `git
 rev-parse` locally, marked "+ local changes" when the tree is dirty), injected as `__COMMIT__` by
@@ -413,6 +418,10 @@ Not built, in rough order of likely usefulness:
   is no per-answer history (no dates of misses, no wrong answers typed); a "missed recently" view or
   showing what was typed would need a small answer log added to progress.
 - Conjugation drills driven by the `verb` metadata already in the dictionary (needs no API)
+- **Light/dark override in Settings** (requested 2026-09-21): today the theme follows the system
+  (`prefers-color-scheme` in `src/index.css`) with no way to switch. A System / Light / Dark choice,
+  stored per device in local storage, applied as a `data-theme` attribute on the root that the dark
+  token block also keys on; the `theme-color` meta for the phone's status bar should follow it
 - **Conjugation table in the Dictionary**: tap a verb entry to see its present tense for every
   person. `verbForm` in `src/lib/sentences/conjugate.ts` already produces each form, stored or by
   rule (requested 2026-09-21)

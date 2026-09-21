@@ -22,6 +22,12 @@ describe("dictionary search", () => {
   it("finds a verb by any present-tense form", () => {
     expect(found("prefiero")).toEqual(["preferir"]);
     expect(found("hablamos")).toContain("hablar");
+    expect(found("acostamos")).toContain("acostarse");
+  });
+
+  it("does not match a reflexive pronoun on its own", () => {
+    expect(found("nos")).not.toContain("acostarse");
+    expect(found("me")).not.toContain("ducharse");
   });
 
   it("ignores a leading article in either language", () => {
