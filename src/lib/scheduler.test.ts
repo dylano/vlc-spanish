@@ -3,6 +3,7 @@ import { addDays, daysBetween, toIsoDate } from "./dates.ts";
 import {
   EASE_FLOOR,
   EASE_START,
+  forgiveMisses,
   isDue,
   MAX_INTERVAL,
   RECOGNITION_MAX_INTERVAL,
@@ -229,6 +230,23 @@ describe("answers before the due date", () => {
     const missed = schedule(card, "wrong", TODAY);
     expect(missed.lapses).toBe(1);
     expect(missed.due).toBe(addDays(TODAY, 1));
+  });
+});
+
+describe("forgiving misses", () => {
+  it("clears the count and turns a recent miss into a right answer, giving back its ease", () => {
+    const card = drill(newCard(), ["correct", "correct"]);
+    const missed = schedule(card, "wrong", card.due);
+    const forgiven = forgiveMisses(missed);
+    expect(forgiven.lapses).toBe(0);
+    expect(forgiven.lastResult).toBe("correct");
+    expect(forgiven.ease).toBeCloseTo(card.ease);
+    expect(forgiven.due).toBe(missed.due);
+  });
+
+  it("only clears the count when the last answer was already right", () => {
+    const card = { ...drill(newCard(), ["correct"]), lapses: 3 };
+    expect(forgiveMisses(card)).toEqual({ ...card, lapses: 0 });
   });
 });
 

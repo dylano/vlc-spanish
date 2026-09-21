@@ -147,12 +147,19 @@ tangled into components.
   just as right. Nothing is
   scheduled, and the summary counts these as "translated" apart from the score. Enter submits.
 - **Problem words** (`/problems`) — every word missed at least once, most missed first, with the
-  count and whether the last answer was wrong (`src/lib/problems.ts`: `lapses` summed over both
+  count and, when the last answer was wrong, "recent miss" (`src/lib/problems.ts`: `lapses` summed over both
   directions; ties put a word still wrong first, then the lower ease). A reference only, with no
   practice button: Focus on problem words on Home does the drilling, and drills only words wrong
   _last time_, while this list is history, so a word stays after it is answered right. Reached from a
   line under the Focus on problem words row ("4 words · see the list"), which stays on its own when
-  nothing is currently wrong. Kept out of the Dictionary on purpose, so the Dictionary stays a
+  nothing is currently wrong. A row is **swiped left to remove** a word whose misses were only
+  slips (a typo in a sentence): it follows the finger over a "Remove" label, slides off past a third
+  of its width and the gap closes, or springs back short of that; a drag counts only once it is
+  clearly sideways, so the list still scrolls. For the keyboard and screen readers, which cannot
+  swipe, each row keeps a remove button that shows only when focused. Removing a word: `forgiveMisses` in `src/lib/scheduler.ts` clears its miss count in both
+  directions and, if the last answer was wrong, counts it as right and gives back the ease that miss
+  cost, so it leaves Focus on problem words too. Its due date stays, so it comes back as an ordinary
+  review; progress keeps no history, so earlier misses cannot be undone beyond the count. Kept out of the Dictionary on purpose, so the Dictionary stays a
   reference; a subtle marker there may come later.
 - **Dictionary** — search both languages (accent-insensitive, so `timido` finds `tímido`), filter
   by tag, read the notes. The tags fold behind a small-caps **Categories** toggle (option 2 on the

@@ -142,3 +142,21 @@ export function schedule(
 export function isDue(progress: Progress, today: IsoDate): boolean {
   return isOnOrBefore(progress.due, today);
 }
+
+/**
+ * Take back the misses on a card the learner says they knew — a typo in a
+ * sentence, say — when they remove it from Problem words. Its miss count is
+ * cleared, and a most recent answer that was wrong counts as right: that takes
+ * it out of Focus on problem words and gives back the ease that miss cost.
+ * Progress keeps no history, so earlier misses cannot be undone beyond the
+ * count, and the due date stays as it is: an ordinary review, not extra drilling.
+ */
+export function forgiveMisses(progress: Progress): Progress {
+  if (progress.lastResult !== "wrong") return { ...progress, lapses: 0 };
+  return {
+    ...progress,
+    lapses: 0,
+    lastResult: "correct",
+    ease: clampEase(progress.ease - EASE_DELTA.wrong),
+  };
+}

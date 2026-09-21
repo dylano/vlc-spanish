@@ -55,13 +55,69 @@
   border-top: 1px solid var(--rule);
 }
 
+/* The list item collapses (grid rows 1fr → 0fr) once its row has slid away. */
+.swipe {
+  display: grid;
+  grid-template-rows: 1fr;
+  border-bottom: 1px solid var(--rule);
+  transition: grid-template-rows 180ms ease 200ms;
+}
+
+/* Reaches into the shell's 28px side gutters, so a swiped row slides off the
+   edge of the screen rather than vanishing at the page margin. */
+.swipeInner {
+  position: relative;
+  min-height: 0;
+  margin: 0 -28px;
+  padding: 0 28px;
+  overflow: hidden;
+}
+
+.leaving {
+  grid-template-rows: 0fr;
+}
+
+.swipe.leaving {
+  border-bottom-color: transparent;
+}
+
+/* Revealed as the row is dragged left. */
+.behind {
+  position: absolute;
+  inset: 0;
+  padding-right: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  font-size: var(--label-size);
+  letter-spacing: var(--label-tracking);
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
 .row {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 12px;
   padding: 12px 0;
-  border-bottom: 1px solid var(--rule);
+  background: var(--paper);
+  /* Vertical drags scroll the list; horizontal ones swipe the row. */
+  touch-action: pan-y;
+  user-select: none;
+  transition: transform 200ms ease;
+}
+
+.dragging {
+  transition: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .swipe,
+  .row {
+    transition: none;
+  }
 }
 
 .es {
@@ -79,6 +135,38 @@
 
 .wrong {
   color: var(--wrong);
+}
+
+/* The keyboard's way to remove a word: hidden until it has focus. */
+.remove {
+  position: absolute;
+  right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: none;
+  background: var(--paper);
+  color: var(--muted);
+  cursor: pointer;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.remove:focus-visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.remove svg {
+  width: 14px;
+  height: 14px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  stroke-linecap: round;
 }
 
 .count {
