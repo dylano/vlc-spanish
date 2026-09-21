@@ -78,6 +78,7 @@ interface VerbEntry extends EntryBase {
     regular: boolean; // REQUIRED
     stemChange?: StemChange;
     irregularYo?: string; // "hago", "salgo", "tengo"
+    pattern?: "gustar"; // gustar, encantar: agrees with what is liked (me gusta, me gustan)
   };
   forms?: {
     yo?: string;

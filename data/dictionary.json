@@ -3673,9 +3673,10 @@
       "pos": "verb",
       "verb": {
         "reflexive": false,
-        "regular": true
+        "regular": true,
+        "pattern": "gustar"
       },
-      "notes": "Works backwards: what is liked is the subject, so the verb agrees with it. Me gusta el libro, me gustan los libros, me gusta leer; a mi madre le gusta.",
+      "notes": "The verb agrees with what is liked, not with the person: me gusta el libro, me gustan los libros, me gusta leer; a mi madre le gusta.",
       "tags": ["verbs"],
       "added": "2026-09-21"
     },
@@ -3686,7 +3687,8 @@
       "pos": "verb",
       "verb": {
         "reflexive": false,
-        "regular": true
+        "regular": true,
+        "pattern": "gustar"
       },
       "notes": "Works like gustar: me encanta la playa, me encantan los libros. For things and activities; loving a person is 'querer'.",
       "tags": ["verbs"],

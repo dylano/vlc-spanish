@@ -143,7 +143,15 @@ tangled into components.
   by tag, read the notes. The tags fold behind a small-caps **Categories** toggle (option 2 on the
   "Dictionary Category Filter" canvas): wrapped in full they took seven rows and pushed the results
   behind the phone keyboard. Picking one folds the grid away and shows the tag as a pill with an ×
-  beside the toggle, which clears it. Search (`src/lib/search.ts`) matches any form a learner might type: the
+  beside the toggle, which clears it.
+  Every verb card has a **Conjugate** link that opens its present tense in a modal dialog over the
+  list (`ConjugationDialog`, a native `<dialog>`: Escape or a tap on the dimmed list closes it). The
+  table (`src/lib/conjugation.ts`) colours what to notice: a changed stem (_pref**ie**ro_, not in
+  nosotros/vosotros), the endings of a regular verb, a whole irregular form (_voy_, _salgo_), and mutes
+  a reflexive pronoun; tags beside "Present tense" name the pattern (_e → ie_, _irregular yo_,
+  _reflexive_). Verbs marked `verb.pattern: "gustar"` get two columns instead, one thing and several
+  (_me gusta / me gustan_), with no tag: a "works backwards" label was mocked up and dropped as
+  unhelpful. Search (`src/lib/search.ts`) matches any form a learner might type: the
   feminine and plural (`hermana`, `zapatos`, `estas`), every present-tense verb form (`prefiero`), and
   the English for those (`sister`, `these`). A leading article is ignored (`la mesa`, `the table`), as
   are apostrophes; `ñ` stays distinct from `n`. Exact matches come first, then words starting with
@@ -416,9 +424,6 @@ were dropped then):
   the Focus session, so a word leaves that session on its next right answer but not this list. There
   is no per-answer history (no dates of misses, no wrong answers typed); a "missed recently" view or
   showing what was typed would need a small answer log added to progress.
-- **Conjugation table in the Dictionary**: tap a verb entry to see its present tense for every
-  person. `verbForm` in `src/lib/sentences/conjugate.ts` already produces each form, stored or by
-  rule (requested 2026-09-21)
 - **Session size in Settings** (requested 2026-09-21): how many words a session holds, default 15
   (today `DEFAULT_SIZE` in `QuizScreen.tsx`: 15 for mixed sessions, 10 for single exercises, 16 for
   Match Pairs). Stored per device in local storage. To decide: whether one setting drives all of them

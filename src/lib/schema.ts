@@ -107,6 +107,12 @@ export const verbEntrySchema = z.object({
     regular: z.boolean(),
     stemChange: stemChangeSchema.optional(),
     irregularYo: nonEmpty.optional(),
+    /**
+     * "gustar" for verbs built like it (gustar, encantar): the verb agrees with
+     * what is liked and the person is a pronoun, so its table is me gusta /
+     * me gustan rather than one form per person.
+     */
+    pattern: z.enum(["gustar"]).optional(),
   }),
   forms: z
     .object({

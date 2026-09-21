@@ -2,12 +2,14 @@ import { useMemo, useState } from "react";
 import { useStore } from "../app/store-context.ts";
 import { canonicalAnswer } from "../lib/grade.ts";
 import { buildSearchIndex, search } from "../lib/search.ts";
+import type { VerbEntry } from "../lib/schema.ts";
+import ConjugationDialog from "./ConjugationDialog.tsx";
 import styles from "./DictionaryScreen.module.css";
 
-function Chevron({ open }: { open: boolean }) {
+function Chevron({ open, className }: { open: boolean; className?: string }) {
   return (
     <svg
-      className={`${styles.chevron} ${open ? styles.chevronUp : styles.chevronDown}`}
+      className={className ?? `${styles.chevron} ${open ? styles.chevronUp : styles.chevronDown}`}
       viewBox="0 0 20 20"
       fill="none"
       stroke="currentColor"
@@ -28,6 +30,7 @@ export default function DictionaryScreen() {
   // The categories fold away: all of them wrapped into seven rows and pushed the
   // results down behind the phone keyboard.
   const [choosing, setChoosing] = useState(false);
+  const [conjugating, setConjugating] = useState<VerbEntry>();
 
   const tags = useMemo(
     () => [...new Set(entries.flatMap((entry) => entry.tags))].sort(),
@@ -121,9 +124,32 @@ export default function DictionaryScreen() {
             </div>
             <p className={styles.en}>{entry.en.join(", ")}</p>
             {entry.notes ? <p className={styles.note}>{entry.notes}</p> : null}
+            {entry.pos === "verb" ? (
+              <button
+                type="button"
+                className={styles.conjugate}
+                aria-haspopup="dialog"
+                onClick={() => {
+                  setConjugating(entry);
+                }}
+              >
+                Conjugate
+                <Chevron open={false} className={styles.conjugateChevron} />
+              </button>
+            ) : null}
           </li>
         ))}
       </ul>
+
+      {conjugating ? (
+        <ConjugationDialog
+          entry={conjugating}
+          dictionary={entries}
+          onClose={() => {
+            setConjugating(undefined);
+          }}
+        />
+      ) : null}
     </section>
   );
 }

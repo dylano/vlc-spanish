@@ -168,3 +168,26 @@
   padding-left: 12px;
   border-left: 1px solid var(--rule);
 }
+
+/* Opens the verb's conjugation over the list. */
+.conjugate {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  min-height: 32px;
+  margin-top: 6px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  font-family: var(--sans);
+  font-size: var(--label-size);
+  letter-spacing: var(--label-tracking);
+  text-transform: uppercase;
+  color: var(--accent);
+  cursor: pointer;
+}
+
+.conjugateChevron {
+  width: 14px;
+  height: 14px;
+}
