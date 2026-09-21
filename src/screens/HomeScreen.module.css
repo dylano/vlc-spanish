@@ -57,6 +57,46 @@
   color: var(--muted);
 }
 
+/* Focus on problem words, with a line under it to the list of problem words:
+   two links in one row, since a link cannot hold another. */
+.problemRow {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 72px;
+  padding: 8px 0 4px;
+  border-bottom: 1px solid var(--rule);
+}
+
+.focus {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 44px;
+  font-family: var(--serif);
+  text-decoration: none;
+}
+
+.seeList {
+  display: inline-flex;
+  align-self: flex-start;
+  align-items: center;
+  gap: 4px;
+  min-height: 32px;
+  font-size: var(--label-size);
+  letter-spacing: var(--label-tracking);
+  text-transform: uppercase;
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.seeList .seeListChevron {
+  width: 14px;
+  height: 14px;
+  color: var(--accent);
+}
+
 .chevron {
   flex: none;
   color: var(--muted);

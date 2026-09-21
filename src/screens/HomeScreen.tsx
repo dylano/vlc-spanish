@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Link } from "react-router";
 import { useStore } from "../app/store-context.ts";
+import { problemWords } from "../lib/problems.ts";
 import { EXERCISES } from "./quiz/exercises.ts";
 import styles from "./HomeScreen.module.css";
 
@@ -30,7 +31,8 @@ function Chevron({ className = "" }: { className?: string }) {
 }
 
 export default function HomeScreen() {
-  const { name, counts } = useStore();
+  const { name, counts, entries, progress } = useStore();
+  const troubled = useMemo(() => problemWords(entries, progress).length, [entries, progress]);
   const [choosing, setChoosing] = useState(false);
 
   const { due, unseen, missed } = counts;
@@ -62,11 +64,24 @@ export default function HomeScreen() {
               </Link>
             ) : null}
 
-            {missed > 0 ? (
-              <Link to="/quiz?scope=misses" className={`${styles.action} ${styles.narrowing}`}>
-                Focus on problem words
-                <Chevron />
-              </Link>
+            {/* The row drills words wrong last time; the line under it opens the
+                longer history. With nothing wrong right now the line stays, so the
+                list is still reachable. */}
+            {missed > 0 || troubled > 0 ? (
+              <div className={styles.problemRow}>
+                {missed > 0 ? (
+                  <Link to="/quiz?scope=misses" className={`${styles.focus} ${styles.narrowing}`}>
+                    Focus on problem words
+                    <Chevron />
+                  </Link>
+                ) : null}
+                {troubled > 0 ? (
+                  <Link to="/problems" className={styles.seeList}>
+                    {troubled} {troubled === 1 ? "word" : "words"} · see the list
+                    <Chevron className={styles.seeListChevron} />
+                  </Link>
+                ) : null}
+              </div>
             ) : null}
           </div>
         ) : (

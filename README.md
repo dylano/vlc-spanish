@@ -139,6 +139,14 @@ tangled into components.
   the model would repeat it; anything else gets no verdict, since it may be
   just as right. Nothing is
   scheduled, and the summary counts these as "translated" apart from the score. Enter submits.
+- **Problem words** (`/problems`) — every word missed at least once, most missed first, with the
+  count and whether the last answer was wrong (`src/lib/problems.ts`: `lapses` summed over both
+  directions; ties put a word still wrong first, then the lower ease). A reference only, with no
+  practice button: Focus on problem words on Home does the drilling, and drills only words wrong
+  _last time_, while this list is history, so a word stays after it is answered right. Reached from a
+  line under the Focus on problem words row ("4 words · see the list"), which stays on its own when
+  nothing is currently wrong. Kept out of the Dictionary on purpose, so the Dictionary stays a
+  reference; a subtle marker there may come later.
 - **Dictionary** — search both languages (accent-insensitive, so `timido` finds `tímido`), filter
   by tag, read the notes. The tags fold behind a small-caps **Categories** toggle (option 2 on the
   "Dictionary Category Filter" canvas): wrapped in full they took seven rows and pushed the results
@@ -425,13 +433,6 @@ over fully type-driven templates, which produce wrong English and odd combinatio
 Not built, in priority order (set 2026-09-21; flashcards, a progress screen and conjugation drills
 were dropped then):
 
-- **Problem words view** (requested 2026-09-21): a list of the words that have given trouble, apart
-  from the Focus on problem words session that drills them. The data is already stored per word and
-  direction: `lapses` (every miss, ever), `ease` (drops with each miss or near miss) and
-  `lastResult`. Ranking by lapses or ease shows the long-term troublemakers; only `lastResult` feeds
-  the Focus session, so a word leaves that session on its next right answer but not this list. There
-  is no per-answer history (no dates of misses, no wrong answers typed); a "missed recently" view or
-  showing what was typed would need a small answer log added to progress.
 - **Other forms on Dictionary cards** (requested 2026-09-21): cards show only the headword and its
   English, so a search can match a form nobody sees ("nie" finds el sobrino through its feminine's
   "niece"). Show the feminine and its English (_el sobrino · la sobrina_, nephew · niece), adjective

@@ -4,6 +4,7 @@ import { StoreProvider } from "./app/store.tsx";
 import { useStore } from "./app/store-context.ts";
 import DictionaryScreen from "./screens/DictionaryScreen.tsx";
 import HomeScreen from "./screens/HomeScreen.tsx";
+import ProblemWordsScreen from "./screens/ProblemWordsScreen.tsx";
 import QuizScreen from "./screens/QuizScreen.tsx";
 import SettingsScreen from "./screens/SettingsScreen.tsx";
 import WelcomeScreen from "./screens/WelcomeScreen.tsx";
@@ -22,6 +23,7 @@ function Gate() {
         <Route index element={<HomeScreen />} />
         <Route path="dictionary" element={<DictionaryScreen />} />
         <Route path="settings" element={<SettingsScreen />} />
+        <Route path="problems" element={<ProblemWordsScreen />} />
         <Route path="*" element={<HomeScreen />} />
       </Route>
     </Routes>
