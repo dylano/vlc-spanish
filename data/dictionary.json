@@ -3104,6 +3104,567 @@
       },
       "tags": ["verbs"],
       "added": "2026-09-21"
+    },
+    {
+      "id": "muy",
+      "es": "muy",
+      "en": ["very"],
+      "pos": "adv",
+      "tags": ["common-words"],
+      "added": "2026-09-21"
+    },
+    {
+      "id": "bastante",
+      "es": "bastante",
+      "en": ["quite", "fairly", "rather", "enough"],
+      "pos": "adv",
+      "notes": "Also 'enough': ya tengo bastante.",
+      "tags": ["common-words"],
+      "added": "2026-09-21"
+    },
+    {
+      "id": "mucho",
+      "es": "mucho",
+      "en": ["many", "much", "a lot of", "lots of"],
+      "pos": "adj",
+      "forms": {
+        "f": "mucha"
+      },
+      "notes": "Agrees with its noun: mucha agua, muchos libros. Before an adjective use 'muy', not 'mucho'.",
+      "tags": ["common-words"],
+      "added": "2026-09-21"
+    },
+    {
+      "id": "mucho-2",
+      "es": "mucho",
+      "en": ["a lot", "very much", "lots"],
+      "pos": "adv",
+      "notes": "After a verb it never changes: trabaja mucho.",
+      "tags": ["common-words"],
+      "added": "2026-09-21"
+    },
+    {
+      "id": "poco",
+      "es": "poco",
+      "en": ["few", "not many", "not much"],
+      "pos": "adj",
+      "forms": {
+        "f": "poca"
+      },
+      "notes": "Agrees with its noun: poca agua, pocos libros. 'Un poco' is a little.",
+      "tags": ["common-words"],
+      "added": "2026-09-21"
+    },
+    {
+      "id": "poco-2",
+      "es": "poco",
+      "en": ["little", "not very", "not much"],
+      "pos": "adv",
+      "notes": "After a verb it never changes: duerme poco. 'Un poco' is a little.",
+      "tags": ["common-words"],
+      "added": "2026-09-21"
+    },
+    {
+      "id": "demasiado",
+      "es": "demasiado",
+      "en": ["too many", "too much"],
+      "pos": "adj",
+      "forms": {
+        "f": "demasiada"
+      },
+      "notes": "Agrees with its noun: demasiada gente, demasiados libros.",
+      "tags": ["common-words"],
+      "added": "2026-09-21"
+    },
+    {
+      "id": "demasiado-2",
+      "es": "demasiado",
+      "en": ["too much", "too"],
+      "pos": "adv",
+      "hint": "with a verb or adjective",
+      "notes": "After a verb or before an adjective it never changes: trabaja demasiado, es demasiado alto.",
+      "tags": ["common-words"],
+      "added": "2026-09-21"
+    },
+    {
+      "id": "un-poco",
+      "es": "un poco",
+      "en": ["a bit", "a little", "a little bit"],
+      "pos": "phrase",
+      "notes": "Before a noun it takes 'de': un poco de agua.",
+      "tags": ["common-words"],
+      "added": "2026-09-21"
+    },
+    {
+      "id": "mas",
+      "es": "más",
+      "en": ["more", "most"],
+      "pos": "adv",
+      "notes": "Keep the accent: 'mas' without it is an old word for 'but'.",
+      "tags": ["common-words"],
+      "added": "2026-09-21"
+    },
+    {
+      "id": "menos",
+      "es": "menos",
+      "en": ["less", "fewer", "least"],
+      "pos": "adv",
+      "tags": ["common-words"],
+      "added": "2026-09-21"
+    },
+    {
+      "id": "y",
+      "es": "y",
+      "en": ["and"],
+      "pos": "conj",
+      "notes": "Becomes 'e' before an i sound: padres e hijos.",
+      "tags": ["common-words"],
+      "added": "2026-09-21"
+    },
+    {
+      "id": "pero",
+      "es": "pero",
+      "en": ["but"],
+      "pos": "conj",
+      "tags": ["common-words"],
+      "added": "2026-09-21"
+    },
+    {
+      "id": "o",
+      "es": "o",
+      "en": ["or"],
+      "pos": "conj",
+      "notes": "Becomes 'u' before an o sound: siete u ocho.",
+      "tags": ["common-words"],
+      "added": "2026-09-21"
+    },
+    {
+      "id": "tambien",
+      "es": "también",
+      "en": ["also", "too", "as well"],
+      "pos": "adv",
+      "notes": "'Yo también' is me too.",
+      "tags": ["common-words"],
+      "added": "2026-09-21"
+    },
+    {
+      "id": "tampoco",
+      "es": "tampoco",
+      "en": ["neither", "not either", "either"],
+      "pos": "adv",
+      "notes": "The negative of 'también': yo tampoco, me neither.",
+      "tags": ["common-words"],
+      "added": "2026-09-21"
+    },
+    {
+      "id": "no",
+      "es": "no",
+      "en": ["no", "not"],
+      "pos": "adv",
+      "notes": "Goes before the verb: no trabajo.",
+      "tags": ["common-words"],
+      "added": "2026-09-21"
+    },
+    {
+      "id": "porque",
+      "es": "porque",
+      "en": ["because"],
+      "pos": "conj",
+      "notes": "'¿Por qué?' (two words, with an accent) asks why.",
+      "tags": ["common-words"],
+      "added": "2026-09-21"
+    },
+    {
+      "id": "cuando",
+      "es": "cuando",
+      "en": ["when"],
+      "pos": "conj",
+      "notes": "With an accent, '¿cuándo?' asks when.",
+      "tags": ["common-words"],
+      "added": "2026-09-21"
+    },
+    {
+      "id": "si",
+      "es": "si",
+      "en": ["if", "whether"],
+      "pos": "conj",
+      "notes": "No accent. 'Sí' with an accent is yes.",
+      "tags": ["common-words"],
+      "added": "2026-09-21"
+    },
+    {
+      "id": "grande",
+      "es": "grande",
+      "en": ["big", "large", "great"],
+      "pos": "adj",
+      "notes": "Same for both genders. Before a singular noun it becomes 'gran' and means great: una gran ciudad.",
+      "tags": ["common-words"],
+      "added": "2026-09-21"
+    },
+    {
+      "id": "pequeno",
+      "es": "pequeño",
+      "en": ["small", "little"],
+      "pos": "adj",
+      "forms": {
+        "f": "pequeña"
+      },
+      "tags": ["common-words"],
+      "added": "2026-09-21"
+    },
+    {
+      "id": "bueno",
+      "es": "bueno",
+      "en": ["good"],
+      "pos": "adj",
+      "forms": {
+        "f": "buena"
+      },
+      "notes": "Becomes 'buen' before a masculine singular noun: buen día. 'Bien' is the adverb: estoy bien.",
+      "tags": ["common-words"],
+      "added": "2026-09-21",
+      "hint": "describes a noun"
+    },
+    {
+      "id": "malo",
+      "es": "malo",
+      "en": ["bad"],
+      "pos": "adj",
+      "forms": {
+        "f": "mala"
+      },
+      "notes": "Becomes 'mal' before a masculine singular noun: mal día. 'Mal' is also the adverb: estoy mal.",
+      "tags": ["common-words"],
+      "added": "2026-09-21",
+      "hint": "describes a noun"
+    },
+    {
+      "id": "bien",
+      "es": "bien",
+      "en": ["well", "fine", "good", "okay"],
+      "pos": "adv",
+      "notes": "An adverb, so it never changes: estoy bien, hablas bien. 'Bueno' describes a noun.",
+      "tags": ["common-words"],
+      "added": "2026-09-21"
+    },
+    {
+      "id": "mal",
+      "es": "mal",
+      "en": ["badly", "bad", "unwell", "poorly"],
+      "pos": "adv",
+      "notes": "An adverb: estoy mal, canta mal. Also 'malo' shortened before a masculine noun.",
+      "tags": ["common-words"],
+      "added": "2026-09-21"
+    },
+    {
+      "id": "nuevo",
+      "es": "nuevo",
+      "en": ["new"],
+      "pos": "adj",
+      "forms": {
+        "f": "nueva"
+      },
+      "tags": ["common-words"],
+      "added": "2026-09-21"
+    },
+    {
+      "id": "viejo",
+      "es": "viejo",
+      "en": ["old"],
+      "pos": "adj",
+      "forms": {
+        "f": "vieja"
+      },
+      "notes": "For people 'mayor' is the polite word.",
+      "tags": ["common-words"],
+      "added": "2026-09-21"
+    },
+    {
+      "id": "otro",
+      "es": "otro",
+      "en": ["another", "other"],
+      "pos": "adj",
+      "forms": {
+        "f": "otra"
+      },
+      "notes": "Never 'un otro': otro libro is another book.",
+      "tags": ["common-words"],
+      "added": "2026-09-21",
+      "enPl": ["other"]
+    },
+    {
+      "id": "mismo",
+      "es": "mismo",
+      "en": ["same"],
+      "pos": "adj",
+      "forms": {
+        "f": "misma"
+      },
+      "tags": ["common-words"],
+      "added": "2026-09-21"
+    },
+    {
+      "id": "mejor",
+      "es": "mejor",
+      "en": ["better", "best"],
+      "pos": "adj",
+      "forms": {
+        "pl": "mejores"
+      },
+      "notes": "Same for both genders; plural mejores. The comparative of both 'bueno' and 'bien'.",
+      "tags": ["common-words"],
+      "added": "2026-09-21"
+    },
+    {
+      "id": "peor",
+      "es": "peor",
+      "en": ["worse", "worst"],
+      "pos": "adj",
+      "forms": {
+        "pl": "peores"
+      },
+      "notes": "Same for both genders; plural peores.",
+      "tags": ["common-words"],
+      "added": "2026-09-21"
+    },
+    {
+      "id": "este",
+      "es": "este",
+      "en": ["this"],
+      "pos": "adj",
+      "forms": {
+        "f": "esta",
+        "pl": "estos"
+      },
+      "enPl": ["these"],
+      "notes": "Plural estos, estas. It goes before the noun: esta chaqueta.",
+      "tags": ["common-words"],
+      "added": "2026-09-21"
+    },
+    {
+      "id": "ese",
+      "es": "ese",
+      "en": ["that"],
+      "pos": "adj",
+      "forms": {
+        "f": "esa",
+        "pl": "esos"
+      },
+      "enPl": ["those"],
+      "notes": "Plural esos, esas. For something near the person you are talking to.",
+      "tags": ["common-words"],
+      "added": "2026-09-21"
+    },
+    {
+      "id": "hoy",
+      "es": "hoy",
+      "en": ["today"],
+      "pos": "adv",
+      "tags": ["time"],
+      "added": "2026-09-21"
+    },
+    {
+      "id": "manana-2",
+      "es": "mañana",
+      "en": ["tomorrow"],
+      "pos": "adv",
+      "notes": "'La mañana' is the morning; 'mañana por la mañana' is tomorrow morning.",
+      "tags": ["time"],
+      "added": "2026-09-21"
+    },
+    {
+      "id": "ayer",
+      "es": "ayer",
+      "en": ["yesterday"],
+      "pos": "adv",
+      "tags": ["time"],
+      "added": "2026-09-21"
+    },
+    {
+      "id": "ahora",
+      "es": "ahora",
+      "en": ["now", "right now"],
+      "pos": "adv",
+      "tags": ["time"],
+      "added": "2026-09-21"
+    },
+    {
+      "id": "despues",
+      "es": "después",
+      "en": ["after", "afterwards", "later"],
+      "pos": "adv",
+      "notes": "Before a noun or verb it takes 'de': después de comer.",
+      "tags": ["time"],
+      "added": "2026-09-21"
+    },
+    {
+      "id": "antes",
+      "es": "antes",
+      "en": ["before", "earlier", "beforehand"],
+      "pos": "adv",
+      "notes": "Before a noun or verb it takes 'de': antes de cenar.",
+      "tags": ["time"],
+      "added": "2026-09-21"
+    },
+    {
+      "id": "luego",
+      "es": "luego",
+      "en": ["then", "later", "afterwards"],
+      "pos": "adv",
+      "notes": "'Hasta luego' is see you later.",
+      "tags": ["time"],
+      "added": "2026-09-21"
+    },
+    {
+      "id": "ya",
+      "es": "ya",
+      "en": ["already", "now"],
+      "pos": "adv",
+      "notes": "'Ya no' is no longer: ya no trabajo.",
+      "tags": ["time"],
+      "added": "2026-09-21"
+    },
+    {
+      "id": "todavia",
+      "es": "todavía",
+      "en": ["still", "yet"],
+      "pos": "adv",
+      "notes": "'Todavía no' is not yet.",
+      "tags": ["time"],
+      "added": "2026-09-21"
+    },
+    {
+      "id": "pronto",
+      "es": "pronto",
+      "en": ["soon"],
+      "pos": "adv",
+      "notes": "In Spain it can also mean early: me levanto pronto.",
+      "tags": ["time"],
+      "added": "2026-09-21"
+    },
+    {
+      "id": "tarde-2",
+      "es": "tarde",
+      "en": ["late"],
+      "pos": "adv",
+      "notes": "'La tarde' is the afternoon; 'tarde' on its own is late: llego tarde.",
+      "tags": ["time"],
+      "added": "2026-09-21"
+    },
+    {
+      "id": "temprano",
+      "es": "temprano",
+      "en": ["early"],
+      "pos": "adv",
+      "tags": ["time"],
+      "added": "2026-09-21"
+    },
+    {
+      "id": "aqui",
+      "es": "aquí",
+      "en": ["here"],
+      "pos": "adv",
+      "tags": ["position"],
+      "added": "2026-09-21"
+    },
+    {
+      "id": "alli",
+      "es": "allí",
+      "en": ["there", "over there"],
+      "pos": "adv",
+      "notes": "'Ahí' is there near you; 'allí' is further away.",
+      "tags": ["position"],
+      "added": "2026-09-21"
+    },
+    {
+      "id": "cerca",
+      "es": "cerca",
+      "en": ["nearby", "near", "close"],
+      "pos": "adv",
+      "notes": "Before a place it takes 'de': cerca de la escuela.",
+      "tags": ["position"],
+      "added": "2026-09-21"
+    },
+    {
+      "id": "lejos",
+      "es": "lejos",
+      "en": ["far away", "far"],
+      "pos": "adv",
+      "notes": "Before a place it takes 'de': lejos de la costa.",
+      "tags": ["position"],
+      "added": "2026-09-21"
+    },
+    {
+      "id": "dentro",
+      "es": "dentro",
+      "en": ["inside", "in"],
+      "pos": "adv",
+      "notes": "Before a noun it takes 'de': dentro de la mochila.",
+      "tags": ["position"],
+      "added": "2026-09-21"
+    },
+    {
+      "id": "fuera",
+      "es": "fuera",
+      "en": ["outside", "out"],
+      "pos": "adv",
+      "notes": "Before a noun it takes 'de': fuera de la casa.",
+      "tags": ["position"],
+      "added": "2026-09-21"
+    },
+    {
+      "id": "encima-de",
+      "es": "encima de",
+      "en": ["on top of", "on", "above"],
+      "pos": "prep",
+      "notes": "De + el contracts: encima del libro.",
+      "tags": ["position"],
+      "added": "2026-09-21"
+    },
+    {
+      "id": "debajo-de",
+      "es": "debajo de",
+      "en": ["under", "underneath", "below"],
+      "pos": "prep",
+      "notes": "De + el contracts: debajo del libro.",
+      "tags": ["position"],
+      "added": "2026-09-21"
+    },
+    {
+      "id": "al-lado-de",
+      "es": "al lado de",
+      "en": ["next to", "beside"],
+      "pos": "prep",
+      "notes": "De + el contracts: al lado del banco.",
+      "tags": ["position"],
+      "added": "2026-09-21"
+    },
+    {
+      "id": "delante-de",
+      "es": "delante de",
+      "en": ["in front of"],
+      "pos": "prep",
+      "notes": "De + el contracts: delante del hospital.",
+      "tags": ["position"],
+      "added": "2026-09-21"
+    },
+    {
+      "id": "detras-de",
+      "es": "detrás de",
+      "en": ["behind"],
+      "pos": "prep",
+      "notes": "De + el contracts: detrás del bar.",
+      "tags": ["position"],
+      "added": "2026-09-21"
+    },
+    {
+      "id": "entre",
+      "es": "entre",
+      "en": ["between", "among"],
+      "pos": "prep",
+      "notes": "No 'de': entre la mesa y la silla.",
+      "tags": ["position"],
+      "added": "2026-09-21"
     }
   ]
 }

@@ -244,7 +244,8 @@ function adjFill(entry: AdjEntry, gender: Gender | "mf", number: NumberKind): Fi
   if (number === "sg") es = feminine ? (entry.forms?.f ?? entry.es) : entry.es;
   else if (feminine && entry.forms?.f) es = spanishPlural(entry.forms.f);
   else es = entry.forms?.pl ?? spanishPlural(entry.es);
-  return { entryId: entry.id, es, en: entry.en[0]!, gender, number };
+  const en = number === "pl" && entry.enPl ? entry.enPl[0]! : entry.en[0]!;
+  return { entryId: entry.id, es, en, gender, number };
 }
 
 /** The form of an adjective agreeing with a gender and number. */

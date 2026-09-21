@@ -92,6 +92,11 @@ export const adjEntrySchema = z.object({
   ...entryBase,
   pos: z.literal("adj"),
   forms: z.object({ f: nonEmpty.optional(), pl: nonEmpty.optional() }).optional(),
+  /**
+   * English for the plural, when it differs: este → ["these"]. Sentences use it
+   * for a plural noun; most adjectives read the same in English either way.
+   */
+  enPl: z.array(nonEmpty).min(1).optional(),
 });
 
 export const verbEntrySchema = z.object({

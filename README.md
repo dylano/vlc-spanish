@@ -271,7 +271,14 @@ from the dictionary. The frame supplies the word order in both languages; the re
 - **Slots** select entries by `tags`, `ids` and `exclude`. Kinds: `noun` (with `number`, and `agree`
   to take another noun's gender — _Mi hermana es enfermera_), `adj` (agrees with a noun slot), `verb`
   (`subject` is a fixed person, `"@"` for the frame's `subjects`, or a noun slot), `word` (adverbs,
-  phrases, numbers as-is) and `glue` (a group in `data/glue.json`).
+  phrases, numbers as-is) and `glue` (a group in `data/glue.json`). A demonstrative is an `adj` slot
+  placed before its noun (`{d} {c} es {a}` → _Esta chaqueta es nueva_), so it agrees, can be blanked
+  and can be broken by Find the Mistake like any adjective; an adjective's `enPl` gives English that
+  changes in the plural (_these_, _those_).
+- **Glue words that are also entries** (`muy`, `bastante`, `también`, `cuando`) may fill a slot before
+  they are practiced, as they could when they were only glue, so a frame like _Mi tío es {q} alto_
+  keeps working for a new learner. A sentence is only ever _aimed_ at a practiced word, though, and
+  only practiced words are blanked, so a glue word is never asked before it has been met.
 - **Placeholders**: `{slot}`, plus `{slot:el}` / `{slot:un}` for a Spanish article and `{slot:the}` /
   `{slot:a}` for an English one; `{S}` is the subject pronoun. `vosotros` renders as "you (plural)".
 - **The renderer handles** gender and number agreement, verb forms (stored forms, then regular
@@ -374,7 +381,7 @@ The first release of Phase 2 is built (not yet deployed at the time of writing):
   Select specific exercise mode
 - A per-exercise score in the summary of a mixed session
 - Single-user and fully static: name on first start, progress in local storage, no server
-- Sentence frames (66, about 27,500 sentences), **Fill in the Blank** (one to three blanks), **Find
+- Sentence frames (77, about 31,500 sentences), **Fill in the Blank** (one to three blanks), **Find
   the Mistake** and **Translate** (ungraded), in General practice and Select specific exercise mode
 
 Still open: not repeating a frame within a session, a progress screen, and possibly **Answer a
@@ -471,7 +478,9 @@ Worth knowing before you change `grade.ts`, because the tests encode all of it:
 - **Both directions** ignore capitals, extra spaces, `¿ ¡`, a closing `. ! ?` and apostrophes
   (`normalize`). Apostrophes go because iOS types a curly `’` by default and "its hot" is a slip of
   punctuation, not of the language; Spanish does not use them.
-- **en→es**: the feminine or plural of the headword is accepted as correct. A missing accent is
+- **en→es**: the feminine or plural of the headword is accepted as correct. For adjectives that means
+  all four agreeing forms, worked out like sentences build them (stored `forms.pl`, else the regular
+  plural), so _simpáticas_ and _muchas_ count even though only _simpática_ is stored. A missing accent is
   `hard` ("almost — check the accent"), and a `ñ` written as `n` is called out as its own case.
   Nouns are expected with their article; a missing article is `hard`, a wrong one is `wrong`, since
   the article is how gender gets tested. A common-gender noun (`gender: "mf"`) accepts either

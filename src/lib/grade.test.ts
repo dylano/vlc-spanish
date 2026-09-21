@@ -132,6 +132,12 @@ describe("en→es adjective forms", () => {
     expect(grade(simpatico, "en→es", "simpática").result).toBe("correct");
   });
 
+  it("accepts every plural, stored or regular", () => {
+    expect(grade(simpatico, "en→es", "simpáticos").result).toBe("correct");
+    expect(grade(simpatico, "en→es", "simpáticas").result).toBe("correct");
+    expect(grade(inteligente, "en→es", "inteligentes").result).toBe("correct");
+  });
+
   it("accepts learner shorthand with a slash", () => {
     expect(grade(simpatico, "en→es", "simpático/a").result).toBe("correct");
   });

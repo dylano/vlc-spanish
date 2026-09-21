@@ -1,4 +1,5 @@
 import type { Direction, Entry } from "./schema.ts";
+import { spanishPlural } from "./sentences/frames.ts";
 import {
   articleFor,
   articleOnlyDifference,
@@ -116,9 +117,17 @@ export function spanishCandidates(entry: Entry): Candidate[] {
       break;
     }
     case "adj": {
+      // Every agreeing form, worked out the way sentences build them: a stored
+      // plural wins, otherwise the regular rule (simpáticos, simpáticas, muchas).
       out.push({ text: entry.es, kind: "exact" });
-      if (entry.forms?.f) out.push({ text: entry.forms.f, kind: "inflection" });
-      if (entry.forms?.pl) out.push({ text: entry.forms.pl, kind: "inflection" });
+      const forms = new Set([
+        entry.forms?.f,
+        entry.forms?.pl ?? spanishPlural(entry.es),
+        entry.forms?.f ? spanishPlural(entry.forms.f) : undefined,
+      ]);
+      for (const form of forms) {
+        if (form && form !== entry.es) out.push({ text: form, kind: "inflection" });
+      }
       break;
     }
     case "verb": {

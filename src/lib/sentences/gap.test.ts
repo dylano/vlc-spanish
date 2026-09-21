@@ -265,14 +265,16 @@ describe("sessions with gaps", () => {
     expect([...counts].sort((a, b) => a - b)).toEqual([1, 2, 3]);
   });
 
-  it("never puts an unpracticed word in a sentence", () => {
+  it("never puts an unpracticed word in a sentence, other than glue words", () => {
     const progress = practiced(60);
     for (let seed = 1; seed <= 10; seed++) {
       for (const card of buildGapSession(options(progress, seed))) {
         for (const id of Object.values(card.gap!.sentence.fills)) {
           const used = entry(id);
           expect(
-            progress.entries[id] !== undefined || !isDrillable(used),
+            progress.entries[id] !== undefined ||
+              !isDrillable(used) ||
+              sentences.glue.words.includes(used.es),
             `${id} in ${card.gap!.sentence.es}`,
           ).toBe(true);
         }

@@ -195,11 +195,14 @@ function sentenceSetup(options: BuildSessionOptions) {
   ) {
     return undefined;
   }
+  const glueWords = new Set(sentences.glue.words);
   const context = {
     dictionary: entries,
     glue: sentences.glue,
     random,
-    eligible: (entry: Entry) => practiced(entry) || !isDrillable(entry),
+    // Words on the glue list (muy, también) may appear before they are practiced,
+    // as they could before they were dictionary entries; only practiced ones are blanked.
+    eligible: (entry: Entry) => practiced(entry) || !isDrillable(entry) || glueWords.has(entry.es),
   };
   const targets = gapTargets(sentences.frames, context);
   // Every other practiced word a sentence can hold, the longest unseen first.
@@ -236,7 +239,10 @@ function* sentenceCandidates(
   let tried = 0;
   const offered = new Set<string>();
   for (const card of remaining) {
-    if (!setup.due(card.entry) || !setup.targets.has(card.entry.id)) continue;
+    // Only a practiced word is aimed at: glue words may appear unpracticed, but a
+    // sentence must not be the first time a word is asked.
+    if (!setup.practiced(card.entry) || !setup.due(card.entry)) continue;
+    if (!setup.targets.has(card.entry.id)) continue;
     if (tried++ >= GAP_SCAN) return;
     offered.add(card.entry.id);
     yield { card, queued: true };

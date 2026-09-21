@@ -25,8 +25,8 @@
     {
       "id": "family-is-very-trait",
       "grammar": ["ser-trait", "adj-agreement"],
-      "es": "Mi {n} es muy {a}.",
-      "en": "My {n} is very {a}.",
+      "es": "Mi {n} es {q} {a}.",
+      "en": "My {n} is {q} {a}.",
       "slots": {
         "n": {
           "kind": "noun",
@@ -39,9 +39,13 @@
           "tags": ["physical-traits", "character-traits"],
           "agree": "n",
           "exclude": ["castano", "comilon", "dormilon", "calvo", "normal"]
+        },
+        "q": {
+          "kind": "word",
+          "ids": ["muy", "bastante"]
         }
       },
-      "cloze": ["a"]
+      "cloze": ["a", "q"]
     },
     {
       "id": "family-two-traits",
@@ -134,8 +138,8 @@
     {
       "id": "profession-is-trait",
       "grammar": ["ser-trait", "adj-agreement", "articles"],
-      "es": "{p:el} es muy {a}.",
-      "en": "{p:the} is very {a}.",
+      "es": "{p:el} es {q} {a}.",
+      "en": "{p:the} is {q} {a}.",
       "slots": {
         "p": {
           "kind": "noun",
@@ -146,9 +150,13 @@
           "tags": ["character-traits"],
           "agree": "p",
           "exclude": ["comilon", "dormilon"]
+        },
+        "q": {
+          "kind": "word",
+          "ids": ["muy", "bastante"]
         }
       },
-      "cloze": ["a", "p"]
+      "cloze": ["a", "q", "p"]
     },
     {
       "id": "family-works-at",
@@ -1407,6 +1415,254 @@
         }
       },
       "cloze": ["v", "c"]
+    },
+    {
+      "id": "this-thing-is",
+      "grammar": ["demonstratives", "adj-agreement", "ser-trait"],
+      "es": "{d} {c} es {a}.",
+      "en": "{d} {c} is {a}.",
+      "slots": {
+        "d": {
+          "kind": "adj",
+          "ids": ["este", "ese"],
+          "agree": "c"
+        },
+        "c": {
+          "kind": "noun",
+          "tags": ["classroom-objects", "clothing"],
+          "exclude": ["zapato", "sandalia", "bota"]
+        },
+        "a": {
+          "kind": "adj",
+          "ids": ["nuevo", "viejo", "grande", "pequeno", "bueno", "malo"],
+          "agree": "c"
+        }
+      },
+      "cloze": ["d", "a"]
+    },
+    {
+      "id": "these-things-are",
+      "grammar": ["demonstratives", "adj-agreement", "ser-trait", "plural"],
+      "es": "{d} {c} son {a}.",
+      "en": "{d} {c} are {a}.",
+      "slots": {
+        "d": {
+          "kind": "adj",
+          "ids": ["este", "ese"],
+          "agree": "c"
+        },
+        "c": {
+          "kind": "noun",
+          "tags": ["classroom-objects", "clothing"],
+          "exclude": ["ropa-interior"],
+          "number": "pl"
+        },
+        "a": {
+          "kind": "adj",
+          "ids": ["nuevo", "viejo", "grande", "pequeno", "bueno", "malo"],
+          "agree": "c"
+        }
+      },
+      "cloze": ["d", "a"]
+    },
+    {
+      "id": "how-many-things",
+      "grammar": ["verb-conjugation", "adj-agreement", "plural"],
+      "subjects": ["yo", "tu", "nosotros", "vosotros", "ellos"],
+      "es": "{v} {q} {c}.",
+      "en": "{S} {v} {q} {c}.",
+      "slots": {
+        "v": {
+          "kind": "verb",
+          "ids": ["tener", "necesitar", "querer", "comprar"],
+          "subject": "@"
+        },
+        "q": {
+          "kind": "adj",
+          "ids": ["mucho", "poco", "demasiado"],
+          "agree": "c"
+        },
+        "c": {
+          "kind": "noun",
+          "tags": ["classroom-objects", "clothing"],
+          "exclude": ["ropa-interior", "hoja-de-papel"],
+          "number": "pl"
+        }
+      },
+      "cloze": ["q", "v"]
+    },
+    {
+      "id": "do-a-lot",
+      "grammar": ["verb-conjugation", "adverbs"],
+      "subjects": ["yo", "tu", "nosotros", "vosotros", "ellos"],
+      "es": "{v} {m}.",
+      "en": "{S} {v} {m}.",
+      "slots": {
+        "v": {
+          "kind": "verb",
+          "ids": ["trabajar", "estudiar", "leer", "hablar", "jugar", "practicar", "salir"],
+          "subject": "@"
+        },
+        "m": {
+          "kind": "word",
+          "ids": ["mucho-2", "poco-2", "demasiado-2"]
+        }
+      },
+      "cloze": ["m", "v"]
+    },
+    {
+      "id": "another-thing",
+      "grammar": ["verb-conjugation", "adj-agreement"],
+      "subjects": ["yo", "tu", "nosotros", "vosotros", "ellos"],
+      "es": "{v} {x} {c}.",
+      "en": "{S} {v} {x} {c}.",
+      "slots": {
+        "v": {
+          "kind": "verb",
+          "ids": ["necesitar", "querer", "comprar"],
+          "subject": "@"
+        },
+        "x": {
+          "kind": "adj",
+          "ids": ["otro"],
+          "agree": "c"
+        },
+        "c": {
+          "kind": "noun",
+          "tags": ["classroom-objects", "clothing"],
+          "exclude": ["zapato", "sandalia", "bota"]
+        }
+      },
+      "cloze": ["x", "v"]
+    },
+    {
+      "id": "when-activity",
+      "grammar": ["time", "verb-conjugation"],
+      "subjects": ["yo", "tu", "nosotros", "vosotros", "ellos"],
+      "es": "{t} {v}.",
+      "en": "{t} {S} {v}.",
+      "slots": {
+        "t": {
+          "kind": "word",
+          "ids": ["hoy", "manana-2", "ahora", "luego", "despues"]
+        },
+        "v": {
+          "kind": "verb",
+          "ids": ["estudiar", "trabajar", "leer", "salir", "jugar", "practicar"],
+          "subject": "@"
+        }
+      },
+      "cloze": ["t", "v"]
+    },
+    {
+      "id": "routine-early-late",
+      "grammar": ["time", "verb-conjugation", "reflexive-routine"],
+      "subjects": ["yo", "tu", "nosotros", "vosotros", "ellos"],
+      "es": "{v} {t}.",
+      "en": "{S} {v} {t}.",
+      "slots": {
+        "v": {
+          "kind": "verb",
+          "ids": [
+            "levantarse",
+            "acostarse",
+            "desayunar",
+            "cenar",
+            "llegar-al-trabajo",
+            "salir-del-trabajo"
+          ],
+          "subject": "@"
+        },
+        "t": {
+          "kind": "word",
+          "ids": ["temprano", "tarde-2"]
+        }
+      },
+      "cloze": ["t", "v"]
+    },
+    {
+      "id": "family-lives-near",
+      "grammar": ["position", "third-person"],
+      "es": "Mi {n} vive {p}.",
+      "en": "My {n} lives {p}.",
+      "slots": {
+        "n": {
+          "kind": "noun",
+          "tags": ["family"],
+          "number": "sg",
+          "exclude": ["mujer"]
+        },
+        "p": {
+          "kind": "word",
+          "ids": ["cerca", "lejos", "aqui", "alli"]
+        }
+      },
+      "cloze": ["p", "n"]
+    },
+    {
+      "id": "do-inside-outside",
+      "grammar": ["position", "verb-conjugation"],
+      "subjects": ["yo", "tu", "nosotros", "vosotros", "ellos"],
+      "es": "{v} {p}.",
+      "en": "{S} {v} {p}.",
+      "slots": {
+        "v": {
+          "kind": "verb",
+          "ids": ["jugar", "estudiar", "trabajar", "comer", "leer"],
+          "subject": "@"
+        },
+        "p": {
+          "kind": "word",
+          "ids": ["dentro", "fuera"]
+        }
+      },
+      "cloze": ["p", "v"]
+    },
+    {
+      "id": "object-position",
+      "grammar": ["position", "ser-estar", "articles"],
+      "es": "{o:el} está {p} {s:el}.",
+      "en": "{o:the} is {p} {s:the}.",
+      "slots": {
+        "o": {
+          "kind": "noun",
+          "tags": ["classroom-objects"],
+          "exclude": ["mesa", "silla", "pizarra", "proyector", "papelera", "mochila"]
+        },
+        "p": {
+          "kind": "word",
+          "ids": ["encima-de", "debajo-de", "al-lado-de", "delante-de", "detras-de"]
+        },
+        "s": {
+          "kind": "noun",
+          "ids": ["mesa", "silla"]
+        }
+      },
+      "cloze": ["p", "o", "s"]
+    },
+    {
+      "id": "family-also",
+      "grammar": ["third-person", "verb-conjugation"],
+      "es": "Mi {n} {t} {v}.",
+      "en": "My {n} {t} {v}.",
+      "slots": {
+        "n": {
+          "kind": "noun",
+          "tags": ["family"],
+          "number": "sg",
+          "exclude": ["mujer"]
+        },
+        "t": {
+          "kind": "word",
+          "ids": ["tambien"]
+        },
+        "v": {
+          "kind": "verb",
+          "ids": ["trabajar", "estudiar", "leer", "jugar", "practicar"],
+          "subject": "n"
+        }
+      },
+      "cloze": ["t", "v"]
     }
   ]
 }
