@@ -39,6 +39,8 @@ vp preview                  # serve the production build
 ```
 
 Run `vp install` after pulling. `vp check` and `vp test` should both pass before committing.
+`pnpm dev` runs `vp dev --host`, which also serves the dev server on the local network, for trying
+it on a phone.
 
 ## Layout
 
@@ -49,7 +51,11 @@ src/lib/          pure logic, no React, thoroughly tested
   grade.ts          answer grading in both directions
   scheduler.ts      SM-2 spaced repetition behind a swappable Scheduler interface
   session.ts        picks the cards for a quiz (and matching rounds), and which english gloss to prompt with
+  counts.ts         the home screen's per-word totals (due, new, missed)
   choices.ts        the options for a multiple-choice card
+  search.ts         Dictionary search across every form of a word
+  conjugation.ts    a verb's present-tense table for the Dictionary, with what to notice marked
+  problems.ts       the Problem words list: misses per word, most first
   random.ts         seedable shuffle
   sentences/        sentence frames: renderer and checks (frames.ts), gaps (gap.ts), mistakes
                     (mistake.ts), translations (translate.ts), Spanish verb forms (conjugate.ts),
@@ -57,12 +63,13 @@ src/lib/          pure logic, no React, thoroughly tested
   dates.ts          ISO calendar-date maths in whole local days
   slug.ts           stable entry ids
 src/
-  app/            store (context), local storage (local.ts), the bundled dictionary and sentence
-                  data, and the shells
+  app/            store (context), local storage (local.ts), theme (theme.ts), the bundled
+                  dictionary and sentence data, and the shells
   screens/        one file per screen, each with a CSS module beside it
-    quiz/           one component per exercise (typed and gaps, multiple choice, matching, spot the
-                    mistake, translate), and the list of them
-                    (exercises.ts) the home screen offers; QuizScreen runs the session
+                  (ConjugationDialog is the Dictionary's verb table, a dialog rather than a screen)
+    quiz/           one component per exercise (typed and gaps, multiple choice, matching, find the
+                    mistake, translate), and the list of them (exercises.ts) the home screen
+                    offers; QuizScreen runs the session
 scripts/
   validate-dictionary.ts   schema check with warnings, exits non-zero on error; gates the build
   validate-frames.ts       frame and glue checks against the dictionary; gates the build
@@ -107,7 +114,7 @@ tangled into components.
   screen with no main nav; the × in the header ends it (every answer is already saved). The header
   names the current exercise in the accent colour. The progress bar and the "4 of 15" counter count
   **words**, not steps — a matching round advances it by four and a two-blank gap by two — so a
-  Practice session always reads its full length; counting steps made the same session anywhere from 4 to 15 long.
+  session always reads its full length; counting steps made the same session anywhere from 4 to 15 long.
   Each card opens with a bold instruction line ("Type the missing word", "Find the wrong word") — in a mixed session the exercise changes
   from card to card, and a muted label was too easy to miss.
   Exercise names, grouped as on the home screen: Words — **Translate** (typed), **Multiple Choice**,
@@ -127,10 +134,10 @@ tangled into components.
 - **Fill in the Blank** — the English sentence as a cue, the Spanish with one to three words blanked;
   type each word in the form the sentence needs. Enter writes into the current blank and moves to the
   next, a tap on a blank goes back to it, and Check grades them all. Shares the typed card's input, so the keyboard stays up
-  between typed cards and gaps. See [Filling a gap](#filling-a-gap).
+  between typed cards and gaps. See [Fill in the Blank](#fill-in-the-blank).
 - **Find the Mistake** — the English sentence as a cue, the Spanish with exactly one word broken.
   Tap the broken word, then type what it should be. Tapping a word that is fine ends the card as a
-  miss and shows the mistake. See [Spotting a mistake](#spotting-a-mistake).
+  miss and shows the mistake. See [Find the Mistake](#find-the-mistake).
 - **Translate** — an English sentence to put into Spanish. **Not graded**: a sentence has too many
   valid translations to mark one wrong, so after Submit the learner's version and the sentence it was
   rendered from ("One way to say it") sit one above the other to compare by eye. The one verdict it gives
@@ -149,7 +156,7 @@ tangled into components.
   reference; a subtle marker there may come later.
 - **Dictionary** — search both languages (accent-insensitive, so `timido` finds `tímido`), filter
   by tag, read the notes. The tags fold behind a small-caps **Categories** toggle (option 2 on the
-  "Dictionary Category Filter" canvas): wrapped in full they took seven rows and pushed the results
+  "Spanish App Screens" canvas, first called "Dictionary Category Filter"): wrapped in full they took seven rows and pushed the results
   behind the phone keyboard. Picking one folds the grid away and shows the tag as a pill with an ×
   beside the toggle, which clears it.
   Every verb card has a **Conjugate** link that opens its present tense in a modal dialog over the
@@ -182,9 +189,11 @@ rev-parse` locally, marked "+ local changes" when the tree is dirty), injected a
 ## Data
 
 The dictionary ships with the app (see [Working on the dictionary](#working-on-the-dictionary)).
-Everything else lives in the browser's **local storage** (`src/app/local.ts`), under two keys:
+Everything else lives in the browser's **local storage** (`src/app/local.ts`), under four keys:
 
 - `vlc-spanish:name` — the name given on first start.
+- `vlc-spanish:theme` — `light` or `dark` once chosen in Settings; absent means follow the device.
+- `vlc-spanish:session-size` — words per session from Settings; absent means 15.
 - `vlc-spanish:progress` — one scheduling record per entry per direction (`en→es` and `es→en` are
   separate cards, and a word is normally practiced in one direction before the other). It is saved
   whenever an answer is recorded, so leaving mid-session loses nothing.
@@ -212,7 +221,7 @@ that tag by name (`/quiz?tag=numbers`) still serves them. The home-screen counts
 predicate — a count that includes words no session will offer promises practice the app cannot
 deliver.
 
-**Words versus cards.** A 159-word dictionary holds up to 318 cards, because each word is scheduled
+**Words versus cards.** A 314-word dictionary holds up to 628 cards, because each word is scheduled
 separately in each direction. The home-screen totals are deliberately counted **per word**
 (`src/lib/counts.ts`): a word counts as new only when it has been practiced in neither direction,
 and as due when either direction is ready. That matches what a session serves, since a mixed session
@@ -247,7 +256,9 @@ the deployed site has no endpoint that writes words at all.
    its words across the Dictionary filter, matching rounds and sentence frames. It
    writes the entries, runs the checks below plus ones the validator cannot do (English glosses
    shared with existing words, headwords one letter apart, sample answers through the grader), and
-   marks anything it had to guess as `flagged`.
+   marks anything it had to guess as `flagged`. It also reads `render:frames` output for sentences
+   using the new words, adds them to frames where they fit, and writes frames for a new section
+   (see [Sentence frames](#sentence-frames)).
 
 2. Resolve anything marked `flagged` — check the spelling or sense against the class list,
    then delete the `flagged` field. Fix spellings **before** committing: `id` is derived from the
@@ -343,7 +354,7 @@ The validator catches structural problems; only reading `render:frames` output c
 that are grammatical but odd. Read it whenever frames change **or words are added**, since new
 words in a tag flow straight into the frames that draw on it.
 
-## Filling a gap
+## Fill in the Blank
 
 `src/lib/sentences/gap.ts`. A gap is aimed at a word: the planner walks the session's priority
 order, takes the first word some frame can blank (`frame.cloze`), and renders that frame with the
@@ -376,9 +387,9 @@ word pinned in the slot. So a gap usually reviews a word that is due.
   adjective, where gender and number live. Each blank is graded against the sentence as shown, never
   against what was typed in the other blanks.
 
-## Spotting a mistake
+## Find the Mistake
 
-`src/lib/sentences/mistake.ts`. Like a gap, a mistake is aimed at a practiced, due word: the frame is
+`src/lib/sentences/mistake.ts`. Like a gap, a mistake is aimed at a practiced word, due ones first (with the same fallback and cap): the frame is
 rendered with that word pinned in a slot, and then **that slot** is broken in one of four ways, each
 only when the result really reads differently:
 
@@ -388,6 +399,7 @@ only when the result really reads differently:
 | number (adjective)     | _Mis nietos son perezoso._       | nietos is masculine plural, so perezosos                 |
 | agreement (profession) | _Mi mujer es diseñador de moda._ | it describes mujer, who is female, so diseñadora de moda |
 | person (verb)          | _Mi primo os vestís a las seis._ | for primo it is se viste                                 |
+| number (gustar)        | _Me gusta los zapatos._          | los zapatos is plural, so me gustan                      |
 | article                | _Trabaja en una hospital._       | hospital is masculine: un hospital                       |
 
 Article swaps are never made on a common-gender noun (_la estudiante_ is fine) or on a contracted
@@ -403,32 +415,25 @@ the wrong person can still be a grammatical sentence (_Vamos al trabajo_ for "I 
 
 ## Status
 
-Phase 1 is complete. Working and deployed at
-[vlc-spanish.netlify.app](https://vlc-spanish.netlify.app):
+Phases 1 and 2 are complete and deployed at [vlc-spanish.netlify.app](https://vlc-spanish.netlify.app):
 
-- The dictionary, bundled into the app from `data/dictionary.json`
-- Progress in local storage (originally users and progress in Netlify Blobs; removed)
-- Typed quizzes with SM-2 scheduling, graded per the rules below
-- Dictionary browse and search
-- Installable PWA with offline caching of the app shell, which includes the dictionary
+- **Dictionary**: bundled from `data/dictionary.json`, searchable across every form of a word, with
+  folded categories and a conjugation table for every verb
+- **Practice**: General practice and the two Focus rows as mixed sessions, or any single exercise;
+  six exercises (Translate a word, Multiple Choice, Match Pairs, Translate a sentence, Fill in the
+  Blank, Find the Mistake), SM-2 scheduling with recognition answers held to a week, and a
+  per-exercise score in the summary
+- **Sentences**: 85 frames (about 33,600 sentences) built from practiced words, including _gustar_
+  and simple negatives, from the first session after 15 words
+- **Problem words**: a list of every word missed, most first
+- **Settings**: name, session length (10–30 words), light or dark
+- **Single-user and fully static**: name on first start, everything in local storage, no server;
+  installable PWA with the app shell cached offline
 
-The first release of Phase 2 is built (not yet deployed at the time of writing):
-
-- Three exercises — Translate (typed), Multiple Choice, Match Pairs — and mixed sessions across them
-- Recognition answers (multiple choice, matching) scheduled more gently than typed recall
-- A session frame sized to the space above the on-screen keyboard
-- The home screen: General practice, Focus on new words, Focus on problem words, and a folded
-  Select specific exercise mode
-- A per-exercise score in the summary of a mixed session
-- Single-user and fully static: name on first start, progress in local storage, no server
-- Sentence frames (85, about 33,600 sentences), **Fill in the Blank** (one to three blanks), **Find
-  the Mistake** and **Translate** (ungraded), in General practice and Select specific exercise mode
-
-Still open: not repeating a frame within a session, and possibly **Answer a
-question** (cued Q&A) or **Odd one out**. Translate was deliberately left ungraded rather than graded
-word by word with a self-mark. Sentences go straight
-into Practice once built. Frames were chosen over a fixed sentence bank, which repeats too often, and
-over fully type-driven templates, which produce wrong English and odd combinations.
+Still open: not repeating a frame within a session, and possibly **Answer a question** (cued Q&A)
+or **Odd one out**. Translate was deliberately left ungraded rather than graded word by word with a
+self-mark. Frames were chosen over a fixed sentence bank, which repeats too often, and over fully
+type-driven templates, which produce wrong English and odd combinations.
 
 Not built, in priority order (set 2026-09-21; flashcards, a progress screen and conjugation drills
 were dropped then):
@@ -483,8 +488,8 @@ of practiced words due they make up about half of a session's words. Rules on to
   keyboard back, because iOS only opens it from a user gesture.
 - **Find the Mistake and Translate join** once sentences are possible, like gaps.
 - **Gaps join once they are possible**, nudged into runs with typed cards since both use the
-  keyboard — see [Filling a gap](#filling-a-gap). With nothing due they still appear, up to four aimed
-  at words practiced earlier (see [Filling a gap](#filling-a-gap)).
+  keyboard — see [Fill in the Blank](#fill-in-the-blank). With nothing due they still appear, up to four per 15
+  words aimed at words practiced earlier (see [Fill in the Blank](#fill-in-the-blank)).
 - **A matching round needs room**: at least four words left in the session and at least three words
   that can share a round. Otherwise the planner stops offering rounds for that session.
 
@@ -534,7 +539,8 @@ because the naive version of the rule gets a real case wrong:
 1. **An article-only difference is a gender mistake**, not a slip: `lavarse las dientes` stays
    `wrong`, since gender is the thing being tested.
 2. **An answer that is itself another headword is a confusion**, not a typo. The dictionary holds
-   six pairs one edit apart — `junio`/`julio`, `padre`/`madre`, `sesenta`/`setenta` — so forgiving
+   about two dozen pairs one edit apart — `junio`/`julio`, `padre`/`madre`, `sesenta`/`setenta`,
+   `llegar`/`llevar`, `este`/`ese` — so forgiving
    single-character slips blindly would mark a real mistake as nearly right. The feedback names what
    you actually wrote instead.
 3. **Anything else within one edit is a typo** → `hard`, "check the spelling". The distance is
