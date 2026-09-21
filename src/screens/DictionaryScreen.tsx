@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import { useStore } from "../app/store-context.ts";
 import { canonicalAnswer } from "../lib/grade.ts";
-import { foldAccents } from "../lib/normalize.ts";
+import { buildSearchIndex, search } from "../lib/search.ts";
 import styles from "./DictionaryScreen.module.css";
 
 export default function DictionaryScreen() {
@@ -14,19 +14,11 @@ export default function DictionaryScreen() {
     [entries],
   );
 
-  const filtered = useMemo(() => {
-    const needle = foldAccents(query.trim().toLowerCase());
-    return entries
-      .filter((entry) => (tag ? entry.tags.includes(tag) : true))
-      .filter((entry) => {
-        if (needle === "") return true;
-        return (
-          foldAccents(entry.es.toLowerCase()).includes(needle) ||
-          entry.en.some((gloss) => gloss.toLowerCase().includes(needle))
-        );
-      })
-      .sort((a, b) => a.es.localeCompare(b.es, "es"));
-  }, [entries, query, tag]);
+  const index = useMemo(() => buildSearchIndex(entries), [entries]);
+  const filtered = useMemo(
+    () => search(index, query).filter((entry) => (tag ? entry.tags.includes(tag) : true)),
+    [index, query, tag],
+  );
 
   return (
     <section className={styles.screen}>

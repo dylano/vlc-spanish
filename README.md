@@ -140,7 +140,11 @@ tangled into components.
   just as right. Nothing is
   scheduled, and the summary counts these as "translated" apart from the score. Enter submits.
 - **Dictionary** — search both languages (accent-insensitive, so `timido` finds `tímido`), filter
-  by tag, read the notes.
+  by tag, read the notes. Search (`src/lib/search.ts`) matches any form a learner might type: the
+  feminine and plural (`hermana`, `zapatos`, `estas`), every present-tense verb form (`prefiero`), and
+  the English for those (`sister`, `these`). A leading article is ignored (`la mesa`, `the table`), as
+  are apostrophes; `ñ` stays distinct from `n`. Exact matches come first, then words starting with
+  the query, then any containing it.
 - **Settings** — your name (editable) and how much you have practiced. No other users, no switching.
   A quiet footer shows the **version**: the commit the build came from (`COMMIT_REF` on Netlify, `git
 rev-parse` locally, marked "+ local changes" when the tree is dirty), injected as `__COMMIT__` by
