@@ -1003,8 +1003,8 @@
         },
         "t": {
           "kind": "word",
-          "tags": ["times-of-day"],
-          "pos": "phrase"
+          "pos": "phrase",
+          "ids": ["por-la-manana", "al-mediodia", "por-la-tarde", "por-la-noche"]
         }
       },
       "cloze": ["x", "t"]

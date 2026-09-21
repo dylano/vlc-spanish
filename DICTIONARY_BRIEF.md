@@ -11,7 +11,7 @@ against the schema below exactly. A validator is provided; output that does not 
 
 Roughly 100–150 entries covering an elementary Peninsular Spanish class, across these tags:
 
-`physical-traits`, `character-traits`, `family`, `frequency`, `times-of-day`,
+`physical-traits`, `character-traits`, `family`, `frequency`,
 `daily-activities`, `verbs`, `days`, `months`, `numbers`, `professions`, `workplaces`,
 `classroom-objects`, `weather`, `geography`, `clothing`,
 `common-words`, `time`, `position`

@@ -400,16 +400,15 @@ The first release of Phase 2 is built (not yet deployed at the time of writing):
 - Sentence frames (85, about 33,600 sentences), **Fill in the Blank** (one to three blanks), **Find
   the Mistake** and **Translate** (ungraded), in General practice and Select specific exercise mode
 
-Still open: not repeating a frame within a session, a progress screen, and possibly **Answer a
+Still open: not repeating a frame within a session, and possibly **Answer a
 question** (cued Q&A) or **Odd one out**. Translate was deliberately left ungraded rather than graded
 word by word with a self-mark. Sentences go straight
 into Practice once built. Frames were chosen over a fixed sentence bank, which repeats too often, and
 over fully type-driven templates, which produce wrong English and odd combinations.
 
-Not built, in rough order of likely usefulness:
+Not built, in priority order (set 2026-09-21; flashcards, a progress screen and conjugation drills
+were dropped then):
 
-- Flashcards (parked: unclear how they fit alongside the Dictionary tab)
-- A progress screen: per-tag mastery, recent misses, session history
 - **Problem words view** (requested 2026-09-21): a list of the words that have given trouble, apart
   from the Focus on problem words session that drills them. The data is already stored per word and
   direction: `lapses` (every miss, ever), `ease` (drops with each miss or near miss) and
@@ -417,14 +416,22 @@ Not built, in rough order of likely usefulness:
   the Focus session, so a word leaves that session on its next right answer but not this list. There
   is no per-answer history (no dates of misses, no wrong answers typed); a "missed recently" view or
   showing what was typed would need a small answer log added to progress.
-- Conjugation drills driven by the `verb` metadata already in the dictionary (needs no API)
+- **Conjugation table in the Dictionary**: tap a verb entry to see its present tense for every
+  person. `verbForm` in `src/lib/sentences/conjugate.ts` already produces each form, stored or by
+  rule (requested 2026-09-21)
+- **Session size in Settings** (requested 2026-09-21): how many words a session holds, default 15
+  (today `DEFAULT_SIZE` in `QuizScreen.tsx`: 15 for mixed sessions, 10 for single exercises, 16 for
+  Match Pairs). Stored per device in local storage. To decide: whether one setting drives all of them
+  or only General practice, and the caps that assume 15 (`MAX_PER_SESSION`, `MAX_EARLY_SENTENCES`)
+  scaling with it
 - **Light/dark override in Settings** (requested 2026-09-21): today the theme follows the system
   (`prefers-color-scheme` in `src/index.css`) with no way to switch. A System / Light / Dark choice,
   stored per device in local storage, applied as a `data-theme` attribute on the root that the dark
   token block also keys on; the `theme-color` meta for the phone's status bar should follow it
-- **Conjugation table in the Dictionary**: tap a verb entry to see its present tense for every
-  person. `verbForm` in `src/lib/sentences/conjugate.ts` already produces each form, stored or by
-  rule (requested 2026-09-21)
+- **Other forms on Dictionary cards** (requested 2026-09-21): cards show only the headword and its
+  English, so a search can match a form nobody sees ("nie" finds el sobrino through its feminine's
+  "niece"). Show the feminine and its English (_el sobrino · la sobrina_, nephew · niece), adjective
+  forms (_simpático · simpática_), and a plural-only marker (_las gafas_)
 
 ## Choosing words
 

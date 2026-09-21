@@ -16,7 +16,7 @@ actually behave.
 These artboards still earn their place because four of them describe work that does not exist yet:
 
 - `MultipleChoice.dc.html` — distractors drawn from the same part of speech and tag
-- `Flashcard.dc.html` / `FlashcardBack.dc.html` — self-marked, with the back doubling as a
+- `Flashcard.dc.html` / `FlashcardBack.dc.html` — dropped 2026-09-21, kept for reference: self-marked, with the back doubling as a
   dictionary entry
 - `Summary.dc.html` — the correct/almost/missed tally
 

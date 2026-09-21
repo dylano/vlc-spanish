@@ -586,7 +586,7 @@
         "pl": "días"
       },
       "notes": "Masculine despite ending in -a: el día, todos los días.",
-      "tags": ["frequency"],
+      "tags": ["time"],
       "added": "2026-09-15"
     },
     {
@@ -598,7 +598,7 @@
       "forms": {
         "pl": "meses"
       },
-      "tags": ["frequency"],
+      "tags": ["time"],
       "added": "2026-09-15"
     },
     {
@@ -610,7 +610,7 @@
       "forms": {
         "pl": "semanas"
       },
-      "tags": ["frequency"],
+      "tags": ["time"],
       "added": "2026-09-15"
     },
     {
@@ -632,7 +632,7 @@
       "en": ["in the morning"],
       "pos": "phrase",
       "notes": "With a clock time it becomes 'de': a las ocho de la mañana.",
-      "tags": ["times-of-day"],
+      "tags": ["time"],
       "added": "2026-09-15"
     },
     {
@@ -640,7 +640,7 @@
       "es": "al mediodía",
       "en": ["at midday", "at noon"],
       "pos": "phrase",
-      "tags": ["times-of-day"],
+      "tags": ["time"],
       "added": "2026-09-15"
     },
     {
@@ -648,7 +648,7 @@
       "es": "por la tarde",
       "en": ["in the afternoon", "in the evening"],
       "pos": "phrase",
-      "tags": ["times-of-day"],
+      "tags": ["time"],
       "added": "2026-09-15"
     },
     {
@@ -656,7 +656,7 @@
       "es": "por la noche",
       "en": ["at night", "in the evening"],
       "pos": "phrase",
-      "tags": ["times-of-day"],
+      "tags": ["time"],
       "added": "2026-09-15"
     },
     {
@@ -669,7 +669,7 @@
         "pl": "mañanas"
       },
       "notes": "'La mañana' is the morning; 'mañana' on its own means tomorrow.",
-      "tags": ["times-of-day"],
+      "tags": ["time"],
       "added": "2026-09-15"
     },
     {
@@ -682,7 +682,7 @@
         "pl": "mediodías"
       },
       "notes": "Masculine despite ending in -a.",
-      "tags": ["times-of-day"],
+      "tags": ["time"],
       "added": "2026-09-15"
     },
     {
@@ -695,7 +695,7 @@
         "pl": "tardes"
       },
       "notes": "In Spain 'la tarde' runs until about 8 or 9 pm, later than English 'afternoon'.",
-      "tags": ["times-of-day"],
+      "tags": ["time"],
       "added": "2026-09-15"
     },
     {
@@ -707,7 +707,7 @@
       "forms": {
         "pl": "noches"
       },
-      "tags": ["times-of-day"],
+      "tags": ["time"],
       "added": "2026-09-15"
     },
     {
