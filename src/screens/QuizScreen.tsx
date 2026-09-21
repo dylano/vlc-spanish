@@ -43,17 +43,14 @@ const GIVEN_VERB: Record<Exercise, string> = {
   translate: "you wrote",
 };
 
-/** Words in a session, when the URL does not say. */
-const DEFAULT_SIZE: Record<QuizConfig["format"], number> = {
-  typed: DEFAULT_CONFIG.size,
-  choice: DEFAULT_CONFIG.size,
-  match: MATCH_ROUND_SIZE * 4,
-  gap: DEFAULT_CONFIG.size,
-  mistake: DEFAULT_CONFIG.size,
-  translate: DEFAULT_CONFIG.size,
-  // Enough for a matching round alongside a run of single cards.
-  mixed: 15,
-};
+/**
+ * Words in a session, when the URL does not say: the length set in Settings,
+ * for every kind of session. Match Pairs rounds it to whole rounds.
+ */
+function sizeFor(format: QuizConfig["format"], sessionSize: number): number {
+  if (format !== "match") return sessionSize;
+  return Math.max(MATCH_ROUND_SIZE, Math.round(sessionSize / MATCH_ROUND_SIZE) * MATCH_ROUND_SIZE);
+}
 
 /** How many words a session step covers. */
 function wordsIn(item: SessionItem): number {
@@ -98,7 +95,7 @@ interface Answered {
  * exercise components under ./quiz.
  */
 export default function QuizScreen() {
-  const { entries, progress, recordResults } = useStore();
+  const { entries, progress, recordResults, sessionSize } = useStore();
   const [params] = useSearchParams();
   const navigate = useNavigate();
 
@@ -114,9 +111,9 @@ export default function QuizScreen() {
           : "due",
       format,
       tags: tag ? [tag] : undefined,
-      size: Number(params.get("size") ?? DEFAULT_SIZE[format]),
+      size: Number(params.get("size") ?? sizeFor(format, sessionSize)),
     };
-  }, [params]);
+  }, [params, sessionSize]);
 
   // Fixed when the screen opens: answering updates progress, and rebuilding
   // mid-session would reshuffle the cards under the user.

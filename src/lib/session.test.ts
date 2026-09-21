@@ -5,6 +5,7 @@ import {
   buildMixedSession,
   buildSession,
   isMatchRound,
+  capFor,
   MAX_PER_SESSION,
   MAX_RUN,
   NEW_WORD_EVERY,
@@ -487,7 +488,7 @@ describe("mixed sessions", () => {
         // used up (these words have no sentences, and a round needs room).
         if (run > MAX_RUN) {
           expect(item.exercise).toBe("typed");
-          expect(choices).toBe(MAX_PER_SESSION.choice);
+          expect(choices).toBe(capFor(MAX_PER_SESSION.choice!, 30));
         }
       }
     }
@@ -521,21 +522,30 @@ describe("mixed sessions", () => {
     }
   });
 
-  it("never holds more than one matching round", () => {
+  it("never holds more than one matching round in fifteen words", () => {
     for (let seed = 1; seed <= 60; seed++) {
-      expect(mixed(pool, 30, seed).filter(isMatchRound).length).toBeLessThanOrEqual(
+      expect(mixed(pool, 15, seed).filter(isMatchRound).length).toBeLessThanOrEqual(
         MAX_PER_SESSION.match!,
       );
     }
   });
 
-  it("never holds more Multiple Choice cards than the cap", () => {
-    for (let seed = 1; seed <= 60; seed++) {
-      const choices = mixed(pool, 30, seed).filter(
-        (item) => !isMatchRound(item) && item.exercise === "choice",
-      ).length;
-      expect(choices).toBeLessThanOrEqual(MAX_PER_SESSION.choice!);
+  it("never holds more Multiple Choice cards than the cap for its length", () => {
+    for (const size of [10, 15, 30]) {
+      for (let seed = 1; seed <= 60; seed++) {
+        const choices = mixed(pool, size, seed).filter(
+          (item) => !isMatchRound(item) && item.exercise === "choice",
+        ).length;
+        expect(choices).toBeLessThanOrEqual(capFor(MAX_PER_SESSION.choice!, size));
+      }
     }
+  });
+
+  it("scales the caps with the session's length, never below one", () => {
+    expect(capFor(2, 15)).toBe(2);
+    expect(capFor(2, 30)).toBe(4);
+    expect(capFor(1, 10)).toBe(1);
+    expect(capFor(4, 20)).toBe(5);
   });
 
   it("is reproducible from a seed", () => {

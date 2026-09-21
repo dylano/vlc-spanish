@@ -54,8 +54,12 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+/*
+ * Dark tokens: the device's setting unless a theme was chosen in Settings, which
+ * index.html and applyTheme() stamp on the root as data-theme.
+ */
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme="light"]) {
     --paper: #141715;
     --card: #1c201e;
     --ink: #eae7e0;
@@ -67,6 +71,27 @@
     --hard: #e0b357;
     --wrong: #ef8378;
   }
+}
+
+:root[data-theme="dark"] {
+  --paper: #141715;
+  --card: #1c201e;
+  --ink: #eae7e0;
+  --muted: #969d97;
+  --rule: #2c312e;
+  --accent: #7ecfa0;
+  --on-accent: #141715;
+  --correct: #7ecfa0;
+  --hard: #e0b357;
+  --wrong: #ef8378;
+}
+
+:root[data-theme="light"] {
+  color-scheme: light;
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
 }
 
 * {

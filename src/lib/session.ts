@@ -539,6 +539,17 @@ export const MAX_RUN = 3;
  */
 export const MAX_EARLY_SENTENCES = 4;
 
+/** The session length the caps above were tuned for. */
+const CAPS_TUNED_FOR = 15;
+
+/**
+ * A cap scaled to the session's length, never below one: a 30-word session may
+ * hold twice as many Multiple Choice cards as a 15-word one.
+ */
+export function capFor(base: number, size: number): number {
+  return Math.max(1, Math.round((base * size) / CAPS_TUNED_FOR));
+}
+
 function weightedPick<T extends string>(weights: Record<T, number>, random: () => number): T {
   const entries = Object.entries(weights) as [T, number][];
   const total = entries.reduce((sum, [, weight]) => sum + weight, 0);
@@ -561,6 +572,7 @@ function weightedPick<T extends string>(weights: Record<T, number>, random: () =
  */
 export function buildMixedSession(options: BuildSessionOptions): SessionItem[] {
   const random = options.random ?? Math.random;
+  const size = options.config.size;
   const remaining = rankedCards(options);
   const makeGap = gapMaker(options);
   const makeMistake = sentenceMaker(options, renderMistake);
@@ -586,7 +598,9 @@ export function buildMixedSession(options: BuildSessionOptions): SessionItem[] {
     }
     if (last && run >= MAX_RUN) weights[last] = 0;
     for (const [capped, limit] of Object.entries(MAX_PER_SESSION) as [Exercise, number][]) {
-      if (plan.filter((step) => step.exercise === capped).length >= limit) weights[capped] = 0;
+      if (plan.filter((step) => step.exercise === capped).length >= capFor(limit, size)) {
+        weights[capped] = 0;
+      }
     }
     if (!roundsPossible || budget < MATCH_ROUND_SIZE) weights.match = 0;
     if (!gapsPossible) weights.gap = 0;
@@ -606,7 +620,7 @@ export function buildMixedSession(options: BuildSessionOptions): SessionItem[] {
             : [step.card.entry.id],
       ),
     );
-    const dueOnly = early >= MAX_EARLY_SENTENCES;
+    const dueOnly = early >= capFor(MAX_EARLY_SENTENCES, size);
     if (exercise === "gap") {
       const next = makeGap?.(remaining, budget, taken, dueOnly);
       if (next) {

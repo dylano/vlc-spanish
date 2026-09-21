@@ -6,10 +6,16 @@ import { entries } from "./dictionary.ts";
 import {
   readName,
   readProgress,
+  readSessionSize,
+  readTheme,
   requestPersistentStorage,
   writeName,
   writeProgress,
+  writeSessionSize,
+  writeTheme,
+  type Theme,
 } from "./local.ts";
+import { applyTheme, effectiveTheme, onSystemThemeChange } from "./theme.ts";
 import { StoreContext, type Store } from "./store-context.ts";
 
 export function StoreProvider({ children }: { children: ReactNode }) {
@@ -18,8 +24,37 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   const [name, setNameState] = useState(readName);
   const [progress, setProgress] = useState<ProgressBlob>(readProgress);
 
+  // Undefined until chosen in Settings: until then the app follows the device,
+  // and Settings shows whichever of light or dark that currently is.
+  const [chosenTheme, setChosenTheme] = useState<Theme | undefined>(readTheme);
+  const [systemTheme, setSystemTheme] = useState<Theme>(() => effectiveTheme(undefined));
+  const theme = chosenTheme ?? systemTheme;
+  const [sessionSize, setSessionSizeState] = useState(readSessionSize);
+
   useEffect(() => {
     requestPersistentStorage();
+  }, []);
+
+  useEffect(() => {
+    applyTheme(chosenTheme);
+  }, [chosenTheme]);
+
+  useEffect(
+    () =>
+      onSystemThemeChange(() => {
+        setSystemTheme(effectiveTheme(undefined));
+      }),
+    [],
+  );
+
+  const setTheme = useCallback((next: Theme) => {
+    writeTheme(next);
+    setChosenTheme(next);
+  }, []);
+
+  const setSessionSize = useCallback((next: number) => {
+    writeSessionSize(next);
+    setSessionSizeState(next);
   }, []);
 
   const setName = useCallback((next: string) => {
@@ -50,8 +85,19 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   const counts = useMemo(() => countWords(entries, progress, today()), [progress]);
 
   const value = useMemo<Store>(
-    () => ({ entries, name, setName, progress, recordResults, counts }),
-    [name, setName, progress, recordResults, counts],
+    () => ({
+      entries,
+      name,
+      setName,
+      progress,
+      recordResults,
+      counts,
+      theme,
+      setTheme,
+      sessionSize,
+      setSessionSize,
+    }),
+    [name, setName, progress, recordResults, counts, theme, setTheme, sessionSize, setSessionSize],
   );
 
   return <StoreContext value={value}>{children}</StoreContext>;

@@ -107,7 +107,7 @@ tangled into components.
   screen with no main nav; the × in the header ends it (every answer is already saved). The header
   names the current exercise in the accent colour. The progress bar and the "4 of 15" counter count
   **words**, not steps — a matching round advances it by four and a two-blank gap by two — so a
-  Practice session always reads 15; counting steps made the same session anywhere from 4 to 15 long.
+  Practice session always reads its full length; counting steps made the same session anywhere from 4 to 15 long.
   Each card opens with a bold instruction line ("Type the missing word", "Find the wrong word") — in a mixed session the exercise changes
   from card to card, and a muted label was too easy to miss.
   Exercise names, grouped as on the home screen: Words — **Translate** (typed), **Multiple Choice**,
@@ -121,7 +121,7 @@ tangled into components.
   `tag`).
 - **Match Pairs** — rounds of four: Spanish in one column, English in the other, each shuffled. Tap
   a tile on either side, then its partner; a right pair locks, a wrong one flashes red and clears.
-  Chosen by name it is four rounds. Rounds were six pairs until that felt tedious to finish. A round draws from one tag where it can and never holds two
+  Chosen by name it is the session length rounded to whole rounds (four at 15). Rounds were six pairs until that felt tedious to finish. A round draws from one tag where it can and never holds two
   interchangeable words (a shared English gloss or headword). A word matched without ever being in
   a wrong pair is a correct **recognition** answer; both words of a wrong pair count as missed.
 - **Fill in the Blank** — the English sentence as a cue, the Spanish with one to three words blanked;
@@ -158,7 +158,15 @@ tangled into components.
   the query, then any containing it. Forms the card does not show (a feminine, a plural, a conjugation)
   match only whole or from the start of a word, and verb forms are indexed without their reflexive
   pronoun, so `nos` does not list every reflexive verb or every plural ending in -nos.
-- **Settings** — your name (editable) and how much you have practiced. No other users, no switching.
+- **Settings** — your name (editable), **session length** and **appearance**, and how much you have
+  practiced. No other users, no switching. Session length is 10, 15 (default), 20 or 30 words, for
+  every kind of session (General practice, the Focus rows, a single exercise; Match Pairs rounds to
+  whole rounds); a `size` in the URL still overrides it. Appearance is Light or Dark with no
+  "System" choice: until one is picked the app follows the device and Settings shows whichever that
+  is, and once picked it sticks. It is a `data-theme` attribute on the root that the dark tokens in
+  `src/index.css` key on, set before first paint by a small script in `index.html` so a dark choice
+  never flashes light; the status bar colour (`theme-color`) follows it. Both are kept in local
+  storage (`vlc-spanish:theme`, `vlc-spanish:session-size`).
   A quiet footer shows the **version**: the commit the build came from (`COMMIT_REF` on Netlify, `git
 rev-parse` locally, marked "+ local changes" when the tree is dirty), injected as `__COMMIT__` by
   `define` in `vite.config.ts`.
@@ -339,7 +347,7 @@ word pinned in the slot. So a gap usually reviews a word that is due.
   the longest unseen first. Without that fallback a new learner saw no sentences until the day after
   their first practice, and none whenever their due words ran out; sentences are the more engaging
   exercises, so waiting a day for them risked the quiz looking too simple to keep at. In a mixed
-  session at most `MAX_EARLY_SENTENCES` (4) sentences go to words that are not due, because each takes
+  session at most `MAX_EARLY_SENTENCES` (4 per 15 words, scaled by `capFor`) sentences go to words that are not due, because each takes
   the place of a new word (uncapped, a simulated learner had 31 words practiced after day one instead
   of 43 with the cap, and late in a day up to 9 of 15 words went to early reviews). A right answer on a word
   that is not due leaves its schedule alone — see the scheduler notes. Gaps appear only once `MIN_SENTENCE_WORDS` (15) drillable words have been
@@ -424,15 +432,6 @@ were dropped then):
   the Focus session, so a word leaves that session on its next right answer but not this list. There
   is no per-answer history (no dates of misses, no wrong answers typed); a "missed recently" view or
   showing what was typed would need a small answer log added to progress.
-- **Session size in Settings** (requested 2026-09-21): how many words a session holds, default 15
-  (today `DEFAULT_SIZE` in `QuizScreen.tsx`: 15 for mixed sessions, 10 for single exercises, 16 for
-  Match Pairs). Stored per device in local storage. To decide: whether one setting drives all of them
-  or only General practice, and the caps that assume 15 (`MAX_PER_SESSION`, `MAX_EARLY_SENTENCES`)
-  scaling with it
-- **Light/dark override in Settings** (requested 2026-09-21): today the theme follows the system
-  (`prefers-color-scheme` in `src/index.css`) with no way to switch. A System / Light / Dark choice,
-  stored per device in local storage, applied as a `data-theme` attribute on the root that the dark
-  token block also keys on; the `theme-color` meta for the phone's status bar should follow it
 - **Other forms on Dictionary cards** (requested 2026-09-21): cards show only the headword and its
   English, so a search can match a form nobody sees ("nie" finds el sobrino through its feminine's
   "niece"). Show the feminine and its English (_el sobrino · la sobrina_, nephew · niece), adjective
@@ -462,13 +461,14 @@ with the reserved share.
 ## Mixed sessions
 
 A session started from General practice or a Focus row is built by `buildMixedSession` in
-`src/lib/session.ts`: 15 words by default, taken in the order described in
+`src/lib/session.ts`: the session length from Settings (15 by default), taken in the order described in
 [Choosing words](#choosing-words), with only the way each is asked varying. Each step picks an exercise by weight (`MIX_WEIGHTS`): Fill
 in the Blank 3, Find the Mistake 2, word Translate (typed) 2, sentence Translate 1, Multiple Choice 1, a matching round 1. Sentence
 exercises lead because they test words in context, which is worth more than rote recall; with a third
 of practiced words due they make up about half of a session's words. Rules on top:
 
-- **At most two Multiple Choice cards and one matching round per session** (`MAX_PER_SESSION`). Multiple Choice is
+- **At most two Multiple Choice cards and one matching round per 15 words** (`MAX_PER_SESSION`, scaled
+  to the session length by `capFor`, never below one: a 30-word session allows four and two). Multiple Choice is
   recognition among four options, easy enough that more feels like filler (before the cap a third of
   sessions had three or more). A matching round is several words at once, so two of them took most of a
   fifteen-word session, sometimes back to back.

@@ -1,9 +1,11 @@
 import { useMemo, useState, type FormEvent } from "react";
+import { SESSION_SIZES, type Theme } from "../app/local.ts";
 import { useStore } from "../app/store-context.ts";
 import styles from "./SettingsScreen.module.css";
 
 export default function SettingsScreen() {
-  const { name, setName, entries, counts, progress } = useStore();
+  const { name, setName, entries, counts, progress, theme, setTheme, sessionSize, setSessionSize } =
+    useStore();
   const [draft, setDraft] = useState(name ?? "");
 
   const sections = useMemo(() => new Set(entries.flatMap((entry) => entry.tags)).size, [entries]);
@@ -40,6 +42,55 @@ export default function SettingsScreen() {
             </button>
           ) : null}
         </form>
+      </div>
+
+      <div className={styles.section}>
+        <p className={styles.label} id="session-length">
+          Session length
+        </p>
+        <div role="radiogroup" aria-labelledby="session-length" className={styles.choices}>
+          {SESSION_SIZES.map((size) => (
+            <button
+              key={size}
+              type="button"
+              role="radio"
+              aria-checked={size === sessionSize}
+              className={`${styles.choice} ${size === sessionSize ? styles.chosen : ""}`}
+              onClick={() => {
+                setSessionSize(size);
+              }}
+            >
+              {size}
+            </button>
+          ))}
+        </div>
+        <p className={styles.note}>
+          Words in each session: General practice, the Focus rows and a single exercise.
+        </p>
+      </div>
+
+      <div className={styles.section}>
+        <p className={styles.label} id="appearance">
+          Appearance
+        </p>
+        {/* No "System" option: until one is chosen the app follows the device, and
+            this shows whichever that currently is. */}
+        <div role="radiogroup" aria-labelledby="appearance" className={styles.choices}>
+          {(["light", "dark"] as Theme[]).map((option) => (
+            <button
+              key={option}
+              type="button"
+              role="radio"
+              aria-checked={option === theme}
+              className={`${styles.choice} ${option === theme ? styles.chosen : ""}`}
+              onClick={() => {
+                setTheme(option);
+              }}
+            >
+              {option === "light" ? "Light" : "Dark"}
+            </button>
+          ))}
+        </div>
       </div>
 
       <div className={styles.section}>
