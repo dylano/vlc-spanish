@@ -38,6 +38,10 @@
   --correct: #2f6d4f;
   --hard: #9a6b12;
   --wrong: #a83a2c;
+  /* A dialog over the page: its surface, edge and the dimming behind it. */
+  --raised: #ffffff;
+  --raised-edge: var(--rule);
+  --scrim: rgb(25 29 26 / 0.45);
 
   --serif: "Instrument Serif", Georgia, "Times New Roman", serif;
   --sans: "Public Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
@@ -70,6 +74,11 @@
     --correct: #7ecfa0;
     --hard: #e0b357;
     --wrong: #ef8378;
+    /* Dark needs more separation than light: a lifted surface, a visible edge,
+       and a deeper scrim, or the dialog melts into the page behind it. */
+    --raised: #2d332f;
+    --raised-edge: #4a534d;
+    --scrim: rgb(0 0 0 / 0.72);
   }
 }
 
@@ -84,6 +93,9 @@
   --correct: #7ecfa0;
   --hard: #e0b357;
   --wrong: #ef8378;
+  --raised: #2d332f;
+  --raised-edge: #4a534d;
+  --scrim: rgb(0 0 0 / 0.72);
 }
 
 :root[data-theme="light"] {

@@ -4,15 +4,15 @@
   max-height: calc(100dvh - 48px);
   margin: 72px auto auto;
   padding: 0;
-  border: 1px solid var(--rule);
+  border: 1px solid var(--raised-edge);
   border-radius: 16px;
-  background: var(--card);
+  background: var(--raised);
   color: var(--ink);
   box-shadow: 0 12px 40px rgb(25 29 26 / 0.18);
 }
 
 .dialog::backdrop {
-  background: rgb(25 29 26 / 0.45);
+  background: var(--scrim);
 }
 
 .card {
@@ -111,11 +111,11 @@
 .table {
   width: 100%;
   border-collapse: collapse;
-  border-top: 1px solid var(--rule);
+  border-top: 1px solid var(--raised-edge);
 }
 
 .table tr {
-  border-bottom: 1px solid var(--rule);
+  border-bottom: 1px solid var(--raised-edge);
 }
 
 .table thead tr {
