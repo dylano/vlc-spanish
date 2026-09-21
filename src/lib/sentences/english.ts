@@ -65,6 +65,25 @@ export function inflectVerb(gloss: string, subject: Subject, gender: SubjectGend
   return [head, ...rest].join(" ").replace(/\bone's\b/g, possessive(subject, gender));
 }
 
+/**
+ * The negative of an infinitive gloss for a subject: "doesn't like",
+ * "don't go to bed", "isn't". English needs do-support where Spanish just puts
+ * "no" before the verb, so a frame asks for it with {v:not}.
+ */
+export function negateVerb(gloss: string, subject: Subject, gender: SubjectGender = "m"): string {
+  const [verb = "", ...rest] = gloss.replace(/^to\s+/, "").split(" ");
+  const third = subject === "el" && gender !== "mf";
+  const head =
+    verb === "be"
+      ? subject === "yo"
+        ? "am not"
+        : third
+          ? "isn't"
+          : "aren't"
+      : `${third ? "doesn't" : "don't"} ${verb}`;
+  return [head, ...rest].join(" ").replace(/\bone's\b/g, possessive(subject, gender));
+}
+
 const IRREGULAR_PLURAL: Record<string, string> = {
   man: "men",
   woman: "women",

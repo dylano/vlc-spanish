@@ -283,8 +283,15 @@ from the dictionary. The frame supplies the word order in both languages; the re
   they are practiced, as they could when they were only glue, so a frame like _Mi tío es {q} alto_
   keeps working for a new learner. A sentence is only ever _aimed_ at a practiced word, though, and
   only practiced words are blanked, so a glue word is never asked before it has been met.
+- **Gustar-type verbs** (`gustar`, `encantar`): a verb slot with `liked` naming the slot of what is
+  liked renders the person's pronoun plus the verb agreeing with that thing — _me gustan los zapatos_,
+  _le gusta leer_, _a mis padres les encantan_ — while the English stays subject-first (_I like shoes_).
+  What is liked is a noun slot or a verb slot with `subject: "inf"`, which renders the infinitive and
+  counts as singular. Gap grading treats _me gusta_ for _me gustan_ as wrong (not a near miss) and
+  says why; Find the Mistake breaks exactly that agreement.
 - **Placeholders**: `{slot}`, plus `{slot:el}` / `{slot:un}` for a Spanish article and `{slot:the}` /
-  `{slot:a}` for an English one; `{S}` is the subject pronoun. `vosotros` renders as "you (plural)".
+  `{slot:a}` for an English one; `{v:not}` gives a verb's English negative with do-support
+  (_don't like_, _doesn't go_, _isn't_) for frames that put _no_ before the Spanish verb; `{S}` is the subject pronoun. `vosotros` renders as "you (plural)".
 - **The renderer handles** gender and number agreement, verb forms (stored forms, then regular
   endings, then a multi-word verb's first word through its own entry), articles, `a el → al` /
   `de el → del`, `y → e` before an _i_ sound, English third-person _-s_ and irregulars, _one's_ →
@@ -385,7 +392,7 @@ The first release of Phase 2 is built (not yet deployed at the time of writing):
   Select specific exercise mode
 - A per-exercise score in the summary of a mixed session
 - Single-user and fully static: name on first start, progress in local storage, no server
-- Sentence frames (77, about 31,500 sentences), **Fill in the Blank** (one to three blanks), **Find
+- Sentence frames (85, about 33,600 sentences), **Fill in the Blank** (one to three blanks), **Find
   the Mistake** and **Translate** (ungraded), in General practice and Select specific exercise mode
 
 Still open: not repeating a frame within a session, a progress screen, and possibly **Answer a

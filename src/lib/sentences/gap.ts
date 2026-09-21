@@ -11,6 +11,7 @@ import type { Entry, VerbEntry } from "../schema.ts";
 import { verbForm } from "./conjugate.ts";
 import { SUBJECTS, type Subject } from "./english.ts";
 import {
+  likeForm,
   renderFrame,
   slotCandidates,
   spanishPlural,
@@ -185,6 +186,29 @@ export function gradeGap(
   );
   if (nearAccent)
     return { result: "hard", expected, note: `almost — check the accent: ${nearAccent}` };
+
+  // Gustar and the like: the right verb with the wrong agreement or pronoun is
+  // wrong, not a near miss, however close the spelling (me gusta for me gustan).
+  if (detail.liked && entry.pos === "verb" && detail.subject) {
+    const segments = gap.sentence.segments;
+    const liked = gap.sentence.slots[detail.liked];
+    // A liked noun has a gender; a liked infinitive (leer) has none.
+    const isActivity = !!liked && liked.gender === undefined;
+    const thing = segments.find((part) => part.slot === detail.liked && !part.article)?.text ?? "";
+    for (const person of SUBJECTS) {
+      for (const number of ["sg", "pl"] as const) {
+        const form = likeForm(entry as VerbEntry, person, number, dictionary);
+        if (!form || foldAccents(normalize(form)) !== foldAccents(answer)) continue;
+        const note =
+          person !== detail.subject
+            ? `right verb, wrong person: for ${detail.agreesWith ? (segments.find((part) => part.slot === detail.agreesWith && !part.article)?.text ?? "") : SPANISH_SUBJECT[detail.subject]} it is ${expected}`
+            : isActivity
+              ? `an activity takes the singular: ${expected}`
+              : `${thing} is ${detail.number === "pl" ? "plural" : "singular"}, so ${expected}`;
+        return { result: "wrong", expected, note };
+      }
+    }
+  }
 
   const otherForm = formsOf(entry, dictionary)
     .filter(Boolean)

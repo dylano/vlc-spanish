@@ -1663,6 +1663,225 @@
         }
       },
       "cloze": ["t", "v"]
+    },
+    {
+      "id": "like-things",
+      "grammar": ["gustar", "articles", "plural"],
+      "subjects": ["yo", "tu", "nosotros", "vosotros", "ellos"],
+      "es": "{v} {c:el}.",
+      "en": "{S} {v} {c}.",
+      "slots": {
+        "c": {
+          "kind": "noun",
+          "tags": ["clothing", "classroom-objects"],
+          "exclude": ["ropa-interior", "hoja-de-papel"],
+          "number": "pl"
+        },
+        "v": {
+          "kind": "verb",
+          "ids": ["gustar", "encantar"],
+          "subject": "@",
+          "liked": "c"
+        }
+      },
+      "cloze": ["v", "c"]
+    },
+    {
+      "id": "like-thing",
+      "grammar": ["gustar", "articles"],
+      "subjects": ["yo", "tu", "nosotros", "vosotros", "ellos"],
+      "es": "{v} {c:el}.",
+      "en": "{S} {v} {c:the}.",
+      "slots": {
+        "c": {
+          "kind": "noun",
+          "tags": ["geography", "clothing"],
+          "exclude": ["ropa-interior", "zapato", "sandalia", "bota", "peninsula", "cordillera"]
+        },
+        "v": {
+          "kind": "verb",
+          "ids": ["gustar", "encantar"],
+          "subject": "@",
+          "liked": "c"
+        }
+      },
+      "cloze": ["v", "c"]
+    },
+    {
+      "id": "like-activity",
+      "grammar": ["gustar", "infinitive"],
+      "subjects": ["yo", "tu", "nosotros", "vosotros", "ellos"],
+      "es": "{v} {a}.",
+      "en": "{S} {v} {a}.",
+      "slots": {
+        "a": {
+          "kind": "verb",
+          "ids": [
+            "leer",
+            "escribir",
+            "estudiar",
+            "aprender",
+            "jugar",
+            "trabajar",
+            "salir",
+            "cenar",
+            "practicar",
+            "hacer-deporte"
+          ],
+          "subject": "inf"
+        },
+        "v": {
+          "kind": "verb",
+          "ids": ["gustar", "encantar"],
+          "subject": "@",
+          "liked": "a"
+        }
+      },
+      "cloze": ["v", "a"]
+    },
+    {
+      "id": "not-like-activity",
+      "grammar": ["gustar", "infinitive", "negation"],
+      "subjects": ["yo", "tu", "nosotros", "vosotros", "ellos"],
+      "es": "No {v} {a}.",
+      "en": "{S} {v:not} {a}.",
+      "slots": {
+        "a": {
+          "kind": "verb",
+          "ids": [
+            "leer",
+            "escribir",
+            "estudiar",
+            "aprender",
+            "jugar",
+            "trabajar",
+            "salir",
+            "cenar",
+            "practicar",
+            "hacer-deporte"
+          ],
+          "subject": "inf"
+        },
+        "v": {
+          "kind": "verb",
+          "ids": ["gustar"],
+          "subject": "@",
+          "liked": "a"
+        }
+      },
+      "cloze": ["v", "a"]
+    },
+    {
+      "id": "not-like-things",
+      "grammar": ["gustar", "articles", "plural", "negation"],
+      "subjects": ["yo", "tu", "nosotros", "vosotros", "ellos"],
+      "es": "No {v} {c:el}.",
+      "en": "{S} {v:not} {c}.",
+      "slots": {
+        "c": {
+          "kind": "noun",
+          "tags": ["clothing", "classroom-objects"],
+          "exclude": ["ropa-interior", "hoja-de-papel"],
+          "number": "pl"
+        },
+        "v": {
+          "kind": "verb",
+          "ids": ["gustar"],
+          "subject": "@",
+          "liked": "c"
+        }
+      },
+      "cloze": ["v", "c"]
+    },
+    {
+      "id": "relative-likes-activity",
+      "grammar": ["gustar", "infinitive", "third-person"],
+      "es": "A mi {n} {v} {a}.",
+      "en": "My {n} {v} {a}.",
+      "slots": {
+        "n": {
+          "kind": "noun",
+          "tags": ["family"],
+          "number": "sg",
+          "exclude": ["mujer"]
+        },
+        "a": {
+          "kind": "verb",
+          "ids": [
+            "leer",
+            "escribir",
+            "estudiar",
+            "aprender",
+            "jugar",
+            "trabajar",
+            "salir",
+            "cenar",
+            "practicar",
+            "hacer-deporte"
+          ],
+          "subject": "inf"
+        },
+        "v": {
+          "kind": "verb",
+          "ids": ["gustar", "encantar"],
+          "subject": "n",
+          "liked": "a"
+        }
+      },
+      "cloze": ["v", "a"]
+    },
+    {
+      "id": "relatives-like-things",
+      "grammar": ["gustar", "articles", "plural"],
+      "es": "A mis {n} {v} {c:el}.",
+      "en": "My {n} {v} {c}.",
+      "slots": {
+        "n": {
+          "kind": "noun",
+          "tags": ["family"],
+          "number": "pl",
+          "exclude": ["madre", "mujer", "marido", "padre", "abuelo", "hermano"]
+        },
+        "c": {
+          "kind": "noun",
+          "tags": ["clothing", "classroom-objects"],
+          "exclude": ["ropa-interior", "hoja-de-papel"],
+          "number": "pl"
+        },
+        "v": {
+          "kind": "verb",
+          "ids": ["gustar", "encantar"],
+          "subject": "n",
+          "liked": "c"
+        }
+      },
+      "cloze": ["v", "c"]
+    },
+    {
+      "id": "relative-not-like-thing",
+      "grammar": ["gustar", "articles", "negation", "third-person"],
+      "es": "A mi {n} no {v} {c:el}.",
+      "en": "My {n} {v:not} {c:the}.",
+      "slots": {
+        "n": {
+          "kind": "noun",
+          "tags": ["family"],
+          "number": "sg",
+          "exclude": ["mujer"]
+        },
+        "c": {
+          "kind": "noun",
+          "tags": ["geography", "clothing"],
+          "exclude": ["ropa-interior", "zapato", "sandalia", "bota", "peninsula", "cordillera"]
+        },
+        "v": {
+          "kind": "verb",
+          "ids": ["gustar"],
+          "subject": "n",
+          "liked": "c"
+        }
+      },
+      "cloze": ["v", "c"]
     }
   ]
 }

@@ -6,6 +6,7 @@ import { verbForm } from "./conjugate.ts";
 import { SUBJECTS, type Subject } from "./english.ts";
 import {
   adjectiveForm,
+  likeForm,
   nounForm,
   renderFrame,
   type Frame,
@@ -158,6 +159,34 @@ function breaksFor(
         explanation: `${noun} is ${detail.gender === "f" ? "feminine" : "masculine"}: ${article.text.toLowerCase()} ${noun}`,
       });
     }
+  }
+
+  // Gustar and the like: break the agreement with what is liked (me gusta los
+  // zapatos) — the classic mistake — or the person's pronoun.
+  if (spec.kind === "verb" && entry.pos === "verb" && detail.subject && detail.liked) {
+    const number = detail.number ?? "sg";
+    const likedSlot = frame.slots[detail.liked];
+    const thing =
+      likedSlot?.kind === "verb" ? "an activity" : wordText(sentence, detail.liked) || "it";
+    const otherNumber = likeForm(
+      entry as VerbEntry,
+      detail.subject,
+      number === "pl" ? "sg" : "pl",
+      dictionary,
+    );
+    if (otherNumber && normalize(otherNumber) !== normalize(right)) {
+      out.push({
+        kind: "number",
+        article: false,
+        wrong: otherNumber,
+        right,
+        explanation:
+          likedSlot?.kind === "verb"
+            ? `${thing} takes the singular: ${right}`
+            : `${thing} is ${number === "pl" ? "plural" : "singular"}, so ${right}`,
+      });
+    }
+    return out;
   }
 
   if (spec.kind === "verb" && entry.pos === "verb" && detail.subject) {

@@ -4,6 +4,7 @@ import { verbForm } from "./conjugate.ts";
 import {
   indefiniteArticle,
   inflectVerb,
+  negateVerb,
   pluralize,
   SUBJECTS,
   subjectPronoun,
@@ -43,8 +44,18 @@ export const slotSchema = z.discriminatedUnion("kind", [
   z.object({
     kind: z.literal("verb"),
     ...select,
-    /** A fixed subject, "@" for the frame's subject, or a noun slot acting as subject. */
+    /**
+     * A fixed subject, "@" for the frame's subject, a noun slot acting as subject,
+     * or "inf" for the infinitive (me gusta leer).
+     */
     subject: z.string(),
+    /**
+     * For verbs like gustar, the slot holding what is liked: a noun slot or an
+     * infinitive verb slot. The Spanish is then the person's pronoun plus the
+     * verb agreeing with that thing (me gustan los zapatos, le gusta leer); the
+     * English stays subject-first (I like shoes).
+     */
+    liked: z.string().optional(),
   }),
   z.object({ kind: z.literal("word"), ...select, pos: z.enum(POS).optional() }),
   z.object({ kind: z.literal("glue"), group: z.string() }),
@@ -100,6 +111,8 @@ export interface SlotDetail {
   agreesWith?: string;
   /** For a verb, the person it is conjugated in. */
   subject?: Subject;
+  /** For a verb like gustar, the slot holding what is liked, which decides gusta or gustan. */
+  liked?: string;
 }
 
 export interface RenderedSentence {
@@ -133,6 +146,32 @@ interface Filled {
   number?: NumberKind;
   /** False for nouns used without an article, like months. */
   takesArticle?: boolean;
+  /** For a verb, the English negative ("doesn't like"), for {v:not}. */
+  enNot?: string;
+}
+
+const OBJECT_PRONOUN: Record<Subject, string> = {
+  yo: "me",
+  tu: "te",
+  el: "le",
+  nosotros: "nos",
+  vosotros: "os",
+  ellos: "les",
+};
+
+/**
+ * A gustar-type verb for a person and what they like: me gusta, les gustan.
+ * The verb agrees with the thing liked (third person, singular or plural), and
+ * the person is the pronoun in front.
+ */
+export function likeForm(
+  entry: VerbEntry,
+  person: Subject,
+  likedNumber: "sg" | "pl",
+  dictionary: Entry[],
+): string | undefined {
+  const form = verbForm(entry, likedNumber === "pl" ? "ellos" : "el", dictionary);
+  return form ? `${OBJECT_PRONOUN[person]} ${form}` : undefined;
 }
 
 function pick<T>(items: readonly T[], random: () => number): T | undefined {
@@ -367,10 +406,14 @@ export function renderFrame(
     }
     const detail: SlotDetail = { accepts: [...accepts], gender: fill.gender, number: fill.number };
     if (slot.kind === "adj" || (slot.kind === "noun" && slot.agree)) detail.agreesWith = slot.agree;
-    if (slot.kind === "verb") {
+    if (slot.kind === "verb" && slot.subject !== "inf") {
       const who = subjectOf(slot.subject, filled, subject);
       detail.subject = who?.subject;
       if (frame.slots[slot.subject]?.kind === "noun") detail.agreesWith = slot.subject;
+      if (slot.liked) {
+        detail.liked = slot.liked;
+        detail.number = filled.get(slot.liked)?.number ?? "sg";
+      }
     }
     slots[name] = detail;
   }
@@ -387,6 +430,8 @@ export function renderFrame(
 
   function rank(slot: Slot): number {
     if (slot.kind === "noun") return slot.agree ? 1 : 0;
+    // A gustar-type verb waits for what is liked, to agree with it.
+    if (slot.kind === "verb" && slot.liked) return 3;
     return 2;
   }
 }
@@ -433,11 +478,25 @@ function fillSlot(
       return adjFill(entry, noun.gender ?? "m", noun.number ?? "sg");
     }
     case "verb": {
+      if (entry.pos !== "verb") return undefined;
+      // An infinitive is itself something liked, and singular: me gusta leer.
+      if (slot.subject === "inf") {
+        return { entryId: entry.id, es: entry.es, en: entry.en[0]!, number: "sg" };
+      }
       const who = subjectOf(slot.subject, filled, frameSubject);
-      if (entry.pos !== "verb" || !who) return undefined;
-      const es = verbForm(entry as VerbEntry, who.subject, dictionary);
+      if (!who) return undefined;
+      const liked = slot.liked ? filled.get(slot.liked) : undefined;
+      if (slot.liked && !liked) return undefined;
+      const es = liked
+        ? likeForm(entry as VerbEntry, who.subject, liked.number ?? "sg", dictionary)
+        : verbForm(entry as VerbEntry, who.subject, dictionary);
       if (!es) return undefined;
-      return { entryId: entry.id, es, en: inflectVerb(entry.en[0]!, who.subject, who.gender) };
+      return {
+        entryId: entry.id,
+        es,
+        en: inflectVerb(entry.en[0]!, who.subject, who.gender),
+        enNot: negateVerb(entry.en[0]!, who.subject, who.gender),
+      };
     }
     case "word":
       return { entryId: entry.id, es: entry.es, en: entry.en[0]! };
@@ -521,6 +580,7 @@ function renderEnglish(
     if (name === "S") return subject ? subjectPronoun(subject) : "";
     const fill = filled.get(name)!;
     if (modifier === "the") return `the ${fill.en}`;
+    if (modifier === "not") return fill.enNot ?? `not ${fill.en}`;
     if (modifier === "a")
       return fill.number === "pl" ? fill.en : `${indefiniteArticle(fill.en)} ${fill.en}`;
     return fill.en;
@@ -575,7 +635,7 @@ export function checkFrame(
 
   for (const [language, template, modifiers] of [
     ["es", frame.es, ["el", "un"]],
-    ["en", frame.en, ["the", "a"]],
+    ["en", frame.en, ["the", "a", "not"]],
   ] as const) {
     for (const { name, modifier } of placeholders(template)) {
       if (name === "S") {
@@ -610,10 +670,18 @@ export function checkFrame(
         errors.push(`slot ${name} uses the frame subject but the frame declares none`);
       if (
         spec !== "@" &&
+        spec !== "inf" &&
         !(SUBJECTS as readonly string[]).includes(spec) &&
         frame.slots[spec]?.kind !== "noun"
       ) {
         errors.push(`slot ${name} has subject ${spec}, which is neither a subject nor a noun slot`);
+      }
+      if (slot.liked) {
+        const liked = frame.slots[slot.liked];
+        if (liked?.kind !== "noun" && !(liked?.kind === "verb" && liked.subject === "inf"))
+          errors.push(
+            `slot ${name} likes ${slot.liked}, which is neither a noun nor an infinitive`,
+          );
       }
     }
     if (slot.kind === "glue") {

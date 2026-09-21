@@ -3665,6 +3665,32 @@
       "notes": "No 'de': entre la mesa y la silla.",
       "tags": ["position"],
       "added": "2026-09-21"
+    },
+    {
+      "id": "gustar",
+      "es": "gustar",
+      "en": ["to like"],
+      "pos": "verb",
+      "verb": {
+        "reflexive": false,
+        "regular": true
+      },
+      "notes": "Works backwards: what is liked is the subject, so the verb agrees with it. Me gusta el libro, me gustan los libros, me gusta leer; a mi madre le gusta.",
+      "tags": ["verbs"],
+      "added": "2026-09-21"
+    },
+    {
+      "id": "encantar",
+      "es": "encantar",
+      "en": ["to love", "to really like"],
+      "pos": "verb",
+      "verb": {
+        "reflexive": false,
+        "regular": true
+      },
+      "notes": "Works like gustar: me encanta la playa, me encantan los libros. For things and activities; loving a person is 'querer'.",
+      "tags": ["verbs"],
+      "added": "2026-09-21"
     }
   ]
 }
