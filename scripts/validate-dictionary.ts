@@ -78,12 +78,12 @@ for (const entry of entries) {
   // headword is itself plural and needs marking, or it would be graded with el/la.
   if (
     entry.pos === "noun" &&
-    entry.number !== "pl" &&
+    entry.number === undefined &&
     !entry.forms?.pl &&
     entry.article !== "none"
   ) {
     warnings.push(
-      `noun "${entry.id}" has no forms.pl; add one, or set number: "pl" if the headword is plural`,
+      `noun "${entry.id}" has no forms.pl; add one, set number: "pl" if the headword is plural, or number: "sg" if it has no plural`,
     );
   }
   if (entry.pos === "noun" && entry.number === "pl" && entry.forms?.pl) {

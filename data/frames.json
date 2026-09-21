@@ -701,6 +701,712 @@
         }
       },
       "cloze": ["n", "v"]
+    },
+    {
+      "id": "object-in-classroom",
+      "grammar": ["articles", "hay"],
+      "es": "Hay {o:un} en {w:el}.",
+      "en": "There is {o:a} in {w:the}.",
+      "slots": {
+        "o": {
+          "kind": "noun",
+          "tags": ["classroom-objects"]
+        },
+        "w": {
+          "kind": "noun",
+          "ids": ["escuela", "despacho"]
+        }
+      },
+      "cloze": ["o", "w"]
+    },
+    {
+      "id": "object-on-table",
+      "grammar": ["ser-estar", "articles"],
+      "es": "{o:el} está en la mesa.",
+      "en": "{o:the} is on the table.",
+      "slots": {
+        "o": {
+          "kind": "noun",
+          "tags": ["classroom-objects"],
+          "exclude": ["mesa", "silla", "pizarra", "proyector", "papelera"]
+        }
+      },
+      "cloze": ["o"]
+    },
+    {
+      "id": "objects-in-backpack",
+      "grammar": ["hay", "plural"],
+      "es": "Hay {o} en la mochila.",
+      "en": "There are {o} in the backpack.",
+      "slots": {
+        "o": {
+          "kind": "noun",
+          "ids": ["libro", "cuaderno", "boligrafo", "estuche", "tableta"],
+          "number": "pl"
+        }
+      },
+      "cloze": ["o"]
+    },
+    {
+      "id": "family-has-object",
+      "grammar": ["articles", "verb-conjugation"],
+      "es": "Mi {n} tiene {o:un}.",
+      "en": "My {n} has {o:a}.",
+      "slots": {
+        "n": {
+          "kind": "noun",
+          "tags": ["family"],
+          "number": "sg",
+          "exclude": ["mujer"]
+        },
+        "o": {
+          "kind": "noun",
+          "tags": ["classroom-objects"],
+          "exclude": ["pizarra", "proyector", "papelera"]
+        }
+      },
+      "cloze": ["o"]
+    },
+    {
+      "id": "profession-writes-on",
+      "grammar": ["articles", "verb-conjugation"],
+      "es": "{p:el} escribe en {o:el}.",
+      "en": "{p:the} writes on {o:the}.",
+      "slots": {
+        "p": {
+          "kind": "noun",
+          "tags": ["professions"]
+        },
+        "o": {
+          "kind": "noun",
+          "ids": ["pizarra", "hoja-de-papel", "tableta", "ordenador"]
+        }
+      },
+      "cloze": ["o", "p"]
+    },
+    {
+      "id": "need-object",
+      "grammar": ["verb-conjugation", "articles"],
+      "subjects": ["yo", "tu", "nosotros", "vosotros", "ellos"],
+      "es": "{v} {o:un}.",
+      "en": "{S} {v} {o:a}.",
+      "slots": {
+        "v": {
+          "kind": "verb",
+          "ids": ["necesitar", "querer", "comprar"],
+          "subject": "@"
+        },
+        "o": {
+          "kind": "noun",
+          "tags": ["classroom-objects"]
+        }
+      },
+      "cloze": ["v", "o"]
+    },
+    {
+      "id": "do-with-relative",
+      "grammar": ["verb-conjugation"],
+      "subjects": ["yo", "tu", "nosotros", "vosotros", "ellos"],
+      "es": "{v} con mi {n}.",
+      "en": "{S} {v} with my {n}.",
+      "slots": {
+        "v": {
+          "kind": "verb",
+          "ids": ["vivir", "estudiar", "hablar", "jugar", "practicar", "aprender", "trabajar"],
+          "subject": "@"
+        },
+        "n": {
+          "kind": "noun",
+          "tags": ["family"],
+          "number": "sg",
+          "exclude": ["mujer", "marido"]
+        }
+      },
+      "cloze": ["v", "n"]
+    },
+    {
+      "id": "days-visit-relative",
+      "grammar": ["days", "verb-conjugation", "personal-a"],
+      "subjects": ["yo", "tu", "nosotros", "vosotros", "ellos"],
+      "es": "Los {d} {v} a mi {n}.",
+      "en": "On {d} {S} {v} my {n}.",
+      "slots": {
+        "d": {
+          "kind": "noun",
+          "tags": ["days"],
+          "number": "pl"
+        },
+        "v": {
+          "kind": "verb",
+          "ids": ["visitar"],
+          "subject": "@"
+        },
+        "n": {
+          "kind": "noun",
+          "tags": ["family"],
+          "number": "sg",
+          "exclude": ["mujer", "marido"]
+        }
+      },
+      "cloze": ["v", "d"]
+    },
+    {
+      "id": "days-activity",
+      "grammar": ["days", "verb-conjugation"],
+      "subjects": ["yo", "tu", "nosotros", "vosotros", "ellos"],
+      "es": "Los {d} {v}.",
+      "en": "On {d} {S} {v}.",
+      "slots": {
+        "d": {
+          "kind": "noun",
+          "tags": ["days"],
+          "number": "pl"
+        },
+        "v": {
+          "kind": "verb",
+          "ids": ["estudiar", "leer", "salir", "trabajar", "jugar"],
+          "subject": "@"
+        }
+      },
+      "cloze": ["v", "d"]
+    },
+    {
+      "id": "listen-to-professional",
+      "grammar": ["verb-conjugation", "personal-a", "contraction"],
+      "subjects": ["yo", "tu", "nosotros", "vosotros", "ellos"],
+      "es": "{v} a {p:el}.",
+      "en": "{S} {v} {p:the}.",
+      "slots": {
+        "v": {
+          "kind": "verb",
+          "ids": ["escuchar", "comprender"],
+          "subject": "@"
+        },
+        "p": {
+          "kind": "noun",
+          "tags": ["professions"]
+        }
+      },
+      "cloze": ["v", "p"]
+    },
+    {
+      "id": "study-at-place",
+      "grammar": ["verb-conjugation", "frequency", "articles"],
+      "subjects": ["yo", "tu", "nosotros", "vosotros", "ellos"],
+      "es": "{f} {v} en {w:el}.",
+      "en": "{S} {f} {v} at {w:the}.",
+      "slots": {
+        "f": {
+          "kind": "word",
+          "tags": ["frequency"],
+          "pos": "adv"
+        },
+        "v": {
+          "kind": "verb",
+          "ids": ["estudiar", "leer", "escribir", "trabajar"],
+          "subject": "@"
+        },
+        "w": {
+          "kind": "noun",
+          "ids": ["universidad", "escuela", "despacho"]
+        }
+      },
+      "cloze": ["v", "f"]
+    },
+    {
+      "id": "see-object",
+      "grammar": ["verb-conjugation", "articles"],
+      "subjects": ["yo", "tu", "nosotros", "vosotros", "ellos"],
+      "es": "{v} {o:el}.",
+      "en": "{S} {v} {o:the}.",
+      "slots": {
+        "v": {
+          "kind": "verb",
+          "ids": ["ver"],
+          "subject": "@"
+        },
+        "o": {
+          "kind": "noun",
+          "ids": ["pizarra", "proyector", "libro", "ordenador", "mochila", "papelera"]
+        }
+      },
+      "cloze": ["v", "o"]
+    },
+    {
+      "id": "weather-winter-month",
+      "grammar": ["weather", "months"],
+      "es": "En {m} {x}.",
+      "en": "In {m} {x}.",
+      "slots": {
+        "m": {
+          "kind": "noun",
+          "ids": ["diciembre", "enero", "febrero"]
+        },
+        "x": {
+          "kind": "word",
+          "ids": ["hace-frio", "nieva", "llueve", "hace-viento", "esta-nublado"]
+        }
+      },
+      "cloze": ["x", "m"]
+    },
+    {
+      "id": "weather-summer-month",
+      "grammar": ["weather", "months"],
+      "es": "En {m} {x}.",
+      "en": "In {m} {x}.",
+      "slots": {
+        "m": {
+          "kind": "noun",
+          "ids": ["junio", "julio", "agosto"]
+        },
+        "x": {
+          "kind": "word",
+          "ids": ["hace-calor"]
+        }
+      },
+      "cloze": ["x", "m"]
+    },
+    {
+      "id": "weather-spring-autumn-month",
+      "grammar": ["weather", "months"],
+      "es": "En {m} {x}.",
+      "en": "In {m} {x}.",
+      "slots": {
+        "m": {
+          "kind": "noun",
+          "ids": ["marzo", "abril", "mayo", "septiembre", "octubre", "noviembre"]
+        },
+        "x": {
+          "kind": "word",
+          "ids": ["llueve", "hace-viento", "esta-nublado"]
+        }
+      },
+      "cloze": ["x", "m"]
+    },
+    {
+      "id": "weather-time-of-day",
+      "grammar": ["weather", "time-of-day"],
+      "es": "{x} {t}.",
+      "en": "{x} {t}.",
+      "slots": {
+        "x": {
+          "kind": "word",
+          "tags": ["weather"]
+        },
+        "t": {
+          "kind": "word",
+          "tags": ["times-of-day"],
+          "pos": "phrase"
+        }
+      },
+      "cloze": ["x", "t"]
+    },
+    {
+      "id": "weather-how-often",
+      "grammar": ["weather", "frequency"],
+      "es": "{x} {f}.",
+      "en": "{x} {f}.",
+      "slots": {
+        "x": {
+          "kind": "word",
+          "tags": ["weather"]
+        },
+        "f": {
+          "kind": "word",
+          "ids": [
+            "todos-los-dias",
+            "todas-las-semanas",
+            "una-vez-a-la-semana",
+            "dos-veces-a-la-semana",
+            "todas-las-tardes"
+          ]
+        }
+      },
+      "cloze": ["x", "f"]
+    },
+    {
+      "id": "visit-see-place",
+      "grammar": ["verb-conjugation", "articles"],
+      "subjects": ["yo", "tu", "nosotros", "vosotros", "ellos"],
+      "es": "{v} {g:el}.",
+      "en": "{S} {v} {g:the}.",
+      "slots": {
+        "v": {
+          "kind": "verb",
+          "ids": ["visitar", "ver"],
+          "subject": "@"
+        },
+        "g": {
+          "kind": "noun",
+          "tags": ["geography"],
+          "exclude": ["peninsula"]
+        }
+      },
+      "cloze": ["g", "v"]
+    },
+    {
+      "id": "live-on-coast",
+      "grammar": ["verb-conjugation", "articles"],
+      "subjects": ["yo", "tu", "nosotros", "vosotros", "ellos"],
+      "es": "{v} en {g:el}.",
+      "en": "{S} {v} on {g:the}.",
+      "slots": {
+        "v": {
+          "kind": "verb",
+          "ids": ["vivir", "trabajar"],
+          "subject": "@"
+        },
+        "g": {
+          "kind": "noun",
+          "ids": ["costa", "isla", "peninsula"]
+        }
+      },
+      "cloze": ["g", "v"]
+    },
+    {
+      "id": "live-in-wild",
+      "grammar": ["verb-conjugation", "articles"],
+      "subjects": ["yo", "tu", "nosotros", "vosotros", "ellos"],
+      "es": "{v} en {g:el}.",
+      "en": "{S} {v} in {g:the}.",
+      "slots": {
+        "v": {
+          "kind": "verb",
+          "ids": ["vivir", "trabajar", "jugar"],
+          "subject": "@"
+        },
+        "g": {
+          "kind": "noun",
+          "ids": ["desierto", "selva", "bosque"]
+        }
+      },
+      "cloze": ["g", "v"]
+    },
+    {
+      "id": "family-lives-on-island",
+      "grammar": ["verb-conjugation", "articles", "third-person"],
+      "es": "Mi {n} vive en {g:un}.",
+      "en": "My {n} lives on {g:a}.",
+      "slots": {
+        "n": {
+          "kind": "noun",
+          "tags": ["family"],
+          "number": "sg",
+          "exclude": ["mujer", "marido"]
+        },
+        "g": {
+          "kind": "noun",
+          "ids": ["isla", "peninsula"]
+        }
+      },
+      "cloze": ["g"]
+    },
+    {
+      "id": "weather-hot-place",
+      "grammar": ["weather", "articles"],
+      "es": "En {g:el} {x}.",
+      "en": "In {g:the} {x}.",
+      "slots": {
+        "g": {
+          "kind": "noun",
+          "ids": ["desierto", "selva"]
+        },
+        "x": {
+          "kind": "word",
+          "ids": ["hace-calor"]
+        }
+      },
+      "cloze": ["x", "g"]
+    },
+    {
+      "id": "weather-hot-coast",
+      "grammar": ["weather", "articles"],
+      "es": "En {g:el} {x}.",
+      "en": "On {g:the} {x}.",
+      "slots": {
+        "g": {
+          "kind": "noun",
+          "ids": ["isla", "costa"]
+        },
+        "x": {
+          "kind": "word",
+          "ids": ["hace-calor"]
+        }
+      },
+      "cloze": ["x", "g"]
+    },
+    {
+      "id": "weather-mountains",
+      "grammar": ["weather", "articles"],
+      "es": "En {g:el} {x}.",
+      "en": "In {g:the} {x}.",
+      "slots": {
+        "g": {
+          "kind": "noun",
+          "ids": ["montana"],
+          "number": "pl"
+        },
+        "x": {
+          "kind": "word",
+          "ids": ["hace-frio", "nieva", "hace-viento"]
+        }
+      },
+      "cloze": ["x", "g"]
+    },
+    {
+      "id": "weather-wet-place",
+      "grammar": ["weather", "articles"],
+      "es": "En {g:el} {x}.",
+      "en": "In {g:the} {x}.",
+      "slots": {
+        "g": {
+          "kind": "noun",
+          "ids": ["selva", "bosque"]
+        },
+        "x": {
+          "kind": "word",
+          "ids": ["llueve", "esta-nublado"]
+        }
+      },
+      "cloze": ["x", "g"]
+    },
+    {
+      "id": "need-clothing",
+      "grammar": ["verb-conjugation", "articles"],
+      "subjects": ["yo", "tu", "nosotros", "vosotros", "ellos"],
+      "es": "{v} {c:un}.",
+      "en": "{S} {v} {c:a}.",
+      "slots": {
+        "v": {
+          "kind": "verb",
+          "ids": ["necesitar", "querer", "tener", "comprar", "llevar"],
+          "subject": "@"
+        },
+        "c": {
+          "kind": "noun",
+          "tags": ["clothing"],
+          "exclude": ["ropa-interior", "zapato", "sandalia", "bota"]
+        }
+      },
+      "cloze": ["c", "v"]
+    },
+    {
+      "id": "need-clothing-plural",
+      "grammar": ["verb-conjugation", "articles", "plural"],
+      "subjects": ["yo", "tu", "nosotros", "vosotros", "ellos"],
+      "es": "{v} {c:un}.",
+      "en": "{S} {v} {c:a}.",
+      "slots": {
+        "v": {
+          "kind": "verb",
+          "ids": ["necesitar", "querer", "tener", "comprar", "llevar"],
+          "subject": "@"
+        },
+        "c": {
+          "kind": "noun",
+          "ids": ["zapato", "sandalia", "bota", "gafas", "gafas-de-sol", "pantalones-cortos"],
+          "number": "pl"
+        }
+      },
+      "cloze": ["c", "v"]
+    },
+    {
+      "id": "cold-clothing",
+      "grammar": ["weather", "verb-conjugation", "articles"],
+      "subjects": ["yo", "tu", "nosotros", "vosotros", "ellos"],
+      "es": "Cuando {x}, {v} {c:un}.",
+      "en": "When {x}, {S} {v} {c:a}.",
+      "slots": {
+        "x": {
+          "kind": "word",
+          "ids": ["hace-frio", "nieva"]
+        },
+        "v": {
+          "kind": "verb",
+          "ids": ["necesitar", "querer", "llevar"],
+          "subject": "@"
+        },
+        "c": {
+          "kind": "noun",
+          "ids": ["chaqueta"]
+        }
+      },
+      "cloze": ["c", "v", "x"]
+    },
+    {
+      "id": "cold-clothing-plural",
+      "grammar": ["weather", "verb-conjugation", "articles"],
+      "subjects": ["yo", "tu", "nosotros", "vosotros", "ellos"],
+      "es": "Cuando {x}, {v} {c:un}.",
+      "en": "When {x}, {S} {v} {c:a}.",
+      "slots": {
+        "x": {
+          "kind": "word",
+          "ids": ["hace-frio", "nieva", "llueve"]
+        },
+        "v": {
+          "kind": "verb",
+          "ids": ["necesitar", "querer", "llevar"],
+          "subject": "@"
+        },
+        "c": {
+          "kind": "noun",
+          "ids": ["bota"],
+          "number": "pl"
+        }
+      },
+      "cloze": ["c", "v", "x"]
+    },
+    {
+      "id": "hot-clothing",
+      "grammar": ["weather", "verb-conjugation", "articles"],
+      "subjects": ["yo", "tu", "nosotros", "vosotros", "ellos"],
+      "es": "Cuando {x}, {v} {c:un}.",
+      "en": "When {x}, {S} {v} {c:a}.",
+      "slots": {
+        "x": {
+          "kind": "word",
+          "ids": ["hace-calor"]
+        },
+        "v": {
+          "kind": "verb",
+          "ids": ["necesitar", "querer", "llevar"],
+          "subject": "@"
+        },
+        "c": {
+          "kind": "noun",
+          "ids": ["camiseta", "banador", "falda", "vestido"]
+        }
+      },
+      "cloze": ["c", "v", "x"]
+    },
+    {
+      "id": "hot-clothing-plural",
+      "grammar": ["weather", "verb-conjugation", "articles"],
+      "subjects": ["yo", "tu", "nosotros", "vosotros", "ellos"],
+      "es": "Cuando {x}, {v} {c:un}.",
+      "en": "When {x}, {S} {v} {c:a}.",
+      "slots": {
+        "x": {
+          "kind": "word",
+          "ids": ["hace-calor"]
+        },
+        "v": {
+          "kind": "verb",
+          "ids": ["necesitar", "querer", "llevar"],
+          "subject": "@"
+        },
+        "c": {
+          "kind": "noun",
+          "ids": ["sandalia", "gafas-de-sol", "pantalones-cortos"],
+          "number": "pl"
+        }
+      },
+      "cloze": ["c", "v", "x"]
+    },
+    {
+      "id": "family-has-clothing",
+      "grammar": ["articles", "verb-conjugation"],
+      "es": "Mi {n} tiene {c:un}.",
+      "en": "My {n} has {c:a}.",
+      "slots": {
+        "n": {
+          "kind": "noun",
+          "tags": ["family"],
+          "number": "sg",
+          "exclude": ["mujer"]
+        },
+        "c": {
+          "kind": "noun",
+          "ids": [
+            "chaqueta",
+            "camiseta",
+            "camisa",
+            "bolso",
+            "falda",
+            "cinturon",
+            "vestido",
+            "banador"
+          ]
+        }
+      },
+      "cloze": ["c"]
+    },
+    {
+      "id": "family-wears",
+      "grammar": ["verb-conjugation", "third-person", "plural"],
+      "es": "Mi {n} {v} {c}.",
+      "en": "My {n} {v} {c}.",
+      "slots": {
+        "n": {
+          "kind": "noun",
+          "tags": ["family"],
+          "number": "sg",
+          "exclude": ["mujer"]
+        },
+        "v": {
+          "kind": "verb",
+          "ids": ["llevar"],
+          "subject": "n"
+        },
+        "c": {
+          "kind": "noun",
+          "ids": [
+            "gafas",
+            "gafas-de-sol",
+            "bota",
+            "sandalia",
+            "zapato",
+            "pantalones-cortos",
+            "vestido",
+            "falda",
+            "camisa",
+            "camiseta",
+            "chaqueta"
+          ],
+          "number": "pl"
+        }
+      },
+      "cloze": ["v", "c"]
+    },
+    {
+      "id": "prefer-place",
+      "grammar": ["verb-conjugation", "stem-change", "articles"],
+      "subjects": ["yo", "tu", "nosotros", "vosotros", "ellos"],
+      "es": "{v} {g:el}.",
+      "en": "{S} {v} {g:the}.",
+      "slots": {
+        "v": {
+          "kind": "verb",
+          "ids": ["preferir"],
+          "subject": "@"
+        },
+        "g": {
+          "kind": "noun",
+          "ids": ["costa", "bosque", "desierto", "isla", "lago", "selva", "rio"]
+        }
+      },
+      "cloze": ["v", "g"]
+    },
+    {
+      "id": "prefer-clothing",
+      "grammar": ["verb-conjugation", "stem-change", "articles"],
+      "subjects": ["yo", "tu", "nosotros", "vosotros", "ellos"],
+      "es": "{v} {c:el}.",
+      "en": "{S} {v} {c:the}.",
+      "slots": {
+        "v": {
+          "kind": "verb",
+          "ids": ["preferir"],
+          "subject": "@"
+        },
+        "c": {
+          "kind": "noun",
+          "tags": ["clothing"],
+          "exclude": ["ropa-interior", "zapato", "sandalia", "bota"]
+        }
+      },
+      "cloze": ["v", "c"]
     }
   ]
 }

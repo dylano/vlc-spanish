@@ -72,7 +72,8 @@ export const nounEntrySchema = z.object({
   /**
    * "pl" for an entry whose headword is itself plural (los padres, los hermanos):
    * a word with its own meaning in the plural, listed separately from the
-   * singular. It takes los/las and has no `forms.pl`.
+   * singular. It takes los/las and has no `forms.pl`. "sg" for a noun with no
+   * plural at all (la ropa interior), so it is not mistaken for one missing it.
    */
   number: z.enum(["sg", "pl"]).optional(),
   /**

@@ -1087,7 +1087,7 @@
     {
       "id": "salir",
       "es": "salir",
-      "en": ["to leave", "to go out"],
+      "en": ["to go out", "to leave"],
       "pos": "verb",
       "verb": {
         "reflexive": false,
@@ -1910,7 +1910,10 @@
       "es": "dormilón",
       "en": ["sleepyhead", "sleepy", "fond of sleeping"],
       "pos": "adj",
-      "forms": { "f": "dormilona", "pl": "dormilones" },
+      "forms": {
+        "f": "dormilona",
+        "pl": "dormilones"
+      },
       "notes": "Used as an adjective or a noun: es muy dormilón. The accent drops in the feminine and plural.",
       "tags": ["character-traits"],
       "added": "2026-09-16"
@@ -1920,7 +1923,10 @@
       "es": "sano",
       "en": ["healthy", "fit", "wholesome"],
       "pos": "adj",
-      "forms": { "f": "sana", "pl": "sanos" },
+      "forms": {
+        "f": "sana",
+        "pl": "sanos"
+      },
       "notes": "As a trait, someone with healthy habits; 'estar sano' is to be in good health right now.",
       "tags": ["character-traits"],
       "added": "2026-09-16"
@@ -1930,7 +1936,10 @@
       "es": "perezoso",
       "en": ["lazy"],
       "pos": "adj",
-      "forms": { "f": "perezosa", "pl": "perezosos" },
+      "forms": {
+        "f": "perezosa",
+        "pl": "perezosos"
+      },
       "tags": ["character-traits"],
       "added": "2026-09-16"
     },
@@ -1939,7 +1948,10 @@
       "es": "fiestero",
       "en": ["party-loving", "party animal", "fond of partying"],
       "pos": "adj",
-      "forms": { "f": "fiestera", "pl": "fiesteros" },
+      "forms": {
+        "f": "fiestera",
+        "pl": "fiesteros"
+      },
       "notes": "Colloquial; also used as a noun (un fiestero).",
       "tags": ["character-traits"],
       "added": "2026-09-16"
@@ -1949,7 +1961,10 @@
       "es": "trabajador",
       "en": ["hard-working", "hardworking", "industrious"],
       "pos": "adj",
-      "forms": { "f": "trabajadora", "pl": "trabajadores" },
+      "forms": {
+        "f": "trabajadora",
+        "pl": "trabajadores"
+      },
       "notes": "The feminine adds -a even though the masculine ends in a consonant. Also the noun 'worker'.",
       "tags": ["character-traits"],
       "added": "2026-09-16"
@@ -1959,7 +1974,10 @@
       "es": "comilón",
       "en": ["big eater", "glutton", "greedy eater"],
       "pos": "adj",
-      "forms": { "f": "comilona", "pl": "comilones" },
+      "forms": {
+        "f": "comilona",
+        "pl": "comilones"
+      },
       "notes": "Someone who eats a lot. The accent drops in the feminine and plural.",
       "tags": ["character-traits"],
       "added": "2026-09-16"
@@ -1969,7 +1987,9 @@
       "es": "deportista",
       "en": ["sporty", "athletic"],
       "pos": "adj",
-      "forms": { "pl": "deportistas" },
+      "forms": {
+        "pl": "deportistas"
+      },
       "notes": "Same form for both genders despite ending in -a: un chico deportista, una chica deportista. Also the noun 'athlete'.",
       "tags": ["character-traits"],
       "added": "2026-09-16"
@@ -1979,7 +1999,10 @@
       "es": "casero",
       "en": ["home-loving", "homebody", "stay-at-home"],
       "pos": "adj",
-      "forms": { "f": "casera", "pl": "caseros" },
+      "forms": {
+        "f": "casera",
+        "pl": "caseros"
+      },
       "notes": "Of a person, a homebody. Of things it means homemade (comida casera); as a noun, el casero is a landlord.",
       "tags": ["character-traits"],
       "added": "2026-09-16"
@@ -1989,7 +2012,9 @@
       "es": "intelectual",
       "en": ["intellectual"],
       "pos": "adj",
-      "forms": { "pl": "intelectuales" },
+      "forms": {
+        "pl": "intelectuales"
+      },
       "tags": ["character-traits"],
       "added": "2026-09-16"
     },
@@ -2000,7 +2025,10 @@
       "enF": ["scientist"],
       "pos": "noun",
       "gender": "m",
-      "forms": { "f": "científica", "pl": "científicos" },
+      "forms": {
+        "f": "científica",
+        "pl": "científicos"
+      },
       "notes": "Also the adjective 'scientific'.",
       "tags": ["professions"],
       "added": "2026-09-16"
@@ -2012,7 +2040,10 @@
       "enF": ["cook", "chef"],
       "pos": "noun",
       "gender": "m",
-      "forms": { "f": "cocinera", "pl": "cocineros" },
+      "forms": {
+        "f": "cocinera",
+        "pl": "cocineros"
+      },
       "notes": "Anyone who cooks for a living; a head chef is 'el chef' or 'el jefe de cocina'.",
       "tags": ["professions"],
       "added": "2026-09-16"
@@ -2023,7 +2054,9 @@
       "en": ["student"],
       "pos": "noun",
       "gender": "mf",
-      "forms": { "pl": "estudiantes" },
+      "forms": {
+        "pl": "estudiantes"
+      },
       "notes": "Same form for both genders: el estudiante, la estudiante.",
       "tags": ["professions"],
       "added": "2026-09-16"
@@ -2035,7 +2068,10 @@
       "enF": ["fashion designer", "designer"],
       "pos": "noun",
       "gender": "m",
-      "forms": { "f": "diseñadora de moda", "pl": "diseñadores de moda" },
+      "forms": {
+        "f": "diseñadora de moda",
+        "pl": "diseñadores de moda"
+      },
       "notes": "The feminine adds -a even though the masculine ends in a consonant: diseñadora.",
       "tags": ["professions"],
       "added": "2026-09-16"
@@ -2046,7 +2082,9 @@
       "en": ["journalist", "reporter"],
       "pos": "noun",
       "gender": "mf",
-      "forms": { "pl": "periodistas" },
+      "forms": {
+        "pl": "periodistas"
+      },
       "notes": "Ends in -a but is masculine too: el periodista, la periodista.",
       "tags": ["professions"],
       "added": "2026-09-16"
@@ -2058,7 +2096,10 @@
       "enF": ["teacher", "professor", "lecturer"],
       "pos": "noun",
       "gender": "m",
-      "forms": { "f": "profesora", "pl": "profesores" },
+      "forms": {
+        "f": "profesora",
+        "pl": "profesores"
+      },
       "notes": "In Spain the everyday word for any teacher, not only a university professor. The feminine adds -a: profesora.",
       "tags": ["professions"],
       "added": "2026-09-16"
@@ -2070,7 +2111,10 @@
       "enF": ["translator"],
       "pos": "noun",
       "gender": "m",
-      "forms": { "f": "traductora", "pl": "traductores" },
+      "forms": {
+        "f": "traductora",
+        "pl": "traductores"
+      },
       "notes": "The feminine adds -a even though the masculine ends in a consonant: traductora.",
       "tags": ["professions"],
       "added": "2026-09-16"
@@ -2082,7 +2126,10 @@
       "enF": ["nurse"],
       "pos": "noun",
       "gender": "m",
-      "forms": { "f": "enfermera", "pl": "enfermeros" },
+      "forms": {
+        "f": "enfermera",
+        "pl": "enfermeros"
+      },
       "tags": ["professions"],
       "added": "2026-09-16"
     },
@@ -2093,7 +2140,10 @@
       "enF": ["waitress", "server"],
       "pos": "noun",
       "gender": "m",
-      "forms": { "f": "camarera", "pl": "camareros" },
+      "forms": {
+        "f": "camarera",
+        "pl": "camareros"
+      },
       "notes": "The word in Spain; 'mesero' is common in Latin America.",
       "tags": ["professions"],
       "added": "2026-09-16"
@@ -2105,7 +2155,10 @@
       "enF": ["secretary"],
       "pos": "noun",
       "gender": "m",
-      "forms": { "f": "secretaria", "pl": "secretarios" },
+      "forms": {
+        "f": "secretaria",
+        "pl": "secretarios"
+      },
       "tags": ["professions"],
       "added": "2026-09-16"
     },
@@ -2115,7 +2168,9 @@
       "en": ["athlete", "sportsperson", "sportsman", "sportswoman"],
       "pos": "noun",
       "gender": "mf",
-      "forms": { "pl": "deportistas" },
+      "forms": {
+        "pl": "deportistas"
+      },
       "notes": "Same form for both genders: el deportista, la deportista. Also the adjective 'sporty', listed separately.",
       "tags": ["professions"],
       "added": "2026-09-16"
@@ -2126,7 +2181,9 @@
       "en": ["salesperson", "sales rep", "sales representative", "salesman", "saleswoman"],
       "pos": "noun",
       "gender": "mf",
-      "forms": { "pl": "comerciales" },
+      "forms": {
+        "pl": "comerciales"
+      },
       "notes": "Same form for both genders: el comercial, la comercial. Also the adjective 'commercial'.",
       "tags": ["professions"],
       "added": "2026-09-16"
@@ -2137,7 +2194,9 @@
       "en": ["university", "college"],
       "pos": "noun",
       "gender": "f",
-      "forms": { "pl": "universidades" },
+      "forms": {
+        "pl": "universidades"
+      },
       "notes": "Nouns ending in -dad are feminine: la universidad, la ciudad.",
       "tags": ["workplaces"],
       "added": "2026-09-16"
@@ -2148,7 +2207,9 @@
       "en": ["gym", "gymnasium"],
       "pos": "noun",
       "gender": "m",
-      "forms": { "pl": "gimnasios" },
+      "forms": {
+        "pl": "gimnasios"
+      },
       "tags": ["workplaces"],
       "added": "2026-09-16"
     },
@@ -2158,7 +2219,9 @@
       "en": ["laboratory", "lab"],
       "pos": "noun",
       "gender": "m",
-      "forms": { "pl": "laboratorios" },
+      "forms": {
+        "pl": "laboratorios"
+      },
       "tags": ["workplaces"],
       "added": "2026-09-16"
     },
@@ -2168,7 +2231,9 @@
       "en": ["hospital"],
       "pos": "noun",
       "gender": "m",
-      "forms": { "pl": "hospitales" },
+      "forms": {
+        "pl": "hospitales"
+      },
       "tags": ["workplaces"],
       "added": "2026-09-16"
     },
@@ -2178,7 +2243,9 @@
       "en": ["newspaper", "paper"],
       "pos": "noun",
       "gender": "m",
-      "forms": { "pl": "periódicos" },
+      "forms": {
+        "pl": "periódicos"
+      },
       "notes": "The newspaper itself and the company that makes it: trabaja en un periódico.",
       "tags": ["workplaces"],
       "added": "2026-09-16"
@@ -2189,7 +2256,9 @@
       "en": ["bar", "café", "cafe", "pub"],
       "pos": "noun",
       "gender": "m",
-      "forms": { "pl": "bares" },
+      "forms": {
+        "pl": "bares"
+      },
       "notes": "In Spain a bar serves coffee and breakfast as much as drinks, so it is often closer to a café.",
       "tags": ["workplaces"],
       "added": "2026-09-16"
@@ -2200,7 +2269,9 @@
       "en": ["restaurant"],
       "pos": "noun",
       "gender": "m",
-      "forms": { "pl": "restaurantes" },
+      "forms": {
+        "pl": "restaurantes"
+      },
       "tags": ["workplaces"],
       "added": "2026-09-16"
     },
@@ -2210,7 +2281,9 @@
       "en": ["workshop", "repair shop"],
       "pos": "noun",
       "gender": "m",
-      "forms": { "pl": "talleres" },
+      "forms": {
+        "pl": "talleres"
+      },
       "tags": ["workplaces"],
       "added": "2026-09-16"
     },
@@ -2220,7 +2293,9 @@
       "en": ["bank"],
       "pos": "noun",
       "gender": "m",
-      "forms": { "pl": "bancos" },
+      "forms": {
+        "pl": "bancos"
+      },
       "tags": ["workplaces"],
       "added": "2026-09-16"
     },
@@ -2230,7 +2305,9 @@
       "en": ["shop", "store"],
       "pos": "noun",
       "gender": "f",
-      "forms": { "pl": "tiendas" },
+      "forms": {
+        "pl": "tiendas"
+      },
       "tags": ["workplaces"],
       "added": "2026-09-16"
     },
@@ -2240,7 +2317,9 @@
       "en": ["supermarket"],
       "pos": "noun",
       "gender": "m",
-      "forms": { "pl": "supermercados" },
+      "forms": {
+        "pl": "supermercados"
+      },
       "tags": ["workplaces"],
       "added": "2026-09-16"
     },
@@ -2250,7 +2329,9 @@
       "en": ["school"],
       "pos": "noun",
       "gender": "f",
-      "forms": { "pl": "escuelas" },
+      "forms": {
+        "pl": "escuelas"
+      },
       "notes": "In Spain a primary or secondary school is usually 'el colegio' (el cole); escuela is common for specialist schools, as in escuela de idiomas.",
       "tags": ["workplaces"],
       "added": "2026-09-16"
@@ -2261,7 +2342,9 @@
       "en": ["office", "study"],
       "pos": "noun",
       "gender": "m",
-      "forms": { "pl": "despachos" },
+      "forms": {
+        "pl": "despachos"
+      },
       "notes": "One person's office, or a study at home; a larger shared office is 'la oficina'.",
       "tags": ["workplaces"],
       "added": "2026-09-16"
@@ -2272,7 +2355,9 @@
       "en": ["company", "business", "firm"],
       "pos": "noun",
       "gender": "f",
-      "forms": { "pl": "empresas" },
+      "forms": {
+        "pl": "empresas"
+      },
       "tags": ["workplaces"],
       "added": "2026-09-16"
     },
@@ -2281,9 +2366,744 @@
       "es": "trabajar",
       "en": ["to work"],
       "pos": "verb",
-      "verb": { "reflexive": false, "regular": true },
+      "verb": {
+        "reflexive": false,
+        "regular": true
+      },
       "tags": ["verbs", "workplaces"],
       "added": "2026-09-17"
+    },
+    {
+      "id": "silla",
+      "es": "silla",
+      "en": ["chair"],
+      "pos": "noun",
+      "gender": "f",
+      "forms": {
+        "pl": "sillas"
+      },
+      "tags": ["classroom-objects"],
+      "added": "2026-09-21"
+    },
+    {
+      "id": "proyector",
+      "es": "proyector",
+      "en": ["projector"],
+      "pos": "noun",
+      "gender": "m",
+      "forms": {
+        "pl": "proyectores"
+      },
+      "tags": ["classroom-objects"],
+      "added": "2026-09-21"
+    },
+    {
+      "id": "papelera",
+      "es": "papelera",
+      "en": ["wastepaper basket", "bin", "wastebasket", "trash can", "waste bin"],
+      "pos": "noun",
+      "gender": "f",
+      "forms": {
+        "pl": "papeleras"
+      },
+      "tags": ["classroom-objects"],
+      "added": "2026-09-21"
+    },
+    {
+      "id": "tableta",
+      "es": "tableta",
+      "en": ["tablet"],
+      "pos": "noun",
+      "gender": "f",
+      "forms": {
+        "pl": "tabletas"
+      },
+      "notes": "Also 'una tableta de chocolate', a bar of chocolate.",
+      "tags": ["classroom-objects"],
+      "added": "2026-09-21"
+    },
+    {
+      "id": "estuche",
+      "es": "estuche",
+      "en": ["pencil case", "case"],
+      "pos": "noun",
+      "gender": "m",
+      "forms": {
+        "pl": "estuches"
+      },
+      "tags": ["classroom-objects"],
+      "added": "2026-09-21"
+    },
+    {
+      "id": "mesa",
+      "es": "mesa",
+      "en": ["table", "desk"],
+      "pos": "noun",
+      "gender": "f",
+      "forms": {
+        "pl": "mesas"
+      },
+      "notes": "In a classroom 'la mesa' is also the desk; 'el escritorio' is a writing desk.",
+      "tags": ["classroom-objects"],
+      "added": "2026-09-21"
+    },
+    {
+      "id": "libro",
+      "es": "libro",
+      "en": ["book"],
+      "pos": "noun",
+      "gender": "m",
+      "forms": {
+        "pl": "libros"
+      },
+      "tags": ["classroom-objects"],
+      "added": "2026-09-21"
+    },
+    {
+      "id": "boligrafo",
+      "es": "bolígrafo",
+      "en": ["pen", "ballpoint pen", "biro"],
+      "pos": "noun",
+      "gender": "m",
+      "forms": {
+        "pl": "bolígrafos"
+      },
+      "notes": "Usually shortened to 'el boli' in Spain.",
+      "tags": ["classroom-objects"],
+      "added": "2026-09-21"
+    },
+    {
+      "id": "ordenador",
+      "es": "ordenador",
+      "en": ["computer"],
+      "pos": "noun",
+      "gender": "m",
+      "forms": {
+        "pl": "ordenadores"
+      },
+      "notes": "Spain only; Latin America says 'la computadora'.",
+      "tags": ["classroom-objects"],
+      "added": "2026-09-21"
+    },
+    {
+      "id": "cuaderno",
+      "es": "cuaderno",
+      "en": ["notebook", "exercise book"],
+      "pos": "noun",
+      "gender": "m",
+      "forms": {
+        "pl": "cuadernos"
+      },
+      "tags": ["classroom-objects"],
+      "added": "2026-09-21"
+    },
+    {
+      "id": "pizarra",
+      "es": "pizarra",
+      "en": ["board", "blackboard", "whiteboard"],
+      "pos": "noun",
+      "gender": "f",
+      "forms": {
+        "pl": "pizarras"
+      },
+      "notes": "Any classroom board, chalk or whiteboard; Latin America often says 'el pizarrón'.",
+      "tags": ["classroom-objects"],
+      "added": "2026-09-21"
+    },
+    {
+      "id": "hoja-de-papel",
+      "es": "hoja de papel",
+      "en": ["sheet of paper", "piece of paper"],
+      "pos": "noun",
+      "gender": "f",
+      "forms": {
+        "pl": "hojas de papel"
+      },
+      "notes": "'La hoja' alone is also a sheet of paper, or a leaf.",
+      "tags": ["classroom-objects"],
+      "added": "2026-09-21"
+    },
+    {
+      "id": "mochila",
+      "es": "mochila",
+      "en": ["backpack", "rucksack", "school bag", "bag"],
+      "pos": "noun",
+      "gender": "f",
+      "forms": {
+        "pl": "mochilas"
+      },
+      "tags": ["classroom-objects"],
+      "added": "2026-09-21"
+    },
+    {
+      "id": "necesitar",
+      "es": "necesitar",
+      "en": ["to need"],
+      "pos": "verb",
+      "verb": {
+        "reflexive": false,
+        "regular": true
+      },
+      "tags": ["verbs"],
+      "added": "2026-09-21"
+    },
+    {
+      "id": "escuchar",
+      "es": "escuchar",
+      "en": ["to listen to", "to listen"],
+      "pos": "verb",
+      "verb": {
+        "reflexive": false,
+        "regular": true
+      },
+      "notes": "No preposition in Spanish: escucho la radio, I listen to the radio.",
+      "tags": ["verbs"],
+      "added": "2026-09-21"
+    },
+    {
+      "id": "ver",
+      "es": "ver",
+      "en": ["to see", "to watch"],
+      "pos": "verb",
+      "verb": {
+        "reflexive": false,
+        "regular": false,
+        "irregularYo": "veo"
+      },
+      "forms": {
+        "yo": "veo",
+        "tu": "ves",
+        "el": "ve",
+        "nosotros": "vemos",
+        "vosotros": "veis",
+        "ellos": "ven"
+      },
+      "notes": "'Ver la tele' is to watch TV.",
+      "tags": ["verbs"],
+      "added": "2026-09-21"
+    },
+    {
+      "id": "visitar",
+      "es": "visitar",
+      "en": ["to visit"],
+      "pos": "verb",
+      "verb": {
+        "reflexive": false,
+        "regular": true
+      },
+      "notes": "A person visited takes 'a': visito a mi abuela.",
+      "tags": ["verbs"],
+      "added": "2026-09-21"
+    },
+    {
+      "id": "leer",
+      "es": "leer",
+      "en": ["to read"],
+      "pos": "verb",
+      "verb": {
+        "reflexive": false,
+        "regular": true
+      },
+      "tags": ["verbs"],
+      "added": "2026-09-21"
+    },
+    {
+      "id": "jugar",
+      "es": "jugar",
+      "en": ["to play"],
+      "pos": "verb",
+      "verb": {
+        "reflexive": false,
+        "regular": false,
+        "stemChange": "u→ue"
+      },
+      "forms": {
+        "yo": "juego",
+        "tu": "juegas",
+        "el": "juega",
+        "nosotros": "jugamos",
+        "vosotros": "jugáis",
+        "ellos": "juegan"
+      },
+      "notes": "For games and sports: juego al fútbol. An instrument is 'tocar'.",
+      "tags": ["verbs"],
+      "added": "2026-09-21"
+    },
+    {
+      "id": "vivir",
+      "es": "vivir",
+      "en": ["to live"],
+      "pos": "verb",
+      "verb": {
+        "reflexive": false,
+        "regular": true
+      },
+      "tags": ["verbs"],
+      "added": "2026-09-21"
+    },
+    {
+      "id": "estudiar",
+      "es": "estudiar",
+      "en": ["to study"],
+      "pos": "verb",
+      "verb": {
+        "reflexive": false,
+        "regular": true
+      },
+      "tags": ["verbs"],
+      "added": "2026-09-21"
+    },
+    {
+      "id": "aprender",
+      "es": "aprender",
+      "en": ["to learn"],
+      "pos": "verb",
+      "verb": {
+        "reflexive": false,
+        "regular": true
+      },
+      "tags": ["verbs"],
+      "added": "2026-09-21"
+    },
+    {
+      "id": "practicar",
+      "es": "practicar",
+      "en": ["to practice", "to practise"],
+      "pos": "verb",
+      "verb": {
+        "reflexive": false,
+        "regular": true
+      },
+      "tags": ["verbs"],
+      "added": "2026-09-21"
+    },
+    {
+      "id": "hace-calor",
+      "es": "hace calor",
+      "en": ["it's hot", "it is hot", "it's warm", "it is warm"],
+      "pos": "phrase",
+      "notes": "Weather uses 'hacer'. A person feeling hot is 'tengo calor'.",
+      "tags": ["weather"],
+      "added": "2026-09-21"
+    },
+    {
+      "id": "hace-frio",
+      "es": "hace frío",
+      "en": ["it's cold", "it is cold"],
+      "pos": "phrase",
+      "notes": "A person feeling cold is 'tengo frío'.",
+      "tags": ["weather"],
+      "added": "2026-09-21"
+    },
+    {
+      "id": "hace-viento",
+      "es": "hace viento",
+      "en": ["it's windy", "it is windy"],
+      "pos": "phrase",
+      "tags": ["weather"],
+      "added": "2026-09-21"
+    },
+    {
+      "id": "llueve",
+      "es": "llueve",
+      "en": ["it rains", "it's raining", "it is raining"],
+      "pos": "phrase",
+      "notes": "From 'llover' (o→ue). For right now, 'está lloviendo' is also common.",
+      "tags": ["weather"],
+      "added": "2026-09-21"
+    },
+    {
+      "id": "nieva",
+      "es": "nieva",
+      "en": ["it snows", "it's snowing", "it is snowing"],
+      "pos": "phrase",
+      "notes": "From 'nevar' (e→ie). For right now, 'está nevando' is also common.",
+      "tags": ["weather"],
+      "added": "2026-09-21"
+    },
+    {
+      "id": "esta-nublado",
+      "es": "está nublado",
+      "en": ["it's cloudy", "it is cloudy", "it's overcast"],
+      "pos": "phrase",
+      "notes": "Uses 'estar', not 'hacer': 'nublado' describes how the sky is.",
+      "tags": ["weather"],
+      "added": "2026-09-21"
+    },
+    {
+      "id": "volcan",
+      "es": "volcán",
+      "en": ["volcano"],
+      "pos": "noun",
+      "gender": "m",
+      "forms": {
+        "pl": "volcanes"
+      },
+      "notes": "The accent drops in the plural: volcanes.",
+      "tags": ["geography"],
+      "added": "2026-09-21"
+    },
+    {
+      "id": "montana",
+      "es": "montaña",
+      "en": ["mountain"],
+      "pos": "noun",
+      "gender": "f",
+      "forms": {
+        "pl": "montañas"
+      },
+      "notes": "'La montaña' also means the mountains as a place to go: vamos a la montaña.",
+      "tags": ["geography"],
+      "added": "2026-09-21"
+    },
+    {
+      "id": "cordillera",
+      "es": "cordillera",
+      "en": ["mountain range", "range"],
+      "pos": "noun",
+      "gender": "f",
+      "forms": {
+        "pl": "cordilleras"
+      },
+      "tags": ["geography"],
+      "added": "2026-09-21"
+    },
+    {
+      "id": "desierto",
+      "es": "desierto",
+      "en": ["desert"],
+      "pos": "noun",
+      "gender": "m",
+      "forms": {
+        "pl": "desiertos"
+      },
+      "tags": ["geography"],
+      "added": "2026-09-21"
+    },
+    {
+      "id": "rio",
+      "es": "río",
+      "en": ["river"],
+      "pos": "noun",
+      "gender": "m",
+      "forms": {
+        "pl": "ríos"
+      },
+      "tags": ["geography"],
+      "added": "2026-09-21"
+    },
+    {
+      "id": "lago",
+      "es": "lago",
+      "en": ["lake"],
+      "pos": "noun",
+      "gender": "m",
+      "forms": {
+        "pl": "lagos"
+      },
+      "tags": ["geography"],
+      "added": "2026-09-21"
+    },
+    {
+      "id": "selva",
+      "es": "selva",
+      "en": ["jungle", "rainforest"],
+      "pos": "noun",
+      "gender": "f",
+      "forms": {
+        "pl": "selvas"
+      },
+      "notes": "Tropical forest; an ordinary forest or wood is 'el bosque'.",
+      "tags": ["geography"],
+      "added": "2026-09-21"
+    },
+    {
+      "id": "bosque",
+      "es": "bosque",
+      "en": ["forest", "woods", "wood"],
+      "pos": "noun",
+      "gender": "m",
+      "forms": {
+        "pl": "bosques"
+      },
+      "tags": ["geography"],
+      "added": "2026-09-21"
+    },
+    {
+      "id": "costa",
+      "es": "costa",
+      "en": ["coast", "coastline"],
+      "pos": "noun",
+      "gender": "f",
+      "forms": {
+        "pl": "costas"
+      },
+      "tags": ["geography"],
+      "added": "2026-09-21"
+    },
+    {
+      "id": "peninsula",
+      "es": "península",
+      "en": ["peninsula"],
+      "pos": "noun",
+      "gender": "f",
+      "forms": {
+        "pl": "penínsulas"
+      },
+      "notes": "In Spain 'la Península' usually means the Iberian mainland, as opposed to the islands.",
+      "tags": ["geography"],
+      "added": "2026-09-21"
+    },
+    {
+      "id": "isla",
+      "es": "isla",
+      "en": ["island"],
+      "pos": "noun",
+      "gender": "f",
+      "forms": {
+        "pl": "islas"
+      },
+      "tags": ["geography"],
+      "added": "2026-09-21"
+    },
+    {
+      "id": "catarata",
+      "es": "catarata",
+      "en": ["waterfall", "falls"],
+      "pos": "noun",
+      "gender": "f",
+      "forms": {
+        "pl": "cataratas"
+      },
+      "notes": "A large waterfall; a smaller one is 'la cascada'.",
+      "tags": ["geography"],
+      "added": "2026-09-21"
+    },
+    {
+      "id": "chaqueta",
+      "es": "chaqueta",
+      "en": ["jacket"],
+      "pos": "noun",
+      "gender": "f",
+      "forms": {
+        "pl": "chaquetas"
+      },
+      "tags": ["clothing"],
+      "added": "2026-09-21"
+    },
+    {
+      "id": "camiseta",
+      "es": "camiseta",
+      "en": ["t-shirt", "t shirt", "tshirt", "tee shirt", "tee"],
+      "pos": "noun",
+      "gender": "f",
+      "forms": {
+        "pl": "camisetas"
+      },
+      "notes": "Also a sports shirt: la camiseta del Valencia.",
+      "tags": ["clothing"],
+      "added": "2026-09-21"
+    },
+    {
+      "id": "camisa",
+      "es": "camisa",
+      "en": ["shirt"],
+      "pos": "noun",
+      "gender": "f",
+      "forms": {
+        "pl": "camisas"
+      },
+      "tags": ["clothing"],
+      "added": "2026-09-21"
+    },
+    {
+      "id": "pantalones-cortos",
+      "es": "pantalones cortos",
+      "en": ["shorts"],
+      "pos": "noun",
+      "gender": "m",
+      "number": "pl",
+      "notes": "Always plural. 'Los pantalones' alone are trousers.",
+      "tags": ["clothing"],
+      "added": "2026-09-21"
+    },
+    {
+      "id": "banador",
+      "es": "bañador",
+      "en": ["swimsuit", "swimming costume", "swimming trunks", "bathing suit"],
+      "pos": "noun",
+      "gender": "m",
+      "forms": {
+        "pl": "bañadores"
+      },
+      "notes": "The Spain word; Latin America says 'el traje de baño'.",
+      "tags": ["clothing"],
+      "added": "2026-09-21"
+    },
+    {
+      "id": "ropa-interior",
+      "es": "ropa interior",
+      "en": ["underwear"],
+      "pos": "noun",
+      "gender": "f",
+      "number": "sg",
+      "notes": "Uncountable, like English: no plural.",
+      "tags": ["clothing"],
+      "added": "2026-09-21"
+    },
+    {
+      "id": "sandalia",
+      "es": "sandalia",
+      "en": ["sandal"],
+      "pos": "noun",
+      "gender": "f",
+      "forms": {
+        "pl": "sandalias"
+      },
+      "tags": ["clothing"],
+      "added": "2026-09-21"
+    },
+    {
+      "id": "gafas",
+      "es": "gafas",
+      "en": ["glasses", "spectacles", "eyeglasses"],
+      "pos": "noun",
+      "gender": "f",
+      "number": "pl",
+      "notes": "Always plural: las gafas. Latin America says 'los lentes' or 'los anteojos'.",
+      "tags": ["clothing"],
+      "added": "2026-09-21"
+    },
+    {
+      "id": "gafas-de-sol",
+      "es": "gafas de sol",
+      "en": ["sunglasses"],
+      "pos": "noun",
+      "gender": "f",
+      "number": "pl",
+      "notes": "Always plural: las gafas de sol.",
+      "tags": ["clothing"],
+      "added": "2026-09-21"
+    },
+    {
+      "id": "zapato",
+      "es": "zapato",
+      "en": ["shoe"],
+      "pos": "noun",
+      "gender": "m",
+      "forms": {
+        "pl": "zapatos"
+      },
+      "tags": ["clothing"],
+      "added": "2026-09-21"
+    },
+    {
+      "id": "bolso",
+      "es": "bolso",
+      "en": ["handbag", "bag", "purse"],
+      "pos": "noun",
+      "gender": "m",
+      "forms": {
+        "pl": "bolsos"
+      },
+      "notes": "'El bolso' is a handbag; 'la bolsa' is a bag you carry shopping in.",
+      "tags": ["clothing"],
+      "added": "2026-09-21"
+    },
+    {
+      "id": "bota",
+      "es": "bota",
+      "en": ["boot"],
+      "pos": "noun",
+      "gender": "f",
+      "forms": {
+        "pl": "botas"
+      },
+      "tags": ["clothing"],
+      "added": "2026-09-21"
+    },
+    {
+      "id": "falda",
+      "es": "falda",
+      "en": ["skirt"],
+      "pos": "noun",
+      "gender": "f",
+      "forms": {
+        "pl": "faldas"
+      },
+      "tags": ["clothing"],
+      "added": "2026-09-21"
+    },
+    {
+      "id": "cinturon",
+      "es": "cinturón",
+      "en": ["belt"],
+      "pos": "noun",
+      "gender": "m",
+      "forms": {
+        "pl": "cinturones"
+      },
+      "notes": "The accent drops in the plural: cinturones.",
+      "tags": ["clothing"],
+      "added": "2026-09-21"
+    },
+    {
+      "id": "vestido",
+      "es": "vestido",
+      "en": ["dress"],
+      "pos": "noun",
+      "gender": "m",
+      "forms": {
+        "pl": "vestidos"
+      },
+      "tags": ["clothing"],
+      "added": "2026-09-21"
+    },
+    {
+      "id": "comprar",
+      "es": "comprar",
+      "en": ["to buy", "to purchase"],
+      "pos": "verb",
+      "verb": {
+        "reflexive": false,
+        "regular": true
+      },
+      "tags": ["verbs"],
+      "added": "2026-09-21"
+    },
+    {
+      "id": "llevar",
+      "es": "llevar",
+      "en": ["to wear", "to carry", "to take", "to bring"],
+      "pos": "verb",
+      "verb": {
+        "reflexive": false,
+        "regular": true
+      },
+      "notes": "Wearing clothes (llevo gafas), carrying something, or taking it somewhere: te llevo al trabajo.",
+      "tags": ["verbs", "clothing"],
+      "added": "2026-09-21"
+    },
+    {
+      "id": "preferir",
+      "es": "preferir",
+      "en": ["to prefer"],
+      "pos": "verb",
+      "verb": {
+        "reflexive": false,
+        "regular": false,
+        "stemChange": "e→ie"
+      },
+      "forms": {
+        "yo": "prefiero",
+        "tu": "prefieres",
+        "el": "prefiere",
+        "nosotros": "preferimos",
+        "vosotros": "preferís",
+        "ellos": "prefieren"
+      },
+      "tags": ["verbs"],
+      "added": "2026-09-21"
     }
   ]
 }

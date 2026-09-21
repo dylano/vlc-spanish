@@ -206,7 +206,12 @@ the deployed site has no endpoint that writes words at all.
    dormilón/ona, sano/a, perezoso/a, trabajador/a, deportista, intelectual
    ```
 
-   The header names the section, which becomes the tag; `/a` shorthand gives the feminine form. It
+   The header names the section, which becomes the tag; `/a` shorthand gives the feminine form.
+   **A header that is not an existing tag is checked against the tags there are first**: if it looks
+   like the same section under another name ("jobs" for `professions`, "routine" for
+   `daily-activities`) or overlaps one, Claude Code asks whether to use the existing tag before
+   writing anything. Section names drift from class to class, and two tags for one topic would split
+   its words across the Dictionary filter, matching rounds and sentence frames. It
    writes the entries, runs the checks below plus ones the validator cannot do (English glosses
    shared with existing words, headwords one letter apart, sample answers through the grader), and
    marks anything it had to guess as `flagged`.
@@ -369,7 +374,7 @@ The first release of Phase 2 is built (not yet deployed at the time of writing):
   Select specific exercise mode
 - A per-exercise score in the summary of a mixed session
 - Single-user and fully static: name on first start, progress in local storage, no server
-- Sentence frames (31, about 25,000 sentences), **Fill in the Blank** (one to three blanks), **Find
+- Sentence frames (66, about 27,500 sentences), **Fill in the Blank** (one to three blanks), **Find
   the Mistake** and **Translate** (ungraded), in General practice and Select specific exercise mode
 
 Still open: not repeating a frame within a session, a progress screen, and possibly **Answer a
@@ -382,8 +387,17 @@ Not built, in rough order of likely usefulness:
 
 - Flashcards (parked: unclear how they fit alongside the Dictionary tab)
 - A progress screen: per-tag mastery, recent misses, session history
+- **Problem words view** (requested 2026-09-21): a list of the words that have given trouble, apart
+  from the Focus on problem words session that drills them. The data is already stored per word and
+  direction: `lapses` (every miss, ever), `ease` (drops with each miss or near miss) and
+  `lastResult`. Ranking by lapses or ease shows the long-term troublemakers; only `lastResult` feeds
+  the Focus session, so a word leaves that session on its next right answer but not this list. There
+  is no per-answer history (no dates of misses, no wrong answers typed); a "missed recently" view or
+  showing what was typed would need a small answer log added to progress.
 - Conjugation drills driven by the `verb` metadata already in the dictionary (needs no API)
-- Offline answer queueing — quizzes read from cache offline, but results are not yet synced back
+- **Conjugation table in the Dictionary**: tap a verb entry to see its present tense for every
+  person. `verbForm` in `src/lib/sentences/conjugate.ts` already produces each form, stored or by
+  rule (requested 2026-09-21)
 
 ## Choosing words
 
@@ -454,12 +468,16 @@ A correct pick is a **recognition** answer for the scheduler (see below), a wron
 
 Worth knowing before you change `grade.ts`, because the tests encode all of it:
 
+- **Both directions** ignore capitals, extra spaces, `¿ ¡`, a closing `. ! ?` and apostrophes
+  (`normalize`). Apostrophes go because iOS types a curly `’` by default and "its hot" is a slip of
+  punctuation, not of the language; Spanish does not use them.
 - **en→es**: the feminine or plural of the headword is accepted as correct. A missing accent is
   `hard` ("almost — check the accent"), and a `ñ` written as `n` is called out as its own case.
   Nouns are expected with their article; a missing article is `hard`, a wrong one is `wrong`, since
   the article is how gender gets tested. A common-gender noun (`gender: "mf"`) accepts either
   article and is shown as `el/la estudiante`. A noun whose headword is itself plural
-  (`number: "pl"`, as in `los hermanos` for siblings) takes `los`/`las`. A noun's `article` field relaxes this for words Spanish
+  (`number: "pl"`, as in `los hermanos` for siblings) takes `los`/`las`. A noun with no plural at all
+  (`number: "sg"`, as in `la ropa interior`) is marked so the validator does not ask for one. A noun's `article` field relaxes this for words Spanish
   uses bare: `"none"` for months (answer shown as `enero`) and `"optional"` for days (shown as
   `el lunes`). Either way the article is accepted but not asked for, and a wrong one is only `hard`. An other-gender noun (`abuela` for `abuelo`) or a conjugated
   verb (`me acuesto` for `acostarse`) is accepted but downgraded to `hard` rather than silently

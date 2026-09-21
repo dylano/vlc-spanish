@@ -12,7 +12,8 @@ against the schema below exactly. A validator is provided; output that does not 
 Roughly 100–150 entries covering an elementary Peninsular Spanish class, across these tags:
 
 `physical-traits`, `character-traits`, `family`, `frequency`, `times-of-day`,
-`daily-activities`, `verbs`, `days`, `months`, `numbers`, `professions`
+`daily-activities`, `verbs`, `days`, `months`, `numbers`, `professions`, `workplaces`,
+`classroom-objects`, `weather`, `geography`, `clothing`
 
 Use exactly these tag strings. An entry may carry more than one tag. Add a new tag only if a word
 genuinely fits none of the above, and keep it kebab-case.
@@ -58,7 +59,7 @@ interface NounEntry extends EntryBase {
   pos: "noun";
   gender: "m" | "f" | "mf"; // REQUIRED; "mf" = one form, either article (el/la estudiante)
   article?: "required" | "optional" | "none"; // omit for ordinary nouns (see below)
-  number?: "pl"; // only when the headword itself is plural: los padres, los hermanos
+  number?: "pl" | "sg"; // "pl": the headword itself is plural (los padres); "sg": no plural (la ropa interior)
   enF?: string[]; // English for forms.f, most natural first; required alongside forms.f
   forms?: { f?: string; m?: string; pl?: string };
 }

@@ -1,11 +1,15 @@
 /** Text normalization shared by grading in both directions. */
 
-/** Lowercase, trim, collapse whitespace, strip surrounding punctuation. */
+/**
+ * Lowercase, trim, collapse whitespace, strip surrounding punctuation, and drop
+ * apostrophes: iOS types a curly ’ by default, and "its hot" typed in a hurry is
+ * a slip of punctuation, not of Spanish. Spanish itself does not use them.
+ */
 export function normalize(input: string): string {
   return input
     .normalize("NFC")
     .toLowerCase()
-    .replace(/[¿¡]/g, "")
+    .replace(/[¿¡'‘’]/g, "")
     .replace(/\s+/g, " ")
     .trim()
     .replace(/[.!?]+$/, "")

@@ -94,6 +94,21 @@ describe("en→es normalization", () => {
   });
 });
 
+describe("es→en apostrophes", () => {
+  const haceCalor: Entry = {
+    ...base,
+    id: "hace-calor",
+    es: "hace calor",
+    en: ["it's hot", "it is hot"],
+    pos: "phrase",
+  };
+
+  it("accepts a curly apostrophe, as iOS types it, or none at all", () => {
+    expect(grade(haceCalor, "es→en", "It’s hot").result).toBe("correct");
+    expect(grade(haceCalor, "es→en", "its hot").result).toBe("correct");
+  });
+});
+
 describe("en→es accents", () => {
   it("downgrades a missing accent to hard with a note", () => {
     const result = grade(simpatico, "en→es", "simpatico");
