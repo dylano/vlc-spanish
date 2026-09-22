@@ -2500,7 +2500,7 @@
     {
       "id": "pizarra",
       "es": "pizarra",
-      "en": ["board", "blackboard", "whiteboard"],
+      "en": ["blackboard", "whiteboard", "chalkboard"],
       "pos": "noun",
       "gender": "f",
       "forms": {
