@@ -6,10 +6,13 @@ import type { VerbEntry } from "../lib/schema.ts";
 import ConjugationDialog from "./ConjugationDialog.tsx";
 import styles from "./DictionaryScreen.module.css";
 
-function Chevron({ open, className }: { open: boolean; className?: string }) {
+/** The category common enough to sit in the filter row as a one-tap shortcut. */
+const QUICK_TAG = "verbs";
+
+function Chevron({ className }: { className: string }) {
   return (
     <svg
-      className={className ?? `${styles.chevron} ${open ? styles.chevronUp : styles.chevronDown}`}
+      className={className}
       viewBox="0 0 20 20"
       fill="none"
       stroke="currentColor"
@@ -83,7 +86,8 @@ export default function DictionaryScreen() {
         ) : null}
       </div>
 
-      {/* One control: it names the filter, opens the grid, and clears it. */}
+      {/* Unfiltered, the row offers both: everything, or the one category common
+          enough to deserve a tap. Choosing either lands in the same filtered row. */}
       <div className={`${styles.filter} ${tag ? styles.filterOn : ""}`}>
         <button
           type="button"
@@ -100,7 +104,6 @@ export default function DictionaryScreen() {
           <span className={styles.filterLabel}>
             {tag ? tag.replace(/-/g, " ") : "All categories"}
           </span>
-          <Chevron open={choosing} />
         </button>
         {tag ? (
           <button
@@ -115,6 +118,20 @@ export default function DictionaryScreen() {
               <path d="M3 3l6 6M9 3l-6 6" />
             </svg>
           </button>
+        ) : tags.includes(QUICK_TAG) ? (
+          <>
+            <span className={styles.filterDivider} aria-hidden="true" />
+            <button
+              type="button"
+              className={styles.quick}
+              onClick={() => {
+                setTag(QUICK_TAG);
+                setChoosing(false);
+              }}
+            >
+              Verbs only
+            </button>
+          </>
         ) : null}
       </div>
 
@@ -163,7 +180,7 @@ export default function DictionaryScreen() {
                 }}
               >
                 Conjugate
-                <Chevron open={false} className={styles.conjugateChevron} />
+                <Chevron className={styles.conjugateChevron} />
               </button>
             ) : null}
           </li>

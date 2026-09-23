@@ -166,10 +166,14 @@ tangled into components.
   below it: as a hairline underline it read as part of the page and was easy to miss. With something
   typed it grows an × that clears it and puts the cursor back, for starting the next search. The tags fold behind a **filter pill** under the search field
   (option 2 on the "Spanish App Screens" canvas, first called "Dictionary Category Filter"): wrapped
-  in full they took seven rows and pushed the results behind the phone keyboard. The pill is one
+  in full they took seven rows and pushed the results behind the phone keyboard. The row is one
   control — it names the filter ("All categories", or the chosen tag), opens the grid, and once a tag
-  is chosen turns accent-coloured and grows an × that clears it. Picking a tag folds the grid away.
-  It started as a quiet small-caps toggle and was too easy to miss.
+  is chosen turns accent-coloured, **centres itself** over the list and grows an × that clears it;
+  centring is what makes an active filter obvious. Picking a tag folds the grid away. A green filter icon marks it as a
+  control: it started as a quiet small-caps toggle and was too easy to miss. With no filter on the
+  row is two tabs — **All categories | Verbs only** (`QUICK_TAG`) — for the one category common
+  enough to deserve a single tap; choosing it sets the filter like any other, so the tabs give way to
+  the filtered row.
   Every verb card has a **Conjugate** link that opens its present tense in a modal dialog over the
   list (`ConjugationDialog`, a native `<dialog>`: Escape or a tap on the dimmed list closes it). The
   table (`src/lib/conjugation.ts`) colours what to notice: a changed stem (_pref**ie**ro_, not in

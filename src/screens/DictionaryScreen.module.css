@@ -86,9 +86,13 @@
 /* The filter: a full-width ruled row, like the home screen's, rather than a
    second pill under the search field — two stacked pills read as clutter, and
    the list below is all hairline rows. */
+/* Centred over the list, filter on or off: off-centre it read as a heading.
+   The clear button floats at the right so it does not pull the label over. */
 .filter {
+  position: relative;
   display: flex;
   align-items: center;
+  justify-content: center;
   margin-top: 12px;
   border-bottom: 1px solid var(--rule);
 }
@@ -99,10 +103,12 @@
 
 .filterOpen {
   display: flex;
-  flex: 1;
+  flex: 0 1 auto;
   min-width: 0;
+  justify-content: center;
   align-items: center;
   gap: 10px;
+  font-weight: 600;
   min-height: 48px;
   padding: 0;
   border: none;
@@ -118,8 +124,30 @@
   color: var(--accent);
 }
 
+/* The other half of the unfiltered row: quieter than "All categories", which is
+   where you are, and it disappears once anything is filtered. */
+.filterDivider {
+  flex: none;
+  width: 1px;
+  height: 20px;
+  margin: 0 16px;
+  background: var(--rule);
+}
+
+.quick {
+  flex: none;
+  min-height: 48px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  font-family: var(--sans);
+  font-size: 0.9375rem;
+  color: var(--muted);
+  cursor: pointer;
+}
+
 .filterLabel {
-  flex: 1;
+  flex: 0 1 auto;
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -137,11 +165,9 @@
   stroke-linecap: round;
 }
 
-.filterOpen .chevron {
-  color: var(--accent);
-}
-
 .filterClear {
+  position: absolute;
+  right: 0;
   display: flex;
   flex: none;
   align-items: center;
@@ -163,21 +189,6 @@
   stroke: currentColor;
   stroke-width: 1.5;
   stroke-linecap: round;
-}
-
-.chevron {
-  flex: none;
-  width: 16px;
-  height: 16px;
-  color: var(--muted);
-}
-
-.chevronDown {
-  transform: rotate(90deg);
-}
-
-.chevronUp {
-  transform: rotate(-90deg);
 }
 
 .tags {
