@@ -162,10 +162,14 @@ tangled into components.
   review; progress keeps no history, so earlier misses cannot be undone beyond the count. Kept out of the Dictionary on purpose, so the Dictionary stays a
   reference; a subtle marker there may come later.
 - **Dictionary** — search both languages (accent-insensitive, so `timido` finds `tímido`), filter
-  by tag, read the notes. The tags fold behind a small-caps **Categories** toggle (option 2 on the
-  "Spanish App Screens" canvas, first called "Dictionary Category Filter"): wrapped in full they took seven rows and pushed the results
-  behind the phone keyboard. Picking one folds the grid away and shows the tag as a pill with an ×
-  beside the toggle, which clears it.
+  by tag, read the notes. The search field is a pill with a magnifier, like the category buttons
+  below it: as a hairline underline it read as part of the page and was easy to miss. With something
+  typed it grows an × that clears it and puts the cursor back, for starting the next search. The tags fold behind a **filter pill** under the search field
+  (option 2 on the "Spanish App Screens" canvas, first called "Dictionary Category Filter"): wrapped
+  in full they took seven rows and pushed the results behind the phone keyboard. The pill is one
+  control — it names the filter ("All categories", or the chosen tag), opens the grid, and once a tag
+  is chosen turns accent-coloured and grows an × that clears it. Picking a tag folds the grid away.
+  It started as a quiet small-caps toggle and was too easy to miss.
   Every verb card has a **Conjugate** link that opens its present tense in a modal dialog over the
   list (`ConjugationDialog`, a native `<dialog>`: Escape or a tap on the dimmed list closes it). The
   table (`src/lib/conjugation.ts`) colours what to notice: a changed stem (_pref**ie**ro_, not in

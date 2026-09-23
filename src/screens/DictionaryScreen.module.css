@@ -4,11 +4,43 @@
   flex-direction: column;
 }
 
+/* A field, not a ruled line: as a hairline underline it read as part of the
+   page and was missed. Pill-shaped like the category buttons below it. */
+.searchRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 4px 14px;
+  /* The dialog's raised surface: in dark, --card sits too close to the page. */
+  border: 1px solid var(--raised-edge);
+  border-radius: 999px;
+  background: var(--raised);
+}
+
+.searchRow:focus-within {
+  border-color: var(--accent);
+}
+
+.searchIcon {
+  flex: none;
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: var(--muted);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+}
+
+.searchRow:focus-within .searchIcon {
+  stroke: var(--accent);
+}
+
 .search {
-  width: 100%;
-  padding: 12px 0;
+  flex: 1;
+  min-width: 0;
+  min-height: 44px;
+  padding: 0;
   border: none;
-  border-bottom: 1px solid var(--rule);
   border-radius: 0;
   background: transparent;
   color: var(--ink);
@@ -24,39 +56,113 @@
 
 .search:focus {
   outline: none;
-  border-bottom-color: var(--accent);
 }
 
-/* A small-caps toggle like the home screen's, with the chosen category beside
-   it as a pill that clears the filter. */
+.clear {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  margin-right: -6px;
+  padding: 0;
+  border: none;
+  border-radius: 999px;
+  background: var(--raised-edge);
+  color: var(--ink);
+  cursor: pointer;
+}
+
+.clear svg {
+  width: 12px;
+  height: 12px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+}
+
+/* The filter: a full-width ruled row, like the home screen's, rather than a
+   second pill under the search field — two stacked pills read as clutter, and
+   the list below is all hairline rows. */
 .filter {
   display: flex;
   align-items: center;
-  gap: 12px;
-  margin: 8px 0 4px;
+  margin-top: 12px;
+  border-bottom: 1px solid var(--rule);
 }
 
-.disclosure {
+.filterOn {
+  border-bottom-color: var(--accent);
+}
+
+.filterOpen {
   display: flex;
   flex: 1;
+  min-width: 0;
   align-items: center;
-  justify-content: space-between;
-  gap: 12px;
+  gap: 10px;
   min-height: 48px;
   padding: 0;
   border: none;
   background: transparent;
   font-family: var(--sans);
-  font-size: var(--label-size);
-  letter-spacing: var(--label-tracking);
-  text-transform: uppercase;
-  color: var(--muted);
+  font-size: 0.9375rem;
+  color: var(--ink);
   text-align: left;
   cursor: pointer;
 }
 
-.disclosureOpen {
-  color: var(--ink);
+.filterOn .filterOpen {
+  color: var(--accent);
+}
+
+.filterLabel {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* The green marks the row as a control rather than a heading. */
+.filterIcon {
+  flex: none;
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+}
+
+.filterOpen .chevron {
+  color: var(--accent);
+}
+
+.filterClear {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  margin-right: -10px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: var(--accent);
+  cursor: pointer;
+}
+
+.filterClear svg {
+  width: 13px;
+  height: 13px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  stroke-linecap: round;
 }
 
 .chevron {
@@ -78,7 +184,7 @@
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
-  margin: 4px 0 16px;
+  margin: 12px 0 16px;
 }
 
 .tag {
@@ -99,29 +205,12 @@
   color: var(--on-accent);
 }
 
-.tagClear {
-  display: flex;
-  flex: none;
-  align-items: center;
-  gap: 6px;
-  padding-right: 10px;
-}
-
-.clear {
-  width: 12px;
-  height: 12px;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 1.5;
-  stroke-linecap: round;
-}
-
 .count {
   font-size: var(--label-size);
   letter-spacing: var(--label-tracking);
   text-transform: uppercase;
   color: var(--muted);
-  margin: 0 0 4px;
+  margin: 14px 0 4px;
 }
 
 .list {

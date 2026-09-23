@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { useStore } from "../app/store-context.ts";
 import { canonicalAnswer } from "../lib/grade.ts";
 import { buildSearchIndex, search } from "../lib/search.ts";
@@ -31,6 +31,8 @@ export default function DictionaryScreen() {
   // results down behind the phone keyboard.
   const [choosing, setChoosing] = useState(false);
   const [conjugating, setConjugating] = useState<VerbEntry>();
+  // Clearing puts the cursor back in the field, ready for the next search.
+  const searchRef = useRef<HTMLInputElement>(null);
 
   const tags = useMemo(
     () => [...new Set(entries.flatMap((entry) => entry.tags))].sort(),
@@ -48,41 +50,68 @@ export default function DictionaryScreen() {
       <label htmlFor="search" className="visually-hidden">
         Search words
       </label>
-      <input
-        id="search"
-        className={styles.search}
-        value={query}
-        onChange={(event) => {
-          setQuery(event.target.value);
-        }}
-        placeholder="Search Spanish or English"
-        autoComplete="off"
-      />
+      <div className={styles.searchRow}>
+        <svg className={styles.searchIcon} viewBox="0 0 20 20" aria-hidden="true">
+          <circle cx="9" cy="9" r="5.5" />
+          <path d="M13 13l4 4" />
+        </svg>
+        <input
+          id="search"
+          ref={searchRef}
+          className={styles.search}
+          value={query}
+          onChange={(event) => {
+            setQuery(event.target.value);
+          }}
+          placeholder="Search Spanish or English"
+          autoComplete="off"
+        />
+        {query ? (
+          <button
+            type="button"
+            className={styles.clear}
+            aria-label="Clear the search"
+            onClick={() => {
+              setQuery("");
+              searchRef.current?.focus();
+            }}
+          >
+            <svg viewBox="0 0 12 12" aria-hidden="true">
+              <path d="M3 3l6 6M9 3l-6 6" />
+            </svg>
+          </button>
+        ) : null}
+      </div>
 
-      <div className={styles.filter}>
+      {/* One control: it names the filter, opens the grid, and clears it. */}
+      <div className={`${styles.filter} ${tag ? styles.filterOn : ""}`}>
         <button
           type="button"
-          className={`${styles.disclosure} ${choosing ? styles.disclosureOpen : ""}`}
+          className={styles.filterOpen}
           aria-expanded={choosing}
           aria-controls="categories"
           onClick={() => {
             setChoosing((open) => !open);
           }}
         >
-          Categories
+          <svg className={styles.filterIcon} viewBox="0 0 20 20" aria-hidden="true">
+            <path d="M3 5h14M6 10h8M8.5 15h3" />
+          </svg>
+          <span className={styles.filterLabel}>
+            {tag ? tag.replace(/-/g, " ") : "All categories"}
+          </span>
           <Chevron open={choosing} />
         </button>
-        {tag && !choosing ? (
+        {tag ? (
           <button
             type="button"
-            className={`${styles.tag} ${styles.tagActive} ${styles.tagClear}`}
+            className={styles.filterClear}
             aria-label={`Remove the ${tag.replace(/-/g, " ")} filter`}
             onClick={() => {
               setTag(undefined);
             }}
           >
-            {tag.replace(/-/g, " ")}
-            <svg className={styles.clear} viewBox="0 0 12 12" aria-hidden="true">
+            <svg viewBox="0 0 12 12" aria-hidden="true">
               <path d="M3 3l6 6M9 3l-6 6" />
             </svg>
           </button>
