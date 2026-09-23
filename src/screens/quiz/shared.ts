@@ -1,5 +1,4 @@
 import type { Grade, Result } from "../../lib/grade.ts";
-import { genderName } from "../../lib/grade.ts";
 import type { Strength } from "../../lib/scheduler.ts";
 import type { Card } from "../../lib/session.ts";
 
@@ -42,7 +41,9 @@ function grammarOf(card: Card): string | undefined {
   const { entry } = card;
   switch (entry.pos) {
     case "noun":
-      return `noun · ${genderName(entry.gender)}${entry.number === "pl" ? " plural" : ""}`;
+      // No gender: the article is what an en→es prompt is testing, so naming it
+      // here would answer the question.
+      return entry.number === "pl" ? "noun · plural" : "noun";
     case "verb": {
       const parts = ["verb"];
       if (entry.verb.reflexive) parts.push("reflexive");

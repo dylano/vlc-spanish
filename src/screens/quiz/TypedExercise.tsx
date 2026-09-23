@@ -139,6 +139,7 @@ export default function TypedExercise({ card, position, label, onDone }: Exercis
             ...GRADE_OPTIONS,
             confusableWith: card.confusableWith,
             dictionary: entries,
+            prompt: card.prompt,
           }),
         ];
     setGrades(graded);

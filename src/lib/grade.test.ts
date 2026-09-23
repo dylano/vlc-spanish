@@ -151,6 +151,48 @@ describe("en→es adjective forms", () => {
   });
 });
 
+describe("nouns with a feminine form", () => {
+  const asked = { requireArticle: true };
+  const enfermero: NounEntry = {
+    ...base,
+    id: "enfermero",
+    es: "enfermero",
+    en: ["nurse"],
+    enF: ["nurse"],
+    pos: "noun",
+    gender: "m",
+    forms: { f: "enfermera", pl: "enfermeros" },
+  };
+
+  it("accepts either gender when both answer to the same English", () => {
+    expect(grade(enfermero, "en→es", "la enfermera", asked).result).toBe("correct");
+    expect(grade(enfermero, "en→es", "el enfermero", asked).result).toBe("correct");
+  });
+
+  it("judges by the gloss the prompt showed, when it knows it", () => {
+    const nieto: NounEntry = {
+      ...base,
+      id: "nieto",
+      es: "nieto",
+      en: ["grandson", "grandchild"],
+      enF: ["granddaughter", "grandchild"],
+      pos: "noun",
+      gender: "m",
+      forms: { f: "nieta", pl: "nietos" },
+    };
+    expect(grade(nieto, "en→es", "la nieta", { ...asked, prompt: "grandchild" }).result).toBe(
+      "correct",
+    );
+    expect(grade(nieto, "en→es", "la nieta", { ...asked, prompt: "grandson" }).result).toBe("hard");
+  });
+
+  it("still calls the other gender almost when the English differs", () => {
+    const result = grade(abuelo, "en→es", "la abuela", asked);
+    expect(result.result).toBe("hard");
+    expect(result.note).toContain("the feminine");
+  });
+});
+
 describe("nouns whose headword is plural", () => {
   const asked = { requireArticle: true };
   const hermanos: NounEntry = {

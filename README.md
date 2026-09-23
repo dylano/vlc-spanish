@@ -543,7 +543,11 @@ Worth knowing before you change `grade.ts`, because the tests encode all of it:
   uses bare: `"none"` for months (answer shown as `enero`) and `"optional"` for days (shown as
   `el lunes`). Either way the article is accepted but not asked for, and a wrong one is only `hard`. An other-gender noun (`abuela` for `abuelo`) or a conjugated
   verb (`me acuesto` for `acostarse`) is accepted but downgraded to `hard` rather than silently
-  passing — they are different words than the prompt asked for.
+  passing — they are different words than the prompt asked for. The exception is a noun whose
+  feminine answers to the **same gloss the prompt showed** (`nurse` is both `enfermero` and
+  `enfermera`): then either gender is correct, since the prompt cannot have asked for one of them.
+  `grade()` is given the gloss shown (`opts.prompt`), so `nieta` is right for "grandchild" and only
+  "almost" for "grandson".
 - **es→en**: a leading `to` or `the/a/an` is stripped before comparing, and any gloss listed in the
   entry's `en` array counts. So does a gloss of any other entry with the same headword: the prompt shows only
   `deportista`, so `sporty` (the adjective) and `athlete` (the noun) are both right on either card.
@@ -567,6 +571,8 @@ because the naive version of the rule gets a real case wrong:
 Some English glosses are claimed by more than one word — `to be` is both `ser` and `estar`. The
 session builder prefers a gloss no other entry uses. Where none exists, the entry's `hint` is shown
 beside the grammar line (`verb · identity, traits, origin`) so the prompt says which word it wants,
+(`promptDetail` in `src/screens/quiz/shared.ts`; a noun's line names no gender — the article is what
+the prompt is testing, so it would answer the question),
 and the rival entries are passed to `grade()` so answering `estar` for `ser` explains the difference
 instead of just failing. The validator warns about any entry with no gloss of its own and no hint.
 

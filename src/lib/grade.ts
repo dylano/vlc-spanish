@@ -45,6 +45,12 @@ export interface GradeOptions {
    * that is itself a headword is never forgiven as a slip.
    */
   dictionary?: Entry[];
+  /**
+   * The English gloss the prompt showed. A noun whose feminine answers to that
+   * same gloss (nurse: enfermero and enfermera) accepts either gender, since the
+   * prompt cannot have asked for one of them.
+   */
+  prompt?: string;
 }
 
 const SEVERITY: Record<Result, number> = { correct: 0, hard: 1, wrong: 2 };
@@ -79,7 +85,7 @@ const VERB_FORM_LABELS: Record<string, string> = {
 };
 
 /** Every Spanish string we will accept for an entry, tagged with how it relates. */
-export function spanishCandidates(entry: Entry): Candidate[] {
+export function spanishCandidates(entry: Entry, prompt?: string): Candidate[] {
   const out: Candidate[] = [];
 
   switch (entry.pos) {
@@ -99,9 +105,18 @@ export function spanishCandidates(entry: Entry): Candidate[] {
         }
       }
       if (entry.forms?.f && entry.gender === "m") {
+        // Both genders answer to the gloss the prompt showed (nurse: enfermero
+        // and enfermera), so it cannot have asked for one of them. Without a
+        // prompt, any shared gloss counts.
+        const shared = (gloss: string) =>
+          entry.en.some((own) => normalize(own) === normalize(gloss)) &&
+          (entry.enF ?? []).some((other) => normalize(other) === normalize(gloss));
+        const sameEnglish = prompt
+          ? shared(prompt)
+          : (entry.enF ?? []).some((gloss) => entry.en.includes(gloss));
         out.push({
           text: entry.forms.f,
-          kind: "other-gender",
+          kind: sameEnglish ? "inflection" : "other-gender",
           article: "la",
           label: "the feminine",
         });
@@ -206,8 +221,8 @@ interface Match {
   hadArticle: boolean;
 }
 
-function findBestMatch(entry: Entry, answer: string): Match | undefined {
-  const candidates = spanishCandidates(entry);
+function findBestMatch(entry: Entry, answer: string, prompt?: string): Match | undefined {
+  const candidates = spanishCandidates(entry, prompt);
   const attempts = expandSlashForms(normalize(answer));
   let best: Match | undefined;
 
@@ -262,7 +277,7 @@ const SEVERITY_BY_KIND: Record<CandidateKind, number> = {
 function gradeSpanish(entry: Entry, answer: string, opts: GradeOptions): Grade {
   const expected = canonicalAnswer(entry, "en→es", opts);
   const requireArticle = articleRequired(entry, opts);
-  const match = findBestMatch(entry, answer);
+  const match = findBestMatch(entry, answer, opts.prompt);
 
   if (!match) {
     const mate = (opts.confusableWith ?? []).find(
