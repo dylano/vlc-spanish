@@ -59,6 +59,15 @@ const OTHER_ARTICLE: Record<string, string> = {
   unas: "unos",
 };
 
+/**
+ * How often an article swap is used when the word could be broken another way,
+ * and how often a word that can *only* have its article swapped is used at all.
+ * Swapping el for la is the easiest mistake to spot and almost every noun offers
+ * one, so uniform choice made them 43% of all mistakes; at this share they are
+ * about 13%.
+ */
+const ARTICLE_SHARE = 0.1;
+
 const SUBJECT_TEXT: Record<Subject, string> = {
   yo: "yo",
   tu: "tú",
@@ -227,21 +236,40 @@ export function renderMistake(
   const entry = context.dictionary.find((candidate) => candidate.id === entryId);
   if (!entry) return undefined;
 
+  // Swapping el for la is the easiest break to spot and nearly every noun offers
+  // one, so it was becoming half of all mistakes. A frame that can break a form —
+  // agreement, number, person — wins; an article swap is what is left when the
+  // word offers nothing else, plus the occasional turn.
+  const wantArticle = context.random() < ARTICLE_SHARE;
+  let fallback: Mistake | undefined;
+
   for (const { frame, slot } of shuffle(targets.get(entryId) ?? [], context.random).slice(0, 8)) {
     const sentence = renderFrame(frame, context, { [slot]: entryId });
     if (!sentence) continue;
-    const [chosen] = shuffle(
+    const breaks = shuffle(
       breaksFor(frame, sentence, slot, entry, context.dictionary, context.random),
       context.random,
     );
-    if (!chosen) continue;
+    if (breaks.length === 0) continue;
 
-    const accepts = [chosen.right];
-    const word = changedWord(chosen.right, chosen.wrong);
-    if (word) accepts.push(word);
-    return { sentence, slot, entryId, ...chosen, accepts };
+    const harder = breaks.find((option) => !option.article);
+    const chosen = harder && !wantArticle ? harder : breaks[0]!;
+    const made = { sentence, slot, entryId, ...chosen, accepts: acceptsFor(chosen) };
+    if (!chosen.article) return made;
+    fallback ??= made;
   }
-  return undefined;
+  // Every frame for this word can only swap its article. Leave it to the next
+  // word in the session unless this is the occasional article turn: nouns whose
+  // sentences offer nothing harder were most of the mistakes.
+  return wantArticle ? fallback : undefined;
+}
+
+/** What counts as a fix: the whole corrected text, or the one word that changed. */
+function acceptsFor(chosen: Break): string[] {
+  const accepts = [chosen.right];
+  const word = changedWord(chosen.right, chosen.wrong);
+  if (word) accepts.push(word);
+  return accepts;
 }
 
 /**

@@ -128,6 +128,21 @@ describe("grading a fix", () => {
   });
 });
 
+describe("choosing what to break", () => {
+  it("prefers a form to an article, since swapping el for la is the easiest", () => {
+    const targets = gapTargets(sentences.frames, { dictionary: entries });
+    const kinds: Record<string, number> = {};
+    const ids = [...targets.keys()];
+    for (let seed = 1; seed <= 200; seed++) {
+      const mistake = renderMistake(ids[seed % ids.length]!, targets, context(seed));
+      if (mistake) kinds[mistake.kind] = (kinds[mistake.kind] ?? 0) + 1;
+    }
+    const total = Object.values(kinds).reduce((sum, count) => sum + count, 0);
+    expect(total).toBeGreaterThan(50);
+    expect(kinds.article ?? 0).toBeLessThan(total * 0.25);
+  });
+});
+
 describe("sessions with mistakes", () => {
   const all: ProgressBlob = { userId: "dylan", entries: {} };
   for (const e of entries.filter(isDrillable)) {

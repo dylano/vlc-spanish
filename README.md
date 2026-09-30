@@ -419,7 +419,11 @@ only when the result really reads differently:
 | article                | _Trabaja en una hospital._       | hospital is masculine: un hospital                       |
 
 Article swaps are never made on a common-gender noun (_la estudiante_ is fine) or on a contracted
-_al_/_del_, which has no article left to swap. The English cue is always shown: without it a verb in
+_al_/_del_, which has no article left to swap. They are also **held back**: swapping el for la is the
+easiest mistake to spot and nearly every noun offers one, so choosing uniformly made them 43% of all
+mistakes. A frame that can break a form wins over one that can only swap an article, and a word whose
+every frame can only swap an article is left for the next word in the session — both only
+`ARTICLE_SHARE` (10%) of the time, which puts article mistakes at about 13%. The English cue is always shown: without it a verb in
 the wrong person can still be a grammatical sentence (_Vamos al trabajo_ for "I go to work").
 
 - **Tapping**: any word of the broken text finds it, including every word of a phrase (_os vestís_).
