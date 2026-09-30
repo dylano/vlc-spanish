@@ -1882,6 +1882,149 @@
         }
       },
       "cloze": ["v", "c"]
+    },
+    {
+      "id": "thing-is-colour",
+      "grammar": ["colours", "adj-agreement", "articles"],
+      "es": "{c:el} es {a}.",
+      "en": "{c:the} is {a}.",
+      "slots": {
+        "c": {
+          "kind": "noun",
+          "tags": ["clothing", "classroom-objects"],
+          "exclude": ["hoja-de-papel"]
+        },
+        "a": {
+          "kind": "adj",
+          "tags": ["colors"],
+          "agree": "c"
+        }
+      },
+      "cloze": ["a", "c"]
+    },
+    {
+      "id": "things-are-colour",
+      "grammar": ["colours", "adj-agreement", "articles", "plural"],
+      "es": "{c:el} son {a}.",
+      "en": "{c:the} are {a}.",
+      "slots": {
+        "c": {
+          "kind": "noun",
+          "tags": ["clothing", "classroom-objects"],
+          "exclude": ["ropa-interior", "hoja-de-papel"],
+          "number": "pl"
+        },
+        "a": {
+          "kind": "adj",
+          "tags": ["colors"],
+          "agree": "c"
+        }
+      },
+      "cloze": ["a", "c"]
+    },
+    {
+      "id": "wear-colour",
+      "grammar": ["colours", "adj-agreement", "verb-conjugation", "plural"],
+      "subjects": ["yo", "tu", "nosotros", "vosotros", "ellos"],
+      "es": "{v} {c} {a}.",
+      "en": "{S} {v} {a} {c}.",
+      "slots": {
+        "v": {
+          "kind": "verb",
+          "ids": ["llevar", "comprar", "querer", "necesitar"],
+          "subject": "@"
+        },
+        "c": {
+          "kind": "noun",
+          "ids": [
+            "camiseta",
+            "camisa",
+            "chaqueta",
+            "falda",
+            "vestido",
+            "zapato",
+            "sandalia",
+            "bota",
+            "bolso",
+            "cinturon",
+            "pantalones-cortos",
+            "gafas",
+            "gafas-de-sol",
+            "banador"
+          ],
+          "number": "pl"
+        },
+        "a": {
+          "kind": "adj",
+          "tags": ["colors"],
+          "agree": "c"
+        }
+      },
+      "cloze": ["a", "c", "v"]
+    },
+    {
+      "id": "this-thing-colour",
+      "grammar": ["colours", "demonstratives", "adj-agreement"],
+      "es": "{d} {c} es {a}.",
+      "en": "{d} {c} is {a}.",
+      "slots": {
+        "d": {
+          "kind": "adj",
+          "ids": ["este", "ese"],
+          "agree": "c"
+        },
+        "c": {
+          "kind": "noun",
+          "tags": ["clothing", "classroom-objects"],
+          "exclude": ["hoja-de-papel"]
+        },
+        "a": {
+          "kind": "adj",
+          "tags": ["colors"],
+          "agree": "c"
+        }
+      },
+      "cloze": ["a", "d"]
+    },
+    {
+      "id": "relative-wears-colour",
+      "grammar": ["colours", "adj-agreement", "third-person", "plural"],
+      "es": "Mi {n} lleva {c} {a}.",
+      "en": "My {n} wears {a} {c}.",
+      "slots": {
+        "n": {
+          "kind": "noun",
+          "tags": ["family"],
+          "number": "sg",
+          "exclude": ["mujer"]
+        },
+        "c": {
+          "kind": "noun",
+          "ids": [
+            "camiseta",
+            "camisa",
+            "chaqueta",
+            "falda",
+            "vestido",
+            "zapato",
+            "sandalia",
+            "bota",
+            "bolso",
+            "cinturon",
+            "pantalones-cortos",
+            "gafas",
+            "gafas-de-sol",
+            "banador"
+          ],
+          "number": "pl"
+        },
+        "a": {
+          "kind": "adj",
+          "tags": ["colors"],
+          "agree": "c"
+        }
+      },
+      "cloze": ["a", "c"]
     }
   ]
 }

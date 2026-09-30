@@ -3693,6 +3693,129 @@
       "notes": "Works like gustar: me encanta la playa, me encantan los libros. For things and activities; loving a person is 'querer'.",
       "tags": ["verbs"],
       "added": "2026-09-21"
+    },
+    {
+      "id": "blanco",
+      "es": "blanco",
+      "en": ["white"],
+      "pos": "adj",
+      "forms": {
+        "f": "blanca"
+      },
+      "tags": ["colors"],
+      "added": "2026-09-30"
+    },
+    {
+      "id": "amarillo",
+      "es": "amarillo",
+      "en": ["yellow"],
+      "pos": "adj",
+      "forms": {
+        "f": "amarilla"
+      },
+      "tags": ["colors"],
+      "added": "2026-09-30",
+      "flagged": "the list said 'amarille'; entered as 'amarillo'"
+    },
+    {
+      "id": "rojo",
+      "es": "rojo",
+      "en": ["red"],
+      "pos": "adj",
+      "forms": {
+        "f": "roja"
+      },
+      "tags": ["colors"],
+      "added": "2026-09-30"
+    },
+    {
+      "id": "negro",
+      "es": "negro",
+      "en": ["black"],
+      "pos": "adj",
+      "forms": {
+        "f": "negra"
+      },
+      "tags": ["colors"],
+      "added": "2026-09-30"
+    },
+    {
+      "id": "naranja",
+      "es": "naranja",
+      "en": ["orange"],
+      "pos": "adj",
+      "notes": "Does not change for gender: una camiseta naranja. It is the fruit used as a colour.",
+      "tags": ["colors"],
+      "added": "2026-09-30"
+    },
+    {
+      "id": "rosa",
+      "es": "rosa",
+      "en": ["pink"],
+      "pos": "adj",
+      "notes": "Does not change for gender: un vestido rosa. It is the flower used as a colour.",
+      "tags": ["colors"],
+      "added": "2026-09-30"
+    },
+    {
+      "id": "lila",
+      "es": "lila",
+      "en": ["lilac", "light purple"],
+      "pos": "adj",
+      "notes": "Does not change for gender. 'Morado' is the usual word for purple.",
+      "tags": ["colors"],
+      "added": "2026-09-30"
+    },
+    {
+      "id": "verde",
+      "es": "verde",
+      "en": ["green"],
+      "pos": "adj",
+      "notes": "Same for both genders; plural verdes.",
+      "tags": ["colors"],
+      "added": "2026-09-30"
+    },
+    {
+      "id": "azul",
+      "es": "azul",
+      "en": ["blue"],
+      "pos": "adj",
+      "notes": "Same for both genders; plural azules.",
+      "tags": ["colors"],
+      "added": "2026-09-30"
+    },
+    {
+      "id": "gris",
+      "es": "gris",
+      "en": ["grey", "gray"],
+      "pos": "adj",
+      "notes": "Same for both genders; plural grises.",
+      "tags": ["colors"],
+      "added": "2026-09-30"
+    },
+    {
+      "id": "marron",
+      "es": "marrón",
+      "en": ["brown"],
+      "pos": "adj",
+      "forms": {
+        "pl": "marrones"
+      },
+      "notes": "Same for both genders. The accent drops in the plural: marrones.",
+      "tags": ["colors"],
+      "added": "2026-09-30"
+    },
+    {
+      "id": "beis",
+      "es": "beis",
+      "en": ["beige"],
+      "pos": "adj",
+      "forms": {
+        "pl": "beis"
+      },
+      "notes": "Does not change at all: unos zapatos beis.",
+      "tags": ["colors"],
+      "added": "2026-09-30"
     }
   ]
 }
