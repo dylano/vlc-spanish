@@ -2627,7 +2627,8 @@
       },
       "notes": "For games and sports: juego al fútbol. An instrument is 'tocar'.",
       "tags": ["verbs"],
-      "added": "2026-09-21"
+      "added": "2026-09-21",
+      "hint": "games and sports"
     },
     {
       "id": "vivir",
@@ -3888,6 +3889,102 @@
       "number": "pl",
       "notes": "Always plural: unos vaqueros. Also 'los tejanos' in parts of Spain.",
       "tags": ["clothing"],
+      "added": "2026-09-30"
+    },
+    {
+      "id": "musico",
+      "es": "músico",
+      "en": ["musician"],
+      "pos": "noun",
+      "gender": "m",
+      "forms": {
+        "f": "música",
+        "pl": "músicos"
+      },
+      "enF": ["musician"],
+      "notes": "The feminine 'la música' is also the word for music, so context tells them apart.",
+      "tags": ["professions"],
+      "added": "2026-09-30"
+    },
+    {
+      "id": "cantante",
+      "es": "cantante",
+      "en": ["singer"],
+      "pos": "noun",
+      "gender": "mf",
+      "forms": {
+        "pl": "cantantes"
+      },
+      "notes": "One form for both: el cantante, la cantante.",
+      "tags": ["professions"],
+      "added": "2026-09-30"
+    },
+    {
+      "id": "bailarin",
+      "es": "bailarín",
+      "en": ["dancer"],
+      "pos": "noun",
+      "gender": "m",
+      "forms": {
+        "f": "bailarina",
+        "pl": "bailarines"
+      },
+      "enF": ["dancer"],
+      "notes": "The accent drops in the feminine and the plural: bailarina, bailarines.",
+      "tags": ["professions"],
+      "added": "2026-09-30"
+    },
+    {
+      "id": "compositor",
+      "es": "compositor",
+      "en": ["composer"],
+      "pos": "noun",
+      "gender": "m",
+      "forms": {
+        "f": "compositora",
+        "pl": "compositores"
+      },
+      "enF": ["composer"],
+      "tags": ["professions"],
+      "added": "2026-09-30"
+    },
+    {
+      "id": "hacer-la-compra",
+      "es": "hacer la compra",
+      "en": ["to do the shopping", "to do the food shopping", "to go shopping"],
+      "pos": "verb",
+      "verb": {
+        "reflexive": false,
+        "regular": false,
+        "irregularYo": "hago"
+      },
+      "notes": "The weekly food shop. 'Ir de compras' is shopping for pleasure.",
+      "tags": ["daily-activities", "verbs"],
+      "added": "2026-09-30"
+    },
+    {
+      "id": "bailar",
+      "es": "bailar",
+      "en": ["to dance"],
+      "pos": "verb",
+      "verb": {
+        "reflexive": false,
+        "regular": true
+      },
+      "tags": ["verbs"],
+      "added": "2026-09-30"
+    },
+    {
+      "id": "tocar",
+      "es": "tocar",
+      "en": ["to play an instrument", "to touch", "to play"],
+      "pos": "verb",
+      "verb": {
+        "reflexive": false,
+        "regular": true
+      },
+      "notes": "Instruments and touching: toco la guitarra, no tocar. Games and sports are 'jugar'.",
+      "tags": ["verbs"],
       "added": "2026-09-30"
     }
   ]

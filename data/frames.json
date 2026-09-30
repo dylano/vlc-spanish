@@ -454,7 +454,7 @@
       "slots": {
         "v": {
           "kind": "verb",
-          "ids": ["salir-del-trabajo", "hacer-deporte"],
+          "ids": ["hacer-deporte", "hacer-la-compra", "salir-del-trabajo"],
           "subject": "@"
         },
         "t": {
@@ -478,7 +478,7 @@
         },
         "v": {
           "kind": "verb",
-          "ids": ["salir-del-trabajo", "hacer-deporte"],
+          "ids": ["hacer-deporte", "hacer-la-compra", "salir-del-trabajo"],
           "subject": "n"
         },
         "t": {
@@ -502,7 +502,7 @@
         },
         "v": {
           "kind": "verb",
-          "ids": ["salir-del-trabajo", "hacer-deporte"],
+          "ids": ["hacer-deporte", "hacer-la-compra", "salir-del-trabajo"],
           "subject": "@"
         }
       },
@@ -527,7 +527,7 @@
         },
         "v": {
           "kind": "verb",
-          "ids": ["salir-del-trabajo", "hacer-deporte"],
+          "ids": ["hacer-deporte", "hacer-la-compra", "salir-del-trabajo"],
           "subject": "n"
         }
       },
@@ -655,7 +655,7 @@
         },
         "v": {
           "kind": "verb",
-          "ids": ["hacer-deporte", "ir-al-trabajo", "salir-del-trabajo"],
+          "ids": ["hacer-deporte", "hacer-la-compra", "ir-al-trabajo", "salir-del-trabajo"],
           "subject": "@"
         }
       },
@@ -820,7 +820,16 @@
       "slots": {
         "v": {
           "kind": "verb",
-          "ids": ["vivir", "estudiar", "hablar", "jugar", "practicar", "aprender", "trabajar"],
+          "ids": [
+            "aprender",
+            "bailar",
+            "estudiar",
+            "hablar",
+            "jugar",
+            "practicar",
+            "trabajar",
+            "vivir"
+          ],
           "subject": "@"
         },
         "n": {
@@ -872,7 +881,7 @@
         },
         "v": {
           "kind": "verb",
-          "ids": ["estudiar", "leer", "salir", "trabajar", "jugar"],
+          "ids": ["bailar", "estudiar", "jugar", "leer", "salir", "trabajar"],
           "subject": "@"
         }
       },
@@ -1730,16 +1739,18 @@
         "a": {
           "kind": "verb",
           "ids": [
-            "leer",
+            "aprender",
+            "bailar",
+            "cenar",
             "escribir",
             "estudiar",
-            "aprender",
+            "hacer-deporte",
+            "hacer-la-compra",
             "jugar",
-            "trabajar",
-            "salir",
-            "cenar",
+            "leer",
             "practicar",
-            "hacer-deporte"
+            "salir",
+            "trabajar"
           ],
           "subject": "inf"
         },
@@ -1762,16 +1773,18 @@
         "a": {
           "kind": "verb",
           "ids": [
-            "leer",
+            "aprender",
+            "bailar",
+            "cenar",
             "escribir",
             "estudiar",
-            "aprender",
+            "hacer-deporte",
+            "hacer-la-compra",
             "jugar",
-            "trabajar",
-            "salir",
-            "cenar",
+            "leer",
             "practicar",
-            "hacer-deporte"
+            "salir",
+            "trabajar"
           ],
           "subject": "inf"
         },
@@ -1821,16 +1834,18 @@
         "a": {
           "kind": "verb",
           "ids": [
-            "leer",
+            "aprender",
+            "bailar",
+            "cenar",
             "escribir",
             "estudiar",
-            "aprender",
+            "hacer-deporte",
+            "hacer-la-compra",
             "jugar",
-            "trabajar",
-            "salir",
-            "cenar",
+            "leer",
             "practicar",
-            "hacer-deporte"
+            "salir",
+            "trabajar"
           ],
           "subject": "inf"
         },
