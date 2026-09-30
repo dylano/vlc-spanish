@@ -3714,8 +3714,7 @@
         "f": "amarilla"
       },
       "tags": ["colors"],
-      "added": "2026-09-30",
-      "flagged": "the list said 'amarille'; entered as 'amarillo'"
+      "added": "2026-09-30"
     },
     {
       "id": "rojo",
@@ -3815,6 +3814,80 @@
       },
       "notes": "Does not change at all: unos zapatos beis.",
       "tags": ["colors"],
+      "added": "2026-09-30"
+    },
+    {
+      "id": "jersey",
+      "es": "jersey",
+      "en": ["jumper", "sweater", "pullover"],
+      "pos": "noun",
+      "gender": "m",
+      "forms": {
+        "pl": "jerséis"
+      },
+      "notes": "Plural jerséis. Latin America says 'el suéter'.",
+      "tags": ["clothing"],
+      "added": "2026-09-30"
+    },
+    {
+      "id": "pulsera",
+      "es": "pulsera",
+      "en": ["bracelet"],
+      "pos": "noun",
+      "gender": "f",
+      "forms": {
+        "pl": "pulseras"
+      },
+      "tags": ["clothing"],
+      "added": "2026-09-30"
+    },
+    {
+      "id": "bufanda",
+      "es": "bufanda",
+      "en": ["scarf"],
+      "pos": "noun",
+      "gender": "f",
+      "forms": {
+        "pl": "bufandas"
+      },
+      "notes": "A winter scarf round the neck; a light one is 'el pañuelo'.",
+      "tags": ["clothing"],
+      "added": "2026-09-30"
+    },
+    {
+      "id": "gorro",
+      "es": "gorro",
+      "en": ["hat", "woolly hat", "beanie"],
+      "pos": "noun",
+      "gender": "m",
+      "forms": {
+        "pl": "gorros"
+      },
+      "notes": "A soft hat with no brim; 'la gorra' is a cap and 'el sombrero' has a brim.",
+      "tags": ["clothing"],
+      "added": "2026-09-30"
+    },
+    {
+      "id": "abrigo",
+      "es": "abrigo",
+      "en": ["coat", "overcoat"],
+      "pos": "noun",
+      "gender": "m",
+      "forms": {
+        "pl": "abrigos"
+      },
+      "tags": ["clothing"],
+      "added": "2026-09-30"
+    },
+    {
+      "id": "vaqueros",
+      "es": "vaqueros",
+      "en": ["jeans"],
+      "pos": "noun",
+      "gender": "m",
+      "number": "pl",
+      "notes": "Always plural: unos vaqueros. Also 'los tejanos' in parts of Spain.",
+      "tags": ["clothing"],
       "added": "2026-09-30"
     }
   ]

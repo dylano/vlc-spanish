@@ -1212,7 +1212,15 @@
         },
         "c": {
           "kind": "noun",
-          "ids": ["zapato", "sandalia", "bota", "gafas", "gafas-de-sol", "pantalones-cortos"],
+          "ids": [
+            "bota",
+            "gafas",
+            "gafas-de-sol",
+            "pantalones-cortos",
+            "sandalia",
+            "vaqueros",
+            "zapato"
+          ],
           "number": "pl"
         }
       },
@@ -1236,7 +1244,7 @@
         },
         "c": {
           "kind": "noun",
-          "ids": ["chaqueta"]
+          "ids": ["abrigo", "bufanda", "chaqueta", "gorro", "jersey"]
         }
       },
       "cloze": ["c", "v", "x"]
@@ -1327,14 +1335,19 @@
         "c": {
           "kind": "noun",
           "ids": [
-            "chaqueta",
-            "camiseta",
-            "camisa",
+            "abrigo",
+            "banador",
             "bolso",
-            "falda",
+            "bufanda",
+            "camisa",
+            "camiseta",
+            "chaqueta",
             "cinturon",
-            "vestido",
-            "banador"
+            "falda",
+            "gorro",
+            "jersey",
+            "pulsera",
+            "vestido"
           ]
         }
       },
@@ -1937,20 +1950,26 @@
         "c": {
           "kind": "noun",
           "ids": [
-            "camiseta",
-            "camisa",
-            "chaqueta",
-            "falda",
-            "vestido",
-            "zapato",
-            "sandalia",
-            "bota",
+            "abrigo",
+            "banador",
             "bolso",
+            "bota",
+            "bufanda",
+            "camisa",
+            "camiseta",
+            "chaqueta",
             "cinturon",
-            "pantalones-cortos",
+            "falda",
             "gafas",
             "gafas-de-sol",
-            "banador"
+            "gorro",
+            "jersey",
+            "pantalones-cortos",
+            "pulsera",
+            "sandalia",
+            "vaqueros",
+            "vestido",
+            "zapato"
           ],
           "number": "pl"
         },
@@ -2001,20 +2020,26 @@
         "c": {
           "kind": "noun",
           "ids": [
-            "camiseta",
-            "camisa",
-            "chaqueta",
-            "falda",
-            "vestido",
-            "zapato",
-            "sandalia",
-            "bota",
+            "abrigo",
+            "banador",
             "bolso",
+            "bota",
+            "bufanda",
+            "camisa",
+            "camiseta",
+            "chaqueta",
             "cinturon",
-            "pantalones-cortos",
+            "falda",
             "gafas",
             "gafas-de-sol",
-            "banador"
+            "gorro",
+            "jersey",
+            "pantalones-cortos",
+            "pulsera",
+            "sandalia",
+            "vaqueros",
+            "vestido",
+            "zapato"
           ],
           "number": "pl"
         },
