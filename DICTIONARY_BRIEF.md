@@ -14,7 +14,7 @@ Roughly 100–150 entries covering an elementary Peninsular Spanish class, acros
 `physical-traits`, `character-traits`, `family`, `frequency`,
 `daily-activities`, `verbs`, `days`, `months`, `numbers`, `professions`, `workplaces`,
 `classroom-objects`, `weather`, `geography`, `clothing`,
-`common-words`, `time`, `position`, `colors`
+`common-words`, `time`, `position`, `colors`, `body`
 
 Use exactly these tag strings. An entry may carry more than one tag. Add a new tag only if a word
 genuinely fits none of the above, and keep it kebab-case.

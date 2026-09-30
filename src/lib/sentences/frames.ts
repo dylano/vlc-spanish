@@ -39,6 +39,11 @@ export const slotSchema = z.discriminatedUnion("kind", [
     number: z.enum(["sg", "pl"]).default("sg"),
     /** Take gender from another noun slot: Mi hermana es enfermera. */
     agree: z.string().optional(),
+    /**
+     * Pin the gender instead of leaving it to chance, for a sentence that only
+     * makes sense one way: a beard belongs to "mi padre", never "mi madre".
+     */
+    gender: z.enum(["m", "f"]).optional(),
   }),
   z.object({ kind: z.literal("adj"), ...select, agree: z.string() }),
   z.object({
@@ -357,10 +362,9 @@ export function renderFrame(
       // a word that can take it. Deciding per word instead lets words that are
       // always masculine (los padres) tip whole frames toward the masculine.
       const gender: Gender | undefined =
-        slot.kind === "noun" && !slot.agree && candidates.some(canBeEitherGender)
-          ? random() < 0.5
-            ? "f"
-            : "m"
+        slot.kind === "noun" && !slot.agree
+          ? (slot.gender ??
+            (candidates.some(canBeEitherGender) ? (random() < 0.5 ? "f" : "m") : undefined))
           : undefined;
       const attempts: (Gender | undefined)[] = gender ? [gender, undefined] : [undefined];
       for (const wanted of attempts) {
@@ -468,9 +472,12 @@ function fillSlot(
   switch (slot.kind) {
     case "noun": {
       if (entry.pos !== "noun") return undefined;
-      const target = slot.agree ? filled.get(slot.agree)?.gender : gender;
+      const target = slot.agree ? filled.get(slot.agree)?.gender : (slot.gender ?? gender);
       const wanted = target === "mf" ? undefined : target;
-      return nounFill(entry, slot.number, wanted, random);
+      const fill = nounFill(entry, slot.number, wanted, random);
+      // A pinned gender is a requirement, not a preference: drop a word that
+      // cannot take it rather than rendering the other one.
+      return slot.gender && fill && fill.gender !== slot.gender ? undefined : fill;
     }
     case "adj": {
       const noun = filled.get(slot.agree);

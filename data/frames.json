@@ -2065,6 +2065,79 @@
         }
       },
       "cloze": ["a", "c"]
+    },
+    {
+      "id": "eye-colour",
+      "grammar": ["body", "colours", "adj-agreement", "tener"],
+      "es": "Mi {n} tiene {b:el} {a}.",
+      "en": "My {n} has {a} {b}.",
+      "slots": {
+        "n": {
+          "kind": "noun",
+          "tags": ["family"],
+          "number": "sg",
+          "exclude": ["mujer"]
+        },
+        "b": {
+          "kind": "noun",
+          "ids": ["ojo"],
+          "number": "pl"
+        },
+        "a": {
+          "kind": "adj",
+          "ids": ["azul", "verde", "marron", "negro", "gris"],
+          "agree": "b"
+        }
+      },
+      "cloze": ["a", "b"]
+    },
+    {
+      "id": "hair-colour",
+      "grammar": ["body", "colours", "adj-agreement", "tener"],
+      "es": "Mi {n} tiene {b:el} {a}.",
+      "en": "My {n} has {a} {b}.",
+      "slots": {
+        "n": {
+          "kind": "noun",
+          "tags": ["family"],
+          "number": "sg",
+          "exclude": ["mujer"]
+        },
+        "b": {
+          "kind": "noun",
+          "ids": ["pelo"]
+        },
+        "a": {
+          "kind": "adj",
+          "ids": ["negro", "blanco", "gris", "rubio", "marron"],
+          "agree": "b"
+        }
+      },
+      "cloze": ["a", "b"]
+    },
+    {
+      "id": "beard-colour",
+      "grammar": ["body", "colours", "adj-agreement", "tener", "third-person"],
+      "es": "Mi {n} tiene {b:el} {a}.",
+      "en": "My {n} has a {a} {b}.",
+      "slots": {
+        "n": {
+          "kind": "noun",
+          "tags": ["family"],
+          "gender": "m",
+          "exclude": ["padres", "abuelos", "hermanos"]
+        },
+        "b": {
+          "kind": "noun",
+          "ids": ["barba", "bigote"]
+        },
+        "a": {
+          "kind": "adj",
+          "ids": ["negro", "blanco", "gris", "rubio"],
+          "agree": "b"
+        }
+      },
+      "cloze": ["a", "b"]
     }
   ]
 }

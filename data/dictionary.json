@@ -3986,6 +3986,54 @@
       "notes": "Instruments and touching: toco la guitarra, no tocar. Games and sports are 'jugar'.",
       "tags": ["verbs"],
       "added": "2026-09-30"
+    },
+    {
+      "id": "ojo",
+      "es": "ojo",
+      "en": ["eye"],
+      "pos": "noun",
+      "gender": "m",
+      "forms": {
+        "pl": "ojos"
+      },
+      "notes": "Eye colour goes in the plural: tiene los ojos azules.",
+      "tags": ["body"],
+      "added": "2026-09-30"
+    },
+    {
+      "id": "pelo",
+      "es": "pelo",
+      "en": ["hair"],
+      "pos": "noun",
+      "gender": "m",
+      "number": "sg",
+      "notes": "Hair in general is singular: tiene el pelo largo. 'Los pelos' are individual hairs.",
+      "tags": ["body"],
+      "added": "2026-09-30"
+    },
+    {
+      "id": "bigote",
+      "es": "bigote",
+      "en": ["moustache", "mustache"],
+      "pos": "noun",
+      "gender": "m",
+      "forms": {
+        "pl": "bigotes"
+      },
+      "tags": ["body"],
+      "added": "2026-09-30"
+    },
+    {
+      "id": "barba",
+      "es": "barba",
+      "en": ["beard"],
+      "pos": "noun",
+      "gender": "f",
+      "forms": {
+        "pl": "barbas"
+      },
+      "tags": ["body"],
+      "added": "2026-09-30"
     }
   ]
 }

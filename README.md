@@ -238,7 +238,7 @@ that tag by name (`/quiz?tag=numbers`) still serves them. The home-screen counts
 predicate — a count that includes words no session will offer promises practice the app cannot
 deliver.
 
-**Words versus cards.** A 339-word dictionary holds up to 678 cards, because each word is scheduled
+**Words versus cards.** A 343-word dictionary holds up to 686 cards, because each word is scheduled
 separately in each direction. The home-screen totals are deliberately counted **per word**
 (`src/lib/counts.ts`): a word counts as new only when it has been practiced in neither direction,
 and as due when either direction is ready. That matches what a session serves, since a mixed session
@@ -335,7 +335,9 @@ from the dictionary. The frame supplies the word order in both languages; the re
   phrases, numbers as-is) and `glue` (a group in `data/glue.json`). A demonstrative is an `adj` slot
   placed before its noun (`{d} {c} es {a}` → _Esta chaqueta es nueva_), so it agrees, can be blanked
   and can be broken by Find the Mistake like any adjective; an adjective's `enPl` gives English that
-  changes in the plural (_these_, _those_).
+  changes in the plural (_these_, _those_). A noun slot's `gender` pins it (`"m"`, `"f"`) for a sentence that only
+  works one way — a beard belongs to _mi padre_, never _mi madre_ — and a word that cannot take that
+  gender is passed over rather than rendered the other way.
 - **Glue words that are also entries** (`muy`, `bastante`, `también`, `cuando`) may fill a slot before
   they are practiced, as they could when they were only glue, so a frame like _Mi tío es {q} alto_
   keeps working for a new learner. A sentence is only ever _aimed_ at a practiced word, though, and
@@ -443,7 +445,7 @@ Phases 1 and 2 are complete and deployed at [vlc-spanish.netlify.app](https://vl
   six exercises (Translate a word, Multiple Choice, Match Pairs, Translate a sentence, Fill in the
   Blank, Find the Mistake), SM-2 scheduling with recognition answers held to a week, and a
   per-exercise score in the summary
-- **Sentences**: 90 frames (about 47,000 sentences) built from any dictionary word, including
+- **Sentences**: 93 frames (about 47,400 sentences) built from any dictionary word, including
   _gustar_ and simple negatives, from the first session
 - **Problem words**: a list of every word missed, most first
 - **Settings**: name, session length (10–30 words), light or dark

@@ -128,6 +128,27 @@ function renderMany(f: Frame, times = 40, dictionary = DICTIONARY) {
   return out;
 }
 
+describe("a pinned gender", () => {
+  const glue = glueSchema.parse(glueFile);
+  const frame = frameSchema.parse({
+    id: "beard",
+    grammar: ["test"],
+    es: "Mi {n} tiene barba.",
+    en: "My {n} has a beard.",
+    slots: { n: { kind: "noun", tags: ["family"], gender: "m" } },
+    cloze: ["n"],
+  } satisfies FrameInput);
+
+  it("never renders the other gender, even for a word that has one", () => {
+    for (let seed = 1; seed <= 30; seed++) {
+      const sentence = renderFrame(frame, { dictionary: entries, glue, random: seeded(seed) });
+      if (!sentence) continue;
+      expect(sentence.slots.n!.gender).toBe("m");
+      expect(sentence.en).not.toMatch(/mother|sister|aunt|wife|daughter|grandmother|niece/);
+    }
+  });
+});
+
 describe("rendering", () => {
   it("agrees an adjective with a noun that may be put in the feminine", () => {
     const f = frame({
