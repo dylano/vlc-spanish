@@ -102,7 +102,9 @@ tangled into components.
 
 ## Screens
 
-- **Welcome** — first start only: asks for a name, which the home screen greets.
+- **Welcome** — first start only: asks for a name in Spanish (_¿Cómo te llamas?_, _Tu nombre_,
+  _Empezar_), which the home screen greets. The line about progress living on this device stays in
+  English: it is a fact about the app, not practice.
 - **Home** — **General practice**, plus **Focus on new words** and **Focus on problem words** (words
   last answered wrong), each shown only when it holds something. Each of those is a **mixed** session
   that moves between the exercises. Below them, set well apart and styled as a small toggle rather
