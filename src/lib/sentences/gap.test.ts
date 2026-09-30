@@ -8,7 +8,6 @@ import {
   DEFAULT_CONFIG,
   isDrillable,
   isMatchRound,
-  MIN_SENTENCE_WORDS,
 } from "../session.ts";
 import { renderFrame, type Frame } from "./frames.ts";
 import { gapTargets, gradeGap, renderGap, type Gap, type GapBlank } from "./gap.ts";
@@ -220,11 +219,13 @@ describe("sessions with gaps", () => {
     sentences,
   });
 
-  it("offers no gaps until enough words have been practiced", () => {
-    expect(buildGapSession(options(practiced(MIN_SENTENCE_WORDS - 1), 1))).toEqual([]);
+  it("offers gaps from the first session, before anything has been practiced", () => {
+    const cards = buildGapSession(options(practiced(0), 1));
+    expect(cards.length).toBeGreaterThan(0);
+    expect(cards.every((card) => card.exercise === "gap")).toBe(true);
   });
 
-  it("builds gaps only from practiced words, every blank its own card asked in Spanish", () => {
+  it("makes every blank its own card, asked in Spanish", () => {
     const progress = practiced(drillable.length);
     for (let seed = 1; seed <= 10; seed++) {
       const cards = buildGapSession(options(progress, seed));
@@ -265,21 +266,17 @@ describe("sessions with gaps", () => {
     expect([...counts].sort((a, b) => a - b)).toEqual([1, 2, 3]);
   });
 
-  it("never puts an unpracticed word in a sentence, other than glue words", () => {
-    const progress = practiced(60);
+  it("puts words the app has not asked yet into sentences: the class has covered them", () => {
+    const progress = practiced(20);
+    let unpracticed = 0;
     for (let seed = 1; seed <= 10; seed++) {
       for (const card of buildGapSession(options(progress, seed))) {
         for (const id of Object.values(card.gap!.sentence.fills)) {
-          const used = entry(id);
-          expect(
-            progress.entries[id] !== undefined ||
-              !isDrillable(used) ||
-              sentences.glue.words.includes(used.es),
-            `${id} in ${card.gap!.sentence.es}`,
-          ).toBe(true);
+          if (progress.entries[id] === undefined && isDrillable(entry(id))) unpracticed++;
         }
       }
     }
+    expect(unpracticed).toBeGreaterThan(0);
   });
 
   it("mixes gaps into Practice once they are possible", () => {

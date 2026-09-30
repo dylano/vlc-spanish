@@ -141,11 +141,14 @@ export interface BuildSessionOptions {
 }
 
 /**
- * Practiced words needed before sentence exercises appear. Sentences only use
- * words the learner has met, and with fewer than this the frames repeat the same
- * handful of words or cannot be filled at all.
+ * Words in a mixed session reserved for ones the app has not asked yet, as a
+ * share of its length. Without it the session fills with reviews: due words come
+ * first, and every exercise can use them, so a simulated learner met 45 words in
+ * ten sessions rather than 84. The learner is working through a class that has
+ * covered the whole dictionary, so meeting more of it matters more than drilling
+ * the handful already seen.
  */
-export const MIN_SENTENCE_WORDS = 15;
+export const NEW_SHARE = 0.4;
 
 /** How many usable words to try before giving up on building a sentence exercise. */
 const GAP_SCAN = 40;
@@ -170,14 +173,12 @@ interface MadeGap {
  * A function that takes the next word a gap can be aimed at off a ranked list,
  * or undefined when this learner cannot have sentence exercises yet.
  *
- * A sentence may use any word the learner has practiced, plus words kept out of
- * drilling (numbers); the gap itself is always a practiced word, so filling it
- * doubles as review of a word that is due.
+ * A sentence may use any dictionary word; the gap itself is aimed at the session's
+ * next word, so filling it doubles as the review (or the first asking) of it.
  */
 /**
  * What every sentence exercise needs, or undefined when this learner cannot have
- * them yet: the render context limited to practiced words, and where each word
- * can sit in a frame.
+ * them yet: the render context and where each word can sit in a frame.
  */
 function sentenceSetup(options: BuildSessionOptions) {
   const { sentences, entries, progress, today, random = Math.random } = options;
@@ -190,20 +191,10 @@ function sentenceSetup(options: BuildSessionOptions) {
     const record = progress.entries[entry.id]?.["en→es"];
     return !record || isDue(record, today);
   };
-  if (
-    entries.filter((entry) => isDrillable(entry) && practiced(entry)).length < MIN_SENTENCE_WORDS
-  ) {
-    return undefined;
-  }
-  const glueWords = new Set(sentences.glue.words);
-  const context = {
-    dictionary: entries,
-    glue: sentences.glue,
-    random,
-    // Words on the glue list (muy, también) may appear before they are practiced,
-    // as they could before they were dictionary entries; only practiced ones are blanked.
-    eligible: (entry: Entry) => practiced(entry) || !isDrillable(entry) || glueWords.has(entry.es),
-  };
+  // Every dictionary word may appear and be blanked, practiced here or not: the
+  // learner is working through a class that has covered them, so a word the app
+  // has not asked yet is not a word they have never met.
+  const context = { dictionary: entries, glue: sentences.glue, random };
   const targets = gapTargets(sentences.frames, context);
   // Every other practiced word a sentence can hold, the longest unseen first.
   // Aimed at only due words, a new learner saw no sentences until the day after
@@ -215,7 +206,7 @@ function sentenceSetup(options: BuildSessionOptions) {
       .map((record) => record?.lastSeen ?? "")
       .reduce((latest, seen) => (seen > latest ? seen : latest), "");
   const fallback = rankedCards({ ...options, config: { ...options.config, scope: "all" } })
-    .filter((card) => practiced(card.entry) && targets.has(card.entry.id))
+    .filter((card) => targets.has(card.entry.id))
     .map((card) => ({ card, seen: lastSeen(card) }))
     .sort((a, b) => a.seen.localeCompare(b.seen))
     .map(({ card }) => card);
@@ -225,10 +216,11 @@ function sentenceSetup(options: BuildSessionOptions) {
 type SentenceSetup = NonNullable<ReturnType<typeof sentenceSetup>>;
 
 /**
- * The words a sentence exercise may be aimed at, best first: due words still in
- * the session's list, then any other practiced word not yet used in this
- * session, the longest unseen first. Only usable words count toward the limit,
- * so a list that opens with forty new words does not hide the practiced ones.
+ * The words a sentence exercise may be aimed at, best first: the session's own
+ * list in its usual order (due, then new, then the other direction), then any
+ * other word not yet used in this session, the longest unseen first. Only usable
+ * words count toward the limit, so a run of words no frame can hold does not
+ * hide the rest.
  */
 function* sentenceCandidates(
   remaining: Card[],
@@ -239,10 +231,9 @@ function* sentenceCandidates(
   let tried = 0;
   const offered = new Set<string>();
   for (const card of remaining) {
-    // Only a practiced word is aimed at: glue words may appear unpracticed, but a
-    // sentence must not be the first time a word is asked.
-    if (!setup.practiced(card.entry) || !setup.due(card.entry)) continue;
-    if (!setup.targets.has(card.entry.id)) continue;
+    // Due first (or never asked in this direction), so a sentence reviews what is
+    // ready; the rest of the ranked list follows.
+    if (!setup.due(card.entry) || !setup.targets.has(card.entry.id)) continue;
     if (tried++ >= GAP_SCAN) return;
     offered.add(card.entry.id);
     yield { card, queued: true };
@@ -273,16 +264,16 @@ function gapMaker(
   const { entries, progress, userId, today, random = Math.random } = options;
   const setup = sentenceSetup(options);
   if (!setup) return undefined;
-  const { practiced, context, targets } = setup;
+  const { context, targets } = setup;
   const index = glossIndex(entries);
 
   return (remaining, maxWords, taken, dueOnly = false) => {
     const roll = random();
     const wanted = Math.min(maxWords, BLANK_ODDS.find(([, odds]) => roll < odds)![0]);
-    // Further blanks must be practiced words not already used this session.
+    // Further blanks are any drillable word not already used this session.
     const canBlank = (id: string) => {
       const entry = entries.find((candidate) => candidate.id === id);
-      return !!entry && practiced(entry) && isDrillable(entry) && !taken.has(id);
+      return !!entry && isDrillable(entry) && !taken.has(id);
     };
 
     for (const { card, queued } of sentenceCandidates(remaining, taken, setup, dueOnly)) {
@@ -512,7 +503,7 @@ export const MIX_WEIGHTS: Record<Exercise, number> = {
   choice: 1,
   match: 1,
   // Sentences test words in context, which is more worth practicing than rote
-  // recall, so they lead the mix from the first session with enough practiced words.
+  // recall, so they lead the mix from the first session.
   gap: 3,
   mistake: 2,
   // Ungraded, so it schedules nothing; still worth a regular appearance.
@@ -584,8 +575,24 @@ export function buildMixedSession(options: BuildSessionOptions): SessionItem[] {
   let translationsPossible = makeTranslation !== undefined;
   const plan: Planned[] = [];
   let early = 0;
+  // Words the app has not asked yet, and how many of them this session owes.
+  const isNew = (card: Card) => options.progress.entries[card.entry.id] === undefined;
+  const quota = Math.min(remaining.filter(isNew).length, Math.round(size * NEW_SHARE));
+  let planned = 0;
 
   while (budget > 0 && remaining.length > 0) {
+    // Once only the reserved slots are left, they go to new words, whatever the
+    // weights would otherwise have picked.
+    if (planned < quota && budget <= quota - planned) {
+      const index = remaining.findIndex(isNew);
+      if (index >= 0) {
+        const [card] = remaining.splice(index, 1);
+        plan.push({ exercise: "typed", card: card! });
+        planned++;
+        budget -= 1;
+        continue;
+      }
+    }
     const last = plan.at(-1)?.exercise;
     let run = 0;
     for (let i = plan.length - 1; i >= 0 && plan[i]!.exercise === last; i--) run++;
@@ -624,6 +631,7 @@ export function buildMixedSession(options: BuildSessionOptions): SessionItem[] {
     if (exercise === "gap") {
       const next = makeGap?.(remaining, budget, taken, dueOnly);
       if (next) {
+        planned += next.blankCards.filter(isNew).length;
         const { early: wasEarly, ...made } = next;
         if (wasEarly) early++;
         plan.push({ exercise, ...made });
@@ -658,6 +666,7 @@ export function buildMixedSession(options: BuildSessionOptions): SessionItem[] {
     if (exercise === "match") {
       const cards = takeRound(remaining);
       if (cards.length >= MATCH_ROUND_MIN) {
+        planned += cards.filter(isNew).length;
         plan.push({ exercise, cards });
         budget -= cards.length;
         continue;
@@ -667,7 +676,9 @@ export function buildMixedSession(options: BuildSessionOptions): SessionItem[] {
       roundsPossible = false;
       continue;
     }
-    plan.push({ exercise, card: remaining.shift()! });
+    const next = remaining.shift()!;
+    if (isNew(next)) planned++;
+    plan.push({ exercise, card: next });
     budget -= 1;
   }
 

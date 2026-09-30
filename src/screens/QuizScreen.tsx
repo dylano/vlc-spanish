@@ -17,8 +17,6 @@ import {
   DEFAULT_CONFIG,
   isMatchRound,
   MATCH_ROUND_SIZE,
-  isDrillable,
-  MIN_SENTENCE_WORDS,
   type Card,
   type Exercise,
   type QuizConfig,
@@ -175,16 +173,9 @@ export default function QuizScreen() {
   if (items.length === 0) {
     const sentenceExercise =
       config.format === "gap" || config.format === "mistake" || config.format === "translate";
-    const practicedWords = entries.filter(
-      (entry) => isDrillable(entry) && progress.entries[entry.id] !== undefined,
-    ).length;
-    // Say why only when it is actually the reason: with enough words practiced,
-    // an empty sentence session means no frame fits them, not too few words.
     const emptyMessage = !sentenceExercise
       ? "There is nothing to practice in this set right now. Try another, or come back later."
-      : practicedWords < MIN_SENTENCE_WORDS
-        ? `Sentences only use words you have already practiced. You have practiced ${practicedWords}; at ${MIN_SENTENCE_WORDS} they will appear.`
-        : "None of the sentences fit the words you have practiced yet. Practice words from more sections and they will appear.";
+      : "No sentence fits the words in this set. Try another, or come back later.";
     return (
       <SessionShell
         footer={

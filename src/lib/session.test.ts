@@ -7,6 +7,7 @@ import {
   isMatchRound,
   capFor,
   MAX_PER_SESSION,
+  NEW_SHARE,
   MAX_RUN,
   NEW_WORD_EVERY,
   MATCH_ROUND_SIZE,
@@ -445,10 +446,10 @@ describe("mixed sessions", () => {
     word(`palabra${i}`, [`word ${i}`], [tags[i % tags.length]!]),
   );
 
-  function mixed(entries: Entry[], size: number, seed: number) {
+  function mixed(entries: Entry[], size: number, seed: number, progress = emptyProgress()) {
     return buildMixedSession({
       entries,
-      progress: emptyProgress(),
+      progress,
       userId: "dylan",
       config: { ...DEFAULT_CONFIG, format: "mixed", size },
       today: TODAY,
@@ -538,6 +539,19 @@ describe("mixed sessions", () => {
         ).length;
         expect(choices).toBeLessThanOrEqual(capFor(MAX_PER_SESSION.choice!, size));
       }
+    }
+  });
+
+  it("keeps a share of the session for words the app has not asked yet", () => {
+    // Half the pool practiced today: plenty is due, so without the reserve the
+    // session would be all reviews.
+    const half = pool.slice(0, Math.floor(pool.length / 2));
+    const progress = withProgress(half.map((entry) => [entry, "en→es", { due: TODAY }]));
+    for (let seed = 1; seed <= 20; seed++) {
+      const items = mixed(pool, 15, seed, progress);
+      const words = items.flatMap((item) => (isMatchRound(item) ? item.cards : [item]));
+      const fresh = words.filter((card) => progress.entries[card.entry.id] === undefined);
+      expect(fresh.length).toBeGreaterThanOrEqual(Math.round(15 * NEW_SHARE));
     }
   });
 

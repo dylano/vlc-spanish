@@ -377,17 +377,16 @@ words in a tag flow straight into the frames that draw on it.
 order, takes the first word some frame can blank (`frame.cloze`), and renders that frame with the
 word pinned in the slot. So a gap usually reviews a word that is due.
 
-- **Sentences only use practiced words** — any word with a progress row, plus words kept out of
-  drilling (numbers). A sentence exercise is aimed first at a word whose `en→es` card is **due** (a
-  sentence is answered in Spanish, so that is the card it reviews), then at any other practiced word,
-  the longest unseen first. Without that fallback a new learner saw no sentences until the day after
-  their first practice, and none whenever their due words ran out; sentences are the more engaging
-  exercises, so waiting a day for them risked the quiz looking too simple to keep at. In a mixed
-  session at most `MAX_EARLY_SENTENCES` (4 per 15 words, scaled by `capFor`) sentences go to words that are not due, because each takes
-  the place of a new word (uncapped, a simulated learner had 31 words practiced after day one instead
-  of 43 with the cap, and late in a day up to 9 of 15 words went to early reviews). A right answer on a word
-  that is not due leaves its schedule alone — see the scheduler notes. Gaps appear only once `MIN_SENTENCE_WORDS` (15) drillable words have been
-  practiced; before that "Fill in the Blank" explains why it is empty.
+- **Sentences use any dictionary word** — practiced here or not. The learner is working through a
+  class that has covered the dictionary, so a word the app has not asked yet is not a word they have
+  never met, and it is graded like any other. Sentences therefore work from the very first session,
+  and they **carry** new words instead of competing with them: they used to be practiced-only, which
+  made them eat the session's new-word slots (a simulated learner met 45 words in ten sessions; now
+  84). A sentence is aimed first at a word whose `en→es` card is **due** or never asked (a sentence
+  is answered in Spanish, so that is the card it reviews), then at the rest of the ranked list, then
+  at any other word, the longest unseen first. In a mixed session at most `MAX_EARLY_SENTENCES`
+  (4 per 15 words, scaled by `capFor`) sentences go to words that are practiced but _not_ due — an
+  early review, which a right answer does not advance (see the scheduler notes).
 - **Several blanks**: a gap gets 1 blank half the time, 2 most of the rest, 3 occasionally
   (`BLANK_ODDS`), limited by how many slots the frame lists in `cloze`. The first blank is the word
   the gap was aimed at; the others are further practiced words in the sentence not already used this
@@ -440,8 +439,8 @@ Phases 1 and 2 are complete and deployed at [vlc-spanish.netlify.app](https://vl
   six exercises (Translate a word, Multiple Choice, Match Pairs, Translate a sentence, Fill in the
   Blank, Find the Mistake), SM-2 scheduling with recognition answers held to a week, and a
   per-exercise score in the summary
-- **Sentences**: 85 frames (about 33,600 sentences) built from practiced words, including _gustar_
-  and simple negatives, from the first session after 15 words
+- **Sentences**: 85 frames (about 33,600 sentences) built from any dictionary word, including
+  _gustar_ and simple negatives, from the first session
 - **Problem words**: a list of every word missed, most first
 - **Settings**: name, session length (10–30 words), light or dark
 - **Single-user and fully static**: name on first start, everything in local storage, no server;
@@ -475,6 +474,12 @@ Due and new are interleaved so that **every third card is a new word** (`NEW_WOR
 remain; with nothing due, a session is all new words. "Focus on new words" takes new words first,
 then other directions.
 
+On top of the order, a mixed session **reserves `NEW_SHARE` (40%) of its length for words the app has
+not asked yet**: once only that many slots are left, they go to new words whatever the exercise
+weights would have chosen. Without it the session fills with reviews — due words come first and every
+exercise can use them — which is how a simulated learner ended up meeting 1 to 3 new words per
+session by the third session.
+
 Why the reserved share: a word answered today comes back tomorrow, then in three days, so without it
 the previous day's words fill every session and new words stop arriving after the first day. A
 simulation of two 15-word sessions a day showed 50 of 150 words practiced after ten days with due
@@ -504,9 +509,9 @@ of practiced words due they make up about half of a session's words. Rules on to
   iOS a typed card that follows a tap exercise may need a tap on the answer line to bring the
   keyboard back, because iOS only opens it from a user gesture.
 - **Find the Mistake and Translate join** once sentences are possible, like gaps.
-- **Gaps join once they are possible**, nudged into runs with typed cards since both use the
-  keyboard — see [Fill in the Blank](#fill-in-the-blank). With nothing due they still appear, up to four per 15
-  words aimed at words practiced earlier (see [Fill in the Blank](#fill-in-the-blank)).
+- **Gaps are available from the first session**, nudged into runs with typed cards since both use the
+  keyboard — see [Fill in the Blank](#fill-in-the-blank). With nothing due they still appear: up to
+  four per 15 words aimed at words practiced earlier, and any number aimed at words not yet asked.
 - **A matching round needs room**: at least four words left in the session and at least three words
   that can share a round. Otherwise the planner stops offering rounds for that session.
 

@@ -167,10 +167,12 @@ describe("sessions with mistakes", () => {
     }
   });
 
-  it("offers none before enough words have been practiced", () => {
-    expect(
-      buildMistakeSession({ ...options(1, "mistake"), progress: { userId: "dylan", entries: {} } }),
-    ).toEqual([]);
+  it("offers them from the first session, before anything has been practiced", () => {
+    const cards = buildMistakeSession({
+      ...options(1, "mistake"),
+      progress: { userId: "dylan", entries: {} },
+    });
+    expect(cards.length).toBeGreaterThan(0);
   });
 
   it("mixes mistakes into Practice", () => {
@@ -226,10 +228,9 @@ describe("sessions with translations", () => {
     }
   });
 
-  it("offers none before enough words have been practiced", () => {
-    expect(
-      buildTranslateSession(options(1, "translate", { userId: "dylan", entries: {} })),
-    ).toEqual([]);
+  it("offers them from the first session, before anything has been practiced", () => {
+    const cards = buildTranslateSession(options(1, "translate", { userId: "dylan", entries: {} }));
+    expect(cards.length).toBeGreaterThan(0);
   });
 
   it("appears in Practice, but rarely", () => {
@@ -281,22 +282,21 @@ describe("sentence sessions right after practicing", () => {
     expect(buildGapSession(options("gap")).length).toBeGreaterThan(0);
   });
 
-  it("still has sentences in General practice, aimed at the words seen longest ago", () => {
+  it("still has sentences in General practice, and caps the early reviews among them", () => {
     let sentenceItems = 0;
-    let seenToday = 0;
     for (let seed = 1; seed <= 10; seed++) {
-      let inSession = 0;
+      let early = 0;
       for (const item of buildMixedSession(options("mixed", seed))) {
         if (isMatchRound(item) || !["gap", "mistake", "translate"].includes(item.exercise))
           continue;
         sentenceItems++;
-        // Nothing is due, so every sentence is an early review, and those are capped.
-        expect(++inSession).toBeLessThanOrEqual(MAX_EARLY_SENTENCES);
-        if (justPracticed.entries[item.entry.id]?.["en→es"]?.lastSeen === "2026-09-17") seenToday++;
+        // Words practiced today are not due: only so many of those may be reviewed
+        // early. Words the app has not asked yet are not reviews at all.
+        if (justPracticed.entries[item.entry.id] !== undefined) {
+          expect(++early).toBeLessThanOrEqual(MAX_EARLY_SENTENCES);
+        }
       }
     }
     expect(sentenceItems).toBeGreaterThan(20);
-    // Forty words from two days ago cover a session's sentences before today's are reached.
-    expect(seenToday).toBe(0);
   });
 });
