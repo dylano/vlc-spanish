@@ -4129,12 +4129,10 @@
       "en": ["ham"],
       "pos": "noun",
       "gender": "m",
-      "forms": {
-        "pl": "jamones"
-      },
-      "notes": "The accent drops in the plural: jamones. 'Jamón serrano' is the cured ham.",
+      "notes": "'Jamón serrano' is the cured ham. As food it has no plural.",
       "tags": ["food"],
-      "added": "2026-10-03"
+      "added": "2026-10-03",
+      "number": "sg"
     },
     {
       "id": "queso",
@@ -4142,11 +4140,10 @@
       "en": ["cheese"],
       "pos": "noun",
       "gender": "m",
-      "forms": {
-        "pl": "quesos"
-      },
       "tags": ["food"],
-      "added": "2026-10-03"
+      "added": "2026-10-03",
+      "number": "sg",
+      "notes": "'Los quesos' means kinds of cheese; as food it has no plural."
     },
     {
       "id": "pan",
@@ -4154,12 +4151,10 @@
       "en": ["bread"],
       "pos": "noun",
       "gender": "m",
-      "forms": {
-        "pl": "panes"
-      },
-      "notes": "'Un pan' is a loaf; bread in general is 'el pan'.",
+      "notes": "'Un pan' is a loaf and 'los panes' are loaves; bread in general is 'el pan'.",
       "tags": ["food"],
-      "added": "2026-10-03"
+      "added": "2026-10-03",
+      "number": "sg"
     },
     {
       "id": "vino",
@@ -4275,7 +4270,7 @@
     {
       "id": "calabacin",
       "es": "calabacín",
-      "en": ["courgette", "zucchini"],
+      "en": ["zucchini", "courgette"],
       "pos": "noun",
       "gender": "m",
       "forms": {
@@ -4315,11 +4310,10 @@
       "en": ["chicken"],
       "pos": "noun",
       "gender": "m",
-      "forms": {
-        "pl": "pollos"
-      },
       "tags": ["food"],
-      "added": "2026-10-03"
+      "added": "2026-10-03",
+      "number": "sg",
+      "notes": "'Los pollos' are the birds; the meat has no plural."
     },
     {
       "id": "ternera",
@@ -4327,12 +4321,10 @@
       "en": ["beef", "veal"],
       "pos": "noun",
       "gender": "f",
-      "forms": {
-        "pl": "terneras"
-      },
-      "notes": "In Spain 'ternera' is the everyday word for beef.",
+      "notes": "In Spain 'ternera' is the everyday word for beef. No plural for the meat.",
       "tags": ["food"],
-      "added": "2026-10-03"
+      "added": "2026-10-03",
+      "number": "sg"
     },
     {
       "id": "cerdo",
@@ -4340,12 +4332,10 @@
       "en": ["pork", "pig"],
       "pos": "noun",
       "gender": "m",
-      "forms": {
-        "pl": "cerdos"
-      },
-      "notes": "The animal and its meat.",
+      "notes": "The animal and its meat. 'Los cerdos' are the animals; the meat has no plural.",
       "tags": ["food"],
-      "added": "2026-10-03"
+      "added": "2026-10-03",
+      "number": "sg"
     },
     {
       "id": "salchicha",
@@ -4366,12 +4356,10 @@
       "en": ["salmon"],
       "pos": "noun",
       "gender": "m",
-      "forms": {
-        "pl": "salmones"
-      },
-      "notes": "The accent drops in the plural: salmones.",
+      "notes": "No plural for the fish as food: salmón.",
       "tags": ["food"],
-      "added": "2026-10-03"
+      "added": "2026-10-03",
+      "number": "sg"
     },
     {
       "id": "atun",
@@ -4379,12 +4367,10 @@
       "en": ["tuna"],
       "pos": "noun",
       "gender": "m",
-      "forms": {
-        "pl": "atunes"
-      },
-      "notes": "The accent drops in the plural: atunes.",
+      "notes": "No plural for the fish as food: atún.",
       "tags": ["food"],
-      "added": "2026-10-03"
+      "added": "2026-10-03",
+      "number": "sg"
     },
     {
       "id": "calamar",

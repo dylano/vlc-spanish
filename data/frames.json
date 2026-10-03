@@ -1717,7 +1717,7 @@
       "slots": {
         "c": {
           "kind": "noun",
-          "tags": ["clothing", "food", "geography"],
+          "tags": ["clothing", "geography"],
           "exclude": [
             "aceituna",
             "bota",
@@ -1929,7 +1929,7 @@
         },
         "c": {
           "kind": "noun",
-          "tags": ["clothing", "food", "geography"],
+          "tags": ["clothing", "geography"],
           "exclude": [
             "aceituna",
             "bota",
@@ -2538,6 +2538,93 @@
         }
       },
       "cloze": ["c", "v"]
+    },
+    {
+      "id": "like-food",
+      "grammar": ["gustar", "food", "articles"],
+      "subjects": ["yo", "tu", "nosotros", "vosotros", "ellos"],
+      "es": "{v} {c:el}.",
+      "en": "{S} {v} {c}.",
+      "slots": {
+        "c": {
+          "kind": "noun",
+          "ids": [
+            "pollo",
+            "ternera",
+            "cerdo",
+            "salmon",
+            "atun",
+            "queso",
+            "jamon",
+            "pan",
+            "chorizo",
+            "arroz",
+            "trigo",
+            "maiz",
+            "harina",
+            "leche",
+            "aceite-de-oliva",
+            "agua",
+            "vino",
+            "cafe",
+            "te",
+            "cerveza"
+          ]
+        },
+        "v": {
+          "kind": "verb",
+          "ids": ["gustar", "encantar"],
+          "subject": "@",
+          "liked": "c"
+        }
+      },
+      "cloze": ["v", "c"]
+    },
+    {
+      "id": "relative-not-like-food",
+      "grammar": ["gustar", "food", "negation", "third-person"],
+      "es": "A mi {n} no {v} {c:el}.",
+      "en": "My {n} {v:not} {c}.",
+      "slots": {
+        "n": {
+          "kind": "noun",
+          "tags": ["family"],
+          "number": "sg",
+          "exclude": ["mujer"]
+        },
+        "c": {
+          "kind": "noun",
+          "ids": [
+            "pollo",
+            "ternera",
+            "cerdo",
+            "salmon",
+            "atun",
+            "queso",
+            "jamon",
+            "pan",
+            "chorizo",
+            "arroz",
+            "trigo",
+            "maiz",
+            "harina",
+            "leche",
+            "aceite-de-oliva",
+            "agua",
+            "vino",
+            "cafe",
+            "te",
+            "cerveza"
+          ]
+        },
+        "v": {
+          "kind": "verb",
+          "ids": ["gustar"],
+          "subject": "n",
+          "liked": "c"
+        }
+      },
+      "cloze": ["v", "c"]
     }
   ]
 }

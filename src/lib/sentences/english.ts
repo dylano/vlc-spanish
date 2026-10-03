@@ -89,6 +89,10 @@ const IRREGULAR_PLURAL: Record<string, string> = {
   // so the ones the dictionary uses are listed rather than guessed at.
   tomato: "tomatoes",
   potato: "potatoes",
+  // Fish and seafood that do not change: "squids" is not what a menu says.
+  squid: "squid",
+  salmon: "salmon",
+  tuna: "tuna",
   man: "men",
   woman: "women",
   child: "children",
