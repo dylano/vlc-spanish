@@ -1695,8 +1695,8 @@
       "slots": {
         "c": {
           "kind": "noun",
-          "tags": ["clothing", "classroom-objects"],
-          "exclude": ["ropa-interior", "hoja-de-papel"],
+          "tags": ["classroom-objects", "clothing", "food"],
+          "exclude": ["agua", "hoja-de-papel", "ropa-interior", "vino"],
           "number": "pl"
         },
         "v": {
@@ -1717,8 +1717,38 @@
       "slots": {
         "c": {
           "kind": "noun",
-          "tags": ["geography", "clothing"],
-          "exclude": ["ropa-interior", "zapato", "sandalia", "bota", "peninsula", "cordillera"]
+          "tags": ["clothing", "food", "geography"],
+          "exclude": [
+            "aceituna",
+            "bota",
+            "calabacin",
+            "calabaza",
+            "calamar",
+            "cebolla",
+            "cordillera",
+            "croqueta",
+            "frutos-secos",
+            "gamba",
+            "garbanzo",
+            "huevo",
+            "judia",
+            "lechuga",
+            "lenteja",
+            "limon",
+            "manzana",
+            "naranja-2",
+            "patata",
+            "peninsula",
+            "pepino",
+            "platano",
+            "remolacha",
+            "ropa-interior",
+            "salchicha",
+            "salsa",
+            "sandalia",
+            "tomate",
+            "zapato"
+          ]
         },
         "v": {
           "kind": "verb",
@@ -1806,8 +1836,8 @@
       "slots": {
         "c": {
           "kind": "noun",
-          "tags": ["clothing", "classroom-objects"],
-          "exclude": ["ropa-interior", "hoja-de-papel"],
+          "tags": ["classroom-objects", "clothing", "food"],
+          "exclude": ["agua", "hoja-de-papel", "ropa-interior", "vino"],
           "number": "pl"
         },
         "v": {
@@ -1872,8 +1902,8 @@
         },
         "c": {
           "kind": "noun",
-          "tags": ["clothing", "classroom-objects"],
-          "exclude": ["ropa-interior", "hoja-de-papel"],
+          "tags": ["classroom-objects", "clothing", "food"],
+          "exclude": ["agua", "hoja-de-papel", "ropa-interior", "vino"],
           "number": "pl"
         },
         "v": {
@@ -1899,8 +1929,38 @@
         },
         "c": {
           "kind": "noun",
-          "tags": ["geography", "clothing"],
-          "exclude": ["ropa-interior", "zapato", "sandalia", "bota", "peninsula", "cordillera"]
+          "tags": ["clothing", "food", "geography"],
+          "exclude": [
+            "aceituna",
+            "bota",
+            "calabacin",
+            "calabaza",
+            "calamar",
+            "cebolla",
+            "cordillera",
+            "croqueta",
+            "frutos-secos",
+            "gamba",
+            "garbanzo",
+            "huevo",
+            "judia",
+            "lechuga",
+            "lenteja",
+            "limon",
+            "manzana",
+            "naranja-2",
+            "patata",
+            "peninsula",
+            "pepino",
+            "platano",
+            "remolacha",
+            "ropa-interior",
+            "salchicha",
+            "salsa",
+            "sandalia",
+            "tomate",
+            "zapato"
+          ]
         },
         "v": {
           "kind": "verb",
@@ -2188,6 +2248,296 @@
         }
       },
       "cloze": ["a", "v", "p"]
+    },
+    {
+      "id": "order-dish",
+      "grammar": ["food", "verb-conjugation", "articles"],
+      "subjects": ["yo", "tu", "nosotros", "vosotros", "ellos"],
+      "es": "{v} {c:un}.",
+      "en": "{S} {v} {c:a}.",
+      "slots": {
+        "v": {
+          "kind": "verb",
+          "ids": ["querer", "necesitar", "comprar"],
+          "subject": "@"
+        },
+        "c": {
+          "kind": "noun",
+          "ids": [
+            "cafe",
+            "cerveza",
+            "ensalada",
+            "helado",
+            "refresco",
+            "te",
+            "tortilla-de-patatas",
+            "yogur"
+          ]
+        }
+      },
+      "cloze": ["c", "v"]
+    },
+    {
+      "id": "order-plate",
+      "grammar": ["food", "verb-conjugation", "plural"],
+      "subjects": ["yo", "tu", "nosotros", "vosotros", "ellos"],
+      "es": "{v} {c}.",
+      "en": "{S} {v} {c}.",
+      "slots": {
+        "v": {
+          "kind": "verb",
+          "ids": ["querer", "necesitar", "comprar"],
+          "subject": "@"
+        },
+        "c": {
+          "kind": "noun",
+          "ids": [
+            "aceituna",
+            "calabacin",
+            "calabaza",
+            "calamar",
+            "cebolla",
+            "croqueta",
+            "frutos-secos",
+            "gamba",
+            "garbanzo",
+            "huevo",
+            "judia",
+            "lechuga",
+            "lenteja",
+            "limon",
+            "manzana",
+            "nachos",
+            "naranja-2",
+            "patata",
+            "pepino",
+            "platano",
+            "remolacha",
+            "salchicha",
+            "salsa",
+            "tomate"
+          ],
+          "number": "pl",
+          "exclude": ["agua", "vino"]
+        }
+      },
+      "cloze": ["c", "v"]
+    },
+    {
+      "id": "order-food",
+      "grammar": ["food", "verb-conjugation"],
+      "subjects": ["yo", "tu", "nosotros", "vosotros", "ellos"],
+      "es": "{v} {c}.",
+      "en": "{S} {v} {c}.",
+      "slots": {
+        "v": {
+          "kind": "verb",
+          "ids": ["querer", "necesitar", "comprar"],
+          "subject": "@"
+        },
+        "c": {
+          "kind": "noun",
+          "ids": [
+            "aceite-de-oliva",
+            "agua",
+            "arroz",
+            "atun",
+            "cerdo",
+            "chorizo",
+            "harina",
+            "jamon",
+            "leche",
+            "maiz",
+            "pan",
+            "pimienta",
+            "pollo",
+            "queso",
+            "sal",
+            "salmon",
+            "ternera",
+            "trigo",
+            "vino"
+          ]
+        }
+      },
+      "cloze": ["c", "v"]
+    },
+    {
+      "id": "food-on-the-table",
+      "grammar": ["food", "hay", "plural"],
+      "es": "Hay {c} en la mesa.",
+      "en": "There are {c} on the table.",
+      "slots": {
+        "c": {
+          "kind": "noun",
+          "ids": [
+            "aceituna",
+            "calabacin",
+            "calabaza",
+            "calamar",
+            "cebolla",
+            "croqueta",
+            "frutos-secos",
+            "gamba",
+            "garbanzo",
+            "huevo",
+            "judia",
+            "lechuga",
+            "lenteja",
+            "limon",
+            "manzana",
+            "nachos",
+            "naranja-2",
+            "patata",
+            "pepino",
+            "platano",
+            "remolacha",
+            "salchicha",
+            "salsa",
+            "tomate"
+          ],
+          "number": "pl",
+          "exclude": ["agua", "vino"]
+        }
+      },
+      "cloze": ["c"]
+    },
+    {
+      "id": "relative-eats",
+      "grammar": ["food", "verb-conjugation", "third-person"],
+      "es": "Mi {n} come {c} {t}.",
+      "en": "My {n} eats {c} {t}.",
+      "slots": {
+        "n": {
+          "kind": "noun",
+          "tags": ["family"],
+          "number": "sg",
+          "exclude": ["mujer"]
+        },
+        "c": {
+          "kind": "noun",
+          "ids": [
+            "aceite-de-oliva",
+            "arroz",
+            "atun",
+            "cerdo",
+            "chorizo",
+            "harina",
+            "jamon",
+            "maiz",
+            "pan",
+            "pimienta",
+            "pollo",
+            "queso",
+            "sal",
+            "salmon",
+            "ternera",
+            "trigo"
+          ]
+        },
+        "t": {
+          "kind": "word",
+          "ids": ["por-la-noche", "al-mediodia"]
+        }
+      },
+      "cloze": ["c", "t"]
+    },
+    {
+      "id": "relative-eats-plate",
+      "grammar": ["food", "verb-conjugation", "third-person", "plural"],
+      "es": "Mi {n} come {c} {t}.",
+      "en": "My {n} eats {c} {t}.",
+      "slots": {
+        "n": {
+          "kind": "noun",
+          "tags": ["family"],
+          "number": "sg",
+          "exclude": ["mujer"]
+        },
+        "c": {
+          "kind": "noun",
+          "ids": [
+            "aceituna",
+            "calabacin",
+            "calabaza",
+            "calamar",
+            "cebolla",
+            "croqueta",
+            "frutos-secos",
+            "gamba",
+            "garbanzo",
+            "huevo",
+            "judia",
+            "lechuga",
+            "lenteja",
+            "limon",
+            "manzana",
+            "nachos",
+            "naranja-2",
+            "patata",
+            "pepino",
+            "platano",
+            "remolacha",
+            "salchicha",
+            "salsa",
+            "tomate"
+          ],
+          "number": "pl",
+          "exclude": ["agua", "vino"]
+        },
+        "t": {
+          "kind": "word",
+          "ids": ["por-la-noche", "al-mediodia"]
+        }
+      },
+      "cloze": ["c", "t"]
+    },
+    {
+      "id": "relative-drinks",
+      "grammar": ["food", "verb-conjugation", "third-person"],
+      "es": "Mi {n} {v} {c} {t}.",
+      "en": "My {n} {v} {c} {t}.",
+      "slots": {
+        "n": {
+          "kind": "noun",
+          "tags": ["family"],
+          "number": "sg",
+          "exclude": ["mujer"]
+        },
+        "v": {
+          "kind": "verb",
+          "ids": ["beber"],
+          "subject": "n"
+        },
+        "c": {
+          "kind": "noun",
+          "ids": ["agua", "leche", "vino", "cafe", "te"]
+        },
+        "t": {
+          "kind": "word",
+          "ids": ["por-la-noche", "al-mediodia"]
+        }
+      },
+      "cloze": ["c", "v"]
+    },
+    {
+      "id": "order-drink",
+      "grammar": ["food", "verb-conjugation", "articles"],
+      "subjects": ["yo", "tu", "nosotros", "vosotros", "ellos"],
+      "es": "{v} {c}.",
+      "en": "{S} {v} {c}.",
+      "slots": {
+        "v": {
+          "kind": "verb",
+          "ids": ["beber", "comprar", "querer"],
+          "subject": "@"
+        },
+        "c": {
+          "kind": "noun",
+          "ids": ["agua", "leche", "vino", "cerveza"]
+        }
+      },
+      "cloze": ["c", "v"]
     }
   ]
 }

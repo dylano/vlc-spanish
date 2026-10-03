@@ -77,6 +77,12 @@ export const nounEntrySchema = z.object({
    */
   number: z.enum(["sg", "pl"]).optional(),
   /**
+   * Feminine nouns that start with a stressed a- take el/un in the singular:
+   * el agua fría, un águila. The word stays feminine — adjectives agree that way
+   * — and the plural is las/unas.
+   */
+  elSingular: z.boolean().optional(),
+  /**
    * English for the feminine form in `forms.f`, most natural first: hermana →
    * ["sister"]. Sentences use it when they put a person in the feminine, so a
    * noun with `forms.f` but no `enF` is only ever used in the masculine. Repeat

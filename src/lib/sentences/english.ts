@@ -85,6 +85,10 @@ export function negateVerb(gloss: string, subject: Subject, gender: SubjectGende
 }
 
 const IRREGULAR_PLURAL: Record<string, string> = {
+  // Nouns in -o are split: tomato and potato take -es, photo and piano take -s,
+  // so the ones the dictionary uses are listed rather than guessed at.
+  tomato: "tomatoes",
+  potato: "potatoes",
   man: "men",
   woman: "women",
   child: "children",

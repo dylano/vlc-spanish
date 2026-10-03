@@ -84,6 +84,12 @@ const VERB_FORM_LABELS: Record<string, string> = {
   ellos: "the ellos form",
 };
 
+/** The article a noun takes, honouring el agua: feminine, but el in the singular. */
+function articleOf(entry: Entry, gender: "m" | "f", plural: boolean): SpanishArticle {
+  if (entry.pos === "noun" && entry.elSingular && !plural) return "el";
+  return articleFor(gender, plural);
+}
+
 /** Every Spanish string we will accept for an entry, tagged with how it relates. */
 export function spanishCandidates(entry: Entry, prompt?: string): Candidate[] {
   const out: Candidate[] = [];
@@ -95,7 +101,7 @@ export function spanishCandidates(entry: Entry, prompt?: string): Candidate[] {
       const genders = entry.gender === "mf" ? (["m", "f"] as const) : [entry.gender];
       const plural = entry.number === "pl";
       for (const gender of genders) {
-        out.push({ text: entry.es, kind: "exact", article: articleFor(gender, plural) });
+        out.push({ text: entry.es, kind: "exact", article: articleOf(entry, gender, plural) });
         if (entry.forms?.pl) {
           out.push({
             text: entry.forms.pl,
@@ -208,7 +214,11 @@ export function canonicalAnswer(
   if (entry.pos === "noun" && opts.requireArticle && entry.article !== "none") {
     const plural = entry.number === "pl";
     const article =
-      entry.gender === "mf" ? (plural ? "los/las" : "el/la") : articleFor(entry.gender, plural);
+      entry.gender === "mf"
+        ? plural
+          ? "los/las"
+          : "el/la"
+        : articleOf(entry, entry.gender, plural);
     return `${article} ${entry.es}`;
   }
   return entry.es;

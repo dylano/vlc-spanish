@@ -259,7 +259,9 @@ describe("sessions with gaps", () => {
   it("sometimes blanks more than one word", () => {
     const progress = practiced(drillable.length);
     const counts = new Set<number>();
-    for (let seed = 1; seed <= 20; seed++) {
+    // Three blanks are the rare roll (BLANK_ODDS), so this needs more than a
+    // handful of seeds to see one.
+    for (let seed = 1; seed <= 60; seed++) {
       for (const card of buildGapSession(options(progress, seed)))
         counts.add(card.gap!.blanks.length);
     }

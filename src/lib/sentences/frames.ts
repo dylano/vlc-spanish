@@ -151,6 +151,8 @@ interface Filled {
   number?: NumberKind;
   /** False for nouns used without an article, like months. */
   takesArticle?: boolean;
+  /** Feminine but el/un in the singular: el agua. */
+  elSingular?: boolean;
   /** For a verb, the English negative ("doesn't like"), for {v:not}. */
   enNot?: string;
 }
@@ -241,6 +243,7 @@ function nounFill(
   random: () => number,
 ): Filled | undefined {
   const takesArticle = entry.article !== "none";
+  const elSingular = entry.elSingular === true;
   const plural = number === "pl";
   const english = (gloss: string) => (plural && entry.number !== "pl" ? pluralize(gloss) : gloss);
 
@@ -251,7 +254,15 @@ function nounFill(
         ? entry.es
         : (entry.forms?.pl ?? spanishPlural(entry.es))
       : entry.es;
-    return { entryId: entry.id, es, en: english(entry.en[0]!), gender, number, takesArticle };
+    return {
+      entryId: entry.id,
+      es,
+      en: english(entry.en[0]!),
+      gender,
+      number,
+      takesArticle,
+      elSingular,
+    };
   }
 
   const canBeFeminine =
@@ -278,7 +289,15 @@ function nounFill(
     };
   }
   const es = plural ? (entry.number === "pl" ? entry.es : entry.forms!.pl!) : entry.es;
-  return { entryId: entry.id, es, en: english(entry.en[0]!), gender, number, takesArticle };
+  return {
+    entryId: entry.id,
+    es,
+    en: english(entry.en[0]!),
+    gender,
+    number,
+    takesArticle,
+    elSingular,
+  };
 }
 
 function adjFill(entry: AdjEntry, gender: Gender | "mf", number: NumberKind): Filled {
@@ -537,8 +556,10 @@ function spanishSegments(
     }
     const fill = filled.get(name)!;
     if ((modifier === "el" || modifier === "un") && fill.takesArticle !== false) {
-      const gender = fill.gender === "f" ? "f" : "m";
-      const article = SPANISH_ARTICLE[modifier][gender][fill.number ?? "sg"];
+      // el agua: feminine, but el/un in the singular.
+      const number = fill.number ?? "sg";
+      const gender = fill.elSingular && number === "sg" ? "m" : fill.gender === "f" ? "f" : "m";
+      const article = SPANISH_ARTICLE[modifier][gender][number];
       segments.push({ text: article, slot: name, entryId: fill.entryId, article: true });
       segments.push({ text: " " });
     }

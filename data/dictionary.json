@@ -3746,7 +3746,8 @@
       "pos": "adj",
       "notes": "Does not change for gender: una camiseta naranja. It is the fruit used as a colour.",
       "tags": ["colors"],
-      "added": "2026-09-30"
+      "added": "2026-09-30",
+      "hint": "the colour"
     },
     {
       "id": "rosa",
@@ -4067,6 +4068,680 @@
         "ellos": "parecen"
       },
       "notes": "Yo form parezco. 'Me parece bien' is it seems fine to me; 'parecerse a' is to look like someone.",
+      "tags": ["verbs"],
+      "added": "2026-10-03"
+    },
+    {
+      "id": "aceituna",
+      "es": "aceituna",
+      "en": ["olive"],
+      "pos": "noun",
+      "gender": "f",
+      "forms": {
+        "pl": "aceitunas"
+      },
+      "notes": "Usually ordered in the plural: unas aceitunas.",
+      "tags": ["food"],
+      "added": "2026-10-03"
+    },
+    {
+      "id": "tortilla-de-patatas",
+      "es": "tortilla de patatas",
+      "en": ["Spanish omelette", "potato omelette", "Spanish tortilla"],
+      "pos": "noun",
+      "gender": "f",
+      "forms": {
+        "pl": "tortillas de patatas"
+      },
+      "notes": "Potato and egg, served in wedges. A Mexican tortilla is a different thing.",
+      "tags": ["food"],
+      "added": "2026-10-03"
+    },
+    {
+      "id": "gamba",
+      "es": "gamba",
+      "en": ["prawn", "shrimp"],
+      "pos": "noun",
+      "gender": "f",
+      "forms": {
+        "pl": "gambas"
+      },
+      "notes": "Usually ordered in the plural: unas gambas.",
+      "tags": ["food"],
+      "added": "2026-10-03"
+    },
+    {
+      "id": "chorizo",
+      "es": "chorizo",
+      "en": ["chorizo", "spiced sausage"],
+      "pos": "noun",
+      "gender": "m",
+      "forms": {
+        "pl": "chorizos"
+      },
+      "notes": "Paprika sausage, eaten sliced or cooked.",
+      "tags": ["food"],
+      "added": "2026-10-03"
+    },
+    {
+      "id": "jamon",
+      "es": "jamón",
+      "en": ["ham"],
+      "pos": "noun",
+      "gender": "m",
+      "forms": {
+        "pl": "jamones"
+      },
+      "notes": "The accent drops in the plural: jamones. 'Jamón serrano' is the cured ham.",
+      "tags": ["food"],
+      "added": "2026-10-03"
+    },
+    {
+      "id": "queso",
+      "es": "queso",
+      "en": ["cheese"],
+      "pos": "noun",
+      "gender": "m",
+      "forms": {
+        "pl": "quesos"
+      },
+      "tags": ["food"],
+      "added": "2026-10-03"
+    },
+    {
+      "id": "pan",
+      "es": "pan",
+      "en": ["bread"],
+      "pos": "noun",
+      "gender": "m",
+      "forms": {
+        "pl": "panes"
+      },
+      "notes": "'Un pan' is a loaf; bread in general is 'el pan'.",
+      "tags": ["food"],
+      "added": "2026-10-03"
+    },
+    {
+      "id": "vino",
+      "es": "vino",
+      "en": ["wine"],
+      "pos": "noun",
+      "gender": "m",
+      "forms": {
+        "pl": "vinos"
+      },
+      "notes": "Also the past of 'venir': él vino = he came. Vino blanco, tinto or rosado.",
+      "tags": ["food"],
+      "added": "2026-10-03"
+    },
+    {
+      "id": "croqueta",
+      "es": "croqueta",
+      "en": ["croquette"],
+      "pos": "noun",
+      "gender": "f",
+      "forms": {
+        "pl": "croquetas"
+      },
+      "notes": "Usually ordered in the plural: unas croquetas.",
+      "tags": ["food"],
+      "added": "2026-10-03"
+    },
+    {
+      "id": "ensalada",
+      "es": "ensalada",
+      "en": ["salad"],
+      "pos": "noun",
+      "gender": "f",
+      "forms": {
+        "pl": "ensaladas"
+      },
+      "tags": ["food"],
+      "added": "2026-10-03"
+    },
+    {
+      "id": "nachos",
+      "es": "nachos",
+      "en": ["nachos"],
+      "pos": "noun",
+      "gender": "m",
+      "number": "pl",
+      "notes": "Always plural: unos nachos.",
+      "tags": ["food"],
+      "added": "2026-10-03"
+    },
+    {
+      "id": "cebolla",
+      "es": "cebolla",
+      "en": ["onion"],
+      "pos": "noun",
+      "gender": "f",
+      "forms": {
+        "pl": "cebollas"
+      },
+      "tags": ["food"],
+      "added": "2026-10-03"
+    },
+    {
+      "id": "tomate",
+      "es": "tomate",
+      "en": ["tomato"],
+      "pos": "noun",
+      "gender": "m",
+      "forms": {
+        "pl": "tomates"
+      },
+      "notes": "Masculine: el tomate.",
+      "tags": ["food"],
+      "added": "2026-10-03"
+    },
+    {
+      "id": "patata",
+      "es": "patata",
+      "en": ["potato"],
+      "pos": "noun",
+      "gender": "f",
+      "forms": {
+        "pl": "patatas"
+      },
+      "notes": "Spain says 'la patata'; Latin America 'la papa'.",
+      "tags": ["food"],
+      "added": "2026-10-03"
+    },
+    {
+      "id": "calabaza",
+      "es": "calabaza",
+      "en": ["pumpkin", "squash"],
+      "pos": "noun",
+      "gender": "f",
+      "forms": {
+        "pl": "calabazas"
+      },
+      "tags": ["food"],
+      "added": "2026-10-03"
+    },
+    {
+      "id": "pepino",
+      "es": "pepino",
+      "en": ["cucumber"],
+      "pos": "noun",
+      "gender": "m",
+      "forms": {
+        "pl": "pepinos"
+      },
+      "tags": ["food"],
+      "added": "2026-10-03"
+    },
+    {
+      "id": "calabacin",
+      "es": "calabacín",
+      "en": ["courgette", "zucchini"],
+      "pos": "noun",
+      "gender": "m",
+      "forms": {
+        "pl": "calabacines"
+      },
+      "notes": "The accent drops in the plural: calabacines.",
+      "tags": ["food"],
+      "added": "2026-10-03"
+    },
+    {
+      "id": "remolacha",
+      "es": "remolacha",
+      "en": ["beetroot", "beet"],
+      "pos": "noun",
+      "gender": "f",
+      "forms": {
+        "pl": "remolachas"
+      },
+      "tags": ["food"],
+      "added": "2026-10-03"
+    },
+    {
+      "id": "lechuga",
+      "es": "lechuga",
+      "en": ["lettuce"],
+      "pos": "noun",
+      "gender": "f",
+      "forms": {
+        "pl": "lechugas"
+      },
+      "tags": ["food"],
+      "added": "2026-10-03"
+    },
+    {
+      "id": "pollo",
+      "es": "pollo",
+      "en": ["chicken"],
+      "pos": "noun",
+      "gender": "m",
+      "forms": {
+        "pl": "pollos"
+      },
+      "tags": ["food"],
+      "added": "2026-10-03"
+    },
+    {
+      "id": "ternera",
+      "es": "ternera",
+      "en": ["beef", "veal"],
+      "pos": "noun",
+      "gender": "f",
+      "forms": {
+        "pl": "terneras"
+      },
+      "notes": "In Spain 'ternera' is the everyday word for beef.",
+      "tags": ["food"],
+      "added": "2026-10-03"
+    },
+    {
+      "id": "cerdo",
+      "es": "cerdo",
+      "en": ["pork", "pig"],
+      "pos": "noun",
+      "gender": "m",
+      "forms": {
+        "pl": "cerdos"
+      },
+      "notes": "The animal and its meat.",
+      "tags": ["food"],
+      "added": "2026-10-03"
+    },
+    {
+      "id": "salchicha",
+      "es": "salchicha",
+      "en": ["sausage"],
+      "pos": "noun",
+      "gender": "f",
+      "forms": {
+        "pl": "salchichas"
+      },
+      "notes": "A fresh sausage; 'el chorizo' is the cured, paprika one.",
+      "tags": ["food"],
+      "added": "2026-10-03"
+    },
+    {
+      "id": "salmon",
+      "es": "salmón",
+      "en": ["salmon"],
+      "pos": "noun",
+      "gender": "m",
+      "forms": {
+        "pl": "salmones"
+      },
+      "notes": "The accent drops in the plural: salmones.",
+      "tags": ["food"],
+      "added": "2026-10-03"
+    },
+    {
+      "id": "atun",
+      "es": "atún",
+      "en": ["tuna"],
+      "pos": "noun",
+      "gender": "m",
+      "forms": {
+        "pl": "atunes"
+      },
+      "notes": "The accent drops in the plural: atunes.",
+      "tags": ["food"],
+      "added": "2026-10-03"
+    },
+    {
+      "id": "calamar",
+      "es": "calamar",
+      "en": ["squid"],
+      "pos": "noun",
+      "gender": "m",
+      "forms": {
+        "pl": "calamares"
+      },
+      "notes": "'Los calamares' on a menu are the fried rings.",
+      "tags": ["food"],
+      "added": "2026-10-03"
+    },
+    {
+      "id": "trigo",
+      "es": "trigo",
+      "en": ["wheat"],
+      "pos": "noun",
+      "gender": "m",
+      "number": "sg",
+      "tags": ["food"],
+      "added": "2026-10-03"
+    },
+    {
+      "id": "maiz",
+      "es": "maíz",
+      "en": ["corn", "maize"],
+      "pos": "noun",
+      "gender": "m",
+      "number": "sg",
+      "tags": ["food"],
+      "added": "2026-10-03"
+    },
+    {
+      "id": "arroz",
+      "es": "arroz",
+      "en": ["rice"],
+      "pos": "noun",
+      "gender": "m",
+      "number": "sg",
+      "tags": ["food"],
+      "added": "2026-10-03"
+    },
+    {
+      "id": "harina",
+      "es": "harina",
+      "en": ["flour"],
+      "pos": "noun",
+      "gender": "f",
+      "number": "sg",
+      "tags": ["food"],
+      "added": "2026-10-03"
+    },
+    {
+      "id": "garbanzo",
+      "es": "garbanzo",
+      "en": ["chickpea"],
+      "pos": "noun",
+      "gender": "m",
+      "forms": {
+        "pl": "garbanzos"
+      },
+      "notes": "Usually in the plural: los garbanzos.",
+      "tags": ["food"],
+      "added": "2026-10-03"
+    },
+    {
+      "id": "lenteja",
+      "es": "lenteja",
+      "en": ["lentil"],
+      "pos": "noun",
+      "gender": "f",
+      "forms": {
+        "pl": "lentejas"
+      },
+      "notes": "Usually in the plural: las lentejas.",
+      "tags": ["food"],
+      "added": "2026-10-03"
+    },
+    {
+      "id": "judia",
+      "es": "judía",
+      "en": ["bean", "green bean"],
+      "pos": "noun",
+      "gender": "f",
+      "forms": {
+        "pl": "judías"
+      },
+      "notes": "'Las judías verdes' are green beans.",
+      "tags": ["food"],
+      "added": "2026-10-03"
+    },
+    {
+      "id": "huevo",
+      "es": "huevo",
+      "en": ["egg"],
+      "pos": "noun",
+      "gender": "m",
+      "forms": {
+        "pl": "huevos"
+      },
+      "tags": ["food"],
+      "added": "2026-10-03"
+    },
+    {
+      "id": "leche",
+      "es": "leche",
+      "en": ["milk"],
+      "pos": "noun",
+      "gender": "f",
+      "number": "sg",
+      "notes": "Feminine: la leche.",
+      "tags": ["food"],
+      "added": "2026-10-03"
+    },
+    {
+      "id": "yogur",
+      "es": "yogur",
+      "en": ["yoghurt", "yogurt"],
+      "pos": "noun",
+      "gender": "m",
+      "forms": {
+        "pl": "yogures"
+      },
+      "tags": ["food"],
+      "added": "2026-10-03"
+    },
+    {
+      "id": "helado",
+      "es": "helado",
+      "en": ["ice cream"],
+      "pos": "noun",
+      "gender": "m",
+      "forms": {
+        "pl": "helados"
+      },
+      "tags": ["food"],
+      "added": "2026-10-03"
+    },
+    {
+      "id": "manzana",
+      "es": "manzana",
+      "en": ["apple"],
+      "pos": "noun",
+      "gender": "f",
+      "forms": {
+        "pl": "manzanas"
+      },
+      "tags": ["food"],
+      "added": "2026-10-03"
+    },
+    {
+      "id": "platano",
+      "es": "plátano",
+      "en": ["banana"],
+      "pos": "noun",
+      "gender": "m",
+      "forms": {
+        "pl": "plátanos"
+      },
+      "notes": "The Spain word; parts of Latin America say 'la banana'.",
+      "tags": ["food"],
+      "added": "2026-10-03"
+    },
+    {
+      "id": "limon",
+      "es": "limón",
+      "en": ["lemon"],
+      "pos": "noun",
+      "gender": "m",
+      "forms": {
+        "pl": "limones"
+      },
+      "notes": "The accent drops in the plural: limones.",
+      "tags": ["food"],
+      "added": "2026-10-03"
+    },
+    {
+      "id": "naranja-2",
+      "es": "naranja",
+      "en": ["orange"],
+      "pos": "noun",
+      "gender": "f",
+      "forms": {
+        "pl": "naranjas"
+      },
+      "notes": "The fruit. 'Naranja' is also the colour, which never changes for gender.",
+      "tags": ["food"],
+      "added": "2026-10-03",
+      "hint": "the fruit"
+    },
+    {
+      "id": "aceite-de-oliva",
+      "es": "aceite de oliva",
+      "en": ["olive oil"],
+      "pos": "noun",
+      "gender": "m",
+      "number": "sg",
+      "tags": ["food"],
+      "added": "2026-10-03"
+    },
+    {
+      "id": "sal",
+      "es": "sal",
+      "en": ["salt"],
+      "pos": "noun",
+      "gender": "f",
+      "number": "sg",
+      "notes": "Feminine: la sal.",
+      "tags": ["food"],
+      "added": "2026-10-03"
+    },
+    {
+      "id": "pimienta",
+      "es": "pimienta",
+      "en": ["pepper", "black pepper"],
+      "pos": "noun",
+      "gender": "f",
+      "number": "sg",
+      "notes": "The spice. 'El pimiento' is the vegetable.",
+      "tags": ["food"],
+      "added": "2026-10-03"
+    },
+    {
+      "id": "salsa",
+      "es": "salsa",
+      "en": ["sauce"],
+      "pos": "noun",
+      "gender": "f",
+      "forms": {
+        "pl": "salsas"
+      },
+      "tags": ["food"],
+      "added": "2026-10-03"
+    },
+    {
+      "id": "frutos-secos",
+      "es": "frutos secos",
+      "en": ["nuts", "dried fruit and nuts"],
+      "pos": "noun",
+      "gender": "m",
+      "number": "pl",
+      "notes": "Always plural: los frutos secos.",
+      "tags": ["food"],
+      "added": "2026-10-03"
+    },
+    {
+      "id": "agua",
+      "es": "agua",
+      "en": ["water"],
+      "pos": "noun",
+      "gender": "f",
+      "elSingular": true,
+      "forms": {
+        "pl": "aguas"
+      },
+      "notes": "Feminine, but takes el in the singular: el agua fría, las aguas.",
+      "tags": ["food"],
+      "added": "2026-10-03"
+    },
+    {
+      "id": "cafe",
+      "es": "café",
+      "en": ["coffee"],
+      "pos": "noun",
+      "gender": "m",
+      "forms": {
+        "pl": "cafés"
+      },
+      "tags": ["food"],
+      "added": "2026-10-03"
+    },
+    {
+      "id": "te",
+      "es": "té",
+      "en": ["tea"],
+      "pos": "noun",
+      "gender": "m",
+      "forms": {
+        "pl": "tés"
+      },
+      "notes": "Keeps the accent to tell it from 'te', the pronoun.",
+      "tags": ["food"],
+      "added": "2026-10-03"
+    },
+    {
+      "id": "cerveza",
+      "es": "cerveza",
+      "en": ["beer"],
+      "pos": "noun",
+      "gender": "f",
+      "forms": {
+        "pl": "cervezas"
+      },
+      "tags": ["food"],
+      "added": "2026-10-03"
+    },
+    {
+      "id": "refresco",
+      "es": "refresco",
+      "en": ["soft drink", "fizzy drink", "soda"],
+      "pos": "noun",
+      "gender": "m",
+      "forms": {
+        "pl": "refrescos"
+      },
+      "tags": ["food"],
+      "added": "2026-10-03"
+    },
+    {
+      "id": "tinto",
+      "es": "tinto",
+      "en": ["red (wine)"],
+      "pos": "adj",
+      "forms": {
+        "f": "tinta"
+      },
+      "notes": "Red wine is 'vino tinto', never 'vino rojo'.",
+      "tags": ["food"],
+      "added": "2026-10-03"
+    },
+    {
+      "id": "rosado",
+      "es": "rosado",
+      "en": ["rosé"],
+      "pos": "adj",
+      "forms": {
+        "f": "rosada"
+      },
+      "notes": "Rosé wine: vino rosado.",
+      "tags": ["food"],
+      "added": "2026-10-03"
+    },
+    {
+      "id": "beber",
+      "es": "beber",
+      "en": ["to drink"],
+      "pos": "verb",
+      "verb": {
+        "reflexive": false,
+        "regular": true
+      },
+      "notes": "'Tomar' is just as common in Spain: tomar un café.",
+      "tags": ["verbs"],
+      "added": "2026-10-03"
+    },
+    {
+      "id": "tomar",
+      "es": "tomar",
+      "en": ["to have (a drink)", "to take"],
+      "pos": "verb",
+      "verb": {
+        "reflexive": false,
+        "regular": true
+      },
+      "notes": "The everyday word for having a drink in Spain: tomar un café. Also 'tomar el sol', to sunbathe. Sentences use 'beber', whose English fits them.",
       "tags": ["verbs"],
       "added": "2026-10-03"
     }

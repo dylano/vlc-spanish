@@ -225,6 +225,30 @@ describe("nouns whose headword is plural", () => {
   });
 });
 
+describe("a feminine noun that takes el", () => {
+  const asked = { requireArticle: true };
+  const agua: NounEntry = {
+    ...base,
+    id: "agua",
+    es: "agua",
+    en: ["water"],
+    pos: "noun",
+    gender: "f",
+    elSingular: true,
+    forms: { pl: "aguas" },
+  };
+
+  it("wants el in the singular and las in the plural", () => {
+    expect(grade(agua, "en→es", "el agua", asked)).toEqual({
+      result: "correct",
+      expected: "el agua",
+    });
+    expect(grade(agua, "en→es", "las aguas", asked).result).toBe("correct");
+    expect(grade(agua, "en→es", "la agua", asked).result).toBe("wrong");
+    expect(grade(agua, "en→es", "los aguas", asked).result).toBe("wrong");
+  });
+});
+
 describe("common-gender nouns", () => {
   const asked = { requireArticle: true };
   const estudiante: NounEntry = {

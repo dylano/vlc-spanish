@@ -553,7 +553,9 @@ Worth knowing before you change `grade.ts`, because the tests encode all of it:
   the article is how gender gets tested. A common-gender noun (`gender: "mf"`) accepts either
   article and is shown as `el/la estudiante`. A noun whose headword is itself plural
   (`number: "pl"`, as in `los hermanos` for siblings) takes `los`/`las`. A noun with no plural at all
-  (`number: "sg"`, as in `la ropa interior`) is marked so the validator does not ask for one. A noun's `article` field relaxes this for words Spanish
+  (`number: "sg"`, as in `la ropa interior`) is marked so the validator does not ask for one. A feminine noun
+  that takes _el_ in the singular (`elSingular`, as in `el agua fría`) is asked and shown that way,
+  with `las` in the plural; it stays feminine for agreement. A noun's `article` field relaxes this for words Spanish
   uses bare: `"none"` for months (answer shown as `enero`) and `"optional"` for days (shown as
   `el lunes`). Either way the article is accepted but not asked for, and a wrong one is only `hard`. An other-gender noun (`abuela` for `abuelo`) or a conjugated
   verb (`me acuesto` for `acostarse`) is accepted but downgraded to `hard` rather than silently
