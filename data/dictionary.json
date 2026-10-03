@@ -4034,6 +4034,41 @@
       },
       "tags": ["body"],
       "added": "2026-09-30"
+    },
+    {
+      "id": "lapiz",
+      "es": "lápiz",
+      "en": ["pencil"],
+      "pos": "noun",
+      "gender": "m",
+      "forms": {
+        "pl": "lápices"
+      },
+      "notes": "Plural lápices: the z becomes c. 'El estuche' is the pencil case.",
+      "tags": ["classroom-objects"],
+      "added": "2026-09-30"
+    },
+    {
+      "id": "parecer",
+      "es": "parecer",
+      "en": ["to seem", "to look", "to appear"],
+      "pos": "verb",
+      "verb": {
+        "reflexive": false,
+        "regular": false,
+        "irregularYo": "parezco"
+      },
+      "forms": {
+        "yo": "parezco",
+        "tu": "pareces",
+        "el": "parece",
+        "nosotros": "parecemos",
+        "vosotros": "parecéis",
+        "ellos": "parecen"
+      },
+      "notes": "Yo form parezco. 'Me parece bien' is it seems fine to me; 'parecerse a' is to look like someone.",
+      "tags": ["verbs"],
+      "added": "2026-10-03"
     }
   ]
 }

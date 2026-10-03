@@ -749,7 +749,7 @@
       "slots": {
         "o": {
           "kind": "noun",
-          "ids": ["libro", "cuaderno", "boligrafo", "estuche", "tableta"],
+          "ids": ["boligrafo", "cuaderno", "estuche", "lapiz", "libro", "tableta"],
           "number": "pl"
         }
       },
@@ -2138,6 +2138,56 @@
         }
       },
       "cloze": ["a", "b"]
+    },
+    {
+      "id": "family-seems",
+      "grammar": ["adj-agreement", "verb-conjugation", "third-person"],
+      "es": "Mi {n} {v} {a}.",
+      "en": "My {n} {v} {a}.",
+      "slots": {
+        "n": {
+          "kind": "noun",
+          "tags": ["family"],
+          "number": "sg",
+          "exclude": ["mujer"]
+        },
+        "v": {
+          "kind": "verb",
+          "ids": ["parecer"],
+          "subject": "n"
+        },
+        "a": {
+          "kind": "adj",
+          "tags": ["physical-traits", "character-traits"],
+          "agree": "n",
+          "exclude": ["castano", "comilon", "dormilon", "calvo", "normal"]
+        }
+      },
+      "cloze": ["a", "v"]
+    },
+    {
+      "id": "profession-seems",
+      "grammar": ["adj-agreement", "verb-conjugation", "articles"],
+      "es": "{p:el} {v} {a}.",
+      "en": "{p:the} {v} {a}.",
+      "slots": {
+        "p": {
+          "kind": "noun",
+          "tags": ["professions"]
+        },
+        "v": {
+          "kind": "verb",
+          "ids": ["parecer"],
+          "subject": "p"
+        },
+        "a": {
+          "kind": "adj",
+          "tags": ["character-traits"],
+          "agree": "p",
+          "exclude": ["comilon", "dormilon"]
+        }
+      },
+      "cloze": ["a", "v", "p"]
     }
   ]
 }

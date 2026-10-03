@@ -238,8 +238,8 @@ that tag by name (`/quiz?tag=numbers`) still serves them. The home-screen counts
 predicate — a count that includes words no session will offer promises practice the app cannot
 deliver.
 
-**Words versus cards.** A 343-word dictionary holds up to 686 cards, because each word is scheduled
-separately in each direction. The home-screen totals are deliberately counted **per word**
+**Words versus cards.** The dictionary holds twice as many cards as words, because each word is
+scheduled separately in each direction. The home-screen totals are deliberately counted **per word**
 (`src/lib/counts.ts`): a word counts as new only when it has been practiced in neither direction,
 and as due when either direction is ready. That matches what a session serves, since a mixed session
 asks each word at most once. Counting cards instead produces totals that exceed the dictionary size
@@ -445,8 +445,9 @@ Phases 1 and 2 are complete and deployed at [vlc-spanish.netlify.app](https://vl
   six exercises (Translate a word, Multiple Choice, Match Pairs, Translate a sentence, Fill in the
   Blank, Find the Mistake), SM-2 scheduling with recognition answers held to a week, and a
   per-exercise score in the summary
-- **Sentences**: 93 frames (about 47,400 sentences) built from any dictionary word, including
-  _gustar_ and simple negatives, from the first session
+- **Sentences**: frames built from any dictionary word, including _gustar_ and simple negatives,
+  from the first session (`vp run validate:frames` prints how many, and
+  `vp run render:frames` how many sentences they can make)
 - **Problem words**: a list of every word missed, most first
 - **Settings**: name, session length (10–30 words), light or dark
 - **Single-user and fully static**: name on first start, everything in local storage, no server;
