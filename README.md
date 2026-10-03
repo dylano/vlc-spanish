@@ -201,7 +201,12 @@ tangled into components.
   storage (`vlc-spanish:theme`, `vlc-spanish:session-size`).
   A quiet footer shows the **version**: the commit the build came from (`COMMIT_REF` on Netlify, `git
 rev-parse` locally, marked "+ local changes" when the tree is dirty), injected as `__COMMIT__` by
-  `define` in `vite.config.ts`.
+  `define` in `vite.config.ts`. It opens **Version** (`/version`), which lists the last ten commits
+  with their messages, **read from GitHub when the screen opens** (`src/lib/commits.ts`, the public
+  repo's API, no key): baking them into the build would go stale on the next push, and the messages
+  are only interesting with a connection. The commit this build came from is marked in the list.
+  Offline it says so and still shows the build's own commit, which is baked in; the browser's own
+  cache often answers anyway.
 
 ## Data
 

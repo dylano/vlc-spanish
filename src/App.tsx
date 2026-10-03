@@ -7,6 +7,7 @@ import HomeScreen from "./screens/HomeScreen.tsx";
 import ProblemWordsScreen from "./screens/ProblemWordsScreen.tsx";
 import QuizScreen from "./screens/QuizScreen.tsx";
 import SettingsScreen from "./screens/SettingsScreen.tsx";
+import VersionScreen from "./screens/VersionScreen.tsx";
 import WelcomeScreen from "./screens/WelcomeScreen.tsx";
 
 /** Until a name is given, the welcome screen is the whole app. */
@@ -24,6 +25,7 @@ function Gate() {
         <Route path="dictionary" element={<DictionaryScreen />} />
         <Route path="settings" element={<SettingsScreen />} />
         <Route path="problems" element={<ProblemWordsScreen />} />
+        <Route path="version" element={<VersionScreen />} />
         <Route path="*" element={<HomeScreen />} />
       </Route>
     </Routes>

@@ -1,4 +1,5 @@
 import { useMemo, useState, type FormEvent } from "react";
+import { Link } from "react-router";
 import { SESSION_SIZES, type Theme } from "../app/local.ts";
 import { useStore } from "../app/store-context.ts";
 import styles from "./SettingsScreen.module.css";
@@ -116,8 +117,11 @@ export default function SettingsScreen() {
       </div>
 
       <div className={styles.spacer} />
-      {/* Which deployment this is, for telling builds apart. */}
-      <p className={styles.version}>Version {__COMMIT__}</p>
+      {/* Which deployment this is, for telling builds apart; the screen behind it
+          names the commits, read from GitHub. */}
+      <Link to="/version" className={styles.version}>
+        Version {__COMMIT__}
+      </Link>
     </section>
   );
 }

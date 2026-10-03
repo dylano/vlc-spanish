@@ -127,7 +127,12 @@
 }
 
 .version {
-  margin: 28px 0 0;
+  display: inline-flex;
+  align-self: flex-start;
+  min-height: 44px;
+  align-items: center;
+  text-decoration: none;
+  margin: 24px 0 0;
   font-size: 0.75rem;
   letter-spacing: 0.04em;
   font-variant-numeric: tabular-nums;
