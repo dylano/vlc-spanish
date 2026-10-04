@@ -413,24 +413,33 @@ word pinned in the slot. So a gap usually reviews a word that is due.
 ## Find the Mistake
 
 `src/lib/sentences/mistake.ts`. Like a gap, a mistake is aimed at a practiced word, due ones first (with the same fallback and cap): the frame is
-rendered with that word pinned in a slot, and then **that slot** is broken in one of four ways, each
-only when the result really reads differently:
+rendered with that word pinned in a slot, and then **that slot** is broken, only in ways where the
+result really reads differently:
 
-| Kind                   | Example                          | Explanation shown                                        |
-| ---------------------- | -------------------------------- | -------------------------------------------------------- |
-| agreement (adjective)  | _Mi madre es tímido._            | madre is feminine singular, so tímida                    |
-| number (adjective)     | _Mis nietos son perezoso._       | nietos is masculine plural, so perezosos                 |
-| agreement (profession) | _Mi mujer es diseñador de moda._ | it describes mujer, who is female, so diseñadora de moda |
-| person (verb)          | _Mi primo os vestís a las seis._ | for primo it is se viste                                 |
-| number (gustar)        | _Me gusta los zapatos._          | los zapatos is plural, so me gustan                      |
-| article                | _Trabaja en una hospital._       | hospital is masculine: un hospital                       |
+| Kind                   | Example                            | Explanation shown                                        |
+| ---------------------- | ---------------------------------- | -------------------------------------------------------- |
+| agreement (adjective)  | _Mi madre es tímido._              | madre is feminine singular, so tímida                    |
+| number (adjective)     | _Mis nietos son perezoso._         | nietos is masculine plural, so perezosos                 |
+| agreement (profession) | _Mi mujer es diseñador de moda._   | it describes mujer, who is female, so diseñadora de moda |
+| person (verb)          | _Mi primo os vestís a las seis._   | for primo it is se viste                                 |
+| number (gustar)        | _Me gusta los zapatos._            | los zapatos is plural, so me gustan                      |
+| article                | _Trabaja en una hospital._         | hospital is masculine: un hospital                       |
+| word                   | _Hablo con mi sobrino._ ("cousin") | the sentence means cousin: primo                         |
+
+A **word** swap puts in another word that fits the slot exactly as the right one does — same gender
+and number (so the article shown stays right), same person for a verb — and that means something
+else, so only the English cue gives it away. It never uses a word sharing a gloss or the headword,
+since that could be just as right.
 
 Article swaps are never made on a common-gender noun (_la estudiante_ is fine) or on a contracted
-_al_/_del_, which has no article left to swap. They are also **held back**: swapping el for la is the
-easiest mistake to spot and nearly every noun offers one, so choosing uniformly made them 43% of all
-mistakes. A frame that can break a form wins over one that can only swap an article, and a word whose
-every frame can only swap an article is left for the next word in the session — both only
-`ARTICLE_SHARE` (10%) of the time, which puts article mistakes at about 13%. The English cue is always shown: without it a verb in
+_al_/_del_, which has no article left to swap. **Which break is used is weighted**, because uniform
+choice let whichever kind is always available take over — first article swaps (43% of mistakes),
+then, once word swaps existed, word swaps (73%). A form break (agreement, number, person) is used
+`FORM_SHARE` (75%) of the time when a word also offers a swap; a noun, which offers only a swap or
+its article, uses its article `NOUN_ARTICLE_SHARE` (30%) of the time; a word whose every frame can
+only swap an article is passed over except `ARTICLE_SHARE` (10%) of the time. Over 60 simulated
+sessions that gives word swaps 60% (the dictionary is mostly nouns), form breaks 31% and article
+swaps 9%. The English cue is always shown: without it a verb in
 the wrong person can still be a grammatical sentence (_Vamos al trabajo_ for "I go to work").
 
 - **Tapping**: any word of the broken text finds it, including every word of a phrase (_os vestís_).

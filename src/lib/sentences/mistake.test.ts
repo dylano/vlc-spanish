@@ -128,6 +128,25 @@ describe("grading a fix", () => {
   });
 });
 
+describe("swapping in the wrong word", () => {
+  it("uses a word that fits the slot but means something else, keeping the article", () => {
+    let found = 0;
+    for (let seed = 1; seed <= 80 && found < 15; seed++) {
+      const mistake = renderMistake("primo", targets, context(seed));
+      if (!mistake || mistake.kind !== "word") continue;
+      found++;
+      expect(normalize(mistake.wrong)).not.toBe(normalize(mistake.right));
+      expect(mistake.explanation).toMatch(/^the sentence means cousin: /);
+      // Only the word changed: the rest of the sentence still reads as written.
+      const shown = broken(mistake);
+      expect(normalize(shown.replace(mistake.wrong, mistake.right))).toBe(
+        normalize(mistake.sentence.es),
+      );
+    }
+    expect(found).toBeGreaterThan(0);
+  });
+});
+
 describe("choosing what to break", () => {
   it("prefers a form to an article, since swapping el for la is the easiest", () => {
     const targets = gapTargets(sentences.frames, { dictionary: entries });

@@ -9,6 +9,8 @@ import {
   likeForm,
   nounForm,
   renderFrame,
+  slotCandidates,
+  spanishPlural,
   type Frame,
   type RenderContext,
   type RenderedSentence,
@@ -16,12 +18,14 @@ import {
 
 /*
  * Find the Mistake: a correct rendered sentence with exactly one slot broken in
- * a way that is unambiguously wrong. Every kind of break changes a form the
- * sentence itself decides — agreement, person, article — so the English cue plus
- * the rest of the Spanish always show that it is wrong and what it should be.
+ * a way that is unambiguously wrong. Most breaks change a form the sentence
+ * itself decides — agreement, person, article; a "word" break swaps in another
+ * word that fits just as well (primo for sobrino), which only the English cue
+ * shows is wrong. Either way the cue plus the rest of the Spanish show what it
+ * should be.
  */
 
-export type MistakeKind = "agreement" | "number" | "person" | "article";
+export type MistakeKind = "agreement" | "number" | "person" | "article" | "word";
 
 export interface Mistake {
   /** The sentence as it should read. */
@@ -68,6 +72,16 @@ const OTHER_ARTICLE: Record<string, string> = {
  */
 const ARTICLE_SHARE = 0.1;
 
+/**
+ * When a word can be broken by its form and also swapped for another word, how
+ * often the form break is used. Word swaps are available for almost every slot,
+ * so without this they were three quarters of all mistakes.
+ */
+const FORM_SHARE = 0.75;
+
+/** For a noun, which can only be swapped or have its article broken: how often the article. */
+const NOUN_ARTICLE_SHARE = 0.3;
+
 const SUBJECT_TEXT: Record<Subject, string> = {
   yo: "yo",
   tu: "tú",
@@ -96,6 +110,63 @@ function changedWord(right: string, wrong: string): string | undefined {
 }
 
 type Break = Omit<Mistake, "sentence" | "slot" | "entryId" | "accepts">;
+
+function sameMeaning(a: Entry, b: Entry): boolean {
+  const glosses = new Set(a.en.map((gloss) => gloss.trim().toLowerCase()));
+  return a.es === b.es || b.en.some((gloss) => glosses.has(gloss.trim().toLowerCase()));
+}
+
+/**
+ * Another word that fits the slot exactly as the right one does — same gender,
+ * number and person, so nothing but the word is wrong — and that means
+ * something else, so the English cue gives it away. Undefined when none does.
+ */
+function wordSwap(
+  frame: Frame,
+  sentence: RenderedSentence,
+  slot: string,
+  entry: Entry,
+  dictionary: Entry[],
+  random: () => number,
+): Break | undefined {
+  const spec = frame.slots[slot];
+  const detail = sentence.slots[slot];
+  if (!spec || !detail || spec.kind === "glue" || spec.kind === "word") return undefined;
+  if (spec.kind === "verb" && detail.liked) return undefined;
+  const right = detail.accepts[0]!;
+  const inSentence = new Set(Object.values(sentence.fills));
+  const gender = detail.gender === "f" ? "f" : "m";
+  const number = detail.number ?? "sg";
+
+  for (const other of shuffle(slotCandidates(spec, { dictionary }), random)) {
+    if (other.id === entry.id || inSentence.has(other.id) || sameMeaning(entry, other)) continue;
+    let wrong: string | undefined;
+    if (spec.kind === "noun" && other.pos === "noun") {
+      // The article stays as shown, so the other word must take the same one.
+      if (other.gender === "mf") {
+        wrong = number === "pl" ? (other.forms?.pl ?? spanishPlural(other.es)) : other.es;
+      } else if (
+        detail.gender !== "mf" &&
+        !other.elSingular === !(entry.pos === "noun" && entry.elSingular)
+      ) {
+        wrong = nounForm(other, gender, number);
+      }
+    } else if (spec.kind === "adj" && other.pos === "adj") {
+      wrong = adjectiveForm(other, gender, number);
+    } else if (spec.kind === "verb" && other.pos === "verb" && detail.subject) {
+      wrong = verbForm(other, detail.subject, dictionary);
+    }
+    if (!wrong || normalize(wrong) === normalize(right)) continue;
+    return {
+      kind: "word",
+      article: false,
+      wrong,
+      right,
+      explanation: `the sentence means ${entry.en[0]!.replace(/^to /, "")}: ${right}`,
+    };
+  }
+  return undefined;
+}
 
 /** Every way this slot of this sentence can be broken, each producing different text. */
 function breaksFor(
@@ -198,6 +269,9 @@ function breaksFor(
     return out;
   }
 
+  const swap = wordSwap(frame, sentence, slot, entry, dictionary, random);
+  if (swap) out.push(swap);
+
   if (spec.kind === "verb" && entry.pos === "verb" && detail.subject) {
     const subject = detail.subject;
     const subjectText = detail.agreesWith
@@ -252,10 +326,22 @@ export function renderMistake(
     );
     if (breaks.length === 0) continue;
 
-    const harder = breaks.find((option) => !option.article);
-    const chosen = harder && !wantArticle ? harder : breaks[0]!;
+    // A form break (agreement, number, person) leads when the word offers one; a
+    // word swap is close to always available, so unweighted it took over. A noun
+    // has no form break, only its meaning (a swap) and its gender (the article),
+    // and both are fair to test, so it mixes the two.
+    const form = breaks.find((option) => !option.article && option.kind !== "word");
+    const swap = breaks.find((option) => option.kind === "word");
+    const article = breaks.find((option) => option.article);
+    let chosen: Break;
+    if (form) chosen = swap && context.random() >= FORM_SHARE ? swap : form;
+    else if (swap) chosen = article && context.random() < NOUN_ARTICLE_SHARE ? article : swap;
+    else chosen = breaks[0]!;
+    if (wantArticle && article) chosen = article;
     const made = { sentence, slot, entryId, ...chosen, accepts: acceptsFor(chosen) };
-    if (!chosen.article) return made;
+    // An article chosen over a swap or a form break is a choice; an article that
+    // is all this frame offers waits, in case another frame offers more.
+    if (!chosen.article || form || swap) return made;
     fallback ??= made;
   }
   // Every frame for this word can only swap its article. Leave it to the next
