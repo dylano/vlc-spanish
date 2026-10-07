@@ -609,6 +609,9 @@ function renderEnglish(
     const fill = filled.get(name)!;
     if (modifier === "the") return `the ${fill.en}`;
     if (modifier === "not") return fill.enNot ?? `not ${fill.en}`;
+    // A slot English does not say word for word: "¿Me pones un café?" is "Can I
+    // have a coffee?", with no "put" in it.
+    if (modifier === "none") return "";
     if (modifier === "a")
       return fill.number === "pl" ? fill.en : `${indefiniteArticle(fill.en)} ${fill.en}`;
     return fill.en;
@@ -663,7 +666,7 @@ export function checkFrame(
 
   for (const [language, template, modifiers] of [
     ["es", frame.es, ["el", "un"]],
-    ["en", frame.en, ["the", "a", "not"]],
+    ["en", frame.en, ["the", "a", "not", "none"]],
   ] as const) {
     for (const { name, modifier } of placeholders(template)) {
       if (name === "S") {

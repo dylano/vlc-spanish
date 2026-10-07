@@ -355,7 +355,10 @@ from the dictionary. The frame supplies the word order in both languages; the re
   says why; Find the Mistake breaks exactly that agreement.
 - **Placeholders**: `{slot}`, plus `{slot:el}` / `{slot:un}` for a Spanish article and `{slot:the}` /
   `{slot:a}` for an English one; `{v:not}` gives a verb's English negative with do-support
-  (_don't like_, _doesn't go_, _isn't_) for frames that put _no_ before the Spanish verb; `{S}` is the subject pronoun. `vosotros` renders as "you (plural)".
+  (_don't like_, _doesn't go_, _isn't_) for frames that put _no_ before the Spanish verb; `{slot:none}`
+  renders nothing, for a slot the English does not say word for word — _¿Me pones un café?_ is
+  "Can I have a coffee?", with no "put" in it — and Find the Mistake never swaps such a slot for
+  another word, since with no cue to give it away the swap could be just as right; `{S}` is the subject pronoun. `vosotros` renders as "you (plural)".
 - **The renderer handles** gender and number agreement, verb forms (stored forms, then regular
   endings, then a multi-word verb's first word through its own entry), articles, `a el → al` /
   `de el → del`, `y → e` before an _i_ sound, English third-person _-s_ and irregulars, _one's_ →

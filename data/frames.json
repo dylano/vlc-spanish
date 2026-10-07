@@ -2258,21 +2258,12 @@
       "slots": {
         "v": {
           "kind": "verb",
-          "ids": ["querer", "necesitar", "comprar"],
+          "ids": ["comprar", "necesitar", "querer", "traer"],
           "subject": "@"
         },
         "c": {
           "kind": "noun",
-          "ids": [
-            "cafe",
-            "cerveza",
-            "ensalada",
-            "helado",
-            "refresco",
-            "te",
-            "tortilla-de-patatas",
-            "yogur"
-          ]
+          "ids": ["cafe", "cerveza", "ensalada", "helado", "refresco", "te", "tortilla", "yogur"]
         }
       },
       "cloze": ["c", "v"]
@@ -2286,7 +2277,7 @@
       "slots": {
         "v": {
           "kind": "verb",
-          "ids": ["querer", "necesitar", "comprar"],
+          "ids": ["comprar", "necesitar", "querer", "traer"],
           "subject": "@"
         },
         "c": {
@@ -2332,7 +2323,7 @@
       "slots": {
         "v": {
           "kind": "verb",
-          "ids": ["querer", "necesitar", "comprar"],
+          "ids": ["comprar", "necesitar", "querer", "traer"],
           "subject": "@"
         },
         "c": {
@@ -2622,6 +2613,107 @@
           "ids": ["gustar"],
           "subject": "n",
           "liked": "c"
+        }
+      },
+      "cloze": ["v", "c"]
+    },
+    {
+      "id": "put-object-position",
+      "grammar": ["verb-conjugation", "articles", "position", "irregular-yo"],
+      "subjects": ["yo", "tu", "nosotros", "vosotros", "ellos"],
+      "es": "{v} {o:el} {p} {s:el}.",
+      "en": "{S} {v} {o:the} {p} {s:the}.",
+      "slots": {
+        "v": {
+          "kind": "verb",
+          "ids": ["poner"],
+          "subject": "@"
+        },
+        "o": {
+          "kind": "noun",
+          "tags": ["classroom-objects"],
+          "exclude": ["mesa", "silla", "pizarra", "proyector", "papelera", "mochila"]
+        },
+        "p": {
+          "kind": "word",
+          "ids": ["encima-de", "debajo-de", "al-lado-de"]
+        },
+        "s": {
+          "kind": "noun",
+          "ids": ["mesa", "silla", "mochila"]
+        }
+      },
+      "cloze": ["v", "p"]
+    },
+    {
+      "id": "order-me-pones",
+      "grammar": ["food", "ordering", "irregular-yo"],
+      "es": "¿Me {v} {c:un}, por favor?",
+      "en": "Can I have {c:a}, please?{v:none}",
+      "slots": {
+        "v": {
+          "kind": "verb",
+          "ids": ["poner"],
+          "subject": "tu"
+        },
+        "c": {
+          "kind": "noun",
+          "ids": ["cafe", "cerveza", "ensalada", "helado", "refresco", "te", "tortilla", "yogur"]
+        }
+      },
+      "cloze": ["v", "c"]
+    },
+    {
+      "id": "order-me-traes",
+      "grammar": ["food", "ordering", "irregular-yo"],
+      "es": "¿Me {v} {c:un}, por favor?",
+      "en": "Could you bring me {c:a}, please?{v:none}",
+      "slots": {
+        "v": {
+          "kind": "verb",
+          "ids": ["traer"],
+          "subject": "tu"
+        },
+        "c": {
+          "kind": "noun",
+          "ids": ["cafe", "cerveza", "ensalada", "helado", "refresco", "te", "tortilla", "yogur"]
+        }
+      },
+      "cloze": ["v", "c"]
+    },
+    {
+      "id": "order-nos-pones",
+      "grammar": ["food", "ordering", "irregular-yo"],
+      "es": "¿Nos {v} {c:un}?",
+      "en": "Can we have some {c}?{v:none}",
+      "slots": {
+        "v": {
+          "kind": "verb",
+          "ids": ["poner"],
+          "subject": "tu"
+        },
+        "c": {
+          "kind": "noun",
+          "ids": ["aceituna", "gamba", "croqueta", "nachos", "calamar", "salchicha"],
+          "number": "pl"
+        }
+      },
+      "cloze": ["v", "c"]
+    },
+    {
+      "id": "order-me-traes-some",
+      "grammar": ["food", "ordering", "irregular-yo"],
+      "es": "¿Me {v} {c}, por favor?",
+      "en": "Could you bring me some {c}, please?{v:none}",
+      "slots": {
+        "v": {
+          "kind": "verb",
+          "ids": ["traer"],
+          "subject": "tu"
+        },
+        "c": {
+          "kind": "noun",
+          "ids": ["agua", "pan", "vino", "queso", "jamon", "leche", "sal", "pimienta"]
         }
       },
       "cloze": ["v", "c"]

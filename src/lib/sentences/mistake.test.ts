@@ -147,6 +147,17 @@ describe("swapping in the wrong word", () => {
   });
 });
 
+describe("a verb the English does not say", () => {
+  it("is never swapped for another verb, since either could be right", () => {
+    const ordering = sentences.frames.filter((frame) => frame.en.includes("{v:none}"));
+    const orderTargets = gapTargets(ordering, { dictionary: entries });
+    for (let seed = 1; seed <= 40; seed++) {
+      const mistake = renderMistake("poner", orderTargets, context(seed));
+      if (mistake) expect(mistake.kind).not.toBe("word");
+    }
+  });
+});
+
 describe("choosing what to break", () => {
   it("prefers a form to an article, since swapping el for la is the easiest", () => {
     const targets = gapTargets(sentences.frames, { dictionary: entries });

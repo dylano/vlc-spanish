@@ -133,6 +133,9 @@ function wordSwap(
   const detail = sentence.slots[slot];
   if (!spec || !detail || spec.kind === "glue" || spec.kind === "word") return undefined;
   if (spec.kind === "verb" && detail.liked) return undefined;
+  // A slot the English does not say ("¿Me pones un café?" is "Can I have a
+  // coffee?") has no cue to give a swap away: "¿Me traes un café?" is just as right.
+  if (frame.en.includes(`{${slot}:none}`)) return undefined;
   const right = detail.accepts[0]!;
   const inSentence = new Set(Object.values(sentence.fills));
   const gender = detail.gender === "f" ? "f" : "m";

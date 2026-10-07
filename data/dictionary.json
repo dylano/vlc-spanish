@@ -3075,13 +3075,13 @@
     {
       "id": "llevar",
       "es": "llevar",
-      "en": ["to wear", "to carry", "to take", "to bring"],
+      "en": ["to wear", "to carry", "to take"],
       "pos": "verb",
       "verb": {
         "reflexive": false,
         "regular": true
       },
-      "notes": "Wearing clothes (llevo gafas), carrying something, or taking it somewhere: te llevo al trabajo.",
+      "notes": "Wearing clothes (llevo gafas), carrying something, or taking it somewhere: te llevo al trabajo. Taking is away from the speaker; bringing here is 'traer'.",
       "tags": ["verbs", "clothing"],
       "added": "2026-09-21"
     },
@@ -4085,15 +4085,15 @@
       "added": "2026-10-03"
     },
     {
-      "id": "tortilla-de-patatas",
-      "es": "tortilla de patatas",
+      "id": "tortilla",
+      "es": "tortilla",
       "en": ["Spanish omelette", "potato omelette", "Spanish tortilla"],
       "pos": "noun",
       "gender": "f",
       "forms": {
-        "pl": "tortillas de patatas"
+        "pl": "tortillas"
       },
-      "notes": "Potato and egg, served in wedges. A Mexican tortilla is a different thing.",
+      "notes": "In Spain, the potato omelette ('tortilla de patatas' in full). A plain omelette is 'tortilla francesa'; the Mexican flatbread is a different thing.",
       "tags": ["food"],
       "added": "2026-10-03"
     },
@@ -4730,6 +4730,50 @@
       "notes": "The everyday word for having a drink in Spain: tomar un café. Also 'tomar el sol', to sunbathe. Sentences use 'beber', whose English fits them.",
       "tags": ["verbs"],
       "added": "2026-10-03"
+    },
+    {
+      "id": "poner",
+      "es": "poner",
+      "en": ["to put", "to place", "to set"],
+      "pos": "verb",
+      "verb": {
+        "reflexive": false,
+        "regular": false,
+        "irregularYo": "pongo"
+      },
+      "forms": {
+        "yo": "pongo",
+        "tu": "pones",
+        "el": "pone",
+        "nosotros": "ponemos",
+        "vosotros": "ponéis",
+        "ellos": "ponen"
+      },
+      "notes": "Yo form pongo. In a bar it is how you order: ¿me pones una caña? (to a waiter you know, or most waiters in Spain; formally, ¿me pone…?). 'Poner la mesa' is to set the table.",
+      "tags": ["verbs"],
+      "added": "2026-10-07"
+    },
+    {
+      "id": "traer",
+      "es": "traer",
+      "en": ["to bring"],
+      "pos": "verb",
+      "verb": {
+        "reflexive": false,
+        "regular": false,
+        "irregularYo": "traigo"
+      },
+      "forms": {
+        "yo": "traigo",
+        "tu": "traes",
+        "el": "trae",
+        "nosotros": "traemos",
+        "vosotros": "traéis",
+        "ellos": "traen"
+      },
+      "notes": "Yo form traigo. In a restaurant: ¿me traes la carta? Bringing is toward the speaker; taking something away is 'llevar'.",
+      "tags": ["verbs"],
+      "added": "2026-10-07"
     }
   ]
 }
