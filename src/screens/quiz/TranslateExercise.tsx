@@ -25,6 +25,22 @@ export default function TranslateExercise({ card, position, label, onDone }: Exe
     if (submitted) compareRef.current?.scrollIntoView({ block: "nearest" });
   }, [submitted]);
 
+  // After Submit the text box is gone, so nothing is focused to catch Enter: listen
+  // on the page. A focused button already submits on Enter, so it is left alone.
+  useEffect(() => {
+    if (!submitted) return undefined;
+    function onKey(event: KeyboardEvent) {
+      if (event.key !== "Enter" || event.metaKey || event.ctrlKey || event.altKey) return;
+      if ((event.target as Element | null)?.closest("input, textarea, button, select")) return;
+      event.preventDefault();
+      submit();
+    }
+    globalThis.addEventListener("keydown", onKey);
+    return () => {
+      globalThis.removeEventListener("keydown", onKey);
+    };
+  });
+
   function submit(event?: FormEvent) {
     event?.preventDefault();
     if (!submitted) {

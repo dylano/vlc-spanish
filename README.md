@@ -139,7 +139,7 @@ tangled into components.
   between typed cards and gaps. See [Fill in the Blank](#fill-in-the-blank).
 - **Find the Mistake** — the English sentence as a cue, the Spanish with exactly one word broken.
   Tap the broken word, then type what it should be. Tapping a word that is fine ends the card as a
-  miss and shows the mistake. See [Find the Mistake](#find-the-mistake).
+  miss and shows the mistake. Enter moves on from there, as from any miss. See [Find the Mistake](#find-the-mistake).
 - **Translate** — an English sentence to put into Spanish. **Not graded**: a sentence has too many
   valid translations to mark one wrong, so after Submit the learner's version and the sentence it was
   rendered from ("One way to say it") sit one above the other to compare by eye. The one verdict it gives
@@ -147,7 +147,8 @@ tangled into components.
   full stop but not accents (`matchesTranslation`), and then only the learner's version is shown, since
   the model would repeat it; anything else gets no verdict, since it may be
   just as right. Nothing is
-  scheduled, and the summary counts these as "translated" apart from the score. Enter submits.
+  scheduled, and the summary counts these as "translated" apart from the score. Enter submits, and
+  Enter again moves on: once submitted the text box is gone, so the page listens for it.
 - **Problem words** (`/problems`) — every word missed at least once, most missed first, with the
   count and, when the last answer was wrong, "recent miss" (`src/lib/problems.ts`: `lapses` summed over both
   directions; ties put a word still wrong first, then the lower ease). A reference only, with no
