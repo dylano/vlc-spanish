@@ -1,0 +1,136 @@
+.screen {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.back {
+  display: inline-flex;
+  align-self: flex-start;
+  align-items: center;
+  gap: 4px;
+  min-height: 44px;
+  margin-top: -12px;
+  font-size: var(--label-size);
+  letter-spacing: var(--label-tracking);
+  text-transform: uppercase;
+  color: var(--muted);
+  text-decoration: none;
+}
+
+.backChevron {
+  width: 14px;
+  height: 14px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.title {
+  font-family: var(--serif);
+  font-size: 2.5rem;
+  font-weight: 400;
+  line-height: 1.05;
+  margin: 4px 0 0;
+}
+
+/* Which words: on top, since the categories below apply to only one side. */
+.segmented {
+  display: flex;
+  margin-top: 18px;
+}
+
+.half {
+  flex: 1;
+  min-height: 44px;
+  padding: 0 8px;
+  border: 1px solid var(--rule);
+  background: transparent;
+  color: var(--muted);
+  font-size: 0.875rem;
+  cursor: pointer;
+}
+
+.half:first-child {
+  border-radius: 999px 0 0 999px;
+}
+
+.half:last-child {
+  border-radius: 0 999px 999px 0;
+}
+
+.halfOn {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--on-accent);
+}
+
+.half:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+.heading {
+  font-family: var(--serif);
+  font-size: 1.5rem;
+  font-weight: 400;
+  line-height: 1.1;
+  margin: 26px 0 0;
+}
+
+/* The Dictionary's category pills. */
+.pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+.pill {
+  min-height: 34px;
+  padding: 6px 12px;
+  border: 1px solid var(--rule);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--muted);
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.pillOn {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--on-accent);
+}
+
+.pill:disabled {
+  cursor: default;
+}
+
+.inactive {
+  opacity: 0.35;
+}
+
+.spacer {
+  flex: 1;
+  min-height: 28px;
+}
+
+.start {
+  display: block;
+  width: 100%;
+  min-height: 52px;
+  border: none;
+  border-radius: 6px;
+  background: var(--accent);
+  color: var(--on-accent);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: pointer;
+}

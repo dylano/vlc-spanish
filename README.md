@@ -14,6 +14,9 @@ drilling, and never calls the Claude API. That is a deliberate decision (see
 [Working on the dictionary](#working-on-the-dictionary)): it means no API key, no billing, and no
 public endpoint at all.
 
+The app is built together with Claude Code: the code, the design canvases and the dictionary
+entries. That is noted here once rather than as a co-author line on every commit.
+
 See [PLAN.md](PLAN.md) for the original spec. Where this README and PLAN.md disagree, this README is
 current — notably PLAN.md §6 describes an in-app "add words" flow that is not being built.
 
@@ -51,11 +54,11 @@ src/lib/          pure logic, no React, thoroughly tested
   grade.ts          answer grading in both directions
   scheduler.ts      SM-2 spaced repetition behind a swappable Scheduler interface
   session.ts        picks the cards for a quiz (and matching rounds), and which english gloss to prompt with
-  counts.ts         the home screen's per-word totals (due, new, missed)
+  counts.ts         the home screen's per-word totals (due, new)
   choices.ts        the options for a multiple-choice card
   search.ts         Dictionary search across every form of a word
   conjugation.ts    a verb's present-tense table for the Dictionary, with what to notice marked
-  problems.ts       the Problem words list: misses per word, most first
+  problems.ts       the Problem words list: misses per word, most first, and which words are on it
   random.ts         seedable shuffle
   sentences/        sentence frames: renderer and checks (frames.ts), gaps (gap.ts), mistakes
                     (mistake.ts), translations (translate.ts), Spanish verb forms (conjugate.ts),
@@ -68,7 +71,7 @@ src/
   screens/        one file per screen, each with a CSS module beside it
                   (ConjugationDialog is the Dictionary's verb table, a dialog rather than a screen)
     quiz/           one component per exercise (typed and gaps, multiple choice, matching, find the
-                    mistake, translate), and the list of them (exercises.ts) the home screen
+                    mistake, translate), and the list of them (exercises.ts) Custom practice
                     offers; QuizScreen runs the session
 scripts/
   validate-dictionary.ts   schema check with warnings, exits non-zero on error; gates the build
@@ -105,12 +108,23 @@ tangled into components.
 - **Welcome** — first start only: asks for a name in Spanish (_¿Cómo te llamas?_, _Tu nombre_,
   _Empezar_), which the home screen greets. The line about progress living on this device stays in
   English: it is a fact about the app, not practice.
-- **Home** — **General practice**, plus **Focus on new words** and **Focus on problem words** (words
-  last answered wrong), each shown only when it holds something. Each of those is a **mixed** session
-  that moves between the exercises. Below them, set well apart and styled as a small toggle rather
-  than a fourth row — it changes how words are asked, not which — **Select specific exercise mode**
-  unfolds the list of exercises; each starts the same kind of session using that exercise only. The
-  list names only exercises that exist.
+- **Home** — two rows the same size: **General practice** ("Mixed exercises on the full
+  dictionary"), a mixed session that moves between the exercises, and **Custom practice** ("Select
+  exercise modes and categories"). With nothing due or new, General gives way to "Nothing due right
+  now"; Custom stays, since it can always offer something. Below them, set apart and quieter, a
+  **Problem words · N** row opens the list. It replaced three Focus rows (new words, problem words,
+  and a "Select specific exercise mode" toggle) after the "Home focus" boards on the canvas: new words
+  already arrive through the reserved share, and choosing modes and categories belongs on one screen.
+- **Custom practice** (`/custom`) — on top, **All words | Problem words · N**; then **Exercise
+  modes** and **Categories** as pills, each row led by **All**. Choosing a pill narrows to it,
+  several can be chosen, and clearing the last one goes back to All. With Problem words chosen the
+  categories grey out rather than hide (board 5e over 5d): the list ignores categories, and the
+  choice comes back on All words. **Start practice** builds the URL — `/quiz?scope=all|problems`,
+  `exercise=gap,mistake` (one mode gives a session of only that; several, a mix of them), `tags=food`.
+  All words uses `scope=all`, so a narrow choice still has words after the due and new ones run out.
+  The choices are kept for next time (`vlc-spanish:custom`); there is no summary line and no note
+  saying so. The Words and Sentences groups both have a Translate, so the pills say "Translate a
+  word" and "Translate a sentence".
 - **Quiz** — one prompt at a time, typed answer, inline verdict, progress bar, and a summary
   listing what to look at again. Nouns are prompted with "include the article". A session is full
   screen with no main nav; the × in the header ends it (every answer is already saved). The header
@@ -119,15 +133,14 @@ tangled into components.
   session always reads its full length; counting steps made the same session anywhere from 4 to 15 long.
   Each card opens with a bold instruction line ("Type the missing word", "Find the wrong word") — in a mixed session the exercise changes
   from card to card, and a muted label was too easy to miss.
-  Exercise names, grouped as on the home screen: Words — **Translate** (typed), **Multiple Choice**,
+  Exercise names, grouped: Words — **Translate** (typed), **Multiple Choice**,
   **Match Pairs**; Sentences — **Translate**, **Fill in the Blank**, **Find the Mistake**. Both groups
   have a Translate; the prompt (one word or a sentence) tells them apart.
   The summary adds a score per exercise when the session used more than one.
 - **Multiple Choice** — the same session with four options; touching one answers it, with no
   separate Check. A right answer moves on by itself, a miss waits for Next. Keys a–d or 1–4 answer
   and Enter moves on, on a computer. A wrong pick says what the picked word means. Started from
-  Select specific exercise mode on the home screen, or by URL: `/quiz?exercise=choice` (combines with `scope` and
-  `tag`).
+  Custom practice, or by URL: `/quiz?exercise=choice` (combines with `scope` and `tags`).
 - **Match Pairs** — rounds of four: Spanish in one column, English in the other, each shuffled. Tap
   a tile on either side, then its partner; a right pair locks, a wrong one flashes red and clears.
   Chosen by name it is the session length rounded to whole rounds (four at 15). Rounds were six pairs until that felt tedious to finish. A round draws from one tag where it can and never holds two
@@ -151,17 +164,19 @@ tangled into components.
   Enter again moves on: once submitted the text box is gone, so the page listens for it.
 - **Problem words** (`/problems`) — every word missed at least once, most missed first, with the
   count and, when the last answer was wrong, "recent miss" (`src/lib/problems.ts`: `lapses` summed over both
-  directions; ties put a word still wrong first, then the lower ease). A reference only, with no
-  practice button: Focus on problem words on Home does the drilling, and drills only words wrong
-  _last time_, while this list is history, so a word stays after it is answered right. Reached from a
-  line under the Focus on problem words row ("4 words · see the list"), which stays on its own when
-  nothing is currently wrong. A row is **swiped left to remove** a word whose misses were only
+  directions; ties put a word still wrong first, then the lower ease). This is history, so a word
+  stays after it is answered right. Reached from the Problem words row on Home. Above the list, beside
+  "N words", a small outlined **Practice these** pill opens Custom practice with Problem words
+  chosen and the last modes kept, ready to start. It sits at the top rather than below the list, which
+  can run well past a screen, and is outlined rather than solid so it does not compete with a
+  session's own buttons. A Problem words session (`scope=problems`) drills only words on this list,
+  whatever their category, due or not: words wrong last time first, then due ones, then the rest. A row is **swiped left to remove** a word whose misses were only
   slips (a typo in a sentence): it follows the finger over a "Remove" label, slides off past a third
   of its width and the gap closes, or springs back short of that; a drag counts only once it is
   clearly sideways, so the list still scrolls. For the keyboard and screen readers, which cannot
   swipe, each row keeps a remove button that shows only when focused. Removing a word: `forgiveMisses` in `src/lib/scheduler.ts` clears its miss count in both
   directions and, if the last answer was wrong, counts it as right and gives back the ease that miss
-  cost, so it leaves Focus on problem words too. Its due date stays, so it comes back as an ordinary
+  cost. Its due date stays, so it comes back as an ordinary
   review; progress keeps no history, so earlier misses cannot be undone beyond the count. Kept out of the Dictionary on purpose, so the Dictionary stays a
   reference; a subtle marker there may come later.
 - **Dictionary** — search both languages (accent-insensitive, so `timido` finds `tímido`), filter
@@ -193,7 +208,7 @@ tangled into components.
   pronoun, so `nos` does not list every reflexive verb or every plural ending in -nos.
 - **Settings** — your name (editable), **session length** and **appearance**, and how much you have
   practiced. No other users, no switching. Session length is 10, 15 (default), 20 or 30 words, for
-  every kind of session (General practice, the Focus rows, a single exercise; Match Pairs rounds to
+  every kind of session (General practice, Custom practice, a single exercise; Match Pairs rounds to
   whole rounds); a `size` in the URL still overrides it. Appearance is Light or Dark with no
   "System" choice: until one is picked the app follows the device and Settings shows whichever that
   is, and once picked it sticks. It is a `data-theme` attribute on the root that the dark tokens in
@@ -212,11 +227,13 @@ rev-parse` locally, marked "+ local changes" when the tree is dirty), injected a
 ## Data
 
 The dictionary ships with the app (see [Working on the dictionary](#working-on-the-dictionary)).
-Everything else lives in the browser's **local storage** (`src/app/local.ts`), under four keys:
+Everything else lives in the browser's **local storage** (`src/app/local.ts`), under five keys:
 
 - `vlc-spanish:name` — the name given on first start.
 - `vlc-spanish:theme` — `light` or `dark` once chosen in Settings; absent means follow the device.
 - `vlc-spanish:session-size` — words per session from Settings; absent means 15.
+- `vlc-spanish:custom` — the last Custom practice choice: which words, and the chosen modes and
+  categories (empty lists mean All).
 - `vlc-spanish:progress` — one scheduling record per entry per direction (`en→es` and `es→en` are
   separate cards, and a word is normally practiced in one direction before the other). It is saved
   whenever an answer is recorded, so leaving mid-session loses nothing.
@@ -240,7 +257,7 @@ progress was deliberately not migrated.
 **Numbers are in the dictionary but not in the drill.** They were a third of the entries, which
 crowded out the words that carry meaning, so `isDrillable` in `src/lib/session.ts` holds back
 anything tagged `numbers`. They are still searchable in the dictionary, and a session that asks for
-that tag by name (`/quiz?tag=numbers`) still serves them. The home-screen counts apply the same
+that tag by name (Custom practice, or `/quiz?tags=numbers`) still serves them. The home-screen counts apply the same
 predicate — a count that includes words no session will offer promises practice the app cannot
 deliver.
 
@@ -459,14 +476,15 @@ Phases 1 and 2 are complete and deployed at [vlc-spanish.netlify.app](https://vl
 
 - **Dictionary**: bundled from `data/dictionary.json`, searchable across every form of a word, with
   folded categories and a conjugation table for every verb
-- **Practice**: General practice and the two Focus rows as mixed sessions, or any single exercise;
+- **Practice**: General practice, and Custom practice for any mix of exercise modes and categories
+  or the Problem words list;
   six exercises (Translate a word, Multiple Choice, Match Pairs, Translate a sentence, Fill in the
   Blank, Find the Mistake), SM-2 scheduling with recognition answers held to a week, and a
   per-exercise score in the summary
 - **Sentences**: frames built from any dictionary word, including _gustar_ and simple negatives,
   from the first session (`vp run validate:frames` prints how many, and
   `vp run render:frames` how many sentences they can make)
-- **Problem words**: a list of every word missed, most first
+- **Problem words**: a list of every word missed, most first, with Practice these
 - **Settings**: name, session length (10–30 words), light or dark
 - **Single-user and fully static**: name on first start, everything in local storage, no server;
   installable PWA with the app shell cached offline
@@ -496,8 +514,8 @@ bands:
 4. **Rest** — everything else, only for sessions that ask for all words.
 
 Due and new are interleaved so that **every third card is a new word** (`NEW_WORD_EVERY`) while any
-remain; with nothing due, a session is all new words. "Focus on new words" takes new words first,
-then other directions.
+remain; with nothing due, a session is all new words. A Problem words session has its own order:
+words wrong last time, then due, then the rest of the list.
 
 On top of the order, a mixed session **reserves `NEW_SHARE` (40%) of its length for words the app has
 not asked yet**: once only that many slots are left, they go to new words whatever the exercise
@@ -513,7 +531,7 @@ with the reserved share.
 
 ## Mixed sessions
 
-A session started from General practice or a Focus row is built by `buildMixedSession` in
+A session started from General practice, or from Custom practice with more than one mode, is built by `buildMixedSession` in
 `src/lib/session.ts`: the session length from Settings (15 by default), taken in the order described in
 [Choosing words](#choosing-words), with only the way each is asked varying. Each step picks an exercise by weight (`MIX_WEIGHTS`): Fill
 in the Blank 3, Find the Mistake 2, word Translate (typed) 2, sentence Translate 1, Multiple Choice 1, a matching round 1. Sentence
@@ -537,6 +555,12 @@ of practiced words due they make up about half of a session's words. Rules on to
 - **Gaps are available from the first session**, nudged into runs with typed cards since both use the
   keyboard — see [Fill in the Blank](#fill-in-the-blank). With nothing due they still appear: up to
   four per 15 words aimed at words practiced earlier, and any number aimed at words not yet asked.
+- **Custom practice limits the mix to the chosen modes** (`config.exercises`). The caps above exist
+  to keep the easy exercises from crowding out typing, so they apply only when typing is among
+  them; without it, a session of Multiple Choice and Match Pairs still fills its length. New words in
+  the reserved share are asked by typing, or by Multiple Choice when typing is not chosen; with
+  neither, they arrive only as sentences pick them. Extra blanks in a gap come only from the chosen
+  words (the category, or the Problem words list).
 - **A matching round needs room**: at least four words left in the session and at least three words
   that can share a round. Otherwise the planner stops offering rounds for that session.
 

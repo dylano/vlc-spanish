@@ -1,16 +1,23 @@
 import type { Entry, ProgressBlob } from "./schema.ts";
 
 /**
- * The words that have given trouble, for the Problem words list. Unlike the
- * Focus on problem words session, which drills words answered wrong last time,
- * this is history: a word stays on it after it is answered right again.
+ * The words that have given trouble, for the Problem words list and the
+ * sessions that drill it. This is history: a word stays on it after it is
+ * answered right again, until it is removed from the list.
  */
 export interface ProblemWord {
   entry: Entry;
   /** Misses in both directions, ever (`lapses`). */
   missed: number;
-  /** Whether the most recent answer in either direction was wrong: the Focus session's rule. */
+  /** Whether the most recent answer in either direction was wrong. */
   wrongLast: boolean;
+}
+
+/** Whether a word belongs on the Problem words list: missed at least once, in either direction. */
+export function isProblem(entry: Entry, progress: ProgressBlob): boolean {
+  return Object.values(progress.entries[entry.id] ?? {}).some(
+    (record) => !!record && record.lapses > 0,
+  );
 }
 
 /** Every word missed at least once, most missed first; ties put a word still wrong first. */

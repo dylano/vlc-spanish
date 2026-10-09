@@ -23,7 +23,7 @@ function blob(rows: [string, Direction, Partial<ReturnType<typeof sm2.create>>][
 describe("countWords", () => {
   it("counts every word as unseen before any practice", () => {
     const counts = countWords(entries, blob([]), TODAY);
-    expect(counts).toEqual({ total: 3, due: 0, unseen: 3, missed: 0 });
+    expect(counts).toEqual({ total: 3, due: 0, unseen: 3 });
   });
 
   it("stops counting a word as new once it is practiced in either direction", () => {
@@ -49,7 +49,7 @@ describe("countWords", () => {
     expect(counts.due).toBe(1);
   });
 
-  it("never reports more due or missed than there are words", () => {
+  it("never reports more due than there are words", () => {
     const rows = entries.flatMap(
       (entry) =>
         [
@@ -59,7 +59,6 @@ describe("countWords", () => {
     );
     const counts = countWords(entries, blob(rows), TODAY);
     expect(counts.due).toBeLessThanOrEqual(counts.total);
-    expect(counts.missed).toBeLessThanOrEqual(counts.total);
     expect(counts.due).toBe(3);
   });
 
@@ -71,35 +70,6 @@ describe("countWords", () => {
     );
     expect(counts.due).toBe(0);
     expect(counts.unseen).toBe(2);
-  });
-
-  it("counts a word whose last answer was wrong as missed", () => {
-    const counts = countWords(
-      entries,
-      blob([["uno", "en→es", { lapses: 1, lastResult: "wrong", due: "2026-12-01" }]]),
-      TODAY,
-    );
-    expect(counts.missed).toBe(1);
-  });
-
-  it("clears a word from misses once it is answered correctly again", () => {
-    // The word still carries a lapse from the earlier mistake, but it is no
-    // longer unlearned, so it should not keep showing up as a miss.
-    const counts = countWords(
-      entries,
-      blob([["uno", "en→es", { lapses: 1, lastResult: "correct", reps: 2, due: "2026-12-01" }]]),
-      TODAY,
-    );
-    expect(counts.missed).toBe(0);
-  });
-
-  it("clears a word from misses when the retry was only almost right", () => {
-    const counts = countWords(
-      entries,
-      blob([["uno", "en→es", { lapses: 2, lastResult: "hard", reps: 1, due: "2026-12-01" }]]),
-      TODAY,
-    );
-    expect(counts.missed).toBe(0);
   });
 
   it("reproduces the reported case: 11 cards across both directions", () => {

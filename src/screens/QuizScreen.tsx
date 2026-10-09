@@ -56,25 +56,17 @@ function wordsIn(item: SessionItem): number {
   return item.blankCards?.length ?? 1;
 }
 
-/** A session asks with one exercise when the URL names it, and mixes them otherwise. */
-function formatParam(value: string | null): QuizConfig["format"] {
-  return value === "typed" ||
-    value === "choice" ||
-    value === "match" ||
-    value === "gap" ||
-    value === "mistake" ||
-    value === "translate"
-    ? value
-    : "mixed";
+/** The exercises named in the URL (`exercise=gap,mistake`), known ones only. */
+function exercisesParam(value: string | null): Exercise[] {
+  const known = new Set<string>(EXERCISES.map((exercise) => exercise.id));
+  return [...new Set((value ?? "").split(","))].filter((id): id is Exercise => known.has(id));
 }
 
-/** Header label: the home-screen row the session came from, in short. */
-const SCOPE_LABEL: Record<QuizConfig["scope"], string> = {
-  due: "General practice",
-  recent: "New words",
-  misses: "Problem words",
-  all: "General practice",
-};
+/** Categories named in the URL (`tags=food,verbs`). */
+function tagsParam(value: string | null): string[] | undefined {
+  const tags = (value ?? "").split(",").filter(Boolean);
+  return tags.length > 0 ? tags : undefined;
+}
 
 const EXERCISE_LABEL = Object.fromEntries(
   EXERCISES.map((exercise) => [exercise.id, exercise.label]),
@@ -99,16 +91,15 @@ export default function QuizScreen() {
 
   const config = useMemo<QuizConfig>(() => {
     const scope = params.get("scope");
-    const tag = params.get("tag");
-    const format = formatParam(params.get("exercise"));
+    const exercises = exercisesParam(params.get("exercise"));
+    // One exercise named: a session of only that. Several, or none: a mix of them.
+    const format = exercises.length === 1 ? exercises[0]! : "mixed";
     return {
       ...DEFAULT_CONFIG,
-      scope:
-        scope === "recent" || scope === "misses" || scope === "all" || scope === "due"
-          ? scope
-          : "due",
+      scope: scope === "all" || scope === "problems" ? scope : "due",
       format,
-      tags: tag ? [tag] : undefined,
+      exercises: exercises.length > 1 ? exercises : undefined,
+      tags: tagsParam(params.get("tags")),
       size: Number(params.get("size") ?? sizeFor(format, sessionSize)),
     };
   }, [params, sessionSize]);
@@ -132,7 +123,13 @@ export default function QuizScreen() {
   // The summary is labelled with where the session came from. Each item's header
   // names its own exercise, so a mixed session always shows which one is up.
   const label =
-    config.format === "mixed" ? SCOPE_LABEL[config.scope] : EXERCISE_LABEL[config.format];
+    config.scope === "problems"
+      ? "Problem words"
+      : config.format !== "mixed"
+        ? EXERCISE_LABEL[config.format]
+        : config.exercises || config.tags
+          ? "Custom practice"
+          : "General practice";
 
   // Progress is counted in words, not steps: a matching round is four words and a
   // gap may have several blanks. Counting steps made the bar of a 15-word

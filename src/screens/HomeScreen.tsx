@@ -1,8 +1,7 @@
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import { Link } from "react-router";
 import { useStore } from "../app/store-context.ts";
 import { problemWords } from "../lib/problems.ts";
-import { EXERCISES } from "./quiz/exercises.ts";
 import styles from "./HomeScreen.module.css";
 
 const DATE_FORMAT: Intl.DateTimeFormatOptions = {
@@ -11,10 +10,10 @@ const DATE_FORMAT: Intl.DateTimeFormatOptions = {
   month: "long",
 };
 
-function Chevron({ className = "" }: { className?: string }) {
+function Chevron() {
   return (
     <svg
-      className={`${styles.chevron} ${className}`}
+      className={styles.chevron}
       width="20"
       height="20"
       viewBox="0 0 20 20"
@@ -33,9 +32,8 @@ function Chevron({ className = "" }: { className?: string }) {
 export default function HomeScreen() {
   const { name, counts, entries, progress } = useStore();
   const troubled = useMemo(() => problemWords(entries, progress).length, [entries, progress]);
-  const [choosing, setChoosing] = useState(false);
 
-  const { due, unseen, missed } = counts;
+  const { due, unseen } = counts;
   // A practice session already tops itself up with new words, so it is worth
   // starting whenever anything at all is left to do.
   const canPractice = due + unseen > 0;
@@ -48,87 +46,39 @@ export default function HomeScreen() {
       <h1 className={styles.greeting}>Hola{name ? `, ${name}` : ""}</h1>
 
       <div className={styles.actions}>
-        {canPractice ? (
-          <div className={styles.list}>
-            <Link to="/quiz?scope=due" className={`${styles.action} ${styles.primary}`}>
-              General practice
+        {/* Two ways to start a session, the same size: everything mixed, or a
+            choice of words, modes and categories. Custom always has something to
+            offer, so it stays when General has nothing left. */}
+        <div className={styles.list}>
+          {canPractice ? (
+            <Link to="/quiz?scope=due" className={styles.action}>
+              <span>
+                General practice
+                <span className={styles.subtitle}>Mixed exercises on the full dictionary</span>
+              </span>
               <Chevron />
             </Link>
+          ) : (
+            <p className={styles.nothing}>Nothing due right now. Come back later.</p>
+          )}
+          <Link to="/custom" className={styles.action}>
+            <span>
+              Custom practice
+              <span className={styles.subtitle}>Select exercise modes and categories</span>
+            </span>
+            <Chevron />
+          </Link>
+        </div>
 
-            {/* Shown only when they hold something: an option that leads nowhere
-                is worse than no option, and it saves explaining an empty count. */}
-            {unseen > 0 ? (
-              <Link to="/quiz?scope=recent" className={`${styles.action} ${styles.narrowing}`}>
-                Focus on new words
-                <Chevron />
-              </Link>
-            ) : null}
-
-            {/* The row drills words wrong last time; the line under it opens the
-                longer history. With nothing wrong right now the line stays, so the
-                list is still reachable. */}
-            {missed > 0 || troubled > 0 ? (
-              <div className={styles.problemRow}>
-                {missed > 0 ? (
-                  <Link to="/quiz?scope=misses" className={`${styles.focus} ${styles.narrowing}`}>
-                    Focus on problem words
-                    <Chevron />
-                  </Link>
-                ) : null}
-                {troubled > 0 ? (
-                  <Link to="/problems" className={styles.seeList}>
-                    {troubled} {troubled === 1 ? "word" : "words"} · see the list
-                    <Chevron className={styles.seeListChevron} />
-                  </Link>
-                ) : null}
-              </div>
-            ) : null}
-          </div>
-        ) : (
-          <p className={styles.nothing}>Nothing to practice right now. Come back later.</p>
-        )}
-
-        {/* Set apart from the rows above on purpose: those are ways to practice,
-            this is a control that changes how the words are asked. Folded by
-            default so the common taps stay the big ones. */}
-        {canPractice ? (
-          <button
-            type="button"
-            className={`${styles.disclosure} ${choosing ? styles.disclosureOpen : ""}`}
-            aria-expanded={choosing}
-            aria-controls="exercises"
-            onClick={() => {
-              setChoosing((open) => !open);
-            }}
-          >
-            Select specific exercise mode
-            <Chevron className={choosing ? styles.chevronUp : styles.chevronDown} />
-          </button>
-        ) : null}
-
-        {canPractice && choosing ? (
-          <div id="exercises">
-            {(["Words", "Sentences"] as const).map((group) => {
-              const members = EXERCISES.filter((exercise) => exercise.group === group);
-              if (members.length === 0) return null;
-              return (
-                <section key={group}>
-                  <p className={styles.groupLabel}>{group}</p>
-                  <div className={styles.exerciseGrid}>
-                    {members.map((exercise) => (
-                      <Link
-                        key={exercise.id}
-                        to={`/quiz?scope=due&exercise=${exercise.id}`}
-                        className={styles.exercise}
-                      >
-                        {exercise.label}
-                      </Link>
-                    ))}
-                  </div>
-                </section>
-              );
-            })}
-          </div>
+        {/* A reference, quieter than the two above: the list of words missed most.
+            Drilling them is a Custom practice choice, reached from the list. */}
+        {troubled > 0 ? (
+          <Link to="/problems" className={styles.problems}>
+            <span>
+              Problem words <span className={styles.count}>· {troubled}</span>
+            </span>
+            <Chevron />
+          </Link>
         ) : null}
       </div>
     </section>

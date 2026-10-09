@@ -21,14 +21,11 @@ export interface Counts {
   due: number;
   /** Words never practiced in either direction. */
   unseen: number;
-  /** Words whose most recent answer was wrong, in either direction. */
-  missed: number;
 }
 
 export function countWords(entries: Entry[], progress: ProgressBlob, today: IsoDate): Counts {
   let due = 0;
   let unseen = 0;
-  let missed = 0;
 
   for (const entry of entries) {
     // Counting words a session would never offer makes the home screen promise
@@ -38,22 +35,17 @@ export function countWords(entries: Entry[], progress: ProgressBlob, today: IsoD
     const records = progress.entries[entry.id];
     let seenAny = false;
     let dueAny = false;
-    let missedAny = false;
 
     for (const direction of DIRECTIONS as readonly Direction[]) {
       const record = records?.[direction];
       if (!record) continue;
       seenAny = true;
       if (isDue(record, today)) dueAny = true;
-      // "Currently unlearned", not "ever got wrong": answering correctly again
-      // clears a word from the misses list rather than marking it forever.
-      if (record.lastResult === "wrong") missedAny = true;
     }
 
     if (!seenAny) unseen += 1;
     if (dueAny) due += 1;
-    if (missedAny) missed += 1;
   }
 
-  return { total: entries.length, due, unseen, missed };
+  return { total: entries.length, due, unseen };
 }
