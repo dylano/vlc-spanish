@@ -4774,6 +4774,113 @@
       "notes": "Yo form traigo. In a restaurant: ¿me traes la carta? Bringing is toward the speaker; taking something away is 'llevar'.",
       "tags": ["verbs"],
       "added": "2026-10-07"
+    },
+    {
+      "id": "salado",
+      "es": "salado",
+      "en": ["salty", "savoury", "savory"],
+      "pos": "adj",
+      "forms": {
+        "f": "salada"
+      },
+      "notes": "Also savoury, as opposed to sweet. Of a person, informally: witty, charming.",
+      "tags": ["food"],
+      "added": "2026-10-09"
+    },
+    {
+      "id": "dulce",
+      "es": "dulce",
+      "en": ["sweet"],
+      "pos": "adj",
+      "notes": "Same for both genders; plural dulces. 'Un dulce' is a sweet.",
+      "tags": ["food"],
+      "added": "2026-10-09"
+    },
+    {
+      "id": "sabor",
+      "es": "sabor",
+      "en": ["flavour", "flavor", "taste"],
+      "pos": "noun",
+      "gender": "m",
+      "forms": {
+        "pl": "sabores"
+      },
+      "notes": "Masculine: el sabor. '¿De qué sabor?' is what flavour?",
+      "tags": ["food"],
+      "added": "2026-10-09"
+    },
+    {
+      "id": "congelador",
+      "es": "congelador",
+      "en": ["freezer"],
+      "pos": "noun",
+      "gender": "m",
+      "forms": {
+        "pl": "congeladores"
+      },
+      "tags": ["food"],
+      "added": "2026-10-09"
+    },
+    {
+      "id": "nevera",
+      "es": "nevera",
+      "en": ["fridge", "refrigerator"],
+      "pos": "noun",
+      "gender": "f",
+      "forms": {
+        "pl": "neveras"
+      },
+      "notes": "'El frigorífico' is just as common in Spain.",
+      "tags": ["food"],
+      "added": "2026-10-09"
+    },
+    {
+      "id": "armario",
+      "es": "armario",
+      "en": ["cupboard", "wardrobe", "closet"],
+      "pos": "noun",
+      "gender": "m",
+      "forms": {
+        "pl": "armarios"
+      },
+      "notes": "A kitchen cupboard or a wardrobe for clothes.",
+      "tags": ["food"],
+      "added": "2026-10-09"
+    },
+    {
+      "id": "chocolate",
+      "es": "chocolate",
+      "en": ["chocolate"],
+      "pos": "noun",
+      "gender": "m",
+      "forms": {
+        "pl": "chocolates"
+      },
+      "notes": "Masculine: el chocolate. Also hot chocolate, as in chocolate con churros.",
+      "tags": ["food"],
+      "added": "2026-10-09"
+    },
+    {
+      "id": "fresa",
+      "es": "fresa",
+      "en": ["strawberry"],
+      "pos": "noun",
+      "gender": "f",
+      "forms": {
+        "pl": "fresas"
+      },
+      "tags": ["food"],
+      "added": "2026-10-09"
+    },
+    {
+      "id": "vainilla",
+      "es": "vainilla",
+      "en": ["vanilla"],
+      "pos": "noun",
+      "gender": "f",
+      "number": "sg",
+      "tags": ["food"],
+      "added": "2026-10-09"
     }
   ]
 }

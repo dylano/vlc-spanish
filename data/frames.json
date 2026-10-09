@@ -2289,6 +2289,7 @@
             "calamar",
             "cebolla",
             "croqueta",
+            "fresa",
             "frutos-secos",
             "gamba",
             "garbanzo",
@@ -2368,6 +2369,7 @@
             "calamar",
             "cebolla",
             "croqueta",
+            "fresa",
             "frutos-secos",
             "gamba",
             "garbanzo",
@@ -2454,6 +2456,7 @@
             "calamar",
             "cebolla",
             "croqueta",
+            "fresa",
             "frutos-secos",
             "gamba",
             "garbanzo",
@@ -2540,26 +2543,27 @@
         "c": {
           "kind": "noun",
           "ids": [
-            "pollo",
-            "ternera",
-            "cerdo",
-            "salmon",
-            "atun",
-            "queso",
-            "jamon",
-            "pan",
-            "chorizo",
-            "arroz",
-            "trigo",
-            "maiz",
-            "harina",
-            "leche",
             "aceite-de-oliva",
             "agua",
-            "vino",
+            "arroz",
+            "atun",
             "cafe",
+            "cerdo",
+            "cerveza",
+            "chocolate",
+            "chorizo",
+            "harina",
+            "jamon",
+            "leche",
+            "maiz",
+            "pan",
+            "pollo",
+            "queso",
+            "salmon",
             "te",
-            "cerveza"
+            "ternera",
+            "trigo",
+            "vino"
           ]
         },
         "v": {
@@ -2586,26 +2590,27 @@
         "c": {
           "kind": "noun",
           "ids": [
-            "pollo",
-            "ternera",
-            "cerdo",
-            "salmon",
-            "atun",
-            "queso",
-            "jamon",
-            "pan",
-            "chorizo",
-            "arroz",
-            "trigo",
-            "maiz",
-            "harina",
-            "leche",
             "aceite-de-oliva",
             "agua",
-            "vino",
+            "arroz",
+            "atun",
             "cafe",
+            "cerdo",
+            "cerveza",
+            "chocolate",
+            "chorizo",
+            "harina",
+            "jamon",
+            "leche",
+            "maiz",
+            "pan",
+            "pollo",
+            "queso",
+            "salmon",
             "te",
-            "cerveza"
+            "ternera",
+            "trigo",
+            "vino"
           ]
         },
         "v": {
@@ -2694,7 +2699,7 @@
         },
         "c": {
           "kind": "noun",
-          "ids": ["aceituna", "gamba", "croqueta", "nachos", "calamar", "salchicha"],
+          "ids": ["aceituna", "calamar", "croqueta", "fresa", "gamba", "nachos", "salchicha"],
           "number": "pl"
         }
       },
@@ -2717,6 +2722,174 @@
         }
       },
       "cloze": ["v", "c"]
+    },
+    {
+      "id": "taste-salty",
+      "grammar": ["food", "adj-agreement", "ser-trait"],
+      "es": "{c:el} es {a}.",
+      "en": "{c:the} is {a}.",
+      "slots": {
+        "c": {
+          "kind": "noun",
+          "ids": ["jamon", "queso", "chorizo", "atun"]
+        },
+        "a": {
+          "kind": "adj",
+          "ids": ["salado"],
+          "agree": "c"
+        }
+      },
+      "cloze": ["a", "c"]
+    },
+    {
+      "id": "taste-salty-plate",
+      "grammar": ["food", "adj-agreement", "ser-trait"],
+      "es": "{c:el} son {a}.",
+      "en": "{c:the} are {a}.",
+      "slots": {
+        "c": {
+          "kind": "noun",
+          "ids": ["aceituna", "nachos", "gamba", "calamar"],
+          "number": "pl"
+        },
+        "a": {
+          "kind": "adj",
+          "ids": ["salado"],
+          "agree": "c"
+        }
+      },
+      "cloze": ["a", "c"]
+    },
+    {
+      "id": "taste-sweet",
+      "grammar": ["food", "adj-agreement", "ser-trait"],
+      "es": "{c:el} es {a}.",
+      "en": "{c:the} is {a}.",
+      "slots": {
+        "c": {
+          "kind": "noun",
+          "ids": ["chocolate", "helado", "platano", "refresco", "yogur"]
+        },
+        "a": {
+          "kind": "adj",
+          "ids": ["dulce"],
+          "agree": "c"
+        }
+      },
+      "cloze": ["a", "c"]
+    },
+    {
+      "id": "taste-sweet-fruit",
+      "grammar": ["food", "adj-agreement", "ser-trait"],
+      "es": "{c:el} son {a}.",
+      "en": "{c:the} are {a}.",
+      "slots": {
+        "c": {
+          "kind": "noun",
+          "ids": ["fresa", "manzana", "naranja-2"],
+          "number": "pl"
+        },
+        "a": {
+          "kind": "adj",
+          "ids": ["dulce"],
+          "agree": "c"
+        }
+      },
+      "cloze": ["a", "c"]
+    },
+    {
+      "id": "kept-in-fridge",
+      "grammar": ["food", "ser-estar", "articles"],
+      "es": "{c:el} está en {k:el}.",
+      "en": "{c:the} is in {k:the}.",
+      "slots": {
+        "c": {
+          "kind": "noun",
+          "ids": ["leche", "queso", "jamon", "yogur", "cerveza"]
+        },
+        "k": {
+          "kind": "noun",
+          "ids": ["nevera"]
+        }
+      },
+      "cloze": ["k", "c"]
+    },
+    {
+      "id": "kept-in-freezer",
+      "grammar": ["food", "ser-estar", "articles"],
+      "es": "{c:el} está en {k:el}.",
+      "en": "{c:the} is in {k:the}.",
+      "slots": {
+        "c": {
+          "kind": "noun",
+          "ids": ["helado", "pollo", "ternera", "cerdo", "salmon"]
+        },
+        "k": {
+          "kind": "noun",
+          "ids": ["congelador"]
+        }
+      },
+      "cloze": ["k", "c"]
+    },
+    {
+      "id": "kept-in-cupboard",
+      "grammar": ["food", "ser-estar", "articles"],
+      "es": "{c:el} está en {k:el}.",
+      "en": "{c:the} is in {k:the}.",
+      "slots": {
+        "c": {
+          "kind": "noun",
+          "ids": ["arroz", "harina", "sal", "pimienta", "aceite-de-oliva", "pan"]
+        },
+        "k": {
+          "kind": "noun",
+          "ids": ["armario"]
+        }
+      },
+      "cloze": ["k", "c"]
+    },
+    {
+      "id": "which-flavour",
+      "grammar": ["food", "questions", "ser"],
+      "es": "¿De qué {s} es {c:el}?",
+      "en": "What {s} is {c:the}?",
+      "slots": {
+        "s": {
+          "kind": "noun",
+          "ids": ["sabor"]
+        },
+        "c": {
+          "kind": "noun",
+          "ids": ["helado", "yogur"]
+        }
+      },
+      "cloze": ["s", "c"]
+    },
+    {
+      "id": "flavour-is",
+      "grammar": ["food", "ser"],
+      "es": "{c:el} es de {f}.",
+      "en": "{c:the} is {f}-flavoured.",
+      "slots": {
+        "c": {
+          "kind": "noun",
+          "ids": ["helado", "yogur"]
+        },
+        "f": {
+          "kind": "noun",
+          "ids": [
+            "cafe",
+            "chocolate",
+            "fresa",
+            "limon",
+            "manzana",
+            "naranja-2",
+            "platano",
+            "vainilla"
+          ]
+        }
+      },
+      "cloze": ["f", "c"]
     }
   ]
 }
