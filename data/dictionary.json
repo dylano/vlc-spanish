@@ -4197,11 +4197,11 @@
     {
       "id": "nachos",
       "es": "nachos",
-      "en": ["nachos"],
+      "en": ["chips", "nachos"],
       "pos": "noun",
       "gender": "m",
       "number": "pl",
-      "notes": "Always plural: unos nachos.",
+      "notes": "Tortilla chips. Always plural: unos nachos.",
       "tags": ["food"],
       "added": "2026-10-03"
     },
