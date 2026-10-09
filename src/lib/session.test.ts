@@ -3,6 +3,7 @@ import { grade } from "./grade.ts";
 import {
   buildMatchRounds,
   buildMixedSession,
+  balanceTags,
   buildSession,
   isMatchRound,
   capFor,
@@ -17,6 +18,7 @@ import {
   isDrillable,
   MIXED_EN_ES_SHARE,
   promptGloss,
+  type Card,
   type Exercise,
 } from "./session.ts";
 import type { Direction, Entry, ProgressBlob, VerbEntry } from "./schema.ts";
@@ -300,6 +302,44 @@ describe("buildSession", () => {
       estar: "location, temporary states",
       hoy: undefined,
     });
+  });
+});
+
+describe("several categories", () => {
+  const big = Array.from({ length: 30 }, (_, i) => word(`comida${i}`, [`food ${i}`], ["food"]));
+  const small = Array.from({ length: 4 }, (_, i) =>
+    word(`tiempo${i}`, [`weather ${i}`], ["weather"]),
+  );
+
+  it("introduces new words from each chosen category in turn, not in proportion to size", () => {
+    for (let seed = 1; seed <= 10; seed++) {
+      const cards = buildSession({
+        entries: [...big, ...small],
+        progress: emptyProgress(),
+        userId: "dylan",
+        config: { ...DEFAULT_CONFIG, size: 8, scope: "all", tags: ["food", "weather"] },
+        today: TODAY,
+        random: seeded(seed),
+      });
+      // Four of each: by size, weather would have had about one.
+      expect(cards.filter((card) => card.entry.tags.includes("weather"))).toHaveLength(4);
+    }
+  });
+
+  it("continues with the rest once a small category runs out", () => {
+    const cards = big
+      .slice(0, 6)
+      .concat(small.slice(0, 2))
+      .map((entry) => ({ entry }) as Card);
+    const order = balanceTags(cards, ["food", "weather"], seeded(1)).map((card) => card.entry.id);
+    expect(order).toHaveLength(8);
+    expect(order.slice(4).every((id) => id.startsWith("comida"))).toBe(true);
+  });
+
+  it("leaves the order alone with one category or none", () => {
+    const cards = big.slice(0, 5).map((entry) => ({ entry }) as Card);
+    expect(balanceTags(cards, ["food"], seeded(1))).toBe(cards);
+    expect(balanceTags(cards, undefined, seeded(1))).toBe(cards);
   });
 });
 

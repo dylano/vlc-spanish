@@ -177,9 +177,13 @@ export default function CustomPracticeScreen() {
       </div>
 
       <div className={styles.spacer} />
-      <button type="button" className={styles.start} onClick={start}>
-        Start practice
-      </button>
+      {/* Stuck above the nav: with every category listed, the end of the page is
+          below the fold on a phone. */}
+      <div className={styles.footer}>
+        <button type="button" className={styles.start} onClick={start}>
+          Start practice
+        </button>
+      </div>
     </section>
   );
 }

@@ -119,7 +119,9 @@ tangled into components.
   modes** and **Categories** as pills, each row led by **All**. Choosing a pill narrows to it,
   several can be chosen, and clearing the last one goes back to All. With Problem words chosen the
   categories grey out rather than hide (board 5e over 5d): the list ignores categories, and the
-  choice comes back on All words. **Start practice** builds the URL — `/quiz?scope=all|problems`,
+  choice comes back on All words. **Start practice** sticks just above the nav, since with every
+  category listed the end of the page is below the fold on a phone; the shell measures the nav into
+  `--nav-height` (safe-area inset included) for it. It builds the URL — `/quiz?scope=all|problems`,
   `exercise=gap,mistake` (one mode gives a session of only that; several, a mix of them), `tags=food`.
   All words uses `scope=all`, so a narrow choice still has words after the due and new ones run out.
   The choices are kept for next time (`vlc-spanish:custom`); there is no summary line and no note
@@ -514,7 +516,14 @@ bands:
 4. **Rest** — everything else, only for sessions that ask for all words.
 
 Due and new are interleaved so that **every third card is a new word** (`NEW_WORD_EVERY`) while any
-remain; with nothing due, a session is all new words. A Problem words session has its own order:
+remain; with nothing due, a session is all new words. With more than one category chosen in Custom practice, **new words** are introduced from
+each in turn (`balanceTags`): in proportion to size, 62 food words left 6 weather words with one new
+word in fourteen, so a first session could be all food. Reviews are not balanced, and follow the
+schedule whatever their category. Balancing them too was tried: in a simulated ten sessions over five
+days, each weather word was asked three times as often as each food word (body words, against
+clothing, nearly three times), where balancing new words alone keeps attention per word about even
+while every early session still mixes the categories.
+A Problem words session has its own order:
 words wrong last time, then due, then the rest of the list.
 
 On top of the order, a mixed session **reserves `NEW_SHARE` (40%) of its length for words the app has

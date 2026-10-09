@@ -862,11 +862,16 @@ function rankedCards(options: BuildSessionOptions): Card[] {
     }
   }
 
+  // New words are shared out between the chosen categories as they are
+  // introduced; reviews follow the schedule, whatever their category.
   const ordered =
     config.scope === "problems"
       ? [...shuffle(wrong, random), ...shuffle(due, random), ...shuffle(rest, random)]
       : [
-          ...interleaveNew(dedupeByEntry(shuffle(due, random), config), shuffle(fresh, random)),
+          ...interleaveNew(
+            dedupeByEntry(shuffle(due, random), config),
+            balanceTags(shuffle(fresh, random), config.tags, random),
+          ),
           ...shuffle(otherDirection, random),
           ...shuffle(rest, random),
         ];
@@ -875,6 +880,34 @@ function rankedCards(options: BuildSessionOptions): Card[] {
 
 function pick<T>(items: readonly T[], random: () => number): T {
   return items[Math.floor(random() * items.length)]!;
+}
+
+/**
+ * Cards taken from each chosen category in turn. Applied to new words only: in
+ * proportion to their size, 62 food words left 6 weather words with one new
+ * word in fourteen, so a first session could be all food. Reviews are left to
+ * the schedule: balanced too, a simulated learner was asked each weather word
+ * three times as often as each food word. A small category runs out first and
+ * the rest continue. A word in several chosen categories counts for one of them,
+ * picked at random. Order within a category is kept.
+ */
+export function balanceTags(
+  cards: Card[],
+  tags: string[] | undefined,
+  random: () => number,
+): Card[] {
+  if (!tags || tags.length < 2) return cards;
+  const queues = new Map<string, Card[]>(shuffle([...tags], random).map((tag) => [tag, []]));
+  for (const card of cards) {
+    const own = tags.filter((tag) => card.entry.tags.includes(tag));
+    queues.get(pick(own, random))!.push(card);
+  }
+  const out: Card[] = [];
+  const lists = [...queues.values()];
+  for (let row = 0; out.length < cards.length; row++) {
+    for (const list of lists) if (row < list.length) out.push(list[row]!);
+  }
+  return out;
 }
 
 /** Reviews with a new word in every third place, each list continuing once the other runs out. */

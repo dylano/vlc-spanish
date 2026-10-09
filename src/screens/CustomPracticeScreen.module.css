@@ -117,7 +117,15 @@
 
 .spacer {
   flex: 1;
-  min-height: 28px;
+  min-height: 12px;
+}
+
+/* The pills scroll under it, fading out just above the button. */
+.footer {
+  position: sticky;
+  bottom: var(--nav-height, 0px);
+  padding: 16px 0 12px;
+  background: linear-gradient(to bottom, transparent, var(--paper) 16px);
 }
 
 .start {
