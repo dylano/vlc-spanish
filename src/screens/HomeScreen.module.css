@@ -32,69 +32,49 @@
   border-top: 1px solid var(--rule);
 }
 
+/* The two ways to start a session: the same size and weight. */
 .action {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  min-height: 72px;
+  min-height: 104px;
   border-bottom: 1px solid var(--rule);
   font-family: var(--serif);
-  text-decoration: none;
-  color: var(--ink);
-}
-
-/* The primary action dominates; the two below it are narrowings of the same
-   thing, so they read as subordinate rather than as rival choices. */
-.primary {
-  min-height: 92px;
   font-size: 2.25rem;
+  line-height: 1.1;
+  text-decoration: none;
   color: var(--accent);
 }
 
-.narrowing {
-  font-size: 1.25rem;
+.subtitle {
+  display: block;
+  margin-top: 4px;
+  font-family: var(--sans);
+  font-size: 0.8125rem;
   color: var(--muted);
 }
 
-/* Focus on problem words, with a line under it to the list of problem words:
-   two links in one row, since a link cannot hold another. */
-.problemRow {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  min-height: 72px;
-  padding: 8px 0 4px;
-  border-bottom: 1px solid var(--rule);
-}
-
-.focus {
+/* A reference rather than a session: set apart and smaller. */
+.problems {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  min-height: 44px;
+  min-height: 64px;
+  margin-top: 36px;
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
   font-family: var(--serif);
+  font-size: 1.375rem;
   text-decoration: none;
+  color: var(--ink);
 }
 
-.seeList {
-  display: inline-flex;
-  align-self: flex-start;
-  align-items: center;
-  gap: 4px;
-  min-height: 32px;
-  font-size: var(--label-size);
-  letter-spacing: var(--label-tracking);
-  text-transform: uppercase;
-  color: var(--accent);
-  text-decoration: none;
-}
-
-.seeList .seeListChevron {
-  width: 14px;
-  height: 14px;
-  color: var(--accent);
+.count {
+  font-family: var(--sans);
+  font-size: 0.8125rem;
+  color: var(--muted);
 }
 
 .chevron {
@@ -102,70 +82,11 @@
   color: var(--muted);
 }
 
-.chevronDown {
-  transform: rotate(90deg);
-}
-
-.chevronUp {
-  transform: rotate(-90deg);
-}
-
-/* Not another row of the list: a small-caps toggle, set well apart, that
-   unfolds the exercise list in place. */
-.disclosure {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  width: 100%;
-  min-height: 48px;
-  margin-top: 40px;
-  padding: 0;
-  border: none;
-  background: transparent;
-  font-family: var(--sans);
-  font-size: var(--label-size);
-  letter-spacing: var(--label-tracking);
-  text-transform: uppercase;
-  color: var(--muted);
-  text-align: left;
-  cursor: pointer;
-}
-
-.disclosure .chevron {
-  width: 16px;
-  height: 16px;
-}
-
-.disclosureOpen {
-  color: var(--ink);
-}
-
-.groupLabel {
-  font-size: var(--label-size);
-  letter-spacing: var(--label-tracking);
-  text-transform: uppercase;
-  color: var(--muted);
-  margin: 20px 0 4px;
-}
-
-.exerciseGrid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  column-gap: 24px;
-}
-
-.exercise {
-  display: flex;
-  align-items: center;
-  min-height: 48px;
-  border-bottom: 1px solid var(--rule);
-  font-size: 0.9375rem;
-  color: var(--ink);
-  text-decoration: none;
-}
-
 .nothing {
+  display: flex;
+  align-items: center;
+  min-height: 104px;
+  border-bottom: 1px solid var(--rule);
   color: var(--muted);
   margin: 0;
 }

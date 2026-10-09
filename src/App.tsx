@@ -2,6 +2,7 @@ import { BrowserRouter, Route, Routes } from "react-router";
 import AppShell from "./app/AppShell.tsx";
 import { StoreProvider } from "./app/store.tsx";
 import { useStore } from "./app/store-context.ts";
+import CustomPracticeScreen from "./screens/CustomPracticeScreen.tsx";
 import DictionaryScreen from "./screens/DictionaryScreen.tsx";
 import HomeScreen from "./screens/HomeScreen.tsx";
 import ProblemWordsScreen from "./screens/ProblemWordsScreen.tsx";
@@ -24,6 +25,7 @@ function Gate() {
         <Route index element={<HomeScreen />} />
         <Route path="dictionary" element={<DictionaryScreen />} />
         <Route path="settings" element={<SettingsScreen />} />
+        <Route path="custom" element={<CustomPracticeScreen />} />
         <Route path="problems" element={<ProblemWordsScreen />} />
         <Route path="version" element={<VersionScreen />} />
         <Route path="*" element={<HomeScreen />} />

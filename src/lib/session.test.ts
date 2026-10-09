@@ -3,6 +3,7 @@ import { grade } from "./grade.ts";
 import {
   buildMatchRounds,
   buildMixedSession,
+  balanceTags,
   buildSession,
   isMatchRound,
   capFor,
@@ -17,6 +18,8 @@ import {
   isDrillable,
   MIXED_EN_ES_SHARE,
   promptGloss,
+  type Card,
+  type Exercise,
 } from "./session.ts";
 import type { Direction, Entry, ProgressBlob, VerbEntry } from "./schema.ts";
 import { sm2 } from "./scheduler.ts";
@@ -177,22 +180,37 @@ describe("buildSession", () => {
     expect(cards).toHaveLength(0);
   });
 
-  it("restricts a misses session to cards whose last answer was wrong", () => {
+  it("restricts a problems session to words ever missed, wrong last time first", () => {
     const progress = withProgress([
-      [entries[0]!, "en→es", { lapses: 2, lastResult: "wrong", due: "2026-12-01" }],
-      [entries[1]!, "en→es", { lapses: 0, lastResult: "correct", due: "2026-12-01" }],
-      // Lapsed in the past but since relearned: no longer a miss.
-      [entries[2]!, "en→es", { lapses: 3, lastResult: "correct", due: "2026-12-01" }],
+      [entries[0]!, "en→es", { lapses: 0, lastResult: "correct", due: "2026-12-01" }],
+      // Missed in the past and since answered right: still on the list.
+      [entries[1]!, "en→es", { lapses: 3, lastResult: "correct", due: "2026-12-01" }],
+      [entries[2]!, "en→es", { lapses: 1, lastResult: "wrong", due: "2026-12-01" }],
     ]);
+    for (let seed = 1; seed <= 5; seed++) {
+      const cards = buildSession({
+        entries,
+        progress,
+        userId: "dylan",
+        config: { ...DEFAULT_CONFIG, direction: "en→es", scope: "problems" },
+        today: TODAY,
+        random: seeded(seed),
+      });
+      expect(cards.map((card) => card.entry.id)).toEqual([entries[2]!.id, entries[1]!.id]);
+    }
+  });
+
+  it("ignores categories in a problems session", () => {
+    const progress = withProgress([[entries[1]!, "en→es", { lapses: 1, due: "2026-12-01" }]]);
     const cards = buildSession({
       entries,
       progress,
       userId: "dylan",
-      config: { ...DEFAULT_CONFIG, direction: "en→es", scope: "misses" },
+      config: { ...DEFAULT_CONFIG, direction: "en→es", scope: "problems", tags: ["nothing-here"] },
       today: TODAY,
-      random: seeded(5),
+      random: seeded(6),
     });
-    expect(cards.map((card) => card.entry.id)).toEqual(["uno"]);
+    expect(cards.map((card) => card.entry.id)).toEqual([entries[1]!.id]);
   });
 
   it("filters by tag", () => {
@@ -284,6 +302,44 @@ describe("buildSession", () => {
       estar: "location, temporary states",
       hoy: undefined,
     });
+  });
+});
+
+describe("several categories", () => {
+  const big = Array.from({ length: 30 }, (_, i) => word(`comida${i}`, [`food ${i}`], ["food"]));
+  const small = Array.from({ length: 4 }, (_, i) =>
+    word(`tiempo${i}`, [`weather ${i}`], ["weather"]),
+  );
+
+  it("introduces new words from each chosen category in turn, not in proportion to size", () => {
+    for (let seed = 1; seed <= 10; seed++) {
+      const cards = buildSession({
+        entries: [...big, ...small],
+        progress: emptyProgress(),
+        userId: "dylan",
+        config: { ...DEFAULT_CONFIG, size: 8, scope: "all", tags: ["food", "weather"] },
+        today: TODAY,
+        random: seeded(seed),
+      });
+      // Four of each: by size, weather would have had about one.
+      expect(cards.filter((card) => card.entry.tags.includes("weather"))).toHaveLength(4);
+    }
+  });
+
+  it("continues with the rest once a small category runs out", () => {
+    const cards = big
+      .slice(0, 6)
+      .concat(small.slice(0, 2))
+      .map((entry) => ({ entry }) as Card);
+    const order = balanceTags(cards, ["food", "weather"], seeded(1)).map((card) => card.entry.id);
+    expect(order).toHaveLength(8);
+    expect(order.slice(4).every((id) => id.startsWith("comida"))).toBe(true);
+  });
+
+  it("leaves the order alone with one category or none", () => {
+    const cards = big.slice(0, 5).map((entry) => ({ entry }) as Card);
+    expect(balanceTags(cards, ["food"], seeded(1))).toBe(cards);
+    expect(balanceTags(cards, undefined, seeded(1))).toBe(cards);
   });
 });
 
@@ -446,12 +502,18 @@ describe("mixed sessions", () => {
     word(`palabra${i}`, [`word ${i}`], [tags[i % tags.length]!]),
   );
 
-  function mixed(entries: Entry[], size: number, seed: number, progress = emptyProgress()) {
+  function mixed(
+    entries: Entry[],
+    size: number,
+    seed: number,
+    progress = emptyProgress(),
+    exercises?: Exercise[],
+  ) {
     return buildMixedSession({
       entries,
       progress,
       userId: "dylan",
-      config: { ...DEFAULT_CONFIG, format: "mixed", size },
+      config: { ...DEFAULT_CONFIG, format: "mixed", size, exercises },
       today: TODAY,
       random: spread(seed),
     });
@@ -474,6 +536,17 @@ describe("mixed sessions", () => {
       for (const item of mixed(pool, 15, seed)) seen.add(item.exercise);
     }
     expect([...seen].sort()).toEqual(["choice", "match", "typed"]);
+  });
+
+  it("uses only the exercises chosen, and still fills the session", () => {
+    for (let seed = 1; seed <= 20; seed++) {
+      const items = mixed(pool, 15, seed, emptyProgress(), ["choice", "match"]);
+      expect(items.every((item) => item.exercise === "choice" || item.exercise === "match")).toBe(
+        true,
+      );
+      // Without typing in the mix the caps are off, so the session is not cut short.
+      expect(wordsIn(items)).toHaveLength(15);
+    }
   });
 
   it("never runs one exercise more than the limit in a row while there is an alternative", () => {
@@ -637,21 +710,8 @@ describe("new words versus reviews", () => {
 
   it("offers a brand-new word in only one direction", () => {
     for (let seed = 1; seed <= 10; seed++) {
-      const ids = session(seed, { scope: "recent" }).map((card) => card.entry.id);
+      const ids = session(seed, { scope: "due" }).map((card) => card.entry.id);
       expect(new Set(ids).size).toBe(ids.length);
     }
-  });
-
-  it("gives Focus on new words brand-new words before other directions", () => {
-    const oneWay = withProgress(
-      reviewed.map((w) => [w, "en→es", { due: "2026-12-01", reps: 3 }]) as [
-        Entry,
-        Direction,
-        { due: string; reps: number },
-      ][],
-    );
-    const cards = session(2, { scope: "recent", size: 25 }, oneWay);
-    const firstOther = cards.findIndex((card) => !brandNew.has(card.entry.id));
-    expect(firstOther).toBe(20);
   });
 });

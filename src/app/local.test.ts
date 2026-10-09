@@ -1,11 +1,15 @@
 import { describe, expect, it } from "vite-plus/test";
 import {
+  CUSTOM_KEY,
+  DEFAULT_CUSTOM,
   EMPTY_PROGRESS,
   LOCAL_USER,
   NAME_KEY,
   PROGRESS_KEY,
+  readCustom,
   readName,
   readProgress,
+  writeCustom,
   writeName,
   writeProgress,
 } from "./local.ts";
@@ -77,5 +81,24 @@ describe("local name", () => {
 
   it("treats a blank name as no name", () => {
     expect(readName(memoryStorage({ [NAME_KEY]: "   " }))).toBeUndefined();
+  });
+});
+
+describe("custom practice choices", () => {
+  it("round-trips what was saved", () => {
+    const store = memoryStorage();
+    const choice = { words: "problems" as const, exercises: ["gap"], tags: ["food"] };
+    writeCustom(choice, store);
+    expect(readCustom(store)).toEqual(choice);
+  });
+
+  it("falls back to All for anything unreadable", () => {
+    expect(readCustom(memoryStorage())).toEqual(DEFAULT_CUSTOM);
+    expect(readCustom(memoryStorage({ [CUSTOM_KEY]: "{not json" }))).toEqual(DEFAULT_CUSTOM);
+    expect(
+      readCustom(
+        memoryStorage({ [CUSTOM_KEY]: '{"words": 3, "exercises": [1, "gap"], "tags": "x"}' }),
+      ),
+    ).toEqual({ words: "all", exercises: ["gap"], tags: [] });
   });
 });

@@ -2,7 +2,8 @@ import { progressBlobSchema, type ProgressBlob } from "../lib/schema.ts";
 
 /*
  * Everything the app remembers lives in this browser's local storage: the
- * learner's name, their progress, and two settings (theme, session length). There is no server and no account, so
+ * learner's name, their progress, two settings (theme, session length) and the
+ * last Custom practice choices. There is no server and no account, so
  * progress belongs to one browser on one device.
  */
 
@@ -17,6 +18,7 @@ export const PROGRESS_KEY = "vlc-spanish:progress";
 /** Also read by the inline script in index.html, which applies it before first paint. */
 export const THEME_KEY = "vlc-spanish:theme";
 export const SESSION_SIZE_KEY = "vlc-spanish:session-size";
+export const CUSTOM_KEY = "vlc-spanish:custom";
 
 export type Theme = "light" | "dark";
 
@@ -85,6 +87,44 @@ export function readSessionSize(store: Storage | undefined = storage()): number 
 export function writeSessionSize(size: number, store: Storage | undefined = storage()): void {
   try {
     store?.setItem(SESSION_SIZE_KEY, String(size));
+  } catch {
+    // The choice still applies for this visit.
+  }
+}
+
+/**
+ * The Custom practice screen's choices, kept for next time. Empty lists mean
+ * "All". Ids are stored as given; the screen drops any it no longer knows.
+ */
+export interface CustomChoice {
+  words: "all" | "problems";
+  exercises: string[];
+  tags: string[];
+}
+
+export const DEFAULT_CUSTOM: CustomChoice = { words: "all", exercises: [], tags: [] };
+
+const strings = (value: unknown): string[] =>
+  Array.isArray(value) ? value.filter((item): item is string => typeof item === "string") : [];
+
+export function readCustom(store: Storage | undefined = storage()): CustomChoice {
+  try {
+    const raw = store?.getItem(CUSTOM_KEY);
+    if (!raw) return DEFAULT_CUSTOM;
+    const parsed = JSON.parse(raw) as Partial<Record<keyof CustomChoice, unknown>>;
+    return {
+      words: parsed.words === "problems" ? "problems" : "all",
+      exercises: strings(parsed.exercises),
+      tags: strings(parsed.tags),
+    };
+  } catch {
+    return DEFAULT_CUSTOM;
+  }
+}
+
+export function writeCustom(choice: CustomChoice, store: Storage | undefined = storage()): void {
+  try {
+    store?.setItem(CUSTOM_KEY, JSON.stringify(choice));
   } catch {
     // The choice still applies for this visit.
   }

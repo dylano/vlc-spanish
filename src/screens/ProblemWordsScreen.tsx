@@ -5,6 +5,7 @@ import { canonicalAnswer } from "../lib/grade.ts";
 import { forgiveMisses } from "../lib/scheduler.ts";
 import type { Direction, Entry } from "../lib/schema.ts";
 import { problemWords } from "../lib/problems.ts";
+import type { CustomPracticeState } from "./CustomPracticeScreen.tsx";
 import styles from "./ProblemWordsScreen.module.css";
 
 /** How far left, as a share of the row, a swipe must go to remove it. */
@@ -102,8 +103,8 @@ function SwipeRow({
 }
 
 /**
- * Every word missed at least once, most missed first. A reference, not a way to
- * practice: Focus on problem words on the home screen does the drilling.
+ * Every word missed at least once, most missed first. "Practice these" opens
+ * Custom practice set to these words, ready to start.
  */
 export default function ProblemWordsScreen() {
   const { entries, progress, recordResults } = useStore();
@@ -131,43 +132,61 @@ export default function ProblemWordsScreen() {
       <h1 className={styles.title}>Problem words</h1>
       <p className={styles.intro}>
         The words you have missed most, across every session. A word stays here after you get it
-        right; the count is its history. If the misses were only slips, remove it: it counts as
-        known again and leaves Focus on problem words. Swipe a word left to remove it.
+        right; the count is its history. Swipe a word left to remove it if the misses were only
+        slips.
       </p>
 
       {words.length === 0 ? (
         <p className={styles.empty}>Nothing missed yet.</p>
       ) : (
-        <ul className={styles.list}>
-          {words.map(({ entry, missed, wrongLast }) => (
-            <SwipeRow
-              key={entry.id}
-              label={`Remove ${entry.es}: the misses were only slips`}
-              onRemove={() => {
-                remove(entry);
-              }}
+        <>
+          {/* Above the list, not below it: the list can run well past a screen. */}
+          <div className={styles.toolbar}>
+            <span className={styles.total}>
+              {words.length} {words.length === 1 ? "word" : "words"}
+            </span>
+            <Link
+              to="/custom"
+              state={{ words: "problems" } satisfies CustomPracticeState}
+              className={styles.practice}
             >
-              <div>
-                <p className={styles.es}>
-                  {canonicalAnswer(entry, "en→es", { requireArticle: true })}
+              Practice these
+              <svg className={styles.practiceChevron} viewBox="0 0 20 20" aria-hidden="true">
+                <path d="M7 4l6 6-6 6" />
+              </svg>
+            </Link>
+          </div>
+          <ul className={styles.list}>
+            {words.map(({ entry, missed, wrongLast }) => (
+              <SwipeRow
+                key={entry.id}
+                label={`Remove ${entry.es}: the misses were only slips`}
+                onRemove={() => {
+                  remove(entry);
+                }}
+              >
+                <div>
+                  <p className={styles.es}>
+                    {canonicalAnswer(entry, "en→es", { requireArticle: true })}
+                  </p>
+                  <p className={styles.detail}>
+                    {entry.en[0]}
+                    {wrongLast ? (
+                      <>
+                        {" · "}
+                        <span className={styles.wrong}>recent miss</span>
+                      </>
+                    ) : null}
+                  </p>
+                </div>
+                <p className={styles.count}>
+                  <span className={styles.number}>{missed}</span>
+                  <span className={styles.missed}>missed</span>
                 </p>
-                <p className={styles.detail}>
-                  {entry.en[0]}
-                  {wrongLast ? (
-                    <>
-                      {" · "}
-                      <span className={styles.wrong}>recent miss</span>
-                    </>
-                  ) : null}
-                </p>
-              </div>
-              <p className={styles.count}>
-                <span className={styles.number}>{missed}</span>
-                <span className={styles.missed}>missed</span>
-              </p>
-            </SwipeRow>
-          ))}
-        </ul>
+              </SwipeRow>
+            ))}
+          </ul>
+        </>
       )}
     </section>
   );

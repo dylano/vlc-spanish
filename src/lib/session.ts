@@ -5,6 +5,7 @@ import type { Frame, Glue } from "./sentences/frames.ts";
 import { gapTargets, renderGap, type Gap } from "./sentences/gap.ts";
 import { renderMistake, type Mistake } from "./sentences/mistake.ts";
 import { renderTranslation, type Translation } from "./sentences/translate.ts";
+import { isProblem } from "./problems.ts";
 import { isDue, sm2 } from "./scheduler.ts";
 import type { Direction, Entry, Progress, ProgressBlob } from "./schema.ts";
 
@@ -30,8 +31,15 @@ export interface QuizConfig {
   size: number;
   direction: Direction | "mixed";
   format: Exercise | "mixed";
+  /** The exercises a mixed session may use; every one when absent or empty. */
+  exercises?: Exercise[];
   tags?: string[];
-  scope: "due" | "recent" | "misses" | "all";
+  /**
+   * Which words: `due` ranks the dictionary for review (due, then new), `all`
+   * adds every other word after those, and `problems` is the Problem words list
+   * only — every word ever missed, whatever its category.
+   */
+  scope: "due" | "all" | "problems";
 }
 
 export const DEFAULT_CONFIG: QuizConfig = {
@@ -129,6 +137,15 @@ function matchesTags(entry: Entry, tags: string[] | undefined): boolean {
   return entry.tags.some((tag) => tags.includes(tag));
 }
 
+/**
+ * Whether a session may ask this word. Problem words ignore categories: the
+ * list is a history of misses, and a missed number is as worth drilling as any.
+ */
+function inScope(entry: Entry, options: Pick<BuildSessionOptions, "config" | "progress">): boolean {
+  if (options.config.scope === "problems") return isProblem(entry, options.progress);
+  return matchesTags(entry, options.config.tags);
+}
+
 export interface BuildSessionOptions {
   entries: Entry[];
   progress: ProgressBlob;
@@ -185,9 +202,12 @@ function sentenceSetup(options: BuildSessionOptions) {
   if (!sentences) return undefined;
 
   const practiced = (entry: Entry) => progress.entries[entry.id] !== undefined;
+  const problems = options.config.scope === "problems";
   // A sentence is answered in Spanish, so it reviews the en→es card; a word
   // counts as due for a sentence only when that card is (or has never been seen).
+  // Problem words are drilled whether due or not: that is the point of asking for them.
   const due = (entry: Entry) => {
+    if (problems) return true;
     const record = progress.entries[entry.id]?.["en→es"];
     return !record || isDue(record, today);
   };
@@ -205,7 +225,10 @@ function sentenceSetup(options: BuildSessionOptions) {
     Object.values(progress.entries[card.entry.id] ?? {})
       .map((record) => record?.lastSeen ?? "")
       .reduce((latest, seen) => (seen > latest ? seen : latest), "");
-  const fallback = rankedCards({ ...options, config: { ...options.config, scope: "all" } })
+  const fallback = rankedCards({
+    ...options,
+    config: { ...options.config, scope: problems ? "problems" : "all" },
+  })
     .filter((card) => targets.has(card.entry.id))
     .map((card) => ({ card, seen: lastSeen(card) }))
     .sort((a, b) => a.seen.localeCompare(b.seen))
@@ -270,10 +293,10 @@ function gapMaker(
   return (remaining, maxWords, taken, dueOnly = false) => {
     const roll = random();
     const wanted = Math.min(maxWords, BLANK_ODDS.find(([, odds]) => roll < odds)![0]);
-    // Further blanks are any drillable word not already used this session.
+    // Further blanks are any word the session may ask, not already used in it.
     const canBlank = (id: string) => {
       const entry = entries.find((candidate) => candidate.id === id);
-      return !!entry && isDrillable(entry) && !taken.has(id);
+      return !!entry && inScope(entry, options) && !taken.has(id);
     };
 
     for (const { card, queued } of sentenceCandidates(remaining, taken, setup, dueOnly)) {
@@ -564,6 +587,19 @@ function weightedPick<T extends string>(weights: Record<T, number>, random: () =
 export function buildMixedSession(options: BuildSessionOptions): SessionItem[] {
   const random = options.random ?? Math.random;
   const size = options.config.size;
+  const chosen = options.config.exercises;
+  const allowed = (exercise: Exercise) =>
+    !chosen || chosen.length === 0 || chosen.includes(exercise);
+  // The caps keep the easy exercises from crowding out typing. Without typing in
+  // the mix there is nothing to protect, and a cap would only end the session early.
+  const capped = allowed("typed");
+  // New words are introduced one at a time, by typing or else by multiple choice;
+  // with neither chosen, they arrive only as sentences pick them.
+  const introduce: Exercise | undefined = allowed("typed")
+    ? "typed"
+    : allowed("choice")
+      ? "choice"
+      : undefined;
   const remaining = rankedCards(options);
   const makeGap = gapMaker(options);
   const makeMistake = sentenceMaker(options, renderMistake);
@@ -577,7 +613,9 @@ export function buildMixedSession(options: BuildSessionOptions): SessionItem[] {
   let early = 0;
   // Words the app has not asked yet, and how many of them this session owes.
   const isNew = (card: Card) => options.progress.entries[card.entry.id] === undefined;
-  const quota = Math.min(remaining.filter(isNew).length, Math.round(size * NEW_SHARE));
+  const quota = introduce
+    ? Math.min(remaining.filter(isNew).length, Math.round(size * NEW_SHARE))
+    : 0;
   let planned = 0;
 
   while (budget > 0 && remaining.length > 0) {
@@ -587,7 +625,7 @@ export function buildMixedSession(options: BuildSessionOptions): SessionItem[] {
       const index = remaining.findIndex(isNew);
       if (index >= 0) {
         const [card] = remaining.splice(index, 1);
-        plan.push({ exercise: "typed", card: card! });
+        plan.push({ exercise: introduce!, card: card! });
         planned++;
         budget -= 1;
         continue;
@@ -597,25 +635,41 @@ export function buildMixedSession(options: BuildSessionOptions): SessionItem[] {
     let run = 0;
     for (let i = plan.length - 1; i >= 0 && plan[i]!.exercise === last; i--) run++;
 
+    // What can still be asked at all: chosen, and not exhausted.
+    const possible: Record<Exercise, boolean> = {
+      typed: allowed("typed"),
+      choice: allowed("choice"),
+      match: allowed("match") && roundsPossible && budget >= MATCH_ROUND_SIZE,
+      gap: allowed("gap") && gapsPossible,
+      mistake: allowed("mistake") && mistakesPossible,
+      translate: allowed("translate") && translationsPossible,
+    };
     const weights = { ...MIX_WEIGHTS };
+    for (const exercise of Object.keys(weights) as Exercise[]) {
+      if (!possible[exercise]) weights[exercise] = 0;
+    }
     // Typed cards and gaps share the keyboard, so they are nudged to follow each other.
     if (last === "typed" || last === "gap") {
       weights.typed *= 2;
       weights.gap *= 2;
     }
     if (last && run >= MAX_RUN) weights[last] = 0;
-    for (const [capped, limit] of Object.entries(MAX_PER_SESSION) as [Exercise, number][]) {
-      if (plan.filter((step) => step.exercise === capped).length >= capFor(limit, size)) {
-        weights[capped] = 0;
-      }
+    const full = (exercise: Exercise) => {
+      const limit = MAX_PER_SESSION[exercise];
+      return (
+        capped &&
+        limit !== undefined &&
+        plan.filter((step) => step.exercise === exercise).length >= capFor(limit, size)
+      );
+    };
+    for (const exercise of Object.keys(weights) as Exercise[]) {
+      if (full(exercise)) weights[exercise] = 0;
     }
-    if (!roundsPossible || budget < MATCH_ROUND_SIZE) weights.match = 0;
-    if (!gapsPossible) weights.gap = 0;
-    if (!mistakesPossible) weights.mistake = 0;
-    if (!translationsPossible) weights.translate = 0;
-    // The run limit varies the pace; it must never leave nothing to ask. When every
-    // other exercise is capped or unavailable, typing continues.
-    if (Object.values(weights).every((weight) => weight === 0)) weights.typed = 1;
+    // The run limit varies the pace; it must never leave nothing to ask. When it
+    // rules out everything else, the exercise it stopped continues.
+    const none = () => Object.values(weights).every((weight) => weight === 0);
+    if (none() && last && possible[last] && !full(last)) weights[last] = 1;
+    if (none()) break;
 
     const exercise = weightedPick(weights, random);
     const taken = new Set(
@@ -766,7 +820,7 @@ function rankedCards(options: BuildSessionOptions): Card[] {
   const { entries, progress, userId, config, today, random = Math.random } = options;
   const index = glossIndex(entries);
 
-  const pool = entries.filter((entry) => matchesTags(entry, config.tags));
+  const pool = entries.filter((entry) => inScope(entry, options));
   const directions: Direction[] =
     config.direction === "mixed" ? ["en→es", "es→en"] : [config.direction];
 
@@ -774,6 +828,8 @@ function rankedCards(options: BuildSessionOptions): Card[] {
   const fresh: Card[] = [];
   const otherDirection: Card[] = [];
   const rest: Card[] = [];
+  // Problem words wrong last time, in that direction: drilled first.
+  const wrong: Card[] = [];
 
   for (const entry of pool) {
     const record = progress.entries[entry.id];
@@ -785,9 +841,12 @@ function rankedCards(options: BuildSessionOptions): Card[] {
       const card = toCard(entry, direction, progress, userId, today, index);
       const seen = record?.[direction];
 
-      if (config.scope === "misses") {
-        // Matches the home-screen count: the most recent answer was wrong.
-        if (seen?.lastResult === "wrong") rest.push(card);
+      if (config.scope === "problems") {
+        // Every problem word is in, due or not; what is still wrong comes first,
+        // then what is due, so a word answered right since waits its turn.
+        if (seen?.lastResult === "wrong") wrong.push(card);
+        else if (seen && isDue(seen, today)) due.push(card);
+        else rest.push(card);
         continue;
       }
       if (!metBefore) {
@@ -798,17 +857,21 @@ function rankedCards(options: BuildSessionOptions): Card[] {
         otherDirection.push(card);
         continue;
       }
-      if (config.scope === "recent") continue;
       if (isDue(seen, today)) due.push(card);
       else if (config.scope === "all") rest.push(card);
     }
   }
 
+  // New words are shared out between the chosen categories as they are
+  // introduced; reviews follow the schedule, whatever their category.
   const ordered =
-    config.scope === "recent"
-      ? [...shuffle(fresh, random), ...shuffle(otherDirection, random)]
+    config.scope === "problems"
+      ? [...shuffle(wrong, random), ...shuffle(due, random), ...shuffle(rest, random)]
       : [
-          ...interleaveNew(dedupeByEntry(shuffle(due, random), config), shuffle(fresh, random)),
+          ...interleaveNew(
+            dedupeByEntry(shuffle(due, random), config),
+            balanceTags(shuffle(fresh, random), config.tags, random),
+          ),
           ...shuffle(otherDirection, random),
           ...shuffle(rest, random),
         ];
@@ -817,6 +880,34 @@ function rankedCards(options: BuildSessionOptions): Card[] {
 
 function pick<T>(items: readonly T[], random: () => number): T {
   return items[Math.floor(random() * items.length)]!;
+}
+
+/**
+ * Cards taken from each chosen category in turn. Applied to new words only: in
+ * proportion to their size, 62 food words left 6 weather words with one new
+ * word in fourteen, so a first session could be all food. Reviews are left to
+ * the schedule: balanced too, a simulated learner was asked each weather word
+ * three times as often as each food word. A small category runs out first and
+ * the rest continue. A word in several chosen categories counts for one of them,
+ * picked at random. Order within a category is kept.
+ */
+export function balanceTags(
+  cards: Card[],
+  tags: string[] | undefined,
+  random: () => number,
+): Card[] {
+  if (!tags || tags.length < 2) return cards;
+  const queues = new Map<string, Card[]>(shuffle([...tags], random).map((tag) => [tag, []]));
+  for (const card of cards) {
+    const own = tags.filter((tag) => card.entry.tags.includes(tag));
+    queues.get(pick(own, random))!.push(card);
+  }
+  const out: Card[] = [];
+  const lists = [...queues.values()];
+  for (let row = 0; out.length < cards.length; row++) {
+    for (const list of lists) if (row < list.length) out.push(list[row]!);
+  }
+  return out;
 }
 
 /** Reviews with a new word in every third place, each list continuing once the other runs out. */

@@ -66,7 +66,7 @@ export default function SettingsScreen() {
           ))}
         </div>
         <p className={styles.note}>
-          Words in each session: General practice, the Focus rows and a single exercise.
+          Words in each session, for General practice and Custom practice.
         </p>
       </div>
 
