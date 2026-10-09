@@ -2869,7 +2869,7 @@
       "id": "flavour-is",
       "grammar": ["food", "ser"],
       "es": "{c:el} es de {f}.",
-      "en": "{c:the} is {f}-flavoured.",
+      "en": "{c:the} is {f}-flavored.",
       "slots": {
         "c": {
           "kind": "noun",

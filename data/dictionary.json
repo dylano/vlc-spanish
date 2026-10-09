@@ -4778,12 +4778,12 @@
     {
       "id": "salado",
       "es": "salado",
-      "en": ["salty", "savoury", "savory"],
+      "en": ["savory", "salty"],
       "pos": "adj",
       "forms": {
         "f": "salada"
       },
-      "notes": "Also savoury, as opposed to sweet. Of a person, informally: witty, charming.",
+      "notes": "Savory as opposed to sweet; also salty. Of a person, informally: witty, charming.",
       "tags": ["food"],
       "added": "2026-10-09"
     },
@@ -4799,13 +4799,13 @@
     {
       "id": "sabor",
       "es": "sabor",
-      "en": ["flavour", "flavor", "taste"],
+      "en": ["flavor", "taste"],
       "pos": "noun",
       "gender": "m",
       "forms": {
         "pl": "sabores"
       },
-      "notes": "Masculine: el sabor. '¿De qué sabor?' is what flavour?",
+      "notes": "Masculine: el sabor. '¿De qué sabor?' is what flavor?",
       "tags": ["food"],
       "added": "2026-10-09"
     },
