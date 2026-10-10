@@ -752,7 +752,7 @@
         "reflexive": false,
         "regular": true
       },
-      "tags": ["daily-activities", "verbs"],
+      "tags": ["daily-activities", "verbs", "food"],
       "added": "2026-09-15"
     },
     {
@@ -772,7 +772,7 @@
         "vosotros": "os ducháis",
         "ellos": "se duchan"
       },
-      "tags": ["daily-activities", "verbs"],
+      "tags": ["daily-activities", "verbs", "body"],
       "added": "2026-09-15"
     },
     {
@@ -793,7 +793,7 @@
         "ellos": "se lavan los dientes"
       },
       "notes": "Literally 'to wash the teeth'. Spanish uses 'los dientes', not 'mis dientes'; the reflexive pronoun already says whose.",
-      "tags": ["daily-activities", "verbs"],
+      "tags": ["daily-activities", "verbs", "body"],
       "added": "2026-09-15"
     },
     {
@@ -814,7 +814,7 @@
         "vosotros": "os vestís",
         "ellos": "se visten"
       },
-      "tags": ["daily-activities", "verbs"],
+      "tags": ["daily-activities", "verbs", "clothing"],
       "added": "2026-09-15"
     },
     {
@@ -827,7 +827,7 @@
         "regular": false
       },
       "notes": "'Al' is 'a' + 'el'. See 'ir' for the conjugation.",
-      "tags": ["daily-activities", "verbs"],
+      "tags": ["daily-activities", "verbs", "workplaces"],
       "added": "2026-09-15"
     },
     {
@@ -839,7 +839,7 @@
         "reflexive": false,
         "regular": true
       },
-      "tags": ["daily-activities", "verbs"],
+      "tags": ["daily-activities", "verbs", "workplaces"],
       "added": "2026-09-15"
     },
     {
@@ -852,7 +852,7 @@
         "regular": true
       },
       "notes": "In Spain 'comer' means to have lunch specifically (the main midday meal); 'almorzar' is less common.",
-      "tags": ["daily-activities", "verbs"],
+      "tags": ["daily-activities", "verbs", "food"],
       "added": "2026-09-15"
     },
     {
@@ -874,7 +874,7 @@
         "ellos": "almuerzan"
       },
       "notes": "Understood in Spain but 'comer' is the everyday word for lunch there.",
-      "tags": ["daily-activities", "verbs"],
+      "tags": ["daily-activities", "verbs", "food"],
       "added": "2026-09-15"
     },
     {
@@ -901,7 +901,7 @@
         "irregularYo": "salgo"
       },
       "notes": "'Del' is 'de' + 'el'. See 'salir' for the conjugation.",
-      "tags": ["daily-activities", "verbs"],
+      "tags": ["daily-activities", "verbs", "workplaces"],
       "added": "2026-09-15"
     },
     {
@@ -913,7 +913,7 @@
         "reflexive": false,
         "regular": true
       },
-      "tags": ["daily-activities", "verbs"],
+      "tags": ["daily-activities", "verbs", "food"],
       "added": "2026-09-15"
     },
     {
@@ -1202,7 +1202,7 @@
         "reflexive": false,
         "regular": true
       },
-      "tags": ["verbs"],
+      "tags": ["verbs", "classroom-objects"],
       "added": "2026-09-15"
     },
     {
@@ -2604,7 +2604,7 @@
         "reflexive": false,
         "regular": true
       },
-      "tags": ["verbs"],
+      "tags": ["verbs", "classroom-objects"],
       "added": "2026-09-21"
     },
     {
@@ -2651,7 +2651,7 @@
         "reflexive": false,
         "regular": true
       },
-      "tags": ["verbs"],
+      "tags": ["verbs", "classroom-objects"],
       "added": "2026-09-21"
     },
     {
@@ -2663,7 +2663,7 @@
         "reflexive": false,
         "regular": true
       },
-      "tags": ["verbs"],
+      "tags": ["verbs", "classroom-objects"],
       "added": "2026-09-21"
     },
     {
@@ -3960,7 +3960,7 @@
         "irregularYo": "hago"
       },
       "notes": "The weekly food shop. 'Ir de compras' is shopping for pleasure.",
-      "tags": ["daily-activities", "verbs"],
+      "tags": ["daily-activities", "verbs", "food"],
       "added": "2026-09-30"
     },
     {
@@ -4715,7 +4715,7 @@
         "regular": true
       },
       "notes": "'Tomar' is just as common in Spain: tomar un café.",
-      "tags": ["verbs"],
+      "tags": ["verbs", "food"],
       "added": "2026-10-03"
     },
     {
@@ -4728,7 +4728,7 @@
         "regular": true
       },
       "notes": "The everyday word for having a drink in Spain: tomar un café. Also 'tomar el sol', to sunbathe. Sentences use 'beber', whose English fits them.",
-      "tags": ["verbs"],
+      "tags": ["verbs", "food"],
       "added": "2026-10-03"
     },
     {
@@ -4750,7 +4750,7 @@
         "ellos": "ponen"
       },
       "notes": "Yo form pongo. In a bar it is how you order: ¿me pones una caña? (to a waiter you know, or most waiters in Spain; formally, ¿me pone…?). 'Poner la mesa' is to set the table.",
-      "tags": ["verbs"],
+      "tags": ["verbs", "food"],
       "added": "2026-10-07"
     },
     {
@@ -4772,7 +4772,7 @@
         "ellos": "traen"
       },
       "notes": "Yo form traigo. In a restaurant: ¿me traes la carta? Bringing is toward the speaker; taking something away is 'llevar'.",
-      "tags": ["verbs"],
+      "tags": ["verbs", "food"],
       "added": "2026-10-07"
     },
     {
