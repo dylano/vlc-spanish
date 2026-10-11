@@ -2890,6 +2890,384 @@
         }
       },
       "cloze": ["f", "c"]
+    },
+    {
+      "id": "cooked-meat",
+      "grammar": ["food", "adj-agreement", "verb-conjugation"],
+      "subjects": ["yo", "tu", "nosotros", "vosotros", "ellos"],
+      "es": "{v} {c} {m}.",
+      "en": "{S} {v} {m} {c}.",
+      "slots": {
+        "v": {
+          "kind": "verb",
+          "ids": ["querer", "preferir"],
+          "subject": "@"
+        },
+        "c": {
+          "kind": "noun",
+          "ids": ["pollo", "cerdo", "ternera"]
+        },
+        "m": {
+          "kind": "adj",
+          "ids": ["asado", "guisado"],
+          "agree": "c"
+        }
+      },
+      "cloze": ["m", "c", "v"]
+    },
+    {
+      "id": "cooked-fried",
+      "grammar": ["food", "adj-agreement", "plural"],
+      "subjects": ["yo", "tu", "nosotros", "vosotros", "ellos"],
+      "es": "{v} {c} {m}.",
+      "en": "{S} {v} {m} {c}.",
+      "slots": {
+        "v": {
+          "kind": "verb",
+          "ids": ["querer", "preferir"],
+          "subject": "@"
+        },
+        "c": {
+          "kind": "noun",
+          "ids": ["patata", "huevo", "calamar"],
+          "number": "pl"
+        },
+        "m": {
+          "kind": "adj",
+          "ids": ["frito"],
+          "agree": "c"
+        }
+      },
+      "cloze": ["m", "c", "v"]
+    },
+    {
+      "id": "cooked-boiled",
+      "grammar": ["food", "adj-agreement", "plural"],
+      "subjects": ["yo", "tu", "nosotros", "vosotros", "ellos"],
+      "es": "{v} {c} {m}.",
+      "en": "{S} {v} {m} {c}.",
+      "slots": {
+        "v": {
+          "kind": "verb",
+          "ids": ["querer", "preferir"],
+          "subject": "@"
+        },
+        "c": {
+          "kind": "noun",
+          "ids": ["patata", "huevo", "garbanzo", "judia"],
+          "number": "pl"
+        },
+        "m": {
+          "kind": "adj",
+          "ids": ["cocido"],
+          "agree": "c"
+        }
+      },
+      "cloze": ["m", "c", "v"]
+    },
+    {
+      "id": "cooked-sauteed",
+      "grammar": ["food", "adj-agreement", "plural"],
+      "subjects": ["yo", "tu", "nosotros", "vosotros", "ellos"],
+      "es": "{v} {c} {m}.",
+      "en": "{S} {v} {m} {c}.",
+      "slots": {
+        "v": {
+          "kind": "verb",
+          "ids": ["querer", "preferir"],
+          "subject": "@"
+        },
+        "c": {
+          "kind": "noun",
+          "ids": ["judia", "calabacin", "gamba"],
+          "number": "pl"
+        },
+        "m": {
+          "kind": "adj",
+          "ids": ["salteado"],
+          "agree": "c"
+        }
+      },
+      "cloze": ["m", "c", "v"]
+    },
+    {
+      "id": "cooked-grilled",
+      "grammar": ["food", "verb-conjugation"],
+      "subjects": ["yo", "tu", "nosotros", "vosotros", "ellos"],
+      "es": "{v} {c} {m}.",
+      "en": "{S} {v} {m} {c}.",
+      "slots": {
+        "v": {
+          "kind": "verb",
+          "ids": ["querer", "preferir"],
+          "subject": "@"
+        },
+        "c": {
+          "kind": "noun",
+          "ids": ["pollo", "salmon", "ternera", "cerdo"]
+        },
+        "m": {
+          "kind": "word",
+          "ids": ["a-la-plancha", "a-la-parrilla", "al-horno"]
+        }
+      },
+      "cloze": ["m", "c", "v"]
+    },
+    {
+      "id": "cooked-grilled-seafood",
+      "grammar": ["food", "plural"],
+      "subjects": ["yo", "tu", "nosotros", "vosotros", "ellos"],
+      "es": "{v} {c} {m}.",
+      "en": "{S} {v} {m} {c}.",
+      "slots": {
+        "v": {
+          "kind": "verb",
+          "ids": ["querer", "preferir"],
+          "subject": "@"
+        },
+        "c": {
+          "kind": "noun",
+          "ids": ["gamba", "calamar"],
+          "number": "pl"
+        },
+        "m": {
+          "kind": "word",
+          "ids": ["a-la-plancha"]
+        }
+      },
+      "cloze": ["m", "c", "v"]
+    },
+    {
+      "id": "cooked-steamed",
+      "grammar": ["food", "verb-conjugation"],
+      "subjects": ["yo", "tu", "nosotros", "vosotros", "ellos"],
+      "es": "{v} {c} {m}.",
+      "en": "{S} {v} {m} {c}.",
+      "slots": {
+        "v": {
+          "kind": "verb",
+          "ids": ["querer", "preferir"],
+          "subject": "@"
+        },
+        "c": {
+          "kind": "noun",
+          "ids": ["salmon", "arroz"]
+        },
+        "m": {
+          "kind": "word",
+          "ids": ["al-vapor"]
+        }
+      },
+      "cloze": ["m", "c", "v"]
+    },
+    {
+      "id": "cooked-steamed-veg",
+      "grammar": ["food", "plural"],
+      "subjects": ["yo", "tu", "nosotros", "vosotros", "ellos"],
+      "es": "{v} {c} {m}.",
+      "en": "{S} {v} {m} {c}.",
+      "slots": {
+        "v": {
+          "kind": "verb",
+          "ids": ["querer", "preferir"],
+          "subject": "@"
+        },
+        "c": {
+          "kind": "noun",
+          "ids": ["judia", "calabacin"],
+          "number": "pl"
+        },
+        "m": {
+          "kind": "word",
+          "ids": ["al-vapor"]
+        }
+      },
+      "cloze": ["m", "c", "v"]
+    },
+    {
+      "id": "cooked-baked-potatoes",
+      "grammar": ["food", "plural"],
+      "subjects": ["yo", "tu", "nosotros", "vosotros", "ellos"],
+      "es": "{v} {c} {m}.",
+      "en": "{S} {v} {m} {c}.",
+      "slots": {
+        "v": {
+          "kind": "verb",
+          "ids": ["querer", "preferir"],
+          "subject": "@"
+        },
+        "c": {
+          "kind": "noun",
+          "ids": ["patata"],
+          "number": "pl"
+        },
+        "m": {
+          "kind": "word",
+          "ids": ["al-horno"]
+        }
+      },
+      "cloze": ["m", "c", "v"]
+    },
+    {
+      "id": "still-raw",
+      "grammar": ["food", "ser-estar", "adj-agreement"],
+      "es": "{c:el} está {a}.",
+      "en": "{c:the} is {a}.",
+      "slots": {
+        "c": {
+          "kind": "noun",
+          "ids": ["pollo", "cerdo", "arroz", "salmon"]
+        },
+        "a": {
+          "kind": "adj",
+          "ids": ["crudo"],
+          "agree": "c"
+        }
+      },
+      "cloze": ["a", "c"]
+    },
+    {
+      "id": "still-raw-plate",
+      "grammar": ["food", "ser-estar", "adj-agreement", "plural"],
+      "es": "{c:el} están {a}.",
+      "en": "{c:the} are {a}.",
+      "slots": {
+        "c": {
+          "kind": "noun",
+          "ids": ["patata", "gamba"],
+          "number": "pl"
+        },
+        "a": {
+          "kind": "adj",
+          "ids": ["crudo"],
+          "agree": "c"
+        }
+      },
+      "cloze": ["a", "c"]
+    },
+    {
+      "id": "order-tableware",
+      "grammar": ["food", "ordering", "irregular-yo", "articles"],
+      "es": "¿Me {v} {c:un}, por favor?",
+      "en": "Could you bring me {c:a}, please?{v:none}",
+      "slots": {
+        "v": {
+          "kind": "verb",
+          "ids": ["traer"],
+          "subject": "tu"
+        },
+        "c": {
+          "kind": "noun",
+          "ids": [
+            "tenedor",
+            "cuchillo",
+            "cuchara",
+            "cucharilla",
+            "servilleta",
+            "vaso",
+            "copa",
+            "taza",
+            "plato"
+          ]
+        }
+      },
+      "cloze": ["c", "v"]
+    },
+    {
+      "id": "order-glass-of",
+      "grammar": ["food", "ordering", "irregular-yo", "articles"],
+      "es": "¿Me {v} {g:un} de {d}, por favor?",
+      "en": "Can I have {g:a} of {d}, please?{v:none}",
+      "slots": {
+        "v": {
+          "kind": "verb",
+          "ids": ["poner"],
+          "subject": "tu"
+        },
+        "g": {
+          "kind": "noun",
+          "ids": ["vaso"]
+        },
+        "d": {
+          "kind": "noun",
+          "ids": ["agua", "leche"]
+        }
+      },
+      "cloze": ["g", "d", "v"]
+    },
+    {
+      "id": "order-wine-glass-of",
+      "grammar": ["food", "ordering", "irregular-yo", "articles"],
+      "es": "¿Me {v} {g:un} de {d}, por favor?",
+      "en": "Can I have a glass of {d}, please?{v:none}{g:none}",
+      "slots": {
+        "v": {
+          "kind": "verb",
+          "ids": ["poner"],
+          "subject": "tu"
+        },
+        "g": {
+          "kind": "noun",
+          "ids": ["copa"]
+        },
+        "d": {
+          "kind": "noun",
+          "ids": ["vino"]
+        }
+      },
+      "cloze": ["d", "v"]
+    },
+    {
+      "id": "order-cup-of",
+      "grammar": ["food", "ordering", "irregular-yo", "articles"],
+      "es": "¿Me {v} {g:un} de {d}, por favor?",
+      "en": "Can I have {g:a} of {d}, please?{v:none}",
+      "slots": {
+        "v": {
+          "kind": "verb",
+          "ids": ["poner"],
+          "subject": "tu"
+        },
+        "g": {
+          "kind": "noun",
+          "ids": ["taza"]
+        },
+        "d": {
+          "kind": "noun",
+          "ids": ["cafe", "te", "leche"]
+        }
+      },
+      "cloze": ["g", "d", "v"]
+    },
+    {
+      "id": "set-the-table",
+      "grammar": ["food", "irregular-yo", "articles", "plural"],
+      "subjects": ["yo", "tu", "nosotros", "vosotros", "ellos"],
+      "es": "{v} {c:el} en la mesa.",
+      "en": "{S} {v} {c:the} on the table.",
+      "slots": {
+        "v": {
+          "kind": "verb",
+          "ids": ["poner"],
+          "subject": "@"
+        },
+        "c": {
+          "kind": "noun",
+          "ids": [
+            "tenedor",
+            "cuchillo",
+            "cuchara",
+            "cucharilla",
+            "servilleta",
+            "vaso",
+            "copa",
+            "taza",
+            "plato"
+          ],
+          "number": "pl"
+        }
+      },
+      "cloze": ["c", "v"]
     }
   ]
 }

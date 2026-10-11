@@ -4881,6 +4881,225 @@
       "number": "sg",
       "tags": ["food"],
       "added": "2026-10-09"
+    },
+    {
+      "id": "taza",
+      "es": "taza",
+      "en": ["cup", "mug"],
+      "pos": "noun",
+      "gender": "f",
+      "forms": {
+        "pl": "tazas"
+      },
+      "notes": "Una taza de café, a cup of coffee. Spelled with z: 'tasa' is a rate or fee.",
+      "tags": ["food"],
+      "added": "2026-10-11"
+    },
+    {
+      "id": "vaso",
+      "es": "vaso",
+      "en": ["glass", "tumbler"],
+      "pos": "noun",
+      "gender": "m",
+      "forms": {
+        "pl": "vasos"
+      },
+      "notes": "A glass for water or soft drinks. A stemmed glass, for wine, is 'una copa'.",
+      "tags": ["food"],
+      "added": "2026-10-11"
+    },
+    {
+      "id": "copa",
+      "es": "copa",
+      "en": ["wine glass", "stemmed glass", "drink"],
+      "pos": "noun",
+      "gender": "f",
+      "forms": {
+        "pl": "copas"
+      },
+      "notes": "A stemmed glass: una copa de vino. 'Tomar una copa' is to have a drink, usually alcoholic.",
+      "tags": ["food"],
+      "added": "2026-10-11"
+    },
+    {
+      "id": "servilleta",
+      "es": "servilleta",
+      "en": ["napkin", "serviette"],
+      "pos": "noun",
+      "gender": "f",
+      "forms": {
+        "pl": "servilletas"
+      },
+      "tags": ["food"],
+      "added": "2026-10-11"
+    },
+    {
+      "id": "plato",
+      "es": "plato",
+      "en": ["plate", "dish", "course"],
+      "pos": "noun",
+      "gender": "m",
+      "forms": {
+        "pl": "platos"
+      },
+      "notes": "Also a dish or course: primer plato and segundo plato are the first and main courses of a menú del día.",
+      "tags": ["food"],
+      "added": "2026-10-11"
+    },
+    {
+      "id": "cuchillo",
+      "es": "cuchillo",
+      "en": ["knife"],
+      "pos": "noun",
+      "gender": "m",
+      "forms": {
+        "pl": "cuchillos"
+      },
+      "tags": ["food"],
+      "added": "2026-10-11"
+    },
+    {
+      "id": "cuchara",
+      "es": "cuchara",
+      "en": ["spoon", "tablespoon", "soup spoon"],
+      "pos": "noun",
+      "gender": "f",
+      "forms": {
+        "pl": "cucharas"
+      },
+      "tags": ["food"],
+      "added": "2026-10-11"
+    },
+    {
+      "id": "tenedor",
+      "es": "tenedor",
+      "en": ["fork"],
+      "pos": "noun",
+      "gender": "m",
+      "forms": {
+        "pl": "tenedores"
+      },
+      "tags": ["food"],
+      "added": "2026-10-11"
+    },
+    {
+      "id": "cucharilla",
+      "es": "cucharilla",
+      "en": ["teaspoon", "small spoon", "coffee spoon"],
+      "pos": "noun",
+      "gender": "f",
+      "forms": {
+        "pl": "cucharillas"
+      },
+      "notes": "Also 'cucharita', which is what most of Latin America says.",
+      "tags": ["food"],
+      "added": "2026-10-11"
+    },
+    {
+      "id": "crudo",
+      "es": "crudo",
+      "en": ["raw", "uncooked"],
+      "pos": "adj",
+      "forms": {
+        "f": "cruda"
+      },
+      "notes": "Usually with estar: el pollo está crudo.",
+      "tags": ["food"],
+      "added": "2026-10-11"
+    },
+    {
+      "id": "frito",
+      "es": "frito",
+      "en": ["fried"],
+      "pos": "adj",
+      "forms": {
+        "f": "frita"
+      },
+      "notes": "Patatas fritas are both chips (fries) and crisps.",
+      "tags": ["food"],
+      "added": "2026-10-11"
+    },
+    {
+      "id": "cocido",
+      "es": "cocido",
+      "en": ["boiled", "cooked"],
+      "pos": "adj",
+      "forms": {
+        "f": "cocida"
+      },
+      "notes": "As a noun, el cocido is a chickpea and meat stew, a classic of Madrid.",
+      "tags": ["food"],
+      "added": "2026-10-11"
+    },
+    {
+      "id": "salteado",
+      "es": "salteado",
+      "en": ["sautéed", "sauteed", "stir-fried"],
+      "pos": "adj",
+      "forms": {
+        "f": "salteada"
+      },
+      "tags": ["food"],
+      "added": "2026-10-11"
+    },
+    {
+      "id": "guisado",
+      "es": "guisado",
+      "en": ["stewed", "braised"],
+      "pos": "adj",
+      "forms": {
+        "f": "guisada"
+      },
+      "notes": "As a noun, un guisado is a stew, as is un guiso.",
+      "tags": ["food"],
+      "added": "2026-10-11"
+    },
+    {
+      "id": "asado",
+      "es": "asado",
+      "en": ["roast", "roasted"],
+      "pos": "adj",
+      "forms": {
+        "f": "asada"
+      },
+      "notes": "Pollo asado is roast chicken; asado al horno, oven-roasted. As a noun, un asado is a barbecue.",
+      "tags": ["food"],
+      "added": "2026-10-11"
+    },
+    {
+      "id": "al-vapor",
+      "es": "al vapor",
+      "en": ["steamed"],
+      "pos": "phrase",
+      "tags": ["food"],
+      "added": "2026-10-11"
+    },
+    {
+      "id": "a-la-plancha",
+      "es": "a la plancha",
+      "en": ["grilled", "griddled", "seared"],
+      "pos": "phrase",
+      "notes": "The usual menu word for grilled: cooked on a hot flat plate with little oil. Over flames or coals is 'a la parrilla'.",
+      "tags": ["food"],
+      "added": "2026-10-11"
+    },
+    {
+      "id": "a-la-parrilla",
+      "es": "a la parrilla",
+      "en": ["barbecued", "chargrilled", "grilled"],
+      "pos": "phrase",
+      "notes": "Cooked on a grill over flames or coals. On a hot flat plate is 'a la plancha', the more common menu word.",
+      "tags": ["food"],
+      "added": "2026-10-11"
+    },
+    {
+      "id": "al-horno",
+      "es": "al horno",
+      "en": ["baked", "oven-baked", "in the oven"],
+      "pos": "phrase",
+      "notes": "Patatas al horno, baked potatoes. Asado al horno is oven-roasted.",
+      "tags": ["food"],
+      "added": "2026-10-11"
     }
   ]
 }

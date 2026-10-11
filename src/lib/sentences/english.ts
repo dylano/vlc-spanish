@@ -93,11 +93,14 @@ const IRREGULAR_PLURAL: Record<string, string> = {
   squid: "squid",
   salmon: "salmon",
   tuna: "tuna",
+  // Usually unchanged in the plural, like the fish above.
+  zucchini: "zucchini",
   man: "men",
   woman: "women",
   child: "children",
   person: "people",
   wife: "wives",
+  knife: "knives",
 };
 
 /** Plural of an English noun phrase; only the last word changes ("fashion designers"). */

@@ -49,6 +49,8 @@ describe("english nouns", () => {
     expect(pluralize("Monday")).toBe("Mondays");
     expect(pluralize("tomato")).toBe("tomatoes");
     expect(pluralize("potato")).toBe("potatoes");
+    expect(pluralize("knife")).toBe("knives");
+    expect(pluralize("zucchini")).toBe("zucchini");
   });
 
   it("chooses a or an by sound", () => {

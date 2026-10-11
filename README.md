@@ -138,7 +138,9 @@ tangled into components.
   Exercise names, grouped: Words — **Translate** (typed), **Multiple Choice**,
   **Match Pairs**; Sentences — **Translate**, **Fill in the Blank**, **Find the Mistake**. Both groups
   have a Translate; the prompt (one word or a sentence) tells them apart.
-  The summary adds a score per exercise when the session used more than one.
+  The summary adds a score per exercise when the session used more than one, and is labelled with
+  where the session came from: General practice, Custom practice, Problem words, or the exercise's
+  name when there was only one.
 - **Multiple Choice** — the same session with four options; touching one answers it, with no
   separate Check. A right answer moves on by itself, a miss waits for Next. Keys a–d or 1–4 answer
   and Enter moves on, on a computer. A wrong pick says what the picked word means. Started from
@@ -503,6 +505,13 @@ were dropped then):
   English, so a search can match a form nobody sees ("nie" finds el sobrino through its feminine's
   "niece"). Show the feminine and its English (_el sobrino · la sobrina_, nephew · niece), adjective
   forms (_simpático · simpática_), and a plural-only marker (_las gafas_)
+- **A "new" marker for added words** (requested 2026-10-09, not started): when a new category or
+  a meaningful batch of words arrives with a deploy, highlight it — a small tag or a highlight on its
+  category pill in Custom practice and the Dictionary filter, and maybe a line on Home — so
+  classmates notice it and can practise it. To settle first: what counts as new (a new tag, or some
+  number of words added to one), how the app knows with no server (compare against what this browser
+  saw last visit, or a date on dictionary entries), and when the marker clears (after practising,
+  after viewing, or after a while). Mock it up on the canvas first.
 
 ## Choosing words
 
@@ -554,8 +563,10 @@ of practiced words due they make up about half of a session's words. Rules on to
   fifteen-word session, sometimes back to back.
 
 - **No more than three of one exercise in a row** (`MAX_RUN`), so the pace keeps changing — unless
-  nothing else is left to offer (Multiple Choice used up, no room for a round, no sentences), when typing
-  continues rather than the session stopping.
+  nothing else is left to offer (Multiple Choice used up, no room for a round, no sentences), when the
+  exercise it stopped continues rather than the session stopping. Typing can always continue, so a
+  session with it in the mix always fills its length; one limited to sentence modes ends early if the
+  chosen words run out of sentences.
 - **Typed cards are nudged into short runs.** Every switch between typing and tapping drops or
   raises the phone keyboard; alternating one card at a time would have it bouncing all session. On
   iOS a typed card that follows a tap exercise may need a tap on the answer line to bring the
