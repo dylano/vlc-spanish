@@ -5,7 +5,7 @@ import { grade } from "../grade.ts";
 import { buildGapSession, buildMistakeSession, DEFAULT_CONFIG } from "../session.ts";
 import { renderFrame, type RenderedSentence } from "./frames.ts";
 import { gapTargets, gradeGap, renderGap, type Gap } from "./gap.ts";
-import { renderMistake } from "./mistake.ts";
+import { mistakeTokens, renderMistake } from "./mistake.ts";
 import { matchesTranslation } from "./translate.ts";
 
 function seeded(seed: number): () => number {
@@ -139,6 +139,43 @@ describe("people and third person", () => {
     for (const sentence of renders("pronoun-relatives")) {
       expect(sentence.es).toMatch(/^¿Tus \p{L}+ \p{L}+n (el|la) /u);
       expect(sentence.en).toMatch(/^Do your .+\?\nYes, they /);
+    }
+  });
+});
+
+describe("two actions, and a thing mentioned first", () => {
+  it("names the thing once, and the second verb takes the pronoun", () => {
+    for (const sentence of renders("and-set-table")) {
+      const match = /^\p{Lu}\p{L}+ (los|las) [\p{L} ]+ y (los|las) \p{L}+ en la mesa\.$/u.exec(
+        sentence.es,
+      );
+      expect(match, sentence.es).not.toBeNull();
+      expect(match![2]).toBe(match![1]);
+      expect(sentence.en).toMatch(/ and put(s)? them on the table\.$/);
+    }
+  });
+
+  it("follows un or una with lo or la, capitalized to start the second sentence", () => {
+    for (const id of ["mention-wear", "mention-wear-relative", "mention-read"]) {
+      for (const sentence of renders(id)) {
+        const match = /(un|una) [^.]+\. (Lo|La) \p{L}+ /u.exec(sentence.es);
+        expect(match, sentence.es).not.toBeNull();
+        expect(match![2]).toBe(match![1] === "una" ? "La" : "Lo");
+        expect(sentence.en, sentence.en).toMatch(/\. (I|You|He|She|We|They) [a-z]+ it /);
+      }
+    }
+  });
+
+  it("keeps the capital on a broken pronoun that starts a sentence", () => {
+    const targets = gapTargets([frame("mention-wear")], { dictionary: entries });
+    for (let seed = 1; seed <= 20; seed++) {
+      const mistake = renderMistake("la", targets, context(seed));
+      if (!mistake || mistake.slot !== "p") continue;
+      const shown = mistakeTokens(mistake)
+        .filter((token) => token.broken && token.word)
+        .map((token) => token.text)
+        .join(" ");
+      expect(shown).toMatch(/^L/);
     }
   });
 });

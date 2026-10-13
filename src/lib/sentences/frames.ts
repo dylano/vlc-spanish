@@ -384,6 +384,14 @@ export function placeholders(template: string): { name: string; modifier?: strin
   }));
 }
 
+/** A capital at the start of each sentence: "I have a book. I read it at night." */
+function capitalizeSentences(text: string): string {
+  return capitalizeFirst(text).replace(
+    /([.?!]\s+)(\p{Ll})/gu,
+    (_, gap: string, letter: string) => gap + letter.toUpperCase(),
+  );
+}
+
 function capitalizeFirst(text: string): string {
   const index = text.search(/\p{L}/u);
   return index < 0
@@ -478,7 +486,7 @@ export function renderFrame(
   }
 
   const segments = spanishSegments(frame.es, filled, subject);
-  const en = capitalizeFirst(renderEnglish(frame.en, filled, subject));
+  const en = capitalizeSentences(renderEnglish(frame.en, filled, subject));
   const fills = Object.fromEntries(
     [...filled].flatMap(([name, fill]) => (fill.entryId ? [[name, fill.entryId]] : [])),
   );
@@ -664,8 +672,17 @@ function spanishSegments(
 
   contract(segments);
   euphony(segments);
-  const first = segments.find((segment) => /\p{L}/u.test(segment.text));
-  if (first) first.text = capitalizeFirst(first.text);
+  // Every sentence starts with a capital, including a second one that starts
+  // with a slot: Tengo un libro nuevo. Lo leo por la noche.
+  let starts = true;
+  for (const segment of segments) {
+    if (!/\p{L}/u.test(segment.text)) {
+      if (/[.?!]\s*$/.test(segment.text)) starts = true;
+      continue;
+    }
+    if (starts) segment.text = capitalizeFirst(segment.text);
+    starts = /[.?!]\s*$/.test(segment.text);
+  }
   return segments.filter((segment) => segment.text !== "");
 }
 

@@ -3744,12 +3744,12 @@
       "slots": {
         "v": {
           "kind": "verb",
-          "ids": ["ver", "visitar", "escuchar"],
+          "ids": ["ver", "escuchar"],
           "subject": "tu"
         },
         "w": {
           "kind": "verb",
-          "ids": ["ver", "visitar", "escuchar"],
+          "ids": ["ver", "escuchar"],
           "subject": "yo",
           "same": "v"
         },
@@ -3993,6 +3993,373 @@
         }
       },
       "cloze": ["p", "w", "c"]
+    },
+    {
+      "id": "and-drink",
+      "grammar": ["object-pronouns", "verb-conjugation"],
+      "subjects": ["yo", "tu", "el", "nosotros", "vosotros", "ellos"],
+      "es": "{v} {c:el} y {p} {w}.",
+      "en": "{S} {v} {c:the} and {w} {p}.",
+      "slots": {
+        "v": {
+          "kind": "verb",
+          "ids": ["comprar"],
+          "subject": "@"
+        },
+        "c": {
+          "kind": "noun",
+          "ids": ["vino", "leche", "cerveza", "refresco", "cafe", "te", "agua"]
+        },
+        "p": {
+          "kind": "pronoun",
+          "agree": "c"
+        },
+        "w": {
+          "kind": "verb",
+          "ids": ["beber"],
+          "subject": "@"
+        }
+      },
+      "cloze": ["p", "w", "c", "v"]
+    },
+    {
+      "id": "and-set-table",
+      "grammar": ["object-pronouns", "verb-conjugation", "plural", "irregular-yo"],
+      "subjects": ["yo", "tu", "el", "nosotros", "vosotros", "ellos"],
+      "es": "{v} {c:el} y {p} {w} en la mesa.",
+      "en": "{S} {v} {c:the} and {w} {p} on the table.",
+      "slots": {
+        "v": {
+          "kind": "verb",
+          "ids": ["traer"],
+          "subject": "@"
+        },
+        "c": {
+          "kind": "noun",
+          "ids": [
+            "tenedor",
+            "cuchillo",
+            "cuchara",
+            "cucharilla",
+            "plato",
+            "vaso",
+            "copa",
+            "taza",
+            "servilleta"
+          ],
+          "number": "pl"
+        },
+        "p": {
+          "kind": "pronoun",
+          "agree": "c"
+        },
+        "w": {
+          "kind": "verb",
+          "ids": ["poner"],
+          "subject": "@"
+        }
+      },
+      "cloze": ["p", "w", "c", "v"]
+    },
+    {
+      "id": "and-wear",
+      "grammar": ["object-pronouns", "verb-conjugation"],
+      "subjects": ["yo", "tu", "el", "nosotros", "vosotros", "ellos"],
+      "es": "{v} {c:el} y {p} {w}.",
+      "en": "{S} {v} {c:the} and {w} {p}.",
+      "slots": {
+        "v": {
+          "kind": "verb",
+          "ids": ["comprar"],
+          "subject": "@"
+        },
+        "c": {
+          "kind": "noun",
+          "ids": [
+            "chaqueta",
+            "camisa",
+            "falda",
+            "vestido",
+            "jersey",
+            "bufanda",
+            "abrigo",
+            "gorro",
+            "cinturon"
+          ]
+        },
+        "p": {
+          "kind": "pronoun",
+          "agree": "c"
+        },
+        "w": {
+          "kind": "verb",
+          "ids": ["llevar"],
+          "subject": "@"
+        }
+      },
+      "cloze": ["p", "w", "c", "v"]
+    },
+    {
+      "id": "and-wear-plural",
+      "grammar": ["object-pronouns", "verb-conjugation", "plural"],
+      "subjects": ["yo", "tu", "el", "nosotros", "vosotros", "ellos"],
+      "es": "{v} {c:el} y {p} {w}.",
+      "en": "{S} {v} {c:the} and {w} {p}.",
+      "slots": {
+        "v": {
+          "kind": "verb",
+          "ids": ["comprar"],
+          "subject": "@"
+        },
+        "c": {
+          "kind": "noun",
+          "ids": [
+            "zapato",
+            "bota",
+            "sandalia",
+            "gafas",
+            "gafas-de-sol",
+            "vaqueros",
+            "pantalones-cortos"
+          ],
+          "number": "pl"
+        },
+        "p": {
+          "kind": "pronoun",
+          "agree": "c"
+        },
+        "w": {
+          "kind": "verb",
+          "ids": ["llevar"],
+          "subject": "@"
+        }
+      },
+      "cloze": ["p", "w", "c", "v"]
+    },
+    {
+      "id": "and-read",
+      "grammar": ["object-pronouns", "verb-conjugation"],
+      "subjects": ["yo", "tu", "el", "nosotros", "vosotros", "ellos"],
+      "es": "{v} {c:el} y {p} {w}.",
+      "en": "{S} {v} {c:the} and {w} {p}.",
+      "slots": {
+        "v": {
+          "kind": "verb",
+          "ids": ["comprar", "tener"],
+          "subject": "@"
+        },
+        "c": {
+          "kind": "noun",
+          "ids": ["libro"]
+        },
+        "p": {
+          "kind": "pronoun",
+          "agree": "c"
+        },
+        "w": {
+          "kind": "verb",
+          "ids": ["leer"],
+          "subject": "@"
+        }
+      },
+      "cloze": ["p", "w", "c", "v"]
+    },
+    {
+      "id": "mention-wear",
+      "grammar": ["object-pronouns", "adj-agreement", "frequency"],
+      "subjects": ["yo", "tu", "el", "nosotros", "ellos"],
+      "es": "{v} {c:un} {a}. {p} {w} {f}.",
+      "en": "{S} {v} {a:a} {c}. {S} {w} {p} {f}.",
+      "slots": {
+        "v": {
+          "kind": "verb",
+          "ids": ["tener"],
+          "subject": "@"
+        },
+        "c": {
+          "kind": "noun",
+          "ids": [
+            "chaqueta",
+            "camisa",
+            "falda",
+            "vestido",
+            "jersey",
+            "bufanda",
+            "abrigo",
+            "gorro",
+            "cinturon"
+          ]
+        },
+        "a": {
+          "kind": "adj",
+          "tags": ["colors"],
+          "agree": "c"
+        },
+        "p": {
+          "kind": "pronoun",
+          "agree": "c"
+        },
+        "w": {
+          "kind": "verb",
+          "ids": ["llevar"],
+          "subject": "@"
+        },
+        "f": {
+          "kind": "word",
+          "ids": [
+            "todos-los-dias",
+            "a-menudo",
+            "a-veces",
+            "todas-las-semanas",
+            "una-vez-a-la-semana"
+          ]
+        }
+      },
+      "cloze": ["p", "w", "a", "c"]
+    },
+    {
+      "id": "mention-wear-plural",
+      "grammar": ["object-pronouns", "adj-agreement", "frequency", "plural"],
+      "subjects": ["yo", "tu", "el", "nosotros", "ellos"],
+      "es": "{v} {c:un} {a}. {p} {w} {f}.",
+      "en": "{S} {v} {a:a} {c}. {S} {w} {p} {f}.",
+      "slots": {
+        "v": {
+          "kind": "verb",
+          "ids": ["tener"],
+          "subject": "@"
+        },
+        "c": {
+          "kind": "noun",
+          "ids": ["zapato", "bota", "sandalia", "vaqueros", "pantalones-cortos"],
+          "number": "pl"
+        },
+        "a": {
+          "kind": "adj",
+          "tags": ["colors"],
+          "agree": "c"
+        },
+        "p": {
+          "kind": "pronoun",
+          "agree": "c"
+        },
+        "w": {
+          "kind": "verb",
+          "ids": ["llevar"],
+          "subject": "@"
+        },
+        "f": {
+          "kind": "word",
+          "ids": [
+            "todos-los-dias",
+            "a-menudo",
+            "a-veces",
+            "todas-las-semanas",
+            "una-vez-a-la-semana"
+          ]
+        }
+      },
+      "cloze": ["p", "w", "a", "c"]
+    },
+    {
+      "id": "mention-wear-relative",
+      "grammar": ["object-pronouns", "adj-agreement", "frequency", "third-person"],
+      "es": "Mi {n} {v} {c:un} {a}. {p} {w} {f}.",
+      "en": "My {n} {v} {a:a} {c}. {n:pronoun} {w} {p} {f}.",
+      "slots": {
+        "n": {
+          "kind": "noun",
+          "tags": ["family"],
+          "exclude": ["mujer"]
+        },
+        "v": {
+          "kind": "verb",
+          "ids": ["tener"],
+          "subject": "n"
+        },
+        "c": {
+          "kind": "noun",
+          "ids": [
+            "chaqueta",
+            "camisa",
+            "falda",
+            "vestido",
+            "jersey",
+            "bufanda",
+            "abrigo",
+            "gorro",
+            "cinturon"
+          ]
+        },
+        "a": {
+          "kind": "adj",
+          "tags": ["colors"],
+          "agree": "c"
+        },
+        "p": {
+          "kind": "pronoun",
+          "agree": "c"
+        },
+        "w": {
+          "kind": "verb",
+          "ids": ["llevar"],
+          "subject": "n"
+        },
+        "f": {
+          "kind": "word",
+          "ids": [
+            "todos-los-dias",
+            "a-menudo",
+            "a-veces",
+            "todas-las-semanas",
+            "una-vez-a-la-semana"
+          ]
+        }
+      },
+      "cloze": ["p", "w", "a", "c"]
+    },
+    {
+      "id": "mention-read",
+      "grammar": ["object-pronouns", "adj-agreement", "frequency"],
+      "subjects": ["yo", "tu", "el", "nosotros", "ellos"],
+      "es": "{v} {c:un} {a}. {p} {w} {f}.",
+      "en": "{S} {v} {a:a} {c}. {S} {w} {p} {f}.",
+      "slots": {
+        "v": {
+          "kind": "verb",
+          "ids": ["tener"],
+          "subject": "@"
+        },
+        "c": {
+          "kind": "noun",
+          "ids": ["libro"]
+        },
+        "a": {
+          "kind": "adj",
+          "ids": ["nuevo"],
+          "agree": "c"
+        },
+        "p": {
+          "kind": "pronoun",
+          "agree": "c"
+        },
+        "w": {
+          "kind": "verb",
+          "ids": ["leer"],
+          "subject": "@"
+        },
+        "f": {
+          "kind": "word",
+          "ids": [
+            "todos-los-dias",
+            "a-menudo",
+            "a-veces",
+            "todas-las-semanas",
+            "una-vez-a-la-semana"
+          ]
+        }
+      },
+      "cloze": ["p", "w", "a", "c"]
     }
   ]
 }

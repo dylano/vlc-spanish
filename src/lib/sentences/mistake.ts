@@ -424,12 +424,11 @@ function acceptsFor(chosen: Break): string[] {
  */
 export function mistakeTokens(mistake: Mistake): MistakeToken[] {
   const tokens: MistakeToken[] = [];
-  const segments = mistake.sentence.segments;
-  segments.forEach((segment, index) => {
+  for (const segment of mistake.sentence.segments) {
     const broken = segment.slot === mistake.slot && Boolean(segment.article) === mistake.article;
     let text = broken ? mistake.wrong : segment.text;
-    // Keep the sentence's capital if the broken text starts it.
-    if (broken && index === segments.findIndex((part) => /\p{L}/u.test(part.text))) {
+    // Keep the capital if the broken text starts a sentence (the renderer gave it one).
+    if (broken && /^\p{Lu}/u.test(segment.text)) {
       text = text.charAt(0).toUpperCase() + text.slice(1);
     }
     for (const match of text.matchAll(/(\p{L}+)|([^\p{L}]+)/gu)) {
@@ -437,7 +436,7 @@ export function mistakeTokens(mistake: Mistake): MistakeToken[] {
       // words with the fix does not leave their gaps behind.
       tokens.push({ text: match[0], word: match[1] !== undefined, broken });
     }
-  });
+  }
   return tokens;
 }
 

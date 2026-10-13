@@ -387,7 +387,15 @@ from the dictionary. The frame supplies the word order in both languages; the re
   bread? Yes, she buys it"), _¿Tus abuelos quieren la ensalada? Sí, la quieren_; the English uses two
   placeholders made for it, `{v:base}` (the bare verb after _does_/_do_) and `{n:pronoun}` (_he_, _she_
   or _they_ for a noun slot). Standard _lo/la_ only: the class has not met leísmo (_le veo_), so in a
-  gap _le_ or _les_ is `wrong`, with a note that _le_ is the indirect object (_le gusta_). Each pronoun is a dictionary entry (tagged
+  gap _le_ or _les_ is `wrong`, with a note that _le_ is the indirect object (_le gusta_).
+  Two more patterns carry a thing from one clause or sentence to the next: **two actions joined by
+  _y_** — _Compro el vino y lo bebo_, _Traes los platos y los pones en la mesa_ (verb pairings chosen
+  by hand, like the cooking frames) — and **a thing mentioned first, then the pronoun**, which also
+  puts the frequency words in sentences: _Tengo una chaqueta blanca. La llevo todas las semanas_,
+  _Mi tía tiene un abrigo verde. Lo lleva a veces_. Those leave out vosotros, since "You (plural)"
+  twice in two short sentences reads badly. Every sentence in a frame now starts with a capital, in
+  both languages, including a second one that starts with a slot (_…blanca. **La** llevo…_), and Find
+  the Mistake keeps that capital on a broken word. Each pronoun is a dictionary entry (tagged
   `common-words`), so a blank on one is scheduled like any word; DIRECT_OBJECT in `frames.ts` maps
   gender and number to the pronoun. Because the pronoun is what these frames are for, they test it
   whatever word they were aimed at: a gap always blanks it (as a second blank, past `BLANK_ODDS`,
@@ -403,9 +411,10 @@ from the dictionary. The frame supplies the word order in both languages; the re
   `common-words`, so a Custom practice session on a category never blanks them, but Find the Mistake
   still breaks the pronoun in these frames (about 0.1–0.2 times per food or clothing session, 0.4
   per family session). Making it respect the category is a small change if it starts to bother.
-  In a **family** Custom practice session about a third of sentences are pronoun frames, since 7 of
-  the 16 use family words (professions about 14%; General practice 10%, in proportion to the frame
-  count); they still practise the family word they are aimed at.
+  How much of a session they take, from simulated sessions: in General practice 14% of sentences
+  (25 of 160 frames), testing a pronoun about 0.8 times per session; in a **family** Custom practice
+  session about a third, in **clothing** 29%, in professions 14% and in food 12%. They still practise
+  the word they are aimed at.
 - **Placeholders**: `{slot}`, plus `{slot:el}` / `{slot:un}` for a Spanish article and `{slot:the}` /
   `{slot:a}` for an English one; `{v:not}` gives a verb's English negative with do-support
   (_don't like_, _doesn't go_, _isn't_) for frames that put _no_ before the Spanish verb; `{slot:none}`
