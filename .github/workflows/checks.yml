@@ -1,0 +1,43 @@
+# Checks on every pull request and every push to main: formatting, lint and
+# types (vp check), the tests, and the dictionary and frame validators.
+# Netlify builds and deploys separately; this only checks.
+name: Checks
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+# A new push to a branch makes the run for its previous push moot.
+concurrency:
+  group: checks-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      # The pnpm version comes from packageManager in package.json.
+      - uses: pnpm/action-setup@v4
+
+      # Node 22, as Netlify builds with (netlify.toml).
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - name: Format, lint and types
+        run: pnpm exec vp check
+
+      - name: Tests
+        run: pnpm exec vp test
+
+      - name: Dictionary
+        run: pnpm run validate:dictionary
+
+      - name: Sentence frames
+        run: pnpm run validate:frames

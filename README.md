@@ -41,7 +41,8 @@ vp build                    # production build to dist/
 vp preview                  # serve the production build
 ```
 
-Run `vp install` after pulling. `vp check` and `vp test` should both pass before committing.
+Run `vp install` after pulling. `vp check` and `vp test` should both pass before committing; the
+pre-commit hook runs `vp check --fix` on staged files, and GitHub runs both on every PR (below).
 `pnpm dev` runs `vp dev --host`, which also serves the dev server on the local network, for trying
 it on a phone.
 
@@ -733,6 +734,12 @@ property of the Netlify site, not something in `netlify.toml` — it is set at c
 
 The site is fully static: `pnpm run build` validates the dictionary and frames, type-checks and
 builds to `dist/`. There are no functions and no environment variables.
+
+**Checks on GitHub** (`.github/workflows/checks.yml`) run on every pull request and every push to
+`main`: `vp check` (format, lint, types), `vp test`, and the dictionary and frame validators, on
+Node 22 like the Netlify build. They are separate from deploying — the Netlify build stops only on a
+validator or type error, not on a failing test — so a red check on a PR is the signal to look before
+merging.
 
 If the old Netlify Blobs store still holds data from the multi-user version (`users`,
 `progress/dylan`, `dictionary` in the `vocab` store), nothing reads it; with the CLI linked to the site
