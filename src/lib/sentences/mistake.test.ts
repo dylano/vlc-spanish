@@ -68,7 +68,10 @@ describe("making a mistake", () => {
   });
 
   it("breaks a profession's gender to disagree with the person", () => {
-    const found = mistakes("enfermero").filter((m) => m.kind === "agreement");
+    // Only breaks of the profession itself: in a pronoun frame the pronoun may be broken instead.
+    const found = mistakes("enfermero").filter(
+      (m) => m.kind === "agreement" && m.entryId === "enfermero",
+    );
     expect(found.length).toBeGreaterThan(0);
     for (const mistake of found)
       expect(mistake.explanation).toMatch(

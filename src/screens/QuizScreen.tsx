@@ -104,10 +104,25 @@ export default function QuizScreen() {
     };
   }, [params, sessionSize]);
 
+  // `grammar=object-pronouns` keeps sentence exercises to the frames practising
+  // one grammar point, for trying out new frames. Unknown names leave all frames in.
+  const grammar = params.get("grammar");
+  const frames = useMemo(() => {
+    const only = sentences.frames.filter((frame) => grammar && frame.grammar.includes(grammar));
+    return only.length > 0 ? { ...sentences, frames: only } : sentences;
+  }, [grammar]);
+
   // Fixed when the screen opens: answering updates progress, and rebuilding
   // mid-session would reshuffle the cards under the user.
   const items = useMemo((): SessionItem[] => {
-    const options = { entries, progress, userId: LOCAL_USER, config, today: today(), sentences };
+    const options = {
+      entries,
+      progress,
+      userId: LOCAL_USER,
+      config,
+      today: today(),
+      sentences: frames,
+    };
     if (config.format === "mixed") return buildMixedSession(options);
     if (config.format === "match") return buildMatchRounds(options);
     if (config.format === "gap") return buildGapSession(options);

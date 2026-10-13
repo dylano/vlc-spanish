@@ -66,6 +66,14 @@ export function inflectVerb(gloss: string, subject: Subject, gender: SubjectGend
 }
 
 /**
+ * The bare verb after do-support: "Does your mother {buy} the bread?". Only
+ * "one's" follows the subject.
+ */
+export function baseVerb(gloss: string, subject: Subject, gender: SubjectGender = "m"): string {
+  return gloss.replace(/^to\s+/, "").replace(/\bone's\b/g, possessive(subject, gender));
+}
+
+/**
  * The negative of an infinitive gloss for a subject: "doesn't like",
  * "don't go to bed", "isn't". English needs do-support where Spanish just puts
  * "no" before the verb, so a frame asks for it with {v:not}.

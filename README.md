@@ -41,7 +41,8 @@ vp build                    # production build to dist/
 vp preview                  # serve the production build
 ```
 
-Run `vp install` after pulling. `vp check` and `vp test` should both pass before committing.
+Run `vp install` after pulling. `vp check` and `vp test` should both pass before committing; the
+pre-commit hook runs `vp check --fix` on staged files, and GitHub runs both on every PR (below).
 `pnpm dev` runs `vp dev --host`, which also serves the dev server on the local network, for trying
 it on a phone.
 
@@ -375,6 +376,46 @@ from the dictionary. The frame supplies the word order in both languages; the re
   What is liked is a noun slot or a verb slot with `subject: "inf"`, which renders the infinitive and
   counts as singular. Gap grading treats _me gusta_ for _me gustan_ as wrong (not a near miss) and
   says why; Find the Mistake breaks exactly that agreement.
+- **Direct object pronouns** (`lo`, `la`, `los`, `las`, frames tagged `object-pronouns`): a
+  question and its answer — _¿Compras el pan? Sí, lo compro._ / _¿Queréis las servilletas? No, no
+  las queremos._ A `pronoun` slot agrees with a noun slot (`agree`), so _el agua_ gets _la_; in
+  English it is _it_ or _them_. A verb slot with `same` repeats another verb slot's verb in its own
+  person (compras → compro); it lists the same `ids`, which the validator checks, so Fill in the Blank
+  knows which verbs can sit there. **People** too: a `pronoun` slot with `person: true` says _him_,
+  _her_ or _them_ — _¿Ves a tu hermana? Sí, la veo_ ("…I see her"), _¿Escuchas al profesor? Sí, lo
+  escucho_ (with _ver_, _visitar_, _escuchar_ and the personal _a_). **Third person**: a relative asks
+  and answers for themselves — _¿Tu madre compra el pan? Sí, lo compra_ ("Does your mother buy the
+  bread? Yes, she buys it"), _¿Tus abuelos quieren la ensalada? Sí, la quieren_; the English uses two
+  placeholders made for it, `{v:base}` (the bare verb after _does_/_do_) and `{n:pronoun}` (_he_, _she_
+  or _they_ for a noun slot). Standard _lo/la_ only: the class has not met leísmo (_le veo_), so in a
+  gap _le_ or _les_ is `wrong`, with a note that _le_ is the indirect object (_le gusta_).
+  Two more patterns carry a thing from one clause or sentence to the next: **two actions joined by
+  _y_** — _Compro el vino y lo bebo_, _Traes los platos y los pones en la mesa_ (verb pairings chosen
+  by hand, like the cooking frames) — and **a thing mentioned first, then the pronoun**, which also
+  puts the frequency words in sentences: _Tengo una chaqueta blanca. La llevo todas las semanas_,
+  _Mi tía tiene un abrigo verde. Lo lleva a veces_. Those leave out vosotros, since "You (plural)"
+  twice in two short sentences reads badly. Every sentence in a frame now starts with a capital, in
+  both languages, including a second one that starts with a slot (_…blanca. **La** llevo…_), and Find
+  the Mistake keeps that capital on a broken word. Each pronoun is a dictionary entry (tagged
+  `common-words`), so a blank on one is scheduled like any word; DIRECT_OBJECT in `frames.ts` maps
+  gender and number to the pronoun. Because the pronoun is what these frames are for, they test it
+  whatever word they were aimed at: a gap always blanks it (as a second blank, past `BLANK_ODDS`,
+  when the session has room), and a mistake breaks it `PRONOUN_SHARE` (75%) of the time — its gender
+  (_lo_ for _la_) or number (_lo_ for _los_) — recording the answer against the pronoun. The four may
+  come back within a session. Aimed only at the pronouns themselves, a session met each of the four
+  once and about 2 of 11 items tested one; now about 8 of 9 do. Typed as word cards, another of the
+  four is `wrong` with a note ("la stands for a feminine singular noun; lo, a masculine singular one"),
+  not a one-letter slip and not a wrong article; _los_ and _las_, which share "them", keep the usual
+  near miss and their hints. The question and the answer sit on two lines: the frames write `\n`
+  between them, the sentence displays keep it (`white-space: pre-line`), and a typed translation on
+  one line still matches, since spacing is ignored. Known and left for now: the pronouns are tagged
+  `common-words`, so a Custom practice session on a category never blanks them, but Find the Mistake
+  still breaks the pronoun in these frames (about 0.1–0.2 times per food or clothing session, 0.4
+  per family session). Making it respect the category is a small change if it starts to bother.
+  How much of a session they take, from simulated sessions: in General practice 14% of sentences
+  (25 of 160 frames), testing a pronoun about 0.8 times per session; in a **family** Custom practice
+  session about a third, in **clothing** 29%, in professions 14% and in food 12%. They still practise
+  the word they are aimed at.
 - **Placeholders**: `{slot}`, plus `{slot:el}` / `{slot:un}` for a Spanish article and `{slot:the}` /
   `{slot:a}` for an English one; `{v:not}` gives a verb's English negative with do-support
   (_don't like_, _doesn't go_, _isn't_) for frames that put _no_ before the Spanish verb; `{slot:none}`
@@ -423,7 +464,10 @@ word pinned in the slot. So a gap usually reviews a word that is due.
   (`BLANK_ODDS`), limited by how many slots the frame lists in `cloze`. The first blank is the word
   the gap was aimed at; the others are further practiced words in the sentence not already used this
   session. Each blank is its own card (`blankCards`), graded and scheduled on its own, and each counts
-  as a word toward the session size.
+  as a word toward the session size. Two blanks side by side (_Sí, \_\_\_ \_\_\_._) give no sign
+  where one word ends, so both words typed into the first are shared out (`spreadAnswer`): each
+  blank takes as many words as its answer has, and the last of the run the rest, as if each had been
+  typed in its own blank. Only into blanks right after it, with nothing but a space between.
 - **Scheduling**: a gap is always answered in Spanish, so every blank schedules its word's `en→es`
   card as a typed (**recall**) answer, whichever direction the session balanced it to.
 - **Grading** (`gradeGap`): the form the sentence needs is correct, and so is the same slot filled
@@ -434,6 +478,11 @@ word pinned in the slot. So a gap usually reviews a word that is due.
   away but a different word). A one-letter slip otherwise is `hard`, except at the end of a noun or
   adjective, where gender and number live. Each blank is graded against the sentence as shown, never
   against what was typed in the other blanks.
+
+**Trying out a grammar point**: `/quiz?exercise=gap,mistake&grammar=object-pronouns` keeps a
+session's sentences to frames whose `grammar` includes that name (any frame tag works, such as
+`gustar` or `negation`; an unknown name leaves every frame in). Word exercises are unaffected, so
+name sentence modes in `exercise`. It is for testing new frames and has no control in the app.
 
 ## Find the Mistake
 
@@ -448,6 +497,7 @@ result really reads differently:
 | agreement (profession) | _Mi mujer es diseñador de moda._   | it describes mujer, who is female, so diseñadora de moda |
 | person (verb)          | _Mi primo os vestís a las seis._   | for primo it is se viste                                 |
 | number (gustar)        | _Me gusta los zapatos._            | los zapatos is plural, so me gustan                      |
+| agreement (pronoun)    | _¿Tienes el queso? Sí, la tengo._  | it stands for queso, masculine singular, so lo           |
 | article                | _Trabaja en una hospital._         | hospital is masculine: un hospital                       |
 | word                   | _Hablo con mi sobrino._ ("cousin") | the sentence means cousin: primo                         |
 
@@ -485,7 +535,8 @@ Phases 1 and 2 are complete and deployed at [vlc-spanish.netlify.app](https://vl
   six exercises (Translate a word, Multiple Choice, Match Pairs, Translate a sentence, Fill in the
   Blank, Find the Mistake), SM-2 scheduling with recognition answers held to a week, and a
   per-exercise score in the summary
-- **Sentences**: frames built from any dictionary word, including _gustar_ and simple negatives,
+- **Sentences**: frames built from any dictionary word, including _gustar_, simple negatives and
+  direct object pronouns (_lo, la, los, las_),
   from the first session (`vp run validate:frames` prints how many, and
   `vp run render:frames` how many sentences they can make)
 - **Problem words**: a list of every word missed, most first, with Practice these
@@ -511,7 +562,17 @@ were dropped then):
   classmates notice it and can practise it. To settle first: what counts as new (a new tag, or some
   number of words added to one), how the app knows with no server (compare against what this browser
   saw last visit, or a date on dictionary entries), and when the marker clears (after practising,
-  after viewing, or after a while). Mock it up on the canvas first.
+  after viewing, or after a while). Parked 2026-10-11 after a round on the canvas ("New words" page):
+  a grocery-label "NEW!" sticker was tried and dropped, and colour on the category pill (amber,
+  green outline, tint, dashed) was left undecided. No practice mode or view for new words alone:
+  marking the categories is enough. It may return as part of a new presentation for the categories.
+- **A "what's new" note on Home** (requested 2026-10-13, not started): a different take on the
+  marker above. A short release note written by hand with a deploy ("Added: direct object pronouns —
+  lo, la, los, las — in sentence practice"), shown on Home for a few days or until it is dismissed.
+  Home has room below its rows. To settle: where the text lives (a small file in `data/`, shipped
+  with the build like the dictionary), how long it shows (a date on the note, compared with today),
+  and remembering a dismissal per note in local storage, so the next note shows again. Board 1 on the
+  canvas's "New words" page (a notice card under the greeting) is a starting point for the look.
 
 ## Choosing words
 
@@ -673,6 +734,12 @@ property of the Netlify site, not something in `netlify.toml` — it is set at c
 
 The site is fully static: `pnpm run build` validates the dictionary and frames, type-checks and
 builds to `dist/`. There are no functions and no environment variables.
+
+**Checks on GitHub** (`.github/workflows/checks.yml`) run on every pull request and every push to
+`main`: `vp check` (format, lint, types), `vp test`, and the dictionary and frame validators, on
+Node 22 like the Netlify build. They are separate from deploying — the Netlify build stops only on a
+validator or type error, not on a failing test — so a red check on a PR is the signal to look before
+merging.
 
 If the old Netlify Blobs store still holds data from the multi-user version (`users`,
 `progress/dylan`, `dictionary` in the `vocab` store), nothing reads it; with the CLI linked to the site

@@ -1,5 +1,5 @@
 import type { Direction, Entry } from "./schema.ts";
-import { spanishPlural } from "./sentences/frames.ts";
+import { directObjectAgreement, isDirectObject, spanishPlural } from "./sentences/frames.ts";
 import {
   articleFor,
   articleOnlyDifference,
@@ -284,8 +284,31 @@ const SEVERITY_BY_KIND: Record<CandidateKind, number> = {
   conjugation: 4,
 };
 
+/** "masculine singular", for a direct object pronoun. */
+function pronounAgreement(id: string): string {
+  const agreement = directObjectAgreement(id)!;
+  return `${agreement.gender === "f" ? "feminine" : "masculine"} ${agreement.number === "pl" ? "plural" : "singular"}`;
+}
+
 function gradeSpanish(entry: Entry, answer: string, opts: GradeOptions): Grade {
   const expected = canonicalAnswer(entry, "en→es", opts);
+
+  // lo, la, los, las: another of the four is the wrong agreement, not a typo one
+  // letter off, and not an article. Two sharing the prompt (them) keep the usual
+  // near miss for a confusable word, below.
+  const typed = normalize(answer);
+  if (
+    isDirectObject(entry) &&
+    typed !== entry.es &&
+    directObjectAgreement(typed) &&
+    !(opts.confusableWith ?? []).some((other) => other.es === typed)
+  ) {
+    return {
+      result: "wrong",
+      expected,
+      note: `${typed} stands for a ${pronounAgreement(typed)} noun; ${entry.es}, a ${pronounAgreement(entry.id)} one`,
+    };
+  }
   const requireArticle = articleRequired(entry, opts);
   const match = findBestMatch(entry, answer, opts.prompt);
 

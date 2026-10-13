@@ -11,6 +11,9 @@ import type { Entry, VerbEntry } from "../schema.ts";
 import { verbForm } from "./conjugate.ts";
 import { SUBJECTS, type Subject } from "./english.ts";
 import {
+  directObjectAgreement,
+  DIRECT_OBJECT,
+  isDirectObject,
   likeForm,
   renderFrame,
   slotCandidates,
@@ -51,6 +54,12 @@ export function gapTargets(
       const spec = frame.slots[slot];
       if (!spec || spec.kind === "glue") continue;
       for (const entry of slotCandidates(spec, context)) {
+        // A pronoun only fits a frame whose noun has its number: los never stands for el pan.
+        if (spec.kind === "pronoun") {
+          const noun = frame.slots[spec.agree];
+          const number = noun?.kind === "noun" ? noun.number : "sg";
+          if (directObjectAgreement(entry.id)?.number !== number) continue;
+        }
         targets.set(entry.id, [...(targets.get(entry.id) ?? []), { frame, slot }]);
       }
     }
@@ -66,6 +75,9 @@ const RENDER_ATTEMPTS = 6;
  * available. Up to `blanks` slots are blanked: the aimed one, then others from
  * the frame's cloze list, so a frame with fewer useful slots gives fewer blanks.
  * `canBlank` limits which other words may be blanked.
+ *
+ * In a frame with a direct object pronoun the pronoun is the point, so it is
+ * always among the blanks: as a second one, past `blanks`, when `limit` allows.
  */
 export function renderGap(
   entryId: string,
@@ -73,19 +85,23 @@ export function renderGap(
   context: RenderContext,
   blanks = 1,
   canBlank: (entryId: string) => boolean = () => true,
+  limit = blanks,
 ): Gap | undefined {
   const options = shuffle(targets.get(entryId) ?? [], context.random);
   for (const { frame, slot } of options.slice(0, RENDER_ATTEMPTS)) {
     const sentence = renderFrame(frame, context, { [slot]: entryId });
     if (!sentence) continue;
 
-    const others = shuffle(
+    const shuffled = shuffle(
       frame.cloze.filter(
         (name) => name !== slot && sentence.fills[name] && canBlank(sentence.fills[name]!),
       ),
       context.random,
     );
-    const chosen = [slot, ...others.slice(0, blanks - 1)];
+    const isPronoun = (name: string) => frame.slots[name]?.kind === "pronoun";
+    const others = [...shuffled.filter(isPronoun), ...shuffled.filter((name) => !isPronoun(name))];
+    const count = others.some(isPronoun) ? Math.max(blanks, Math.min(2, limit)) : blanks;
+    const chosen = [slot, ...others.slice(0, count - 1)];
     const position = (name: string) =>
       sentence.segments.findIndex((part) => part.slot === name && !part.article);
     if (chosen.some((name) => position(name) < 0)) continue;
@@ -113,6 +129,48 @@ export function renderGap(
     };
   }
   return undefined;
+}
+
+/**
+ * Share out an answer typed into one blank over the blanks that follow it with
+ * nothing but a space between: "los quiere" in the first of "Sí, ___ ___."
+ * fills both. Each blank takes as many words as its expected form has, the
+ * last of the run takes the rest. Undefined when there is nothing to share: one
+ * word too few for a spill, or no blank right after this one.
+ */
+export function spreadAnswer(
+  gap: Gap,
+  index: number,
+  typed: string,
+): Map<number, string> | undefined {
+  const words = typed.trim().split(/\s+/).filter(Boolean);
+  const position = (blank: GapBlank) =>
+    gap.sentence.segments.findIndex((part) => part.slot === blank.slot && !part.article);
+  // The run of blanks from this one, each separated from the next by spaces only.
+  const run = [index];
+  while (run.length < gap.blanks.length - index) {
+    const here = position(gap.blanks[run.at(-1)!]!);
+    const next = position(gap.blanks[run.at(-1)! + 1]!);
+    const between = gap.sentence.segments.slice(here + 1, next);
+    if (next <= here || between.some((part) => part.text.trim() !== "")) break;
+    run.push(run.at(-1)! + 1);
+  }
+  const wordsIn = (blankIndex: number) => gap.blanks[blankIndex]!.expected.split(/\s+/).length;
+  if (run.length < 2 || words.length <= wordsIn(index)) return undefined;
+
+  const out = new Map<number, string>();
+  let at = 0;
+  run.forEach((blankIndex, step) => {
+    const take = step === run.length - 1 ? words.length - at : wordsIn(blankIndex);
+    out.set(blankIndex, words.slice(at, at + take).join(" "));
+    at += take;
+  });
+  // Stop at the last blank that got something, so a short answer does not blank the rest.
+  for (const [blankIndex, text] of [...out].reverse()) {
+    if (text !== "") break;
+    out.delete(blankIndex);
+  }
+  return out.size > 1 ? out : undefined;
 }
 
 const SPANISH_SUBJECT: Record<Subject, string> = {
@@ -148,6 +206,9 @@ function formsOf(entry: Entry, dictionary: Entry[]): string[] {
       ];
     }
     default:
+      // lo, la, los and las are one word in four forms, chosen by the noun.
+      if (isDirectObject(entry))
+        return Object.values(DIRECT_OBJECT).flatMap((by) => Object.values(by));
       return [entry.es, ...Object.values(entry.forms ?? {})];
   }
 }
@@ -208,6 +269,20 @@ export function gradeGap(
         return { result: "wrong", expected, note };
       }
     }
+  }
+
+  // le is the indirect object (le gusta). Using it for a person (le veo) is
+  // leísmo, which the class has not met; it is not a slip of lo.
+  if (isDirectObject(entry) && (answer === "le" || answer === "les")) {
+    const noun = detail.agreesWith
+      ? (gap.sentence.segments.find((part) => part.slot === detail.agreesWith && !part.article)
+          ?.text ?? "")
+      : "";
+    return {
+      result: "wrong",
+      expected,
+      note: `${answer} is for an indirect object (${answer} gusta); ${noun ? `for ${noun}` : "here"} it is ${expected}`,
+    };
   }
 
   const otherForm = formsOf(entry, dictionary)

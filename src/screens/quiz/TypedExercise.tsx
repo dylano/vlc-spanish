@@ -3,7 +3,7 @@ import SessionShell from "../../app/SessionShell.tsx";
 import { useStore } from "../../app/store-context.ts";
 import { articleRequired, grade, type Grade, type Result } from "../../lib/grade.ts";
 import { normalize } from "../../lib/normalize.ts";
-import { gradeGap } from "../../lib/sentences/gap.ts";
+import { gradeGap, spreadAnswer } from "../../lib/sentences/gap.ts";
 import styles from "../QuizScreen.module.css";
 import {
   CORRECT_PAUSE_MS,
@@ -117,13 +117,23 @@ export default function TypedExercise({ card, position, label, onDone }: Exercis
       finish(grades, answers);
       return;
     }
+    // Words for neighbouring blanks typed into one ("los quiere" for "Sí, ___ ___.")
+    // go where they belong, as if each had been typed in its own blank.
+    const current = [...answers];
+    let reached = active;
+    const spread = card.gap ? spreadAnswer(card.gap, active, answer) : undefined;
+    if (spread) {
+      for (const [index, text] of spread) current[index] = text;
+      reached = Math.max(...spread.keys());
+      setAnswers(current);
+    }
     // Not the last blank yet: move on without grading.
-    if (active < slots - 1) {
-      setActive(active + 1);
+    if (reached < slots - 1) {
+      setActive(reached + 1);
       return;
     }
 
-    const given = Array.from({ length: slots }, (_, index) => answers[index] ?? "");
+    const given = Array.from({ length: slots }, (_, index) => current[index] ?? "");
     const graded = card.gap
       ? blanks.map((blank, index) =>
           gradeGap(

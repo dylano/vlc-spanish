@@ -6,6 +6,7 @@ import { verbForm } from "./conjugate.ts";
 import { SUBJECTS, type Subject } from "./english.ts";
 import {
   adjectiveForm,
+  DIRECT_OBJECT,
   likeForm,
   nounForm,
   renderFrame,
@@ -82,6 +83,13 @@ const FORM_SHARE = 0.75;
 /** For a noun, which can only be swapped or have its article broken: how often the article. */
 const NOUN_ARTICLE_SHARE = 0.3;
 
+/**
+ * In a frame with a direct object pronoun, how often the mistake is the pronoun
+ * rather than the word the sentence was aimed at. The pronoun is what those
+ * frames are for; aimed at it alone, a session met each of the four once.
+ */
+const PRONOUN_SHARE = 0.75;
+
 const SUBJECT_TEXT: Record<Subject, string> = {
   yo: "yo",
   tu: "tú",
@@ -131,7 +139,8 @@ function wordSwap(
 ): Break | undefined {
   const spec = frame.slots[slot];
   const detail = sentence.slots[slot];
-  if (!spec || !detail || spec.kind === "glue" || spec.kind === "word") return undefined;
+  if (!spec || !detail || spec.kind === "glue" || spec.kind === "word" || spec.kind === "pronoun")
+    return undefined;
   if (spec.kind === "verb" && detail.liked) return undefined;
   // A slot the English does not say ("¿Me pones un café?" is "Can I have a
   // coffee?") has no cue to give a swap away: "¿Me traes un café?" is just as right.
@@ -227,6 +236,31 @@ function breaksFor(
     }
   }
 
+  // A direct object pronoun in the wrong gender or number: lo for la, lo for los.
+  if (spec.kind === "pronoun" && detail.agreesWith) {
+    const noun = wordText(sentence, detail.agreesWith);
+    const gender = detail.gender === "f" ? "f" : "m";
+    const number = detail.number ?? "sg";
+    const explanation = `it stands for ${noun}, ${describe(gender, number)}, so ${right}`;
+    out.push(
+      {
+        kind: "agreement",
+        article: false,
+        wrong: DIRECT_OBJECT[gender === "f" ? "m" : "f"][number],
+        right,
+        explanation,
+      },
+      {
+        kind: "number",
+        article: false,
+        wrong: DIRECT_OBJECT[gender][number === "pl" ? "sg" : "pl"],
+        right,
+        explanation,
+      },
+    );
+    return out;
+  }
+
   // Swapping el/la only breaks a noun with one gender, and only an article the
   // sentence still shows (a contracted "al" has none to swap).
   if (spec.kind === "noun" && entry.pos === "noun" && entry.gender !== "mf") {
@@ -303,7 +337,9 @@ function breaksFor(
 
 /**
  * A sentence with one mistake aimed at an entry: the entry fills the broken
- * slot. Undefined when no frame holding the entry can be broken cleanly.
+ * slot, or, in a frame with a direct object pronoun, usually the pronoun does
+ * (`entryId` says which). Undefined when no frame holding the entry can be
+ * broken cleanly.
  */
 export function renderMistake(
   entryId: string,
@@ -323,6 +359,27 @@ export function renderMistake(
   for (const { frame, slot } of shuffle(targets.get(entryId) ?? [], context.random).slice(0, 8)) {
     const sentence = renderFrame(frame, context, { [slot]: entryId });
     if (!sentence) continue;
+
+    const pronounSlot = Object.keys(frame.slots).find(
+      (name) => name !== slot && frame.slots[name]!.kind === "pronoun" && sentence.fills[name],
+    );
+    if (pronounSlot && context.random() < PRONOUN_SHARE) {
+      const pronoun = context.dictionary.find((other) => other.id === sentence.fills[pronounSlot])!;
+      const [chosen] = shuffle(
+        breaksFor(frame, sentence, pronounSlot, pronoun, context.dictionary, context.random),
+        context.random,
+      );
+      if (chosen) {
+        return {
+          sentence,
+          slot: pronounSlot,
+          entryId: pronoun.id,
+          ...chosen,
+          accepts: acceptsFor(chosen),
+        };
+      }
+    }
+
     const breaks = shuffle(
       breaksFor(frame, sentence, slot, entry, context.dictionary, context.random),
       context.random,
@@ -367,12 +424,11 @@ function acceptsFor(chosen: Break): string[] {
  */
 export function mistakeTokens(mistake: Mistake): MistakeToken[] {
   const tokens: MistakeToken[] = [];
-  const segments = mistake.sentence.segments;
-  segments.forEach((segment, index) => {
+  for (const segment of mistake.sentence.segments) {
     const broken = segment.slot === mistake.slot && Boolean(segment.article) === mistake.article;
     let text = broken ? mistake.wrong : segment.text;
-    // Keep the sentence's capital if the broken text starts it.
-    if (broken && index === segments.findIndex((part) => /\p{L}/u.test(part.text))) {
+    // Keep the capital if the broken text starts a sentence (the renderer gave it one).
+    if (broken && /^\p{Lu}/u.test(segment.text)) {
       text = text.charAt(0).toUpperCase() + text.slice(1);
     }
     for (const match of text.matchAll(/(\p{L}+)|([^\p{L}]+)/gu)) {
@@ -380,7 +436,7 @@ export function mistakeTokens(mistake: Mistake): MistakeToken[] {
       // words with the fix does not leave their gaps behind.
       tokens.push({ text: match[0], word: match[1] !== undefined, broken });
     }
-  });
+  }
   return tokens;
 }
 

@@ -252,7 +252,9 @@ describe("sessions with gaps", () => {
         card.blankCards!.map((blank) => blank.entry.id),
       );
       expect(ids.length).toBeLessThanOrEqual(15);
-      expect(new Set(ids).size).toBe(ids.length);
+      // lo, la, los and las may come back: their frames always blank them.
+      const words = ids.filter((id) => !["lo", "la", "los", "las"].includes(id));
+      expect(new Set(words).size).toBe(words.length);
     }
   });
 
