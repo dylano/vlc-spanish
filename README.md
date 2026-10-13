@@ -463,7 +463,10 @@ word pinned in the slot. So a gap usually reviews a word that is due.
   (`BLANK_ODDS`), limited by how many slots the frame lists in `cloze`. The first blank is the word
   the gap was aimed at; the others are further practiced words in the sentence not already used this
   session. Each blank is its own card (`blankCards`), graded and scheduled on its own, and each counts
-  as a word toward the session size.
+  as a word toward the session size. Two blanks side by side (_Sí, \_\_\_ \_\_\_._) give no sign
+  where one word ends, so both words typed into the first are shared out (`spreadAnswer`): each
+  blank takes as many words as its answer has, and the last of the run the rest, as if each had been
+  typed in its own blank. Only into blanks right after it, with nothing but a space between.
 - **Scheduling**: a gap is always answered in Spanish, so every blank schedules its word's `en→es`
   card as a typed (**recall**) answer, whichever direction the session balanced it to.
 - **Grading** (`gradeGap`): the form the sentence needs is correct, and so is the same slot filled
@@ -562,6 +565,13 @@ were dropped then):
   a grocery-label "NEW!" sticker was tried and dropped, and colour on the category pill (amber,
   green outline, tint, dashed) was left undecided. No practice mode or view for new words alone:
   marking the categories is enough. It may return as part of a new presentation for the categories.
+- **A "what's new" note on Home** (requested 2026-10-13, not started): a different take on the
+  marker above. A short release note written by hand with a deploy ("Added: direct object pronouns —
+  lo, la, los, las — in sentence practice"), shown on Home for a few days or until it is dismissed.
+  Home has room below its rows. To settle: where the text lives (a small file in `data/`, shipped
+  with the build like the dictionary), how long it shows (a date on the note, compared with today),
+  and remembering a dismissal per note in local storage, so the next note shows again. Board 1 on the
+  canvas's "New words" page (a notice card under the greeting) is a starting point for the look.
 
 ## Choosing words
 

@@ -131,6 +131,48 @@ export function renderGap(
   return undefined;
 }
 
+/**
+ * Share out an answer typed into one blank over the blanks that follow it with
+ * nothing but a space between: "los quiere" in the first of "Sí, ___ ___."
+ * fills both. Each blank takes as many words as its expected form has, the
+ * last of the run takes the rest. Undefined when there is nothing to share: one
+ * word too few for a spill, or no blank right after this one.
+ */
+export function spreadAnswer(
+  gap: Gap,
+  index: number,
+  typed: string,
+): Map<number, string> | undefined {
+  const words = typed.trim().split(/\s+/).filter(Boolean);
+  const position = (blank: GapBlank) =>
+    gap.sentence.segments.findIndex((part) => part.slot === blank.slot && !part.article);
+  // The run of blanks from this one, each separated from the next by spaces only.
+  const run = [index];
+  while (run.length < gap.blanks.length - index) {
+    const here = position(gap.blanks[run.at(-1)!]!);
+    const next = position(gap.blanks[run.at(-1)! + 1]!);
+    const between = gap.sentence.segments.slice(here + 1, next);
+    if (next <= here || between.some((part) => part.text.trim() !== "")) break;
+    run.push(run.at(-1)! + 1);
+  }
+  const wordsIn = (blankIndex: number) => gap.blanks[blankIndex]!.expected.split(/\s+/).length;
+  if (run.length < 2 || words.length <= wordsIn(index)) return undefined;
+
+  const out = new Map<number, string>();
+  let at = 0;
+  run.forEach((blankIndex, step) => {
+    const take = step === run.length - 1 ? words.length - at : wordsIn(blankIndex);
+    out.set(blankIndex, words.slice(at, at + take).join(" "));
+    at += take;
+  });
+  // Stop at the last blank that got something, so a short answer does not blank the rest.
+  for (const [blankIndex, text] of [...out].reverse()) {
+    if (text !== "") break;
+    out.delete(blankIndex);
+  }
+  return out.size > 1 ? out : undefined;
+}
+
 const SPANISH_SUBJECT: Record<Subject, string> = {
   yo: "yo",
   tu: "tú",

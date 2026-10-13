@@ -4,7 +4,7 @@ import { sentences } from "../../app/sentences.ts";
 import { grade } from "../grade.ts";
 import { buildGapSession, buildMistakeSession, DEFAULT_CONFIG } from "../session.ts";
 import { renderFrame, type RenderedSentence } from "./frames.ts";
-import { gapTargets, gradeGap, renderGap, type Gap } from "./gap.ts";
+import { gapTargets, gradeGap, renderGap, spreadAnswer, type Gap } from "./gap.ts";
 import { mistakeTokens, renderMistake } from "./mistake.ts";
 import { matchesTranslation } from "./translate.ts";
 
@@ -279,5 +279,37 @@ describe("pronoun frames in a session", () => {
       }
     }
     expect(onPronoun / total).toBeGreaterThan(0.6);
+  });
+});
+
+describe("neighbouring blanks", () => {
+  // Sí, ___ ___. with the pronoun and the verb blanked.
+  function sideBySide(): Gap {
+    for (let seed = 1; seed <= 200; seed++) {
+      const gap = renderGap(
+        "lo",
+        gapTargets([frame("pronoun-relative")], { dictionary: entries }),
+        context(seed),
+        3,
+      );
+      if (gap && gap.blanks.map((blank) => blank.slot).join() === "c,p,w") return gap;
+    }
+    throw new Error("no gap with the noun, pronoun and verb blanked");
+  }
+
+  it("shares two words typed into the first of two neighbouring blanks", () => {
+    const gap = sideBySide();
+    const spread = spreadAnswer(gap, 1, "lo quieren");
+    expect([...spread!]).toEqual([
+      [1, "lo"],
+      [2, "quieren"],
+    ]);
+  });
+
+  it("leaves one word alone, and never spills into a blank that is not next to it", () => {
+    const gap = sideBySide();
+    expect(spreadAnswer(gap, 1, "lo")).toBeUndefined();
+    // The noun's blank ends the question; the pronoun's starts the answer.
+    expect(spreadAnswer(gap, 0, "queso lo")).toBeUndefined();
   });
 });
