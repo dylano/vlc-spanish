@@ -68,6 +68,8 @@
   color: var(--muted);
   margin: 0 0 12px;
   text-wrap: pretty;
+  /* A question and its answer sit on two lines (frames write a line break). */
+  white-space: pre-line;
 }
 
 .gapSentence {
@@ -77,6 +79,7 @@
   line-height: 1.25;
   margin: 0;
   text-wrap: pretty;
+  white-space: pre-line;
 }
 
 /* A blank is a button, so a tap goes back to it; it still has to read as a line
@@ -237,6 +240,7 @@
   line-height: 1.3;
   color: var(--ink);
   margin: 0;
+  white-space: pre-line;
 }
 
 .divider {

@@ -3268,6 +3268,731 @@
         }
       },
       "cloze": ["c", "v"]
+    },
+    {
+      "id": "pronoun-yes",
+      "grammar": ["object-pronouns", "verb-conjugation", "questions"],
+      "es": "¿{v} {c:el}?\nSí, {p} {w}.",
+      "en": "Do you {v} {c:the}?\nYes, I {w} {p}.",
+      "slots": {
+        "v": {
+          "kind": "verb",
+          "ids": ["comprar", "querer", "necesitar", "tener"],
+          "subject": "tu"
+        },
+        "c": {
+          "kind": "noun",
+          "ids": [
+            "pan",
+            "queso",
+            "cafe",
+            "leche",
+            "agua",
+            "vino",
+            "ensalada",
+            "tortilla",
+            "helado",
+            "tenedor",
+            "cuchillo",
+            "cuchara",
+            "plato",
+            "vaso",
+            "taza",
+            "servilleta",
+            "camisa",
+            "chaqueta",
+            "falda",
+            "vestido",
+            "jersey",
+            "bolso",
+            "cinturon",
+            "bufanda",
+            "abrigo",
+            "gorro"
+          ]
+        },
+        "p": {
+          "kind": "pronoun",
+          "agree": "c"
+        },
+        "w": {
+          "kind": "verb",
+          "ids": ["comprar", "querer", "necesitar", "tener"],
+          "subject": "yo",
+          "same": "v"
+        }
+      },
+      "cloze": ["p", "w", "c"]
+    },
+    {
+      "id": "pronoun-yes-plural",
+      "grammar": ["object-pronouns", "verb-conjugation", "questions", "plural"],
+      "es": "¿{v} {c:el}?\nSí, {p} {w}.",
+      "en": "Do you {v} {c:the}?\nYes, I {w} {p}.",
+      "slots": {
+        "v": {
+          "kind": "verb",
+          "ids": ["comprar", "querer", "necesitar", "tener"],
+          "subject": "tu"
+        },
+        "c": {
+          "kind": "noun",
+          "ids": [
+            "tenedor",
+            "cuchillo",
+            "plato",
+            "vaso",
+            "servilleta",
+            "taza",
+            "patata",
+            "huevo",
+            "fresa",
+            "manzana",
+            "aceituna",
+            "zapato",
+            "bota",
+            "sandalia",
+            "gafas",
+            "vaqueros"
+          ],
+          "number": "pl"
+        },
+        "p": {
+          "kind": "pronoun",
+          "agree": "c"
+        },
+        "w": {
+          "kind": "verb",
+          "ids": ["comprar", "querer", "necesitar", "tener"],
+          "subject": "yo",
+          "same": "v"
+        }
+      },
+      "cloze": ["p", "w", "c"]
+    },
+    {
+      "id": "pronoun-no",
+      "grammar": ["object-pronouns", "verb-conjugation", "questions", "negation"],
+      "es": "¿{v} {c:el}?\nNo, no {p} {w}.",
+      "en": "Do you {v} {c:the}?\nNo, I {w:not} {p}.",
+      "slots": {
+        "v": {
+          "kind": "verb",
+          "ids": ["comprar", "querer", "necesitar", "tener"],
+          "subject": "tu"
+        },
+        "c": {
+          "kind": "noun",
+          "ids": [
+            "pan",
+            "queso",
+            "cafe",
+            "leche",
+            "agua",
+            "vino",
+            "ensalada",
+            "tortilla",
+            "helado",
+            "tenedor",
+            "cuchillo",
+            "cuchara",
+            "plato",
+            "vaso",
+            "taza",
+            "servilleta",
+            "camisa",
+            "chaqueta",
+            "falda",
+            "vestido",
+            "jersey",
+            "bolso",
+            "cinturon",
+            "bufanda",
+            "abrigo",
+            "gorro"
+          ]
+        },
+        "p": {
+          "kind": "pronoun",
+          "agree": "c"
+        },
+        "w": {
+          "kind": "verb",
+          "ids": ["comprar", "querer", "necesitar", "tener"],
+          "subject": "yo",
+          "same": "v"
+        }
+      },
+      "cloze": ["p", "w", "c"]
+    },
+    {
+      "id": "pronoun-no-plural",
+      "grammar": ["object-pronouns", "verb-conjugation", "questions", "negation", "plural"],
+      "es": "¿{v} {c:el}?\nNo, no {p} {w}.",
+      "en": "Do you {v} {c:the}?\nNo, I {w:not} {p}.",
+      "slots": {
+        "v": {
+          "kind": "verb",
+          "ids": ["comprar", "querer", "necesitar", "tener"],
+          "subject": "tu"
+        },
+        "c": {
+          "kind": "noun",
+          "ids": [
+            "tenedor",
+            "cuchillo",
+            "plato",
+            "vaso",
+            "servilleta",
+            "taza",
+            "patata",
+            "huevo",
+            "fresa",
+            "manzana",
+            "aceituna",
+            "zapato",
+            "bota",
+            "sandalia",
+            "gafas",
+            "vaqueros"
+          ],
+          "number": "pl"
+        },
+        "p": {
+          "kind": "pronoun",
+          "agree": "c"
+        },
+        "w": {
+          "kind": "verb",
+          "ids": ["comprar", "querer", "necesitar", "tener"],
+          "subject": "yo",
+          "same": "v"
+        }
+      },
+      "cloze": ["p", "w", "c"]
+    },
+    {
+      "id": "pronoun-we",
+      "grammar": ["object-pronouns", "verb-conjugation", "questions"],
+      "es": "¿{v} {c:el}?\nSí, {p} {w}.",
+      "en": "Do you (plural) {v} {c:the}?\nYes, we {w} {p}.",
+      "slots": {
+        "v": {
+          "kind": "verb",
+          "ids": ["comprar", "querer", "necesitar", "tener"],
+          "subject": "vosotros"
+        },
+        "c": {
+          "kind": "noun",
+          "ids": [
+            "pan",
+            "queso",
+            "cafe",
+            "leche",
+            "agua",
+            "vino",
+            "ensalada",
+            "tortilla",
+            "helado",
+            "tenedor",
+            "cuchillo",
+            "cuchara",
+            "plato",
+            "vaso",
+            "taza",
+            "servilleta",
+            "camisa",
+            "chaqueta",
+            "falda",
+            "vestido",
+            "jersey",
+            "bolso",
+            "cinturon",
+            "bufanda",
+            "abrigo",
+            "gorro"
+          ]
+        },
+        "p": {
+          "kind": "pronoun",
+          "agree": "c"
+        },
+        "w": {
+          "kind": "verb",
+          "ids": ["comprar", "querer", "necesitar", "tener"],
+          "subject": "nosotros",
+          "same": "v"
+        }
+      },
+      "cloze": ["p", "w", "c"]
+    },
+    {
+      "id": "pronoun-we-plural",
+      "grammar": ["object-pronouns", "verb-conjugation", "questions", "plural"],
+      "es": "¿{v} {c:el}?\nSí, {p} {w}.",
+      "en": "Do you (plural) {v} {c:the}?\nYes, we {w} {p}.",
+      "slots": {
+        "v": {
+          "kind": "verb",
+          "ids": ["comprar", "querer", "necesitar", "tener"],
+          "subject": "vosotros"
+        },
+        "c": {
+          "kind": "noun",
+          "ids": [
+            "tenedor",
+            "cuchillo",
+            "plato",
+            "vaso",
+            "servilleta",
+            "taza",
+            "patata",
+            "huevo",
+            "fresa",
+            "manzana",
+            "aceituna",
+            "zapato",
+            "bota",
+            "sandalia",
+            "gafas",
+            "vaqueros"
+          ],
+          "number": "pl"
+        },
+        "p": {
+          "kind": "pronoun",
+          "agree": "c"
+        },
+        "w": {
+          "kind": "verb",
+          "ids": ["comprar", "querer", "necesitar", "tener"],
+          "subject": "nosotros",
+          "same": "v"
+        }
+      },
+      "cloze": ["p", "w", "c"]
+    },
+    {
+      "id": "pronoun-wear",
+      "grammar": ["object-pronouns", "verb-conjugation", "questions"],
+      "es": "¿{v} {c:el}?\nSí, {p} {w}.",
+      "en": "Do you {v} {c:the}?\nYes, I {w} {p}.",
+      "slots": {
+        "v": {
+          "kind": "verb",
+          "ids": ["llevar"],
+          "subject": "tu"
+        },
+        "c": {
+          "kind": "noun",
+          "ids": [
+            "chaqueta",
+            "camisa",
+            "falda",
+            "vestido",
+            "jersey",
+            "bufanda",
+            "abrigo",
+            "gorro",
+            "cinturon"
+          ]
+        },
+        "p": {
+          "kind": "pronoun",
+          "agree": "c"
+        },
+        "w": {
+          "kind": "verb",
+          "ids": ["llevar"],
+          "subject": "yo",
+          "same": "v"
+        }
+      },
+      "cloze": ["p", "w", "c"]
+    },
+    {
+      "id": "pronoun-wear-plural",
+      "grammar": ["object-pronouns", "verb-conjugation", "questions", "plural"],
+      "es": "¿{v} {c:el}?\nSí, {p} {w}.",
+      "en": "Do you {v} {c:the}?\nYes, I {w} {p}.",
+      "slots": {
+        "v": {
+          "kind": "verb",
+          "ids": ["llevar"],
+          "subject": "tu"
+        },
+        "c": {
+          "kind": "noun",
+          "ids": [
+            "zapato",
+            "bota",
+            "sandalia",
+            "gafas",
+            "gafas-de-sol",
+            "vaqueros",
+            "pantalones-cortos"
+          ],
+          "number": "pl"
+        },
+        "p": {
+          "kind": "pronoun",
+          "agree": "c"
+        },
+        "w": {
+          "kind": "verb",
+          "ids": ["llevar"],
+          "subject": "yo",
+          "same": "v"
+        }
+      },
+      "cloze": ["p", "w", "c"]
+    },
+    {
+      "id": "pronoun-person",
+      "grammar": ["object-pronouns", "personal-a", "verb-conjugation", "questions"],
+      "es": "¿{v} a tu {c}?\nSí, {p} {w}.",
+      "en": "Do you {v} your {c}?\nYes, I {w} {p}.",
+      "slots": {
+        "v": {
+          "kind": "verb",
+          "ids": ["ver", "visitar", "escuchar"],
+          "subject": "tu"
+        },
+        "w": {
+          "kind": "verb",
+          "ids": ["ver", "visitar", "escuchar"],
+          "subject": "yo",
+          "same": "v"
+        },
+        "c": {
+          "kind": "noun",
+          "tags": ["family"]
+        },
+        "p": {
+          "kind": "pronoun",
+          "agree": "c",
+          "person": true
+        }
+      },
+      "cloze": ["p", "w", "c"]
+    },
+    {
+      "id": "pronoun-person-no",
+      "grammar": ["object-pronouns", "personal-a", "verb-conjugation", "questions", "negation"],
+      "es": "¿{v} a tu {c}?\nNo, no {p} {w}.",
+      "en": "Do you {v} your {c}?\nNo, I {w:not} {p}.",
+      "slots": {
+        "v": {
+          "kind": "verb",
+          "ids": ["ver", "visitar", "escuchar"],
+          "subject": "tu"
+        },
+        "w": {
+          "kind": "verb",
+          "ids": ["ver", "visitar", "escuchar"],
+          "subject": "yo",
+          "same": "v"
+        },
+        "c": {
+          "kind": "noun",
+          "tags": ["family"]
+        },
+        "p": {
+          "kind": "pronoun",
+          "agree": "c",
+          "person": true
+        }
+      },
+      "cloze": ["p", "w", "c"]
+    },
+    {
+      "id": "pronoun-person-plural",
+      "grammar": ["object-pronouns", "personal-a", "verb-conjugation", "questions", "plural"],
+      "es": "¿{v} a tus {c}?\nSí, {p} {w}.",
+      "en": "Do you {v} your {c}?\nYes, I {w} {p}.",
+      "slots": {
+        "v": {
+          "kind": "verb",
+          "ids": ["ver", "visitar", "escuchar"],
+          "subject": "tu"
+        },
+        "w": {
+          "kind": "verb",
+          "ids": ["ver", "visitar", "escuchar"],
+          "subject": "yo",
+          "same": "v"
+        },
+        "c": {
+          "kind": "noun",
+          "tags": ["family"],
+          "number": "pl",
+          "exclude": ["madre", "mujer", "marido", "padre", "abuelo", "hermano"]
+        },
+        "p": {
+          "kind": "pronoun",
+          "agree": "c",
+          "person": true
+        }
+      },
+      "cloze": ["p", "w", "c"]
+    },
+    {
+      "id": "pronoun-person-profession",
+      "grammar": ["object-pronouns", "personal-a", "contraction", "verb-conjugation", "questions"],
+      "es": "¿{v} a {c:el}?\nSí, {p} {w}.",
+      "en": "Do you {v} {c:the}?\nYes, I {w} {p}.",
+      "slots": {
+        "v": {
+          "kind": "verb",
+          "ids": ["ver", "visitar", "escuchar"],
+          "subject": "tu"
+        },
+        "w": {
+          "kind": "verb",
+          "ids": ["ver", "visitar", "escuchar"],
+          "subject": "yo",
+          "same": "v"
+        },
+        "c": {
+          "kind": "noun",
+          "tags": ["professions"]
+        },
+        "p": {
+          "kind": "pronoun",
+          "agree": "c",
+          "person": true
+        }
+      },
+      "cloze": ["p", "w", "c"]
+    },
+    {
+      "id": "pronoun-relative",
+      "grammar": ["object-pronouns", "third-person", "verb-conjugation", "questions"],
+      "es": "¿Tu {n} {v} {c:el}?\nSí, {p} {w}.",
+      "en": "Does your {n} {v:base} {c:the}?\nYes, {n:pronoun} {w} {p}.",
+      "slots": {
+        "n": {
+          "kind": "noun",
+          "tags": ["family"]
+        },
+        "v": {
+          "kind": "verb",
+          "ids": ["comprar", "querer", "necesitar", "tener"],
+          "subject": "n"
+        },
+        "w": {
+          "kind": "verb",
+          "ids": ["comprar", "querer", "necesitar", "tener"],
+          "subject": "n",
+          "same": "v"
+        },
+        "c": {
+          "kind": "noun",
+          "ids": [
+            "pan",
+            "queso",
+            "cafe",
+            "leche",
+            "agua",
+            "vino",
+            "ensalada",
+            "tortilla",
+            "helado",
+            "tenedor",
+            "cuchillo",
+            "cuchara",
+            "plato",
+            "vaso",
+            "taza",
+            "servilleta",
+            "camisa",
+            "chaqueta",
+            "falda",
+            "vestido",
+            "jersey",
+            "bolso",
+            "cinturon",
+            "bufanda",
+            "abrigo",
+            "gorro"
+          ]
+        },
+        "p": {
+          "kind": "pronoun",
+          "agree": "c"
+        }
+      },
+      "cloze": ["p", "w", "c"]
+    },
+    {
+      "id": "pronoun-relative-no",
+      "grammar": ["object-pronouns", "third-person", "verb-conjugation", "questions", "negation"],
+      "es": "¿Tu {n} {v} {c:el}?\nNo, no {p} {w}.",
+      "en": "Does your {n} {v:base} {c:the}?\nNo, {n:pronoun} {w:not} {p}.",
+      "slots": {
+        "n": {
+          "kind": "noun",
+          "tags": ["family"]
+        },
+        "v": {
+          "kind": "verb",
+          "ids": ["comprar", "querer", "necesitar", "tener"],
+          "subject": "n"
+        },
+        "w": {
+          "kind": "verb",
+          "ids": ["comprar", "querer", "necesitar", "tener"],
+          "subject": "n",
+          "same": "v"
+        },
+        "c": {
+          "kind": "noun",
+          "ids": [
+            "pan",
+            "queso",
+            "cafe",
+            "leche",
+            "agua",
+            "vino",
+            "ensalada",
+            "tortilla",
+            "helado",
+            "tenedor",
+            "cuchillo",
+            "cuchara",
+            "plato",
+            "vaso",
+            "taza",
+            "servilleta",
+            "camisa",
+            "chaqueta",
+            "falda",
+            "vestido",
+            "jersey",
+            "bolso",
+            "cinturon",
+            "bufanda",
+            "abrigo",
+            "gorro"
+          ]
+        },
+        "p": {
+          "kind": "pronoun",
+          "agree": "c"
+        }
+      },
+      "cloze": ["p", "w", "c"]
+    },
+    {
+      "id": "pronoun-relative-plural",
+      "grammar": ["object-pronouns", "third-person", "verb-conjugation", "questions", "plural"],
+      "es": "¿Tu {n} {v} {c:el}?\nSí, {p} {w}.",
+      "en": "Does your {n} {v:base} {c:the}?\nYes, {n:pronoun} {w} {p}.",
+      "slots": {
+        "n": {
+          "kind": "noun",
+          "tags": ["family"]
+        },
+        "v": {
+          "kind": "verb",
+          "ids": ["comprar", "querer", "necesitar", "tener"],
+          "subject": "n"
+        },
+        "w": {
+          "kind": "verb",
+          "ids": ["comprar", "querer", "necesitar", "tener"],
+          "subject": "n",
+          "same": "v"
+        },
+        "c": {
+          "kind": "noun",
+          "ids": [
+            "tenedor",
+            "cuchillo",
+            "plato",
+            "vaso",
+            "servilleta",
+            "taza",
+            "patata",
+            "huevo",
+            "fresa",
+            "manzana",
+            "aceituna",
+            "zapato",
+            "bota",
+            "sandalia",
+            "gafas",
+            "vaqueros"
+          ],
+          "number": "pl"
+        },
+        "p": {
+          "kind": "pronoun",
+          "agree": "c"
+        }
+      },
+      "cloze": ["p", "w", "c"]
+    },
+    {
+      "id": "pronoun-relatives",
+      "grammar": ["object-pronouns", "third-person", "verb-conjugation", "questions", "plural"],
+      "es": "¿Tus {n} {v} {c:el}?\nSí, {p} {w}.",
+      "en": "Do your {n} {v:base} {c:the}?\nYes, {n:pronoun} {w} {p}.",
+      "slots": {
+        "n": {
+          "kind": "noun",
+          "tags": ["family"],
+          "number": "pl",
+          "exclude": ["madre", "mujer", "marido", "padre", "abuelo", "hermano"]
+        },
+        "v": {
+          "kind": "verb",
+          "ids": ["comprar", "querer", "necesitar", "tener"],
+          "subject": "n"
+        },
+        "w": {
+          "kind": "verb",
+          "ids": ["comprar", "querer", "necesitar", "tener"],
+          "subject": "n",
+          "same": "v"
+        },
+        "c": {
+          "kind": "noun",
+          "ids": [
+            "pan",
+            "queso",
+            "cafe",
+            "leche",
+            "agua",
+            "vino",
+            "ensalada",
+            "tortilla",
+            "helado",
+            "tenedor",
+            "cuchillo",
+            "cuchara",
+            "plato",
+            "vaso",
+            "taza",
+            "servilleta",
+            "camisa",
+            "chaqueta",
+            "falda",
+            "vestido",
+            "jersey",
+            "bolso",
+            "cinturon",
+            "bufanda",
+            "abrigo",
+            "gorro"
+          ]
+        },
+        "p": {
+          "kind": "pronoun",
+          "agree": "c"
+        }
+      },
+      "cloze": ["p", "w", "c"]
     }
   ]
 }

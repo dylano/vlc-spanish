@@ -5100,6 +5100,44 @@
       "notes": "Patatas al horno, baked potatoes. Asado al horno is oven-roasted.",
       "tags": ["food"],
       "added": "2026-10-11"
+    },
+    {
+      "id": "lo",
+      "es": "lo",
+      "en": ["it", "him"],
+      "pos": "pronoun",
+      "notes": "Direct object pronoun for a masculine singular noun, before the verb: ¿El pan? Lo compro. Also him: lo veo.",
+      "tags": ["common-words"],
+      "added": "2026-10-13"
+    },
+    {
+      "id": "la",
+      "es": "la",
+      "en": ["it", "her"],
+      "pos": "pronoun",
+      "notes": "Direct object pronoun for a feminine singular noun, before the verb: ¿La ensalada? La quiero. Also her. Same spelling as the article.",
+      "tags": ["common-words"],
+      "added": "2026-10-13"
+    },
+    {
+      "id": "los",
+      "es": "los",
+      "en": ["them"],
+      "pos": "pronoun",
+      "hint": "masculine or mixed, as an object",
+      "notes": "Direct object pronoun for a masculine plural noun, before the verb: ¿Los platos? Los tengo. Same spelling as the article.",
+      "tags": ["common-words"],
+      "added": "2026-10-13"
+    },
+    {
+      "id": "las",
+      "es": "las",
+      "en": ["them"],
+      "pos": "pronoun",
+      "hint": "feminine, as an object",
+      "notes": "Direct object pronoun for a feminine plural noun, before the verb: ¿Las servilletas? Las traigo. Same spelling as the article.",
+      "tags": ["common-words"],
+      "added": "2026-10-13"
     }
   ]
 }

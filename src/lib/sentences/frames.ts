@@ -2,6 +2,7 @@ import { z } from "zod";
 import { POS, type AdjEntry, type Entry, type NounEntry, type VerbEntry } from "../schema.ts";
 import { verbForm } from "./conjugate.ts";
 import {
+  baseVerb,
   indefiniteArticle,
   inflectVerb,
   negateVerb,
@@ -19,9 +20,38 @@ import {
  * verb forms, articles and a little English inflection.
  *
  * Placeholders are {slot} or {slot:modifier}. In Spanish, a noun slot takes
- * :el (definite article) or :un (indefinite). In English it takes :the or :a.
+ * :el (definite article) or :un (indefinite). In English it takes :the or :a,
+ * or :pronoun for he, she or they. A verb takes :not for its negative and :base
+ * for the bare form after do-support ("Does your mother buy…?").
  * {S} is the frame's subject pronoun, for frames that declare `subjects`.
  */
+
+/**
+ * Direct object pronouns, by the gender and number of the noun they stand for:
+ * el pan → lo compro, las servilletas → las tengo. Each is a dictionary entry,
+ * so a blank on one is scheduled like any other word.
+ */
+export const DIRECT_OBJECT = {
+  m: { sg: "lo", pl: "los" },
+  f: { sg: "la", pl: "las" },
+} as const;
+const DIRECT_OBJECT_IDS: readonly string[] = ["lo", "la", "los", "las"];
+
+/** The gender and number a direct object pronoun stands for: la → feminine singular. */
+export function directObjectAgreement(
+  id: string,
+): { gender: "m" | "f"; number: "sg" | "pl" } | undefined {
+  for (const gender of ["m", "f"] as const) {
+    for (const number of ["sg", "pl"] as const) {
+      if (DIRECT_OBJECT[gender][number] === id) return { gender, number };
+    }
+  }
+  return undefined;
+}
+
+export function isDirectObject(entry: Entry): boolean {
+  return entry.pos === "pronoun" && DIRECT_OBJECT_IDS.includes(entry.id);
+}
 
 const select = {
   /** Entries carrying any of these tags. */
@@ -61,8 +91,20 @@ export const slotSchema = z.discriminatedUnion("kind", [
      * English stays subject-first (I like shoes).
      */
     liked: z.string().optional(),
+    /**
+     * The verb filled in another verb slot, here in this slot's person: a
+     * question and its answer (¿Compras el pan? Sí, lo compro). List the same
+     * ids as that slot, so Fill in the Blank knows which verbs can sit here.
+     */
+    same: z.string().optional(),
   }),
   z.object({ kind: z.literal("word"), ...select, pos: z.enum(POS).optional() }),
+  /**
+   * A direct object pronoun standing for a noun slot, agreeing with it: lo, la,
+   * los or las. In English, "it" or "them", or for a `person` "him", "her" or
+   * "them" (¿Ves a tu hermana? Sí, la veo — I see her).
+   */
+  z.object({ kind: z.literal("pronoun"), agree: z.string(), person: z.boolean().optional() }),
   z.object({ kind: z.literal("glue"), group: z.string() }),
 ]);
 export type Slot = z.infer<typeof slotSchema>;
@@ -155,6 +197,8 @@ interface Filled {
   elSingular?: boolean;
   /** For a verb, the English negative ("doesn't like"), for {v:not}. */
   enNot?: string;
+  /** For a verb, the bare English form after does or do ("buy"), for {v:base}. */
+  enBase?: string;
 }
 
 const OBJECT_PRONOUN: Record<Subject, string> = {
@@ -205,6 +249,7 @@ export function spanishPlural(phrase: string): string {
 }
 
 function selects(entry: Entry, slot: Exclude<Slot, { kind: "glue" }>): boolean {
+  if (slot.kind === "pronoun") return true;
   if (slot.ids && !slot.ids.includes(entry.id)) return false;
   if (slot.exclude?.includes(entry.id)) return false;
   if (slot.tags && !entry.tags.some((tag) => slot.tags!.includes(tag))) return false;
@@ -232,6 +277,8 @@ export function slotCandidates(
         return entry.pos === "verb";
       case "word":
         return slot.pos ? entry.pos === slot.pos : true;
+      case "pronoun":
+        return isDirectObject(entry);
     }
   });
 }
@@ -364,6 +411,24 @@ export function renderFrame(
   const used = new Set<string>();
   const subject = frame.subjects ? pick(frame.subjects, random) : undefined;
 
+  // A verb pinned in an answer is pinned in its question too, and the other way round.
+  fixed = { ...fixed };
+  for (const [name, slot] of Object.entries(frame.slots)) {
+    if (slot.kind !== "verb" || !slot.same) continue;
+    const pinned = fixed[name] ?? fixed[slot.same];
+    if (pinned) {
+      fixed[name] = pinned;
+      fixed[slot.same] = pinned;
+    }
+  }
+  // A pinned pronoun decides its noun's gender: aimed at "la", the noun is feminine.
+  const pinnedGender: Record<string, Gender> = {};
+  for (const [name, slot] of Object.entries(frame.slots)) {
+    const agreement =
+      slot.kind === "pronoun" && fixed[name] ? directObjectAgreement(fixed[name]!) : undefined;
+    if (slot.kind === "pronoun" && agreement) pinnedGender[slot.agree] = agreement.gender;
+  }
+
   // Nouns first (agreeing nouns after the ones they agree with), then the rest.
   const order = Object.entries(frame.slots).sort(([, a], [, b]) => rank(a) - rank(b));
 
@@ -374,21 +439,32 @@ export function renderFrame(
       const item = pick(glue.groups[slot.group] ?? [], random);
       result = item ? { es: item.es, en: item.en } : undefined;
     } else {
+      const sameAs = slot.kind === "verb" && slot.same ? filled.get(slot.same)?.entryId : undefined;
       const candidates = slotCandidates(slot, context).filter(
-        (entry) => fixed[name] === undefined || entry.id === fixed[name],
+        (entry) =>
+          (fixed[name] === undefined || entry.id === fixed[name]) &&
+          (sameAs === undefined || entry.id === sameAs),
       );
       // For a person whose gender is free, decide the gender first and then find
       // a word that can take it. Deciding per word instead lets words that are
       // always masculine (los padres) tip whole frames toward the masculine.
+      const pinned = slot.kind === "noun" ? pinnedGender[name] : undefined;
       const gender: Gender | undefined =
         slot.kind === "noun" && !slot.agree
           ? (slot.gender ??
+            pinned ??
             (candidates.some(canBeEitherGender) ? (random() < 0.5 ? "f" : "m") : undefined))
           : undefined;
-      const attempts: (Gender | undefined)[] = gender ? [gender, undefined] : [undefined];
+      // A gender a pronoun was pinned for is a requirement, not a preference.
+      const attempts: (Gender | undefined)[] = pinned
+        ? [pinned]
+        : gender
+          ? [gender, undefined]
+          : [undefined];
       for (const wanted of attempts) {
         for (const entry of shuffled(candidates, random)) {
-          if (used.has(entry.id)) continue;
+          // The answer repeats the question's verb; anything else is used once.
+          if (used.has(entry.id) && sameAs === undefined) continue;
           result = fillSlot(slot, entry, filled, subject, dictionary, random, wanted);
           if (result) break;
         }
@@ -428,7 +504,8 @@ export function renderFrame(
       if (other) accepts.add(other.es);
     }
     const detail: SlotDetail = { accepts: [...accepts], gender: fill.gender, number: fill.number };
-    if (slot.kind === "adj" || (slot.kind === "noun" && slot.agree)) detail.agreesWith = slot.agree;
+    if (slot.kind === "adj" || slot.kind === "pronoun" || (slot.kind === "noun" && slot.agree))
+      detail.agreesWith = slot.agree;
     if (slot.kind === "verb" && slot.subject !== "inf") {
       const who = subjectOf(slot.subject, filled, subject);
       detail.subject = who?.subject;
@@ -455,6 +532,8 @@ export function renderFrame(
     if (slot.kind === "noun") return slot.agree ? 1 : 0;
     // A gustar-type verb waits for what is liked, to agree with it.
     if (slot.kind === "verb" && slot.liked) return 3;
+    // An answer's verb waits for the question's.
+    if (slot.kind === "verb" && slot.same) return 4;
     return 2;
   }
 }
@@ -522,10 +601,26 @@ function fillSlot(
         es,
         en: inflectVerb(entry.en[0]!, who.subject, who.gender),
         enNot: negateVerb(entry.en[0]!, who.subject, who.gender),
+        enBase: baseVerb(entry.en[0]!, who.subject, who.gender),
       };
     }
     case "word":
       return { entryId: entry.id, es: entry.es, en: entry.en[0]! };
+    case "pronoun": {
+      const noun = filled.get(slot.agree);
+      if (!noun || !isDirectObject(entry)) return undefined;
+      // A common-gender noun was given a gender when it was filled; el agua is feminine.
+      const gender = noun.gender === "f" ? "f" : "m";
+      const number = noun.number ?? "sg";
+      if (entry.id !== DIRECT_OBJECT[gender][number]) return undefined;
+      return {
+        entryId: entry.id,
+        es: entry.es,
+        en: number === "pl" ? "them" : slot.person ? (gender === "f" ? "her" : "him") : "it",
+        gender,
+        number,
+      };
+    }
   }
 }
 
@@ -609,6 +704,10 @@ function renderEnglish(
     const fill = filled.get(name)!;
     if (modifier === "the") return `the ${fill.en}`;
     if (modifier === "not") return fill.enNot ?? `not ${fill.en}`;
+    if (modifier === "base") return fill.enBase ?? fill.en;
+    // A person named earlier, as the subject of the answer: Yes, she buys it.
+    if (modifier === "pronoun")
+      return fill.number === "pl" ? "they" : fill.gender === "f" ? "she" : "he";
     // A slot English does not say word for word: "¿Me pones un café?" is "Can I
     // have a coffee?", with no "put" in it.
     if (modifier === "none") return "";
@@ -625,6 +724,8 @@ export function estimateVariety(
 ): number {
   let total = frame.subjects?.length ?? 1;
   for (const slot of Object.values(frame.slots)) {
+    // Decided by other slots: the answer's verb is the question's, the pronoun its noun's.
+    if (slot.kind === "pronoun" || (slot.kind === "verb" && slot.same)) continue;
     if (slot.kind === "glue") total *= context.glue.groups[slot.group]?.length ?? 0;
     else if (slot.kind === "noun" && !slot.agree) {
       total *= slotCandidates(slot, context).reduce(
@@ -666,7 +767,7 @@ export function checkFrame(
 
   for (const [language, template, modifiers] of [
     ["es", frame.es, ["el", "un"]],
-    ["en", frame.en, ["the", "a", "not", "none"]],
+    ["en", frame.en, ["the", "a", "not", "none", "base", "pronoun"]],
   ] as const) {
     for (const { name, modifier } of placeholders(template)) {
       if (name === "S") {
@@ -691,9 +792,20 @@ export function checkFrame(
     if (!declared.has(name)) errors.push(`cloze names unknown slot ${name}`);
 
   for (const [name, slot] of Object.entries(frame.slots)) {
-    if ((slot.kind === "adj" || (slot.kind === "noun" && slot.agree)) && slot.agree) {
+    if (
+      (slot.kind === "adj" || slot.kind === "pronoun" || (slot.kind === "noun" && slot.agree)) &&
+      slot.agree
+    ) {
       if (frame.slots[slot.agree]?.kind !== "noun")
         errors.push(`slot ${name} agrees with ${slot.agree}, which is not a noun slot`);
+    }
+    if (slot.kind === "verb" && slot.same) {
+      const source = frame.slots[slot.same];
+      if (source?.kind !== "verb") {
+        errors.push(`slot ${name} repeats ${slot.same}, which is not a verb slot`);
+      } else if ([...(source.ids ?? [])].sort().join() !== [...(slot.ids ?? [])].sort().join()) {
+        errors.push(`slot ${name} repeats ${slot.same} but lists different ids`);
+      }
     }
     if (slot.kind === "verb") {
       const spec = slot.subject;

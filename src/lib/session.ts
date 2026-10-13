@@ -6,6 +6,7 @@ import { gapTargets, renderGap, type Gap } from "./sentences/gap.ts";
 import { renderMistake, type Mistake } from "./sentences/mistake.ts";
 import { renderTranslation, type Translation } from "./sentences/translate.ts";
 import { isProblem } from "./problems.ts";
+import { isDirectObject } from "./sentences/frames.ts";
 import { isDue, sm2 } from "./scheduler.ts";
 import type { Direction, Entry, Progress, ProgressBlob } from "./schema.ts";
 
@@ -294,13 +295,14 @@ function gapMaker(
     const roll = random();
     const wanted = Math.min(maxWords, BLANK_ODDS.find(([, odds]) => roll < odds)![0]);
     // Further blanks are any word the session may ask, not already used in it.
+    // The direct object pronouns may come back: their frames always blank them.
     const canBlank = (id: string) => {
       const entry = entries.find((candidate) => candidate.id === id);
-      return !!entry && inScope(entry, options) && !taken.has(id);
+      return !!entry && inScope(entry, options) && (isDirectObject(entry) || !taken.has(id));
     };
 
     for (const { card, queued } of sentenceCandidates(remaining, taken, setup, dueOnly)) {
-      const gap = renderGap(card.entry.id, targets, context, wanted, canBlank);
+      const gap = renderGap(card.entry.id, targets, context, wanted, canBlank, maxWords);
       if (!gap) continue;
 
       removeWord(remaining, card.entry.id);
@@ -322,7 +324,10 @@ function gapMaker(
 /**
  * A function that takes the next word a one-sentence exercise can be aimed at
  * off a ranked list, or undefined when this learner cannot have sentence
- * exercises yet. `render` builds the exercise around that word.
+ * exercises yet. `render` builds the exercise around that word. `tests` names
+ * the word the exercise ended up testing, when that can be another word in the
+ * sentence (a mistake in a pronoun frame breaks the pronoun); the card is that
+ * word's.
  */
 function sentenceMaker<T>(
   options: BuildSessionOptions,
@@ -331,6 +336,7 @@ function sentenceMaker<T>(
     targets: Map<string, { frame: Frame; slot: string }[]>,
     context: SentenceSetup["context"],
   ) => T | undefined,
+  tests?: (made: T) => string,
 ):
   | ((
       remaining: Card[],
@@ -338,16 +344,26 @@ function sentenceMaker<T>(
       dueOnly?: boolean,
     ) => { card: Card; made: T; early: boolean } | undefined)
   | undefined {
-  const { progress, userId, today } = options;
+  const { entries, progress, userId, today } = options;
   const setup = sentenceSetup(options);
   if (!setup) return undefined;
   const { context, targets } = setup;
+  const index = glossIndex(entries);
 
   return (remaining, taken, dueOnly = false) => {
     for (const { card, queued } of sentenceCandidates(remaining, taken, setup, dueOnly)) {
       const made = render(card.entry.id, targets, context);
       if (!made) continue;
       removeWord(remaining, card.entry.id);
+      const tested = tests?.(made);
+      if (tested && tested !== card.entry.id) {
+        const entry = entries.find((candidate) => candidate.id === tested)!;
+        return {
+          card: toCard(entry, "en→es", progress, userId, today, index),
+          made,
+          early: !queued,
+        };
+      }
       // A sentence in Spanish concerns the word's en→es card.
       return {
         card: {
@@ -370,7 +386,7 @@ function buildSentenceSession<K extends "mistake" | "translate">(
 ): Card[] {
   const make =
     exercise === "mistake"
-      ? sentenceMaker(options, renderMistake)
+      ? sentenceMaker(options, renderMistake, (mistake) => mistake.entryId)
       : sentenceMaker(options, renderTranslation);
   if (!make) return [];
   const remaining = rankedCards(options);
@@ -602,7 +618,7 @@ export function buildMixedSession(options: BuildSessionOptions): SessionItem[] {
       : undefined;
   const remaining = rankedCards(options);
   const makeGap = gapMaker(options);
-  const makeMistake = sentenceMaker(options, renderMistake);
+  const makeMistake = sentenceMaker(options, renderMistake, (mistake) => mistake.entryId);
   const makeTranslation = sentenceMaker(options, renderTranslation);
   let budget = Math.min(options.config.size, remaining.length);
   let roundsPossible = true;

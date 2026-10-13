@@ -47,6 +47,8 @@ for (const frame of frames) {
     const sentence = renderFrame(frame, context);
     if (!sentence || seen.has(sentence.es)) continue;
     seen.add(sentence.es);
-    console.log(`  ${sentence.es.padEnd(48)} ${sentence.en}`);
+    // One line per sentence: a question and its answer print with " / " between.
+    const line = (text: string) => text.replace(/\n/g, " / ");
+    console.log(`  ${line(sentence.es).padEnd(48)} ${line(sentence.en)}`);
   }
 }

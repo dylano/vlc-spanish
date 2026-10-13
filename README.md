@@ -375,6 +375,37 @@ from the dictionary. The frame supplies the word order in both languages; the re
   What is liked is a noun slot or a verb slot with `subject: "inf"`, which renders the infinitive and
   counts as singular. Gap grading treats _me gusta_ for _me gustan_ as wrong (not a near miss) and
   says why; Find the Mistake breaks exactly that agreement.
+- **Direct object pronouns** (`lo`, `la`, `los`, `las`, frames tagged `object-pronouns`): a
+  question and its answer — _¿Compras el pan? Sí, lo compro._ / _¿Queréis las servilletas? No, no
+  las queremos._ A `pronoun` slot agrees with a noun slot (`agree`), so _el agua_ gets _la_; in
+  English it is _it_ or _them_. A verb slot with `same` repeats another verb slot's verb in its own
+  person (compras → compro); it lists the same `ids`, which the validator checks, so Fill in the Blank
+  knows which verbs can sit there. **People** too: a `pronoun` slot with `person: true` says _him_,
+  _her_ or _them_ — _¿Ves a tu hermana? Sí, la veo_ ("…I see her"), _¿Escuchas al profesor? Sí, lo
+  escucho_ (with _ver_, _visitar_, _escuchar_ and the personal _a_). **Third person**: a relative asks
+  and answers for themselves — _¿Tu madre compra el pan? Sí, lo compra_ ("Does your mother buy the
+  bread? Yes, she buys it"), _¿Tus abuelos quieren la ensalada? Sí, la quieren_; the English uses two
+  placeholders made for it, `{v:base}` (the bare verb after _does_/_do_) and `{n:pronoun}` (_he_, _she_
+  or _they_ for a noun slot). Standard _lo/la_ only: the class has not met leísmo (_le veo_), so in a
+  gap _le_ or _les_ is `wrong`, with a note that _le_ is the indirect object (_le gusta_). Each pronoun is a dictionary entry (tagged
+  `common-words`), so a blank on one is scheduled like any word; DIRECT_OBJECT in `frames.ts` maps
+  gender and number to the pronoun. Because the pronoun is what these frames are for, they test it
+  whatever word they were aimed at: a gap always blanks it (as a second blank, past `BLANK_ODDS`,
+  when the session has room), and a mistake breaks it `PRONOUN_SHARE` (75%) of the time — its gender
+  (_lo_ for _la_) or number (_lo_ for _los_) — recording the answer against the pronoun. The four may
+  come back within a session. Aimed only at the pronouns themselves, a session met each of the four
+  once and about 2 of 11 items tested one; now about 8 of 9 do. Typed as word cards, another of the
+  four is `wrong` with a note ("la stands for a feminine singular noun; lo, a masculine singular one"),
+  not a one-letter slip and not a wrong article; _los_ and _las_, which share "them", keep the usual
+  near miss and their hints. The question and the answer sit on two lines: the frames write `\n`
+  between them, the sentence displays keep it (`white-space: pre-line`), and a typed translation on
+  one line still matches, since spacing is ignored. Known and left for now: the pronouns are tagged
+  `common-words`, so a Custom practice session on a category never blanks them, but Find the Mistake
+  still breaks the pronoun in these frames (about 0.1–0.2 times per food or clothing session, 0.4
+  per family session). Making it respect the category is a small change if it starts to bother.
+  In a **family** Custom practice session about a third of sentences are pronoun frames, since 7 of
+  the 16 use family words (professions about 14%; General practice 10%, in proportion to the frame
+  count); they still practise the family word they are aimed at.
 - **Placeholders**: `{slot}`, plus `{slot:el}` / `{slot:un}` for a Spanish article and `{slot:the}` /
   `{slot:a}` for an English one; `{v:not}` gives a verb's English negative with do-support
   (_don't like_, _doesn't go_, _isn't_) for frames that put _no_ before the Spanish verb; `{slot:none}`
@@ -435,6 +466,11 @@ word pinned in the slot. So a gap usually reviews a word that is due.
   adjective, where gender and number live. Each blank is graded against the sentence as shown, never
   against what was typed in the other blanks.
 
+**Trying out a grammar point**: `/quiz?exercise=gap,mistake&grammar=object-pronouns` keeps a
+session's sentences to frames whose `grammar` includes that name (any frame tag works, such as
+`gustar` or `negation`; an unknown name leaves every frame in). Word exercises are unaffected, so
+name sentence modes in `exercise`. It is for testing new frames and has no control in the app.
+
 ## Find the Mistake
 
 `src/lib/sentences/mistake.ts`. Like a gap, a mistake is aimed at a practiced word, due ones first (with the same fallback and cap): the frame is
@@ -448,6 +484,7 @@ result really reads differently:
 | agreement (profession) | _Mi mujer es diseñador de moda._   | it describes mujer, who is female, so diseñadora de moda |
 | person (verb)          | _Mi primo os vestís a las seis._   | for primo it is se viste                                 |
 | number (gustar)        | _Me gusta los zapatos._            | los zapatos is plural, so me gustan                      |
+| agreement (pronoun)    | _¿Tienes el queso? Sí, la tengo._  | it stands for queso, masculine singular, so lo           |
 | article                | _Trabaja en una hospital._         | hospital is masculine: un hospital                       |
 | word                   | _Hablo con mi sobrino._ ("cousin") | the sentence means cousin: primo                         |
 
@@ -485,7 +522,8 @@ Phases 1 and 2 are complete and deployed at [vlc-spanish.netlify.app](https://vl
   six exercises (Translate a word, Multiple Choice, Match Pairs, Translate a sentence, Fill in the
   Blank, Find the Mistake), SM-2 scheduling with recognition answers held to a week, and a
   per-exercise score in the summary
-- **Sentences**: frames built from any dictionary word, including _gustar_ and simple negatives,
+- **Sentences**: frames built from any dictionary word, including _gustar_, simple negatives and
+  direct object pronouns (_lo, la, los, las_),
   from the first session (`vp run validate:frames` prints how many, and
   `vp run render:frames` how many sentences they can make)
 - **Problem words**: a list of every word missed, most first, with Practice these
@@ -511,7 +549,10 @@ were dropped then):
   classmates notice it and can practise it. To settle first: what counts as new (a new tag, or some
   number of words added to one), how the app knows with no server (compare against what this browser
   saw last visit, or a date on dictionary entries), and when the marker clears (after practising,
-  after viewing, or after a while). Mock it up on the canvas first.
+  after viewing, or after a while). Parked 2026-10-11 after a round on the canvas ("New words" page):
+  a grocery-label "NEW!" sticker was tried and dropped, and colour on the category pill (amber,
+  green outline, tint, dashed) was left undecided. No practice mode or view for new words alone:
+  marking the categories is enough. It may return as part of a new presentation for the categories.
 
 ## Choosing words
 
