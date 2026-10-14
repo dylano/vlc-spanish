@@ -60,6 +60,9 @@ src/lib/          pure logic, no React, thoroughly tested
   search.ts         Dictionary search across every form of a word
   conjugation.ts    a verb's present-tense table for the Dictionary, with what to notice marked
   problems.ts       the Problem words list: misses per word, most first, and which words are on it
+  forms.ts          a Dictionary card's other forms: el abuelo/a, este/a/os/as, a surprising plural
+  releaseNote.ts    the "what's new" note: when it shows, and its *italics*
+  commits.ts        recent commits from GitHub, for the Version screen
   random.ts         seedable shuffle
   sentences/        sentence frames: renderer and checks (frames.ts), gaps (gap.ts), mistakes
                     (mistake.ts), translations (translate.ts), Spanish verb forms (conjugate.ts),
@@ -68,7 +71,7 @@ src/lib/          pure logic, no React, thoroughly tested
   slug.ts           stable entry ids
 src/
   app/            store (context), local storage (local.ts), theme (theme.ts), the bundled
-                  dictionary and sentence data, and the shells
+                  dictionary, sentence data and release note, and the shells
   screens/        one file per screen, each with a CSS module beside it
                   (ConjugationDialog is the Dictionary's verb table, a dialog rather than a screen)
     quiz/           one component per exercise (typed and gaps, multiple choice, matching, find the
@@ -82,6 +85,9 @@ data/
   dictionary.json          the dictionary, bundled into the app at build time
   frames.json              sentence frames
   glue.json                function words and phrases (clock times) sentences may use
+  release-note.json        the "what's new" note on Home (see Writing the release note)
+design/README.md           links to the design canvases, where screens are mocked up first
+.github/workflows/         checks on every PR (see Deploying)
 ```
 
 ### Sessions and the on-screen keyboard
@@ -124,8 +130,8 @@ tangled into components.
   and hides it on that device for good: the device
   remembers the dismissed note's date, and only a note dated later shows. Only the latest note
   exists. The note does not move the practice rows: an invisible twin of it below them keeps them
-  centred where they are without one (it fits down to about 740px of screen height; on shorter
-  screens the twin is left out and the note pushes the rows down, there being no room otherwise). See
+  centred where they are without one. Below 740px of screen height (a breakpoint in the CSS) there
+  is no room for both, so the twin is left out and the note pushes the rows down. See
   [Writing the release note](#writing-the-release-note).
 - **Custom practice** (`/custom`) — on top, **All words | Problem words · N**; then **Exercise
   modes** and **Categories** as pills, each row led by **All**. Choosing a pill narrows to it,
@@ -145,7 +151,8 @@ tangled into components.
   screen with no main nav; the × in the header ends it (every answer is already saved). The header
   names the current exercise in the accent colour. The progress bar and the "4 of 15" counter count
   **words**, not steps — a matching round advances it by four and a two-blank gap by two — so a
-  session always reads its full length; counting steps made the same session anywhere from 4 to 15 long.
+  session always reads its full length; counting steps made the same session look a different length
+  every time.
   Each card opens with a bold instruction line ("Type the missing word", "Find the wrong word") — in a mixed session the exercise changes
   from card to card, and a muted label was too easy to miss.
   Exercise names, grouped: Words — **Translate** (typed), **Multiple Choice**,
@@ -213,7 +220,7 @@ tangled into components.
   below it: as a hairline underline it read as part of the page and was easy to miss. With something
   typed it grows an × that clears it and puts the cursor back, for starting the next search. The tags fold behind a **filter pill** under the search field
   (option 2 on the "Spanish App Screens" canvas, first called "Dictionary Category Filter"): wrapped
-  in full they took seven rows and pushed the results behind the phone keyboard. The row is one
+  in full they took most of the screen and pushed the results behind the phone keyboard. The row is one
   control — it names the filter ("All categories", or the chosen tag), opens the grid, and once a tag
   is chosen turns accent-coloured, **centres itself** over the list and grows an × that clears it;
   centring is what makes an active filter obvious. Picking a tag folds the grid away. A green filter icon marks it as a
@@ -232,7 +239,7 @@ tangled into components.
   feminine and plural (`hermana`, `zapatos`, `estas`), every present-tense verb form (`prefiero`), and
   the English for those (`sister`, `these`). A leading article is ignored (`la mesa`, `the table`), as
   are apostrophes; `ñ` stays distinct from `n`. Exact matches come first, then words starting with
-  the query, then any containing it. Forms the card does not show (a feminine, a plural, a conjugation)
+  the query, then any containing it. Forms other than the headword (a feminine, a plural, a conjugation)
   match only whole or from the start of a word, and verb forms are indexed without their reflexive
   pronoun, so `nos` does not list every reflexive verb or every plural ending in -nos.
 - **Settings** — your name (editable), **session length** and **appearance**, and how much you have
@@ -285,7 +292,7 @@ Until September 2026 users and progress lived in Netlify Blobs behind two unauth
 functions. They were removed to make the app single-user with nothing stored remotely; production
 progress was deliberately not migrated.
 
-**Numbers are in the dictionary but not in the drill.** They were a third of the entries, which
+**Numbers are in the dictionary but not in the drill.** They are a large share of the entries, which
 crowded out the words that carry meaning, so `isDrillable` in `src/lib/session.ts` holds back
 anything tagged `numbers`. They are still searchable in the dictionary, and a session that asks for
 that tag by name (Custom practice, or `/quiz?tags=numbers`) still serves them. The home-screen counts apply the same
@@ -596,7 +603,7 @@ the wrong person can still be a grammatical sentence (_Vamos al trabajo_ for "I 
 Phases 1 and 2 are complete and deployed at [vlc-spanish.netlify.app](https://vlc-spanish.netlify.app):
 
 - **Dictionary**: bundled from `data/dictionary.json`, searchable across every form of a word, with
-  folded categories and a conjugation table for every verb
+  folded categories, a word's other forms on its card, and a conjugation table for every verb
 - **Practice**: General practice, and Custom practice for any mix of exercise modes and categories
   or the Problem words list;
   six exercises (Translate a word, Multiple Choice, Match Pairs, Translate a sentence, Fill in the
@@ -607,18 +614,21 @@ Phases 1 and 2 are complete and deployed at [vlc-spanish.netlify.app](https://vl
   from the first session (`vp run validate:frames` prints how many, and
   `vp run render:frames` how many sentences they can make)
 - **Problem words**: a list of every word missed, most first, with Practice these
-- **Settings**: name, session length (10–30 words), light or dark
+- **What's new**: a release note on Home, written by hand in `data/release-note.json`
+- **Settings**: name, session length (10–30 words), light or dark, and the recent commits
 - **Single-user and fully static**: name on first start, everything in local storage, no server;
   installable PWA with the app shell cached offline
 
-Still open: possibly **Answer a question** (cued Q&A) or **Odd one out**. Translate was deliberately left ungraded rather than graded word by word with a
-self-mark. Frames were chosen over a fixed sentence bank, which repeats too often, and over fully
-type-driven templates, which produce wrong English and odd combinations.
+Nothing is waiting to be built. Ideas, not commitments:
 
-Not built, in priority order (set 2026-09-21; flashcards, a progress screen and conjugation drills
-were dropped then):
+- **Answer a question** (cued Q&A) or **Odd one out**, as further exercises.
+- **More pronoun forms** as the class reaches them: with an infinitive (_lo quiero comprar_ /
+  _quiero comprarlo_), commands (_cómpralo_), double pronouns (_te lo traigo_).
 
-Nothing at the moment.
+Decided against: flashcards, a progress screen and conjugation drills (2026-09-21); grading Translate
+word by word with a self-mark (it stays ungraded); a fixed sentence bank, which repeats too often,
+and fully type-driven templates, which produce wrong English and odd combinations (frames instead);
+a "new" marker on categories (2026-10-14; the release note covers it).
 
 ## Choosing words
 
@@ -736,7 +746,7 @@ because the naive version of the rule gets a real case wrong:
 1. **An article-only difference is a gender mistake**, not a slip: `lavarse las dientes` stays
    `wrong`, since gender is the thing being tested.
 2. **An answer that is itself another headword is a confusion**, not a typo. The dictionary holds
-   about two dozen pairs one edit apart — `junio`/`julio`, `padre`/`madre`, `sesenta`/`setenta`,
+   many pairs one edit apart — `junio`/`julio`, `padre`/`madre`, `sesenta`/`setenta`,
    `llegar`/`llevar`, `este`/`ese` — so forgiving
    single-character slips blindly would mark a real mistake as nearly right. The feedback names what
    you actually wrote instead.

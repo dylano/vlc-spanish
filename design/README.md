@@ -1,34 +1,16 @@
-# Design canvas
+# Design canvases
 
-Source artboards for the quiz screen designs, published as a Claude Design canvas:
-<https://claude.ai/artifact/75hQU2j5LgsnYjdJsPpuZ8>
+Screens are designed on Claude Design canvases before they are built. The canvases are published
+artifacts, not files in this repo; the README records which board was chosen for each feature and
+why.
 
-Each `*.dc.html` file is one phone artboard (390×844); `canvas.json` positions them and holds the
-sticky notes. The seeded `spanish-vocab-quiz-screens.html` is generated from these and is gitignored
-— it is ~2.5MB of editor payload, and `vp check --fix` corrupts it if it is ever formatted.
+- **Spanish App Screens** — <https://claude.ai/artifact/Ne1o34YXe4hixfUcRhkzu9>. Every design round
+  since phase 2, one page per topic: the Dictionary category filter, the conjugation dialog,
+  Settings, Problem words, the verbs shortcut, Home and Custom practice, the "new words" marker
+  (dropped), the release note, and the Dictionary card's forms.
+- **Spanish Vocab Quiz Screens** — <https://claude.ai/artifact/75hQU2j5LgsnYjdJsPpuZ8>. The first
+  canvas, for phases 1 and 2: Home, the typed quiz and its feedback states, Multiple Choice, the
+  summary, Settings, and flashcards (dropped 2026-09-21). Everything on it has since been built or
+  dropped. Its artboards used to live in this folder and were removed on 2026-10-15.
 
-## What is authoritative
-
-**For screens already built, the app is authoritative, not these files.** Home, the typed quiz, the
-three feedback states, settings, and the name picker all shipped — read `src/screens/` for how they
-actually behave.
-
-These artboards still earn their place because four of them describe work that does not exist yet:
-
-- `MultipleChoice.dc.html` — distractors drawn from the same part of speech and tag
-- `Flashcard.dc.html` / `FlashcardBack.dc.html` — dropped 2026-09-21, kept for reference: self-marked, with the back doubling as a
-  dictionary entry
-- `Summary.dc.html` — the correct/almost/missed tally
-
-Delete the superseded ones when Phase 2 lands, rather than letting them drift.
-
-A second page, **Phase 2 home**, holds the chosen home screen for Phase 2's exercises
-(`HomeOptionB2`, closed, and `HomeOptionB2Open`): Practice, Focus on new words, Remediation, and a
-folding Choose exercise list grouped under Words and Sentences. It is built; the app has since renamed
-the rows (General practice, Focus on problem words, Select specific exercise mode) and set the
-exercise toggle apart from the list, so the app is authoritative.
-
-## Changing the design
-
-Edit the `.dc.html` files, then re-seed and republish — the canvas is regenerated from scratch each
-time, never edited in place. The `/design` skill carries the exact commands.
+**The app is authoritative**, not the canvases: read `src/screens/` for how a screen behaves now.

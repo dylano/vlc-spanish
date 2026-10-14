@@ -9,7 +9,8 @@ against the schema below exactly. A validator is provided; output that does not 
 
 ## Target
 
-Roughly 100–150 entries covering an elementary Peninsular Spanish class, across these tags:
+The vocabulary of an elementary Peninsular Spanish class, added in batches as the class covers it,
+across these tags:
 
 `physical-traits`, `character-traits`, `family`, `frequency`,
 `daily-activities`, `verbs`, `days`, `months`, `numbers`, `professions`, `workplaces`,
@@ -51,7 +52,7 @@ interface EntryBase {
   pos: Pos;
   notes?: string; // only when it earns its place (see below)
   tags: string[]; // from the list above
-  added: string; // "2026-09-15" for every seed entry
+  added: string; // the day the entry was written, YYYY-MM-DD ("2026-09-15" for the seed entries)
   flagged?: string; // set when you are unsure; explain the uncertainty
   hint?: string; // only when no gloss in `en` is unique to this entry (see below)
 }
