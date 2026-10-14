@@ -1,6 +1,11 @@
 import { normalize } from "../normalize.ts";
-import { shuffle } from "../random.ts";
-import { renderFrame, type Frame, type RenderContext, type RenderedSentence } from "./frames.ts";
+import {
+  framesToTry,
+  renderFrame,
+  type Frame,
+  type RenderContext,
+  type RenderedSentence,
+} from "./frames.ts";
 
 /**
  * A whole English sentence to put into Spanish. It is never graded: there are
@@ -27,9 +32,11 @@ export function renderTranslation(
   targets: Map<string, { frame: Frame; slot: string }[]>,
   context: RenderContext,
 ): Translation | undefined {
-  for (const { frame, slot } of shuffle(targets.get(entryId) ?? [], context.random).slice(0, 6)) {
+  for (const { frame, slot } of framesToTry(targets, entryId, context).slice(0, 6)) {
     const sentence = renderFrame(frame, context, { [slot]: entryId });
-    if (sentence) return { sentence };
+    if (!sentence) continue;
+    context.usedFrames?.add(frame.id);
+    return { sentence };
   }
   return undefined;
 }

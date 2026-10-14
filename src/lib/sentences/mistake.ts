@@ -7,6 +7,7 @@ import { SUBJECTS, type Subject } from "./english.ts";
 import {
   adjectiveForm,
   DIRECT_OBJECT,
+  framesToTry,
   likeForm,
   nounForm,
   renderFrame,
@@ -335,13 +336,8 @@ function breaksFor(
   return out;
 }
 
-/**
- * A sentence with one mistake aimed at an entry: the entry fills the broken
- * slot, or, in a frame with a direct object pronoun, usually the pronoun does
- * (`entryId` says which). Undefined when no frame holding the entry can be
- * broken cleanly.
- */
-export function renderMistake(
+/** The mistake renderMistake returns, before its frame is recorded as used. */
+function findMistake(
   entryId: string,
   targets: Map<string, { frame: Frame; slot: string }[]>,
   context: RenderContext,
@@ -356,7 +352,7 @@ export function renderMistake(
   const wantArticle = context.random() < ARTICLE_SHARE;
   let fallback: Mistake | undefined;
 
-  for (const { frame, slot } of shuffle(targets.get(entryId) ?? [], context.random).slice(0, 8)) {
+  for (const { frame, slot } of framesToTry(targets, entryId, context).slice(0, 8)) {
     const sentence = renderFrame(frame, context, { [slot]: entryId });
     if (!sentence) continue;
 
@@ -408,6 +404,22 @@ export function renderMistake(
   // word in the session unless this is the occasional article turn: nouns whose
   // sentences offer nothing harder were most of the mistakes.
   return wantArticle ? fallback : undefined;
+}
+
+/**
+ * A sentence with one mistake aimed at an entry: the entry fills the broken
+ * slot, or, in a frame with a direct object pronoun, usually the pronoun does
+ * (`entryId` says which). Undefined when no frame holding the entry can be
+ * broken cleanly.
+ */
+export function renderMistake(
+  entryId: string,
+  targets: Map<string, { frame: Frame; slot: string }[]>,
+  context: RenderContext,
+): Mistake | undefined {
+  const mistake = findMistake(entryId, targets, context);
+  if (mistake) context.usedFrames?.add(mistake.sentence.frameId);
+  return mistake;
 }
 
 /** What counts as a fix: the whole corrected text, or the one word that changed. */

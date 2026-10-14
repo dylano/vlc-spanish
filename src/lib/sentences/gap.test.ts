@@ -9,7 +9,7 @@ import {
   isDrillable,
   isMatchRound,
 } from "../session.ts";
-import { renderFrame, type Frame } from "./frames.ts";
+import { framesToTry, renderFrame, type Frame } from "./frames.ts";
 import { gapTargets, gradeGap, renderGap, type Gap, type GapBlank } from "./gap.ts";
 
 const TODAY = "2026-09-17";
@@ -219,6 +219,21 @@ describe("sessions with gaps", () => {
     sentences,
   });
 
+  it("rarely uses one sentence pattern twice in a session", () => {
+    // Before frames were tried unused first, about one session in five repeated a
+    // pattern (Hay cebollas… then Hay calabazas en la mesa); now about one in twenty.
+    let repeats = 0;
+    for (let seed = 1; seed <= 40; seed++) {
+      const frames = buildMixedSession(options(practiced(0), seed, "mixed")).flatMap((item) =>
+        isMatchRound(item)
+          ? []
+          : [(item.gap ?? item.mistake ?? item.translation)?.sentence.frameId].filter(Boolean),
+      );
+      repeats += frames.length - new Set(frames).size;
+    }
+    expect(repeats / 40).toBeLessThan(0.15);
+  });
+
   it("offers gaps from the first session, before anything has been practiced", () => {
     const cards = buildGapSession(options(practiced(0), 1));
     expect(cards.length).toBeGreaterThan(0);
@@ -292,5 +307,17 @@ describe("sessions with gaps", () => {
       }
     }
     expect(gaps).toBeGreaterThan(0);
+  });
+});
+
+describe("choosing a frame", () => {
+  it("tries frames the session has not used first, and falls back to used ones", () => {
+    const targets = gapTargets(sentences.frames, { dictionary: entries });
+    const all = targets.get("pan")!;
+    const usedFrames = new Set(all.slice(0, 3).map((option) => option.frame.id));
+    const order = framesToTry(targets, "pan", { random: seeded(1), usedFrames });
+    expect(order).toHaveLength(all.length);
+    const firstUsed = order.findIndex((option) => usedFrames.has(option.frame.id));
+    expect(firstUsed).toBe(all.length - usedFrames.size);
   });
 });

@@ -156,6 +156,16 @@ export interface BuildSessionOptions {
   random?: () => number;
   /** Sentence frames and glue; without them a session has no sentence exercises. */
   sentences?: { frames: Frame[]; glue: Glue };
+  /**
+   * Frames this session has used, shared by its gaps, mistakes and translations
+   * so they prefer patterns not seen yet. The builders start a fresh one.
+   */
+  usedFrames?: Set<string>;
+}
+
+/** The options with a fresh record of frames used, for one session. */
+function withUsedFrames(options: BuildSessionOptions): BuildSessionOptions {
+  return { ...options, usedFrames: new Set() };
 }
 
 /**
@@ -215,7 +225,12 @@ function sentenceSetup(options: BuildSessionOptions) {
   // Every dictionary word may appear and be blanked, practiced here or not: the
   // learner is working through a class that has covered them, so a word the app
   // has not asked yet is not a word they have never met.
-  const context = { dictionary: entries, glue: sentences.glue, random };
+  const context = {
+    dictionary: entries,
+    glue: sentences.glue,
+    random,
+    usedFrames: options.usedFrames,
+  };
   const targets = gapTargets(sentences.frames, context);
   // Every other practiced word a sentence can hold, the longest unseen first.
   // Aimed at only due words, a new learner saw no sentences until the day after
@@ -381,9 +396,10 @@ function sentenceMaker<T>(
 
 /** A session of one sentence exercise only. Empty when the learner cannot have sentences yet. */
 function buildSentenceSession<K extends "mistake" | "translate">(
-  options: BuildSessionOptions,
+  sessionOptions: BuildSessionOptions,
   exercise: K,
 ): Card[] {
+  const options = withUsedFrames(sessionOptions);
   const make =
     exercise === "mistake"
       ? sentenceMaker(options, renderMistake, (mistake) => mistake.entryId)
@@ -416,7 +432,8 @@ export function buildTranslateSession(options: BuildSessionOptions): Card[] {
 }
 
 /** A session of gaps only. Empty when the learner cannot have sentences yet. */
-export function buildGapSession(options: BuildSessionOptions): Card[] {
+export function buildGapSession(sessionOptions: BuildSessionOptions): Card[] {
+  const options = withUsedFrames(sessionOptions);
   const makeGap = gapMaker(options);
   if (!makeGap) return [];
   const remaining = rankedCards(options);
@@ -600,7 +617,8 @@ function weightedPick<T extends string>(weights: Record<T, number>, random: () =
  * every switch between typing and tapping drops or raises the phone's keyboard,
  * and one-at-a-time alternation would have it bouncing all session.
  */
-export function buildMixedSession(options: BuildSessionOptions): SessionItem[] {
+export function buildMixedSession(sessionOptions: BuildSessionOptions): SessionItem[] {
+  const options = withUsedFrames(sessionOptions);
   const random = options.random ?? Math.random;
   const size = options.config.size;
   const chosen = options.config.exercises;

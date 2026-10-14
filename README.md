@@ -180,7 +180,8 @@ tangled into components.
   Enter again moves on: once submitted the text box is gone, so the page listens for it.
 - **Problem words** (`/problems`) — every word missed at least once, most missed first, with the
   count and, when the last answer was wrong, "recent miss" (`src/lib/problems.ts`: `lapses` summed over both
-  directions; ties put a word still wrong first, then the lower ease). This is history, so a word
+  directions; ties put a word still wrong first, then the lower ease). Only a **wrong** answer counts:
+  an "almost" (an accent, a one-letter slip) does not put a word on the list (decided 2026-10-14). This is history, so a word
   stays after it is answered right. Reached from the Problem words row on Home. Above the list, beside
   "N words", a small outlined **Practice these** pill opens Custom practice with Problem words
   chosen and the last modes kept, ready to start. It sits at the top rather than below the list, which
@@ -516,6 +517,13 @@ word pinned in the slot. So a gap usually reviews a word that is due.
   adjective, where gender and number live. Each blank is graded against the sentence as shown, never
   against what was typed in the other blanks.
 
+**Not repeating a pattern**: a session's gaps, mistakes and translations share a record of the
+frames they have used (`usedFrames`), and each tries a word's unused frames first (`framesToTry`
+in `frames.ts`), falling back to a used one only when nothing else fits that word. Without it a
+session could say _Hay cebollas en la mesa_ and then _Hay calabazas en la mesa_: in 200 simulated
+sessions a pattern came back in 21% of General practice sessions, 42% of food and 88% of family
+ones; now 5%, 3% and 31% (family words fit few patterns), with as many sentences as before.
+
 **Trying out a grammar point**: `/quiz?exercise=gap,mistake&grammar=object-pronouns` keeps a
 session's sentences to frames whose `grammar` includes that name (any frame tag works, such as
 `gustar` or `negation`; an unknown name leaves every frame in). Word exercises are unaffected, so
@@ -581,8 +589,7 @@ Phases 1 and 2 are complete and deployed at [vlc-spanish.netlify.app](https://vl
 - **Single-user and fully static**: name on first start, everything in local storage, no server;
   installable PWA with the app shell cached offline
 
-Still open: not repeating a frame within a session, and possibly **Answer a question** (cued Q&A)
-or **Odd one out**. Translate was deliberately left ungraded rather than graded word by word with a
+Still open: possibly **Answer a question** (cued Q&A) or **Odd one out**. Translate was deliberately left ungraded rather than graded word by word with a
 self-mark. Frames were chosen over a fixed sentence bank, which repeats too often, and over fully
 type-driven templates, which produce wrong English and odd combinations.
 
@@ -593,16 +600,6 @@ were dropped then):
   English, so a search can match a form nobody sees ("nie" finds el sobrino through its feminine's
   "niece"). Show the feminine and its English (_el sobrino · la sobrina_, nephew · niece), adjective
   forms (_simpático · simpática_), and a plural-only marker (_las gafas_)
-- **A "new" marker for added words** (requested 2026-10-09, not started): when a new category or
-  a meaningful batch of words arrives with a deploy, highlight it — a small tag or a highlight on its
-  category pill in Custom practice and the Dictionary filter, and maybe a line on Home — so
-  classmates notice it and can practise it. To settle first: what counts as new (a new tag, or some
-  number of words added to one), how the app knows with no server (compare against what this browser
-  saw last visit, or a date on dictionary entries), and when the marker clears (after practising,
-  after viewing, or after a while). Parked 2026-10-11 after a round on the canvas ("New words" page):
-  a grocery-label "NEW!" sticker was tried and dropped, and colour on the category pill (amber,
-  green outline, tint, dashed) was left undecided. No practice mode or view for new words alone:
-  marking the categories is enough. It may return as part of a new presentation for the categories.
 
 ## Choosing words
 
