@@ -310,7 +310,10 @@ The note on Home is `data/release-note.json`, shipped with the build like the di
   does not bring it back. Two notes on the same date would hide the second; move it to the next day.
 - **No note**: the file may hold `null`. A file that does not parse shows no note rather than
   breaking Home, and fails the tests (`src/lib/releaseNote.test.ts`), so CI catches it.
-- Claude Code reminds you after a significant update and offers a draft.
+- **What earns a note**: usually a big new chunk of words or grammar (a new grammar topic, a large
+  word batch), and not much more than one a week, so everyone gets a chance to see each one.
+  Smaller changes show in the recent commit history (Settings → Version). When a new branch starts,
+  Claude Code says how old the current note is and offers a draft if the work might deserve one.
 
 ## Working on the dictionary
 
@@ -421,8 +424,10 @@ from the dictionary. The frame supplies the word order in both languages; the re
   English it is _it_ or _them_. A verb slot with `same` repeats another verb slot's verb in its own
   person (compras → compro); it lists the same `ids`, which the validator checks, so Fill in the Blank
   knows which verbs can sit there. **People** too: a `pronoun` slot with `person: true` says _him_,
-  _her_ or _them_ — _¿Ves a tu hermana? Sí, la veo_ ("…I see her"), _¿Escuchas al profesor? Sí, lo
-  escucho_ (with _ver_, _visitar_, _escuchar_ and the personal _a_). **Third person**: a relative asks
+  _her_ or _them_, with _ver_, _visitar_, _escuchar_ and the personal _a_ — only in the answers that
+  say how often (below: _¿Ves a tu prima? Nunca la veo_, _¿Escuchas a la cantante? La escucho todos
+  los días_). Plain yes/no versions (_¿Ves a tu hermana? Sí, la veo_) were dropped as dull: they made
+  up much of a family session. **Third person**: a relative asks
   and answers for themselves — _¿Tu madre compra el pan? Sí, lo compra_ ("Does your mother buy the
   bread? Yes, she buys it"), _¿Tus abuelos quieren la ensalada? Sí, la quieren_; the English uses two
   placeholders made for it, `{v:base}` (the bare verb after _does_/_do_) and `{n:pronoun}` (_he_, _she_
@@ -435,26 +440,33 @@ from the dictionary. The frame supplies the word order in both languages; the re
   _Mi tía tiene un abrigo verde. Lo lleva a veces_. Those leave out vosotros, since "You (plural)"
   twice in two short sentences reads badly. Every sentence in a frame now starts with a capital, in
   both languages, including a second one that starts with a slot (_…blanca. **La** llevo…_), and Find
-  the Mistake keeps that capital on a broken word. Each pronoun is a dictionary entry (tagged
+  the Mistake keeps that capital on a broken word.
+  **Answers that say how often** instead of _sí_ or _no_ (frames `often-*`, tagged `frequency` too):
+  _¿Ves a tu prima? **Nunca la** veo._ — no _no_ with _nunca_ before the verb — _¿Bebes café? **Lo**
+  bebo todos los días._, _¿Compras huevos? **Los** compro todas las semanas._ A short adverb
+  (_siempre, nunca, a veces, a menudo, normalmente_) goes before the pronoun and a longer phrase
+  (_todos los días, una vez a la semana_) after the verb, as Spanish usually puts them; English keeps
+  its own order (_I never see her_, _I see her every day_). Things asked about in general take no
+  article (_¿Bebes café?_), and the pronoun still agrees (_agua_ → _la_). Spouses are left out of the
+  people frames: "I see my wife once a month" reads oddly. Pronouns with an infinitive (_lo quiero
+  comprar_) wait until the class reaches them. Each pronoun is a dictionary entry (tagged
   `common-words`), so a blank on one is scheduled like any word; DIRECT_OBJECT in `frames.ts` maps
   gender and number to the pronoun. Because the pronoun is what these frames are for, they test it
   whatever word they were aimed at: a gap always blanks it (as a second blank, past `BLANK_ODDS`,
   when the session has room), and a mistake breaks it `PRONOUN_SHARE` (75%) of the time — its gender
   (_lo_ for _la_) or number (_lo_ for _los_) — recording the answer against the pronoun. The four may
-  come back within a session. Aimed only at the pronouns themselves, a session met each of the four
-  once and about 2 of 11 items tested one; now about 8 of 9 do. Typed as word cards, another of the
+  come back within a session: aimed only at the pronouns themselves, a session met each of the four
+  once, so few items tested a pronoun at all. Typed as word cards, another of the
   four is `wrong` with a note ("la stands for a feminine singular noun; lo, a masculine singular one"),
   not a one-letter slip and not a wrong article; _los_ and _las_, which share "them", keep the usual
   near miss and their hints. The question and the answer sit on two lines: the frames write `\n`
   between them, the sentence displays keep it (`white-space: pre-line`), and a typed translation on
   one line still matches, since spacing is ignored. Known and left for now: the pronouns are tagged
   `common-words`, so a Custom practice session on a category never blanks them, but Find the Mistake
-  still breaks the pronoun in these frames (about 0.1–0.2 times per food or clothing session, 0.4
-  per family session). Making it respect the category is a small change if it starts to bother.
-  How much of a session they take, from simulated sessions: in General practice 14% of sentences
-  (25 of 160 frames), testing a pronoun about 0.8 times per session; in a **family** Custom practice
-  session about a third, in **clothing** 29%, in professions 14% and in food 12%. They still practise
-  the word they are aimed at.
+  still breaks the pronoun in these frames now and then. Making it respect the category is a small
+  change if it starts to bother. Pronoun frames take a share of General practice in proportion to
+  their number, and more of a Custom practice session on the categories they use (clothing, family,
+  food); they still practise the word they are aimed at.
 - **Placeholders**: `{slot}`, plus `{slot:el}` / `{slot:un}` for a Spanish article and `{slot:the}` /
   `{slot:a}` for an English one; `{v:not}` gives a verb's English negative with do-support
   (_don't like_, _doesn't go_, _isn't_) for frames that put _no_ before the Spanish verb; `{slot:none}`
@@ -467,7 +479,7 @@ from the dictionary. The frame supplies the word order in both languages; the re
   _his/her/..._, English plurals and _a/an_. A person noun is put in the feminine only if it has
   `enF`, the English for its feminine form. For a person slot whose gender is free, the gender is
   decided first (50/50) and then a word that can take it is chosen; deciding per word let the
-  always-masculine plurals (_los padres_, _los abuelos_) tip sentences to about 60% masculine.
+  always-masculine plurals (_los padres_, _los abuelos_) tip sentences toward the masculine.
 - **Words whose English is a noun** (_comilón_ "big eater", _dormilón_ "sleepyhead") are excluded
   from trait frames: "My son is very big eater" is what including them produces.
 - **Word pairings are the frame's job.** Routines are split by time of day so morning activities get
@@ -493,8 +505,7 @@ word pinned in the slot. So a gap usually reviews a word that is due.
   class that has covered the dictionary, so a word the app has not asked yet is not a word they have
   never met, and it is graded like any other. Sentences therefore work from the very first session,
   and they **carry** new words instead of competing with them: they used to be practiced-only, which
-  made them eat the session's new-word slots (a simulated learner met 45 words in ten sessions; now
-  84). A sentence is aimed first at a word whose `en→es` card is **due** or never asked (a sentence
+  made them eat the session's new-word slots, and a learner met far fewer words. A sentence is aimed first at a word whose `en→es` card is **due** or never asked (a sentence
   is answered in Spanish, so that is the card it reviews), then at the rest of the ranked list, then
   at any other word, the longest unseen first. In a mixed session at most `MAX_EARLY_SENTENCES`
   (4 per 15 words, scaled by `capFor`) sentences go to words that are practiced but _not_ due — an
@@ -521,9 +532,9 @@ word pinned in the slot. So a gap usually reviews a word that is due.
 **Not repeating a pattern**: a session's gaps, mistakes and translations share a record of the
 frames they have used (`usedFrames`), and each tries a word's unused frames first (`framesToTry`
 in `frames.ts`), falling back to a used one only when nothing else fits that word. Without it a
-session could say _Hay cebollas en la mesa_ and then _Hay calabazas en la mesa_: in 200 simulated
-sessions a pattern came back in 21% of General practice sessions, 42% of food and 88% of family
-ones; now 5%, 3% and 31% (family words fit few patterns), with as many sentences as before.
+session could say _Hay cebollas en la mesa_ and then _Hay calabazas en la mesa_, often so in a
+single-category session. Repeats are now rare, though family words, which fit few patterns, still
+see some; sessions have as many sentences as before.
 
 **Trying out a grammar point**: `/quiz?exercise=gap,mistake&grammar=object-pronouns` keeps a
 session's sentences to frames whose `grammar` includes that name (any frame tag works, such as
@@ -554,13 +565,12 @@ since that could be just as right.
 
 Article swaps are never made on a common-gender noun (_la estudiante_ is fine) or on a contracted
 _al_/_del_, which has no article left to swap. **Which break is used is weighted**, because uniform
-choice let whichever kind is always available take over — first article swaps (43% of mistakes),
-then, once word swaps existed, word swaps (73%). A form break (agreement, number, person) is used
+choice let whichever kind is always available take over — first article swaps, then, once word
+swaps existed, word swaps. A form break (agreement, number, person) is used
 `FORM_SHARE` (75%) of the time when a word also offers a swap; a noun, which offers only a swap or
 its article, uses its article `NOUN_ARTICLE_SHARE` (30%) of the time; a word whose every frame can
-only swap an article is passed over except `ARTICLE_SHARE` (10%) of the time. Over 60 simulated
-sessions that gives word swaps 60% (the dictionary is mostly nouns), form breaks 31% and article
-swaps 9%. The English cue is always shown: without it a verb in
+only swap an article is passed over except `ARTICLE_SHARE` (10%) of the time. Word swaps still lead,
+since the dictionary is mostly nouns. The English cue is always shown: without it a verb in
 the wrong person can still be a grammatical sentence (_Vamos al trabajo_ for "I go to work").
 
 - **Tapping**: any word of the broken text finds it, including every word of a phrase (_os vestís_).
@@ -615,26 +625,21 @@ bands:
 
 Due and new are interleaved so that **every third card is a new word** (`NEW_WORD_EVERY`) while any
 remain; with nothing due, a session is all new words. With more than one category chosen in Custom practice, **new words** are introduced from
-each in turn (`balanceTags`): in proportion to size, 62 food words left 6 weather words with one new
-word in fourteen, so a first session could be all food. Reviews are not balanced, and follow the
-schedule whatever their category. Balancing them too was tried: in a simulated ten sessions over five
-days, each weather word was asked three times as often as each food word (body words, against
-clothing, nearly three times), where balancing new words alone keeps attention per word about even
-while every early session still mixes the categories.
+each in turn (`balanceTags`): in proportion to size, a big category drowned a small one (food against weather),
+so a first session could be all food. Reviews are not balanced, and follow the schedule whatever
+their category. Balancing them too was tried: it drilled a small category's words several times as
+often as a big one's, where balancing new words alone keeps attention per word about even while
+every early session still mixes the categories.
 A Problem words session has its own order:
 words wrong last time, then due, then the rest of the list.
 
 On top of the order, a mixed session **reserves `NEW_SHARE` (40%) of its length for words the app has
 not asked yet**: once only that many slots are left, they go to new words whatever the exercise
 weights would have chosen. Without it the session fills with reviews — due words come first and every
-exercise can use them — which is how a simulated learner ended up meeting 1 to 3 new words per
-session by the third session.
+exercise can use them — and new words dwindled to a trickle within a few sessions.
 
 Why the reserved share: a word answered today comes back tomorrow, then in three days, so without it
-the previous day's words fill every session and new words stop arriving after the first day. A
-simulation of two 15-word sessions a day showed 50 of 150 words practiced after ten days with due
-words strictly first (and many "new" slots taken by other directions of words just seen), and 108
-with the reserved share.
+the previous day's words fill every session and new words stop arriving after the first day.
 
 ## Mixed sessions
 
@@ -642,13 +647,11 @@ A session started from General practice, or from Custom practice with more than 
 `src/lib/session.ts`: the session length from Settings (15 by default), taken in the order described in
 [Choosing words](#choosing-words), with only the way each is asked varying. Each step picks an exercise by weight (`MIX_WEIGHTS`): Fill
 in the Blank 3, Find the Mistake 2, word Translate (typed) 2, sentence Translate 1, Multiple Choice 1, a matching round 1. Sentence
-exercises lead because they test words in context, which is worth more than rote recall; with a third
-of practiced words due they make up about half of a session's words. Rules on top:
+exercises lead because they test words in context, which is worth more than rote recall. Rules on top:
 
 - **At most two Multiple Choice cards and one matching round per 15 words** (`MAX_PER_SESSION`, scaled
   to the session length by `capFor`, never below one: a 30-word session allows four and two). Multiple Choice is
-  recognition among four options, easy enough that more feels like filler (before the cap a third of
-  sessions had three or more). A matching round is several words at once, so two of them took most of a
+  recognition among four options, easy enough that more feels like filler. A matching round is several words at once, so two of them took most of a
   fifteen-word session, sometimes back to back.
 
 - **No more than three of one exercise in a row** (`MAX_RUN`), so the pace keeps changing — unless
