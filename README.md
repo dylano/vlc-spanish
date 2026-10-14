@@ -120,7 +120,8 @@ tangled into components.
   a green edge, "NEW · 13 OCTOBER" (the date in the device's language, like Home's own), a title, a line or two of text and a **×** (board 1 on the
   canvas's "Release note" page; a quieter note at the foot of Home and one in the Dictionary's
   note style were judged too easy to miss). It shows for **7 days from its date** (`SHOW_DAYS` in
-  `src/lib/releaseNote.ts`), to new users too, and × hides it on that device for good: the device
+  `src/lib/releaseNote.ts`), to new users too, and × fades it out (180 ms, none with reduced motion)
+  and hides it on that device for good: the device
   remembers the dismissed note's date, and only a note dated later shows. Only the latest note
   exists. The note does not move the practice rows: an invisible twin of it below them keeps them
   centred where they are without one (it fits down to about 740px of screen height; on shorter

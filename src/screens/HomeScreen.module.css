@@ -30,6 +30,19 @@
   border-left: 3px solid var(--accent);
   border-radius: 6px;
   background: var(--raised);
+  transition: opacity 180ms ease;
+}
+
+/* Dismissed: a quick fade, then it is gone. The twin keeps the rows in place. */
+.noteLeaving {
+  opacity: 0;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .note {
+    transition: none;
+  }
 }
 
 /* The note's invisible twin (see HomeScreen): never seen, focused or read out,
