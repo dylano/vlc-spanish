@@ -198,7 +198,18 @@ tangled into components.
   review; progress keeps no history, so earlier misses cannot be undone beyond the count. Kept out of the Dictionary on purpose, so the Dictionary stays a
   reference; a subtle marker there may come later.
 - **Dictionary** — search both languages (accent-insensitive, so `timido` finds `tímido`), filter
-  by tag, read the notes. The search field is a pill with a magnifier, like the category buttons
+  by tag, read the notes. A card shows a word's **other forms** (`src/lib/forms.ts`): the other
+  gender in shorthand on the headword when only the ending changes — _el abuelo/a_, _el
+  profesor/a_, _el diseñador/a de moda_, _simpático/a_ — keeping the masculine's article, since
+  learners know _el_ becomes _la_; _este/a/os/as_ and _ese/a/os/as_ also take their plural endings,
+  with "this / pl. these" beneath. Under a noun the English pairs the same way when the feminine's
+  differs ("nephew / niece"). A feminine that drops an accent is written out (_el bailarín / la
+  bailarina_), and a different word is not paired at all: _padre_ and _madre_ each have their own
+  entry. The grammar label adds a plural worth knowing, one that is not just the word plus -s or -es
+  (_noun · pl. lápices_, _pl. jerséis_, _pl. lunes_), or that a noun is _always plural_ (_las gafas_)
+  or has _no plural_. Chosen on the canvas's "Dictionary forms" page (board D, plus board C's
+  plurals): writing out both forms made the headword long, _el/la abuelo/a_ was too busy, a separate
+  forms line made every card taller, and forms only in the label were easy to miss. The search field is a pill with a magnifier, like the category buttons
   below it: as a hairline underline it read as part of the page and was easy to miss. With something
   typed it grows an × that clears it and puts the cursor back, for starting the next search. The tags fold behind a **filter pill** under the search field
   (option 2 on the "Spanish App Screens" canvas, first called "Dictionary Category Filter"): wrapped
@@ -607,10 +618,7 @@ type-driven templates, which produce wrong English and odd combinations.
 Not built, in priority order (set 2026-09-21; flashcards, a progress screen and conjugation drills
 were dropped then):
 
-- **Other forms on Dictionary cards** (requested 2026-09-21): cards show only the headword and its
-  English, so a search can match a form nobody sees ("nie" finds el sobrino through its feminine's
-  "niece"). Show the feminine and its English (_el sobrino · la sobrina_, nephew · niece), adjective
-  forms (_simpático · simpática_), and a plural-only marker (_las gafas_)
+Nothing at the moment.
 
 ## Choosing words
 
