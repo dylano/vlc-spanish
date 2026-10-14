@@ -1,4 +1,4 @@
-import type { Grade, Result } from "../../lib/grade.ts";
+import { canonicalAnswer, type Grade, type Result } from "../../lib/grade.ts";
 import type { Strength } from "../../lib/scheduler.ts";
 import type { Card } from "../../lib/session.ts";
 
@@ -71,7 +71,13 @@ export function promptDetail(card: Card): string | undefined {
   return [grammarOf(card), card.hint].filter(Boolean).join(" · ") || undefined;
 }
 
-/** The prompt text: the unambiguous english gloss, or the spanish headword. */
+/**
+ * The prompt text: the unambiguous english gloss, or the spanish headword with
+ * its article (la manzana, el/la estudiante, los padres), as the Dictionary,
+ * the Match Pairs tiles and the multiple-choice options show it.
+ */
 export function promptText(card: Card): string {
-  return card.direction === "en→es" ? card.prompt : card.entry.es;
+  return card.direction === "en→es"
+    ? card.prompt
+    : canonicalAnswer(card.entry, "en→es", GRADE_OPTIONS);
 }

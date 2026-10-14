@@ -140,7 +140,8 @@ tangled into components.
   saying so. The Words and Sentences groups both have a Translate, so the pills say "Translate a
   word" and "Translate a sentence".
 - **Quiz** — one prompt at a time, typed answer, inline verdict, progress bar, and a summary
-  listing what to look at again. Nouns are prompted with "include the article". A session is full
+  listing what to look at again. Nouns are prompted with "include the article"; the other way round, a Spanish noun is
+  shown with its article (_la manzana_, _el agua_, _el/la estudiante_), as in the Dictionary. A session is full
   screen with no main nav; the × in the header ends it (every answer is already saved). The header
   names the current exercise in the accent colour. The progress bar and the "4 of 15" counter count
   **words**, not steps — a matching round advances it by four and a two-blank gap by two — so a
