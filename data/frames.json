@@ -3648,124 +3648,6 @@
       "cloze": ["p", "w", "c"]
     },
     {
-      "id": "pronoun-person",
-      "grammar": ["object-pronouns", "personal-a", "verb-conjugation", "questions"],
-      "es": "¿{v} a tu {c}?\nSí, {p} {w}.",
-      "en": "Do you {v} your {c}?\nYes, I {w} {p}.",
-      "slots": {
-        "v": {
-          "kind": "verb",
-          "ids": ["ver", "visitar", "escuchar"],
-          "subject": "tu"
-        },
-        "w": {
-          "kind": "verb",
-          "ids": ["ver", "visitar", "escuchar"],
-          "subject": "yo",
-          "same": "v"
-        },
-        "c": {
-          "kind": "noun",
-          "tags": ["family"]
-        },
-        "p": {
-          "kind": "pronoun",
-          "agree": "c",
-          "person": true
-        }
-      },
-      "cloze": ["p", "w", "c"]
-    },
-    {
-      "id": "pronoun-person-no",
-      "grammar": ["object-pronouns", "personal-a", "verb-conjugation", "questions", "negation"],
-      "es": "¿{v} a tu {c}?\nNo, no {p} {w}.",
-      "en": "Do you {v} your {c}?\nNo, I {w:not} {p}.",
-      "slots": {
-        "v": {
-          "kind": "verb",
-          "ids": ["ver", "visitar", "escuchar"],
-          "subject": "tu"
-        },
-        "w": {
-          "kind": "verb",
-          "ids": ["ver", "visitar", "escuchar"],
-          "subject": "yo",
-          "same": "v"
-        },
-        "c": {
-          "kind": "noun",
-          "tags": ["family"]
-        },
-        "p": {
-          "kind": "pronoun",
-          "agree": "c",
-          "person": true
-        }
-      },
-      "cloze": ["p", "w", "c"]
-    },
-    {
-      "id": "pronoun-person-plural",
-      "grammar": ["object-pronouns", "personal-a", "verb-conjugation", "questions", "plural"],
-      "es": "¿{v} a tus {c}?\nSí, {p} {w}.",
-      "en": "Do you {v} your {c}?\nYes, I {w} {p}.",
-      "slots": {
-        "v": {
-          "kind": "verb",
-          "ids": ["ver", "visitar", "escuchar"],
-          "subject": "tu"
-        },
-        "w": {
-          "kind": "verb",
-          "ids": ["ver", "visitar", "escuchar"],
-          "subject": "yo",
-          "same": "v"
-        },
-        "c": {
-          "kind": "noun",
-          "tags": ["family"],
-          "number": "pl",
-          "exclude": ["madre", "mujer", "marido", "padre", "abuelo", "hermano"]
-        },
-        "p": {
-          "kind": "pronoun",
-          "agree": "c",
-          "person": true
-        }
-      },
-      "cloze": ["p", "w", "c"]
-    },
-    {
-      "id": "pronoun-person-profession",
-      "grammar": ["object-pronouns", "personal-a", "contraction", "verb-conjugation", "questions"],
-      "es": "¿{v} a {c:el}?\nSí, {p} {w}.",
-      "en": "Do you {v} {c:the}?\nYes, I {w} {p}.",
-      "slots": {
-        "v": {
-          "kind": "verb",
-          "ids": ["ver", "escuchar"],
-          "subject": "tu"
-        },
-        "w": {
-          "kind": "verb",
-          "ids": ["ver", "escuchar"],
-          "subject": "yo",
-          "same": "v"
-        },
-        "c": {
-          "kind": "noun",
-          "tags": ["professions"]
-        },
-        "p": {
-          "kind": "pronoun",
-          "agree": "c",
-          "person": true
-        }
-      },
-      "cloze": ["p", "w", "c"]
-    },
-    {
       "id": "pronoun-relative",
       "grammar": ["object-pronouns", "third-person", "verb-conjugation", "questions"],
       "es": "¿Tu {n} {v} {c:el}?\nSí, {p} {w}.",
@@ -4491,6 +4373,349 @@
         }
       },
       "cloze": ["p", "w", "c"]
+    },
+    {
+      "id": "often-person",
+      "grammar": ["object-pronouns", "frequency", "questions", "personal-a"],
+      "es": "¿{v} a tu {c}?\n{f} {p} {w}.",
+      "en": "Do you {v} your {c}?\nI {f} {w} {p}.",
+      "slots": {
+        "v": {
+          "kind": "verb",
+          "ids": ["ver", "visitar"],
+          "subject": "tu"
+        },
+        "w": {
+          "kind": "verb",
+          "ids": ["ver", "visitar"],
+          "subject": "yo",
+          "same": "v"
+        },
+        "c": {
+          "kind": "noun",
+          "tags": ["family"],
+          "exclude": ["mujer", "marido"]
+        },
+        "p": {
+          "kind": "pronoun",
+          "agree": "c",
+          "person": true
+        },
+        "f": {
+          "kind": "word",
+          "ids": ["siempre", "nunca", "a-veces", "normalmente", "a-menudo"]
+        }
+      },
+      "cloze": ["p", "w", "f", "c"]
+    },
+    {
+      "id": "often-person-when",
+      "grammar": ["object-pronouns", "frequency", "questions", "personal-a"],
+      "es": "¿{v} a tu {c}?\n{p} {w} {f}.",
+      "en": "Do you {v} your {c}?\nI {w} {p} {f}.",
+      "slots": {
+        "v": {
+          "kind": "verb",
+          "ids": ["ver", "visitar"],
+          "subject": "tu"
+        },
+        "w": {
+          "kind": "verb",
+          "ids": ["ver", "visitar"],
+          "subject": "yo",
+          "same": "v"
+        },
+        "c": {
+          "kind": "noun",
+          "tags": ["family"],
+          "exclude": ["mujer", "marido"]
+        },
+        "p": {
+          "kind": "pronoun",
+          "agree": "c",
+          "person": true
+        },
+        "f": {
+          "kind": "word",
+          "ids": [
+            "todos-los-dias",
+            "todas-las-semanas",
+            "una-vez-a-la-semana",
+            "dos-veces-a-la-semana",
+            "una-vez-al-mes"
+          ]
+        }
+      },
+      "cloze": ["p", "w", "f", "c"]
+    },
+    {
+      "id": "often-people-when",
+      "grammar": ["object-pronouns", "frequency", "questions", "personal-a", "plural"],
+      "es": "¿{v} a tus {c}?\n{p} {w} {f}.",
+      "en": "Do you {v} your {c}?\nI {w} {p} {f}.",
+      "slots": {
+        "v": {
+          "kind": "verb",
+          "ids": ["ver", "visitar"],
+          "subject": "tu"
+        },
+        "w": {
+          "kind": "verb",
+          "ids": ["ver", "visitar"],
+          "subject": "yo",
+          "same": "v"
+        },
+        "c": {
+          "kind": "noun",
+          "tags": ["family"],
+          "number": "pl",
+          "exclude": ["madre", "mujer", "marido", "padre", "abuelo", "hermano"]
+        },
+        "p": {
+          "kind": "pronoun",
+          "agree": "c",
+          "person": true
+        },
+        "f": {
+          "kind": "word",
+          "ids": [
+            "todos-los-dias",
+            "todas-las-semanas",
+            "una-vez-a-la-semana",
+            "dos-veces-a-la-semana",
+            "una-vez-al-mes"
+          ]
+        }
+      },
+      "cloze": ["p", "w", "f", "c"]
+    },
+    {
+      "id": "often-drink",
+      "grammar": ["object-pronouns", "frequency", "questions", "food"],
+      "es": "¿{v} {c}?\n{f} {p} {w}.",
+      "en": "Do you {v} {c}?\nI {f} {w} {p}.",
+      "slots": {
+        "v": {
+          "kind": "verb",
+          "ids": ["beber"],
+          "subject": "tu"
+        },
+        "w": {
+          "kind": "verb",
+          "ids": ["beber"],
+          "subject": "yo",
+          "same": "v"
+        },
+        "c": {
+          "kind": "noun",
+          "ids": ["cafe", "te", "leche", "vino", "cerveza", "agua", "refresco"]
+        },
+        "p": {
+          "kind": "pronoun",
+          "agree": "c"
+        },
+        "f": {
+          "kind": "word",
+          "ids": ["siempre", "nunca", "a-veces", "normalmente", "a-menudo"]
+        }
+      },
+      "cloze": ["p", "w", "f", "c"]
+    },
+    {
+      "id": "often-drink-when",
+      "grammar": ["object-pronouns", "frequency", "questions", "food"],
+      "es": "¿{v} {c}?\n{p} {w} {f}.",
+      "en": "Do you {v} {c}?\nI {w} {p} {f}.",
+      "slots": {
+        "v": {
+          "kind": "verb",
+          "ids": ["beber"],
+          "subject": "tu"
+        },
+        "w": {
+          "kind": "verb",
+          "ids": ["beber"],
+          "subject": "yo",
+          "same": "v"
+        },
+        "c": {
+          "kind": "noun",
+          "ids": ["cafe", "te", "leche", "vino", "cerveza", "agua", "refresco"]
+        },
+        "p": {
+          "kind": "pronoun",
+          "agree": "c"
+        },
+        "f": {
+          "kind": "word",
+          "ids": [
+            "todos-los-dias",
+            "todas-las-semanas",
+            "una-vez-a-la-semana",
+            "dos-veces-a-la-semana",
+            "una-vez-al-mes"
+          ]
+        }
+      },
+      "cloze": ["p", "w", "f", "c"]
+    },
+    {
+      "id": "often-buy-when",
+      "grammar": ["object-pronouns", "frequency", "questions", "food"],
+      "es": "¿{v} {c}?\n{p} {w} {f}.",
+      "en": "Do you {v} {c}?\nI {w} {p} {f}.",
+      "slots": {
+        "v": {
+          "kind": "verb",
+          "ids": ["comprar"],
+          "subject": "tu"
+        },
+        "w": {
+          "kind": "verb",
+          "ids": ["comprar"],
+          "subject": "yo",
+          "same": "v"
+        },
+        "c": {
+          "kind": "noun",
+          "ids": ["pan", "queso", "arroz", "pollo", "jamon", "leche"]
+        },
+        "p": {
+          "kind": "pronoun",
+          "agree": "c"
+        },
+        "f": {
+          "kind": "word",
+          "ids": [
+            "todos-los-dias",
+            "todas-las-semanas",
+            "una-vez-a-la-semana",
+            "dos-veces-a-la-semana",
+            "una-vez-al-mes"
+          ]
+        }
+      },
+      "cloze": ["p", "w", "f", "c"]
+    },
+    {
+      "id": "often-buy-plural",
+      "grammar": ["object-pronouns", "frequency", "questions", "food", "plural"],
+      "es": "¿{v} {c}?\n{p} {w} {f}.",
+      "en": "Do you {v} {c}?\nI {w} {p} {f}.",
+      "slots": {
+        "v": {
+          "kind": "verb",
+          "ids": ["comprar"],
+          "subject": "tu"
+        },
+        "w": {
+          "kind": "verb",
+          "ids": ["comprar"],
+          "subject": "yo",
+          "same": "v"
+        },
+        "c": {
+          "kind": "noun",
+          "ids": ["huevo", "patata", "manzana", "fresa", "tomate", "aceituna"],
+          "number": "pl"
+        },
+        "p": {
+          "kind": "pronoun",
+          "agree": "c"
+        },
+        "f": {
+          "kind": "word",
+          "ids": [
+            "todos-los-dias",
+            "todas-las-semanas",
+            "una-vez-a-la-semana",
+            "dos-veces-a-la-semana",
+            "una-vez-al-mes"
+          ]
+        }
+      },
+      "cloze": ["p", "w", "f", "c"]
+    },
+    {
+      "id": "often-wear",
+      "grammar": ["object-pronouns", "frequency", "questions", "clothing"],
+      "es": "¿{v} {c:el}?\n{f} {p} {w}.",
+      "en": "Do you {v} {c:the}?\nI {f} {w} {p}.",
+      "slots": {
+        "v": {
+          "kind": "verb",
+          "ids": ["llevar"],
+          "subject": "tu"
+        },
+        "w": {
+          "kind": "verb",
+          "ids": ["llevar"],
+          "subject": "yo",
+          "same": "v"
+        },
+        "c": {
+          "kind": "noun",
+          "ids": [
+            "chaqueta",
+            "camisa",
+            "falda",
+            "vestido",
+            "jersey",
+            "bufanda",
+            "abrigo",
+            "gorro",
+            "cinturon"
+          ]
+        },
+        "p": {
+          "kind": "pronoun",
+          "agree": "c"
+        },
+        "f": {
+          "kind": "word",
+          "ids": ["siempre", "nunca", "a-veces", "normalmente", "a-menudo"]
+        }
+      },
+      "cloze": ["p", "w", "f", "c"]
+    },
+    {
+      "id": "often-profession-when",
+      "grammar": ["object-pronouns", "frequency", "questions", "personal-a", "contraction"],
+      "es": "¿{v} a {c:el}?\n{p} {w} {f}.",
+      "en": "Do you {v} {c:the}?\nI {w} {p} {f}.",
+      "slots": {
+        "v": {
+          "kind": "verb",
+          "ids": ["escuchar"],
+          "subject": "tu"
+        },
+        "w": {
+          "kind": "verb",
+          "ids": ["escuchar"],
+          "subject": "yo",
+          "same": "v"
+        },
+        "c": {
+          "kind": "noun",
+          "ids": ["profesor", "cantante", "compositor", "periodista"]
+        },
+        "p": {
+          "kind": "pronoun",
+          "agree": "c",
+          "person": true
+        },
+        "f": {
+          "kind": "word",
+          "ids": [
+            "todos-los-dias",
+            "todas-las-semanas",
+            "una-vez-a-la-semana",
+            "dos-veces-a-la-semana",
+            "una-vez-al-mes"
+          ]
+        }
+      },
+      "cloze": ["p", "w", "f", "c"]
     }
   ]
 }

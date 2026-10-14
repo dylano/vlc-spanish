@@ -238,8 +238,9 @@
 
 .head {
   display: flex;
+  flex-wrap: wrap;
   align-items: baseline;
-  gap: 10px;
+  column-gap: 10px;
 }
 
 .es {
@@ -258,6 +259,16 @@
   font-size: 0.9375rem;
   color: var(--muted);
   margin: 2px 0 0;
+}
+
+/* The shorthand ending (el abuelo/a) and the slash between pairs: quiet, so the
+   headword still reads as one word. */
+.slash {
+  color: var(--muted);
+}
+
+.plural {
+  font-size: 0.8125rem;
 }
 
 .note {

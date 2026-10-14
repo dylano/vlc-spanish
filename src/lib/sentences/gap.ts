@@ -12,6 +12,7 @@ import { verbForm } from "./conjugate.ts";
 import { SUBJECTS, type Subject } from "./english.ts";
 import {
   directObjectAgreement,
+  framesToTry,
   DIRECT_OBJECT,
   isDirectObject,
   likeForm,
@@ -87,7 +88,7 @@ export function renderGap(
   canBlank: (entryId: string) => boolean = () => true,
   limit = blanks,
 ): Gap | undefined {
-  const options = shuffle(targets.get(entryId) ?? [], context.random);
+  const options = framesToTry(targets, entryId, context);
   for (const { frame, slot } of options.slice(0, RENDER_ATTEMPTS)) {
     const sentence = renderFrame(frame, context, { [slot]: entryId });
     if (!sentence) continue;
@@ -117,6 +118,7 @@ export function renderGap(
     while (chosen.length > 1 && !showsSpanish()) chosen.pop();
     if (!showsSpanish()) continue;
 
+    context.usedFrames?.add(frame.id);
     return {
       sentence,
       blanks: chosen

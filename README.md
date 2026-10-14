@@ -1,8 +1,22 @@
 # Spanish vocab
 
-A vocabulary drilling app for an elementary Peninsular Spanish class: one dictionary, spaced-repetition
-progress, and quizzes that grade the way a teacher would — accepting the feminine form, noticing a
-missing accent, insisting on the article.
+Vocabulary and sentence practice for an elementary Peninsular Spanish class: a searchable
+dictionary, spaced-repetition scheduling, and exercises from single words to generated sentences.
+
+<table>
+  <tr>
+    <td><img src="docs/screenshots/home.png" width="200" alt="Home: General practice, Custom practice and a what's-new note"></td>
+    <td><img src="docs/screenshots/custom.png" width="200" alt="Custom practice: exercise modes and categories chosen as pills"></td>
+    <td><img src="docs/screenshots/exercise.png" width="200" alt="Fill in the Blank: a wrong pronoun, with the note abrigo is masculine, so lo"></td>
+    <td><img src="docs/screenshots/conjugation.png" width="200" alt="Dictionary: the present tense of volver, with the o to ue stem change marked"></td>
+  </tr>
+  <tr>
+    <td align="center">Home</td>
+    <td align="center">Custom practice</td>
+    <td align="center">Fill in the Blank</td>
+    <td align="center">Dictionary: conjugation</td>
+  </tr>
+</table>
 
 It is a **single-user, fully static app**. There is no server and no account: the learner gives a
 name on first start, and their progress lives in the browser's local storage on that device.
@@ -60,6 +74,9 @@ src/lib/          pure logic, no React, thoroughly tested
   search.ts         Dictionary search across every form of a word
   conjugation.ts    a verb's present-tense table for the Dictionary, with what to notice marked
   problems.ts       the Problem words list: misses per word, most first, and which words are on it
+  forms.ts          a Dictionary card's other forms: el abuelo/a, este/a/os/as, a surprising plural
+  releaseNote.ts    the "what's new" note: when it shows, and its *italics*
+  commits.ts        recent commits from GitHub, for the Version screen
   random.ts         seedable shuffle
   sentences/        sentence frames: renderer and checks (frames.ts), gaps (gap.ts), mistakes
                     (mistake.ts), translations (translate.ts), Spanish verb forms (conjugate.ts),
@@ -68,7 +85,7 @@ src/lib/          pure logic, no React, thoroughly tested
   slug.ts           stable entry ids
 src/
   app/            store (context), local storage (local.ts), theme (theme.ts), the bundled
-                  dictionary and sentence data, and the shells
+                  dictionary, sentence data and release note, and the shells
   screens/        one file per screen, each with a CSS module beside it
                   (ConjugationDialog is the Dictionary's verb table, a dialog rather than a screen)
     quiz/           one component per exercise (typed and gaps, multiple choice, matching, find the
@@ -82,6 +99,10 @@ data/
   dictionary.json          the dictionary, bundled into the app at build time
   frames.json              sentence frames
   glue.json                function words and phrases (clock times) sentences may use
+  release-note.json        the "what's new" note on Home (see Writing the release note)
+design/README.md           links to the design canvases, where screens are mocked up first
+docs/screenshots/          the phone screenshots at the top of this README
+.github/workflows/         checks on every PR (see Deploying)
 ```
 
 ### Sessions and the on-screen keyboard
@@ -124,8 +145,8 @@ tangled into components.
   and hides it on that device for good: the device
   remembers the dismissed note's date, and only a note dated later shows. Only the latest note
   exists. The note does not move the practice rows: an invisible twin of it below them keeps them
-  centred where they are without one (it fits down to about 740px of screen height; on shorter
-  screens the twin is left out and the note pushes the rows down, there being no room otherwise). See
+  centred where they are without one. Below 740px of screen height (a breakpoint in the CSS) there
+  is no room for both, so the twin is left out and the note pushes the rows down. See
   [Writing the release note](#writing-the-release-note).
 - **Custom practice** (`/custom`) — on top, **All words | Problem words · N**; then **Exercise
   modes** and **Categories** as pills, each row led by **All**. Choosing a pill narrows to it,
@@ -140,11 +161,13 @@ tangled into components.
   saying so. The Words and Sentences groups both have a Translate, so the pills say "Translate a
   word" and "Translate a sentence".
 - **Quiz** — one prompt at a time, typed answer, inline verdict, progress bar, and a summary
-  listing what to look at again. Nouns are prompted with "include the article". A session is full
+  listing what to look at again. Nouns are prompted with "include the article"; the other way round, a Spanish noun is
+  shown with its article (_la manzana_, _el agua_, _el/la estudiante_), as in the Dictionary. A session is full
   screen with no main nav; the × in the header ends it (every answer is already saved). The header
   names the current exercise in the accent colour. The progress bar and the "4 of 15" counter count
   **words**, not steps — a matching round advances it by four and a two-blank gap by two — so a
-  session always reads its full length; counting steps made the same session anywhere from 4 to 15 long.
+  session always reads its full length; counting steps made the same session look a different length
+  every time.
   Each card opens with a bold instruction line ("Type the missing word", "Find the wrong word") — in a mixed session the exercise changes
   from card to card, and a muted label was too easy to miss.
   Exercise names, grouped: Words — **Translate** (typed), **Multiple Choice**,
@@ -180,7 +203,8 @@ tangled into components.
   Enter again moves on: once submitted the text box is gone, so the page listens for it.
 - **Problem words** (`/problems`) — every word missed at least once, most missed first, with the
   count and, when the last answer was wrong, "recent miss" (`src/lib/problems.ts`: `lapses` summed over both
-  directions; ties put a word still wrong first, then the lower ease). This is history, so a word
+  directions; ties put a word still wrong first, then the lower ease). Only a **wrong** answer counts:
+  an "almost" (an accent, a one-letter slip) does not put a word on the list (decided 2026-10-14). This is history, so a word
   stays after it is answered right. Reached from the Problem words row on Home. Above the list, beside
   "N words", a small outlined **Practice these** pill opens Custom practice with Problem words
   chosen and the last modes kept, ready to start. It sits at the top rather than below the list, which
@@ -196,11 +220,22 @@ tangled into components.
   review; progress keeps no history, so earlier misses cannot be undone beyond the count. Kept out of the Dictionary on purpose, so the Dictionary stays a
   reference; a subtle marker there may come later.
 - **Dictionary** — search both languages (accent-insensitive, so `timido` finds `tímido`), filter
-  by tag, read the notes. The search field is a pill with a magnifier, like the category buttons
+  by tag, read the notes. A card shows a word's **other forms** (`src/lib/forms.ts`): the other
+  gender in shorthand on the headword when only the ending changes — _el abuelo/a_, _el
+  profesor/a_, _el diseñador/a de moda_, _simpático/a_ — keeping the masculine's article, since
+  learners know _el_ becomes _la_; _este/a/os/as_ and _ese/a/os/as_ also take their plural endings,
+  with "this / pl. these" beneath. Under a noun the English pairs the same way when the feminine's
+  differs ("nephew / niece"). A feminine that drops an accent is written out (_el bailarín / la
+  bailarina_), and a different word is not paired at all: _padre_ and _madre_ each have their own
+  entry. The grammar label adds a plural worth knowing, one that is not just the word plus -s or -es
+  (_noun · pl. lápices_, _pl. jerséis_, _pl. lunes_), or that a noun is _always plural_ (_las gafas_)
+  or has _no plural_. Chosen on the canvas's "Dictionary forms" page (board D, plus board C's
+  plurals): writing out both forms made the headword long, _el/la abuelo/a_ was too busy, a separate
+  forms line made every card taller, and forms only in the label were easy to miss. The search field is a pill with a magnifier, like the category buttons
   below it: as a hairline underline it read as part of the page and was easy to miss. With something
   typed it grows an × that clears it and puts the cursor back, for starting the next search. The tags fold behind a **filter pill** under the search field
   (option 2 on the "Spanish App Screens" canvas, first called "Dictionary Category Filter"): wrapped
-  in full they took seven rows and pushed the results behind the phone keyboard. The row is one
+  in full they took most of the screen and pushed the results behind the phone keyboard. The row is one
   control — it names the filter ("All categories", or the chosen tag), opens the grid, and once a tag
   is chosen turns accent-coloured, **centres itself** over the list and grows an × that clears it;
   centring is what makes an active filter obvious. Picking a tag folds the grid away. A green filter icon marks it as a
@@ -219,7 +254,7 @@ tangled into components.
   feminine and plural (`hermana`, `zapatos`, `estas`), every present-tense verb form (`prefiero`), and
   the English for those (`sister`, `these`). A leading article is ignored (`la mesa`, `the table`), as
   are apostrophes; `ñ` stays distinct from `n`. Exact matches come first, then words starting with
-  the query, then any containing it. Forms the card does not show (a feminine, a plural, a conjugation)
+  the query, then any containing it. Forms other than the headword (a feminine, a plural, a conjugation)
   match only whole or from the start of a word, and verb forms are indexed without their reflexive
   pronoun, so `nos` does not list every reflexive verb or every plural ending in -nos.
 - **Settings** — your name (editable), **session length** and **appearance**, and how much you have
@@ -272,7 +307,7 @@ Until September 2026 users and progress lived in Netlify Blobs behind two unauth
 functions. They were removed to make the app single-user with nothing stored remotely; production
 progress was deliberately not migrated.
 
-**Numbers are in the dictionary but not in the drill.** They were a third of the entries, which
+**Numbers are in the dictionary but not in the drill.** They are a large share of the entries, which
 crowded out the words that carry meaning, so `isDrillable` in `src/lib/session.ts` holds back
 anything tagged `numbers`. They are still searchable in the dictionary, and a session that asks for
 that tag by name (Custom practice, or `/quiz?tags=numbers`) still serves them. The home-screen counts apply the same
@@ -308,7 +343,10 @@ The note on Home is `data/release-note.json`, shipped with the build like the di
   does not bring it back. Two notes on the same date would hide the second; move it to the next day.
 - **No note**: the file may hold `null`. A file that does not parse shows no note rather than
   breaking Home, and fails the tests (`src/lib/releaseNote.test.ts`), so CI catches it.
-- Claude Code reminds you after a significant update and offers a draft.
+- **What earns a note**: usually a big new chunk of words or grammar (a new grammar topic, a large
+  word batch), and not much more than one a week, so everyone gets a chance to see each one.
+  Smaller changes show in the recent commit history (Settings → Version). When a new branch starts,
+  Claude Code says how old the current note is and offers a draft if the work might deserve one.
 
 ## Working on the dictionary
 
@@ -419,8 +457,10 @@ from the dictionary. The frame supplies the word order in both languages; the re
   English it is _it_ or _them_. A verb slot with `same` repeats another verb slot's verb in its own
   person (compras → compro); it lists the same `ids`, which the validator checks, so Fill in the Blank
   knows which verbs can sit there. **People** too: a `pronoun` slot with `person: true` says _him_,
-  _her_ or _them_ — _¿Ves a tu hermana? Sí, la veo_ ("…I see her"), _¿Escuchas al profesor? Sí, lo
-  escucho_ (with _ver_, _visitar_, _escuchar_ and the personal _a_). **Third person**: a relative asks
+  _her_ or _them_, with _ver_, _visitar_, _escuchar_ and the personal _a_ — only in the answers that
+  say how often (below: _¿Ves a tu prima? Nunca la veo_, _¿Escuchas a la cantante? La escucho todos
+  los días_). Plain yes/no versions (_¿Ves a tu hermana? Sí, la veo_) were dropped as dull: they made
+  up much of a family session. **Third person**: a relative asks
   and answers for themselves — _¿Tu madre compra el pan? Sí, lo compra_ ("Does your mother buy the
   bread? Yes, she buys it"), _¿Tus abuelos quieren la ensalada? Sí, la quieren_; the English uses two
   placeholders made for it, `{v:base}` (the bare verb after _does_/_do_) and `{n:pronoun}` (_he_, _she_
@@ -433,26 +473,33 @@ from the dictionary. The frame supplies the word order in both languages; the re
   _Mi tía tiene un abrigo verde. Lo lleva a veces_. Those leave out vosotros, since "You (plural)"
   twice in two short sentences reads badly. Every sentence in a frame now starts with a capital, in
   both languages, including a second one that starts with a slot (_…blanca. **La** llevo…_), and Find
-  the Mistake keeps that capital on a broken word. Each pronoun is a dictionary entry (tagged
+  the Mistake keeps that capital on a broken word.
+  **Answers that say how often** instead of _sí_ or _no_ (frames `often-*`, tagged `frequency` too):
+  _¿Ves a tu prima? **Nunca la** veo._ — no _no_ with _nunca_ before the verb — _¿Bebes café? **Lo**
+  bebo todos los días._, _¿Compras huevos? **Los** compro todas las semanas._ A short adverb
+  (_siempre, nunca, a veces, a menudo, normalmente_) goes before the pronoun and a longer phrase
+  (_todos los días, una vez a la semana_) after the verb, as Spanish usually puts them; English keeps
+  its own order (_I never see her_, _I see her every day_). Things asked about in general take no
+  article (_¿Bebes café?_), and the pronoun still agrees (_agua_ → _la_). Spouses are left out of the
+  people frames: "I see my wife once a month" reads oddly. Pronouns with an infinitive (_lo quiero
+  comprar_) wait until the class reaches them. Each pronoun is a dictionary entry (tagged
   `common-words`), so a blank on one is scheduled like any word; DIRECT_OBJECT in `frames.ts` maps
   gender and number to the pronoun. Because the pronoun is what these frames are for, they test it
   whatever word they were aimed at: a gap always blanks it (as a second blank, past `BLANK_ODDS`,
   when the session has room), and a mistake breaks it `PRONOUN_SHARE` (75%) of the time — its gender
   (_lo_ for _la_) or number (_lo_ for _los_) — recording the answer against the pronoun. The four may
-  come back within a session. Aimed only at the pronouns themselves, a session met each of the four
-  once and about 2 of 11 items tested one; now about 8 of 9 do. Typed as word cards, another of the
+  come back within a session: aimed only at the pronouns themselves, a session met each of the four
+  once, so few items tested a pronoun at all. Typed as word cards, another of the
   four is `wrong` with a note ("la stands for a feminine singular noun; lo, a masculine singular one"),
   not a one-letter slip and not a wrong article; _los_ and _las_, which share "them", keep the usual
   near miss and their hints. The question and the answer sit on two lines: the frames write `\n`
   between them, the sentence displays keep it (`white-space: pre-line`), and a typed translation on
   one line still matches, since spacing is ignored. Known and left for now: the pronouns are tagged
   `common-words`, so a Custom practice session on a category never blanks them, but Find the Mistake
-  still breaks the pronoun in these frames (about 0.1–0.2 times per food or clothing session, 0.4
-  per family session). Making it respect the category is a small change if it starts to bother.
-  How much of a session they take, from simulated sessions: in General practice 14% of sentences
-  (25 of 160 frames), testing a pronoun about 0.8 times per session; in a **family** Custom practice
-  session about a third, in **clothing** 29%, in professions 14% and in food 12%. They still practise
-  the word they are aimed at.
+  still breaks the pronoun in these frames now and then. Making it respect the category is a small
+  change if it starts to bother. Pronoun frames take a share of General practice in proportion to
+  their number, and more of a Custom practice session on the categories they use (clothing, family,
+  food); they still practise the word they are aimed at.
 - **Placeholders**: `{slot}`, plus `{slot:el}` / `{slot:un}` for a Spanish article and `{slot:the}` /
   `{slot:a}` for an English one; `{v:not}` gives a verb's English negative with do-support
   (_don't like_, _doesn't go_, _isn't_) for frames that put _no_ before the Spanish verb; `{slot:none}`
@@ -465,7 +512,7 @@ from the dictionary. The frame supplies the word order in both languages; the re
   _his/her/..._, English plurals and _a/an_. A person noun is put in the feminine only if it has
   `enF`, the English for its feminine form. For a person slot whose gender is free, the gender is
   decided first (50/50) and then a word that can take it is chosen; deciding per word let the
-  always-masculine plurals (_los padres_, _los abuelos_) tip sentences to about 60% masculine.
+  always-masculine plurals (_los padres_, _los abuelos_) tip sentences toward the masculine.
 - **Words whose English is a noun** (_comilón_ "big eater", _dormilón_ "sleepyhead") are excluded
   from trait frames: "My son is very big eater" is what including them produces.
 - **Word pairings are the frame's job.** Routines are split by time of day so morning activities get
@@ -491,8 +538,7 @@ word pinned in the slot. So a gap usually reviews a word that is due.
   class that has covered the dictionary, so a word the app has not asked yet is not a word they have
   never met, and it is graded like any other. Sentences therefore work from the very first session,
   and they **carry** new words instead of competing with them: they used to be practiced-only, which
-  made them eat the session's new-word slots (a simulated learner met 45 words in ten sessions; now
-  84). A sentence is aimed first at a word whose `en→es` card is **due** or never asked (a sentence
+  made them eat the session's new-word slots, and a learner met far fewer words. A sentence is aimed first at a word whose `en→es` card is **due** or never asked (a sentence
   is answered in Spanish, so that is the card it reviews), then at the rest of the ranked list, then
   at any other word, the longest unseen first. In a mixed session at most `MAX_EARLY_SENTENCES`
   (4 per 15 words, scaled by `capFor`) sentences go to words that are practiced but _not_ due — an
@@ -515,6 +561,13 @@ word pinned in the slot. So a gap usually reviews a word that is due.
   away but a different word). A one-letter slip otherwise is `hard`, except at the end of a noun or
   adjective, where gender and number live. Each blank is graded against the sentence as shown, never
   against what was typed in the other blanks.
+
+**Not repeating a pattern**: a session's gaps, mistakes and translations share a record of the
+frames they have used (`usedFrames`), and each tries a word's unused frames first (`framesToTry`
+in `frames.ts`), falling back to a used one only when nothing else fits that word. Without it a
+session could say _Hay cebollas en la mesa_ and then _Hay calabazas en la mesa_, often so in a
+single-category session. Repeats are now rare, though family words, which fit few patterns, still
+see some; sessions have as many sentences as before.
 
 **Trying out a grammar point**: `/quiz?exercise=gap,mistake&grammar=object-pronouns` keeps a
 session's sentences to frames whose `grammar` includes that name (any frame tag works, such as
@@ -545,13 +598,12 @@ since that could be just as right.
 
 Article swaps are never made on a common-gender noun (_la estudiante_ is fine) or on a contracted
 _al_/_del_, which has no article left to swap. **Which break is used is weighted**, because uniform
-choice let whichever kind is always available take over — first article swaps (43% of mistakes),
-then, once word swaps existed, word swaps (73%). A form break (agreement, number, person) is used
+choice let whichever kind is always available take over — first article swaps, then, once word
+swaps existed, word swaps. A form break (agreement, number, person) is used
 `FORM_SHARE` (75%) of the time when a word also offers a swap; a noun, which offers only a swap or
 its article, uses its article `NOUN_ARTICLE_SHARE` (30%) of the time; a word whose every frame can
-only swap an article is passed over except `ARTICLE_SHARE` (10%) of the time. Over 60 simulated
-sessions that gives word swaps 60% (the dictionary is mostly nouns), form breaks 31% and article
-swaps 9%. The English cue is always shown: without it a verb in
+only swap an article is passed over except `ARTICLE_SHARE` (10%) of the time. Word swaps still lead,
+since the dictionary is mostly nouns. The English cue is always shown: without it a verb in
 the wrong person can still be a grammatical sentence (_Vamos al trabajo_ for "I go to work").
 
 - **Tapping**: any word of the broken text finds it, including every word of a phrase (_os vestís_).
@@ -566,7 +618,7 @@ the wrong person can still be a grammatical sentence (_Vamos al trabajo_ for "I 
 Phases 1 and 2 are complete and deployed at [vlc-spanish.netlify.app](https://vlc-spanish.netlify.app):
 
 - **Dictionary**: bundled from `data/dictionary.json`, searchable across every form of a word, with
-  folded categories and a conjugation table for every verb
+  folded categories, a word's other forms on its card, and a conjugation table for every verb
 - **Practice**: General practice, and Custom practice for any mix of exercise modes and categories
   or the Problem words list;
   six exercises (Translate a word, Multiple Choice, Match Pairs, Translate a sentence, Fill in the
@@ -577,32 +629,21 @@ Phases 1 and 2 are complete and deployed at [vlc-spanish.netlify.app](https://vl
   from the first session (`vp run validate:frames` prints how many, and
   `vp run render:frames` how many sentences they can make)
 - **Problem words**: a list of every word missed, most first, with Practice these
-- **Settings**: name, session length (10–30 words), light or dark
+- **What's new**: a release note on Home, written by hand in `data/release-note.json`
+- **Settings**: name, session length (10–30 words), light or dark, and the recent commits
 - **Single-user and fully static**: name on first start, everything in local storage, no server;
   installable PWA with the app shell cached offline
 
-Still open: not repeating a frame within a session, and possibly **Answer a question** (cued Q&A)
-or **Odd one out**. Translate was deliberately left ungraded rather than graded word by word with a
-self-mark. Frames were chosen over a fixed sentence bank, which repeats too often, and over fully
-type-driven templates, which produce wrong English and odd combinations.
+Nothing is waiting to be built. Ideas, not commitments:
 
-Not built, in priority order (set 2026-09-21; flashcards, a progress screen and conjugation drills
-were dropped then):
+- **Answer a question** (cued Q&A) or **Odd one out**, as further exercises.
+- **More pronoun forms** as the class reaches them: with an infinitive (_lo quiero comprar_ /
+  _quiero comprarlo_), commands (_cómpralo_), double pronouns (_te lo traigo_).
 
-- **Other forms on Dictionary cards** (requested 2026-09-21): cards show only the headword and its
-  English, so a search can match a form nobody sees ("nie" finds el sobrino through its feminine's
-  "niece"). Show the feminine and its English (_el sobrino · la sobrina_, nephew · niece), adjective
-  forms (_simpático · simpática_), and a plural-only marker (_las gafas_)
-- **A "new" marker for added words** (requested 2026-10-09, not started): when a new category or
-  a meaningful batch of words arrives with a deploy, highlight it — a small tag or a highlight on its
-  category pill in Custom practice and the Dictionary filter, and maybe a line on Home — so
-  classmates notice it and can practise it. To settle first: what counts as new (a new tag, or some
-  number of words added to one), how the app knows with no server (compare against what this browser
-  saw last visit, or a date on dictionary entries), and when the marker clears (after practising,
-  after viewing, or after a while). Parked 2026-10-11 after a round on the canvas ("New words" page):
-  a grocery-label "NEW!" sticker was tried and dropped, and colour on the category pill (amber,
-  green outline, tint, dashed) was left undecided. No practice mode or view for new words alone:
-  marking the categories is enough. It may return as part of a new presentation for the categories.
+Decided against: flashcards, a progress screen and conjugation drills (2026-09-21); grading Translate
+word by word with a self-mark (it stays ungraded); a fixed sentence bank, which repeats too often,
+and fully type-driven templates, which produce wrong English and odd combinations (frames instead);
+a "new" marker on categories (2026-10-14; the release note covers it).
 
 ## Choosing words
 
@@ -617,26 +658,21 @@ bands:
 
 Due and new are interleaved so that **every third card is a new word** (`NEW_WORD_EVERY`) while any
 remain; with nothing due, a session is all new words. With more than one category chosen in Custom practice, **new words** are introduced from
-each in turn (`balanceTags`): in proportion to size, 62 food words left 6 weather words with one new
-word in fourteen, so a first session could be all food. Reviews are not balanced, and follow the
-schedule whatever their category. Balancing them too was tried: in a simulated ten sessions over five
-days, each weather word was asked three times as often as each food word (body words, against
-clothing, nearly three times), where balancing new words alone keeps attention per word about even
-while every early session still mixes the categories.
+each in turn (`balanceTags`): in proportion to size, a big category drowned a small one (food against weather),
+so a first session could be all food. Reviews are not balanced, and follow the schedule whatever
+their category. Balancing them too was tried: it drilled a small category's words several times as
+often as a big one's, where balancing new words alone keeps attention per word about even while
+every early session still mixes the categories.
 A Problem words session has its own order:
 words wrong last time, then due, then the rest of the list.
 
 On top of the order, a mixed session **reserves `NEW_SHARE` (40%) of its length for words the app has
 not asked yet**: once only that many slots are left, they go to new words whatever the exercise
 weights would have chosen. Without it the session fills with reviews — due words come first and every
-exercise can use them — which is how a simulated learner ended up meeting 1 to 3 new words per
-session by the third session.
+exercise can use them — and new words dwindled to a trickle within a few sessions.
 
 Why the reserved share: a word answered today comes back tomorrow, then in three days, so without it
-the previous day's words fill every session and new words stop arriving after the first day. A
-simulation of two 15-word sessions a day showed 50 of 150 words practiced after ten days with due
-words strictly first (and many "new" slots taken by other directions of words just seen), and 108
-with the reserved share.
+the previous day's words fill every session and new words stop arriving after the first day.
 
 ## Mixed sessions
 
@@ -644,13 +680,11 @@ A session started from General practice, or from Custom practice with more than 
 `src/lib/session.ts`: the session length from Settings (15 by default), taken in the order described in
 [Choosing words](#choosing-words), with only the way each is asked varying. Each step picks an exercise by weight (`MIX_WEIGHTS`): Fill
 in the Blank 3, Find the Mistake 2, word Translate (typed) 2, sentence Translate 1, Multiple Choice 1, a matching round 1. Sentence
-exercises lead because they test words in context, which is worth more than rote recall; with a third
-of practiced words due they make up about half of a session's words. Rules on top:
+exercises lead because they test words in context, which is worth more than rote recall. Rules on top:
 
 - **At most two Multiple Choice cards and one matching round per 15 words** (`MAX_PER_SESSION`, scaled
   to the session length by `capFor`, never below one: a 30-word session allows four and two). Multiple Choice is
-  recognition among four options, easy enough that more feels like filler (before the cap a third of
-  sessions had three or more). A matching round is several words at once, so two of them took most of a
+  recognition among four options, easy enough that more feels like filler. A matching round is several words at once, so two of them took most of a
   fifteen-word session, sometimes back to back.
 
 - **No more than three of one exercise in a row** (`MAX_RUN`), so the pace keeps changing — unless
@@ -727,7 +761,7 @@ because the naive version of the rule gets a real case wrong:
 1. **An article-only difference is a gender mistake**, not a slip: `lavarse las dientes` stays
    `wrong`, since gender is the thing being tested.
 2. **An answer that is itself another headword is a confusion**, not a typo. The dictionary holds
-   about two dozen pairs one edit apart — `junio`/`julio`, `padre`/`madre`, `sesenta`/`setenta`,
+   many pairs one edit apart — `junio`/`julio`, `padre`/`madre`, `sesenta`/`setenta`,
    `llegar`/`llevar`, `este`/`ese` — so forgiving
    single-character slips blindly would mark a real mistake as nearly right. The feedback names what
    you actually wrote instead.

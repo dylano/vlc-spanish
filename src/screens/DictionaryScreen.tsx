@@ -1,8 +1,8 @@
-import { useMemo, useRef, useState } from "react";
+import { Fragment, useMemo, useRef, useState } from "react";
 import { useStore } from "../app/store-context.ts";
-import { canonicalAnswer } from "../lib/grade.ts";
+import { cardForms } from "../lib/forms.ts";
 import { buildSearchIndex, search } from "../lib/search.ts";
-import type { VerbEntry } from "../lib/schema.ts";
+import type { Entry, VerbEntry } from "../lib/schema.ts";
 import ConjugationDialog from "./ConjugationDialog.tsx";
 import styles from "./DictionaryScreen.module.css";
 
@@ -23,6 +23,52 @@ function Chevron({ className }: { className: string }) {
     >
       <path d="M7 4l6 6-6 6" />
     </svg>
+  );
+}
+
+/** One English gloss after another with a quiet slash between: nephew / niece. */
+function Paired({ parts }: { parts: string[] }) {
+  return parts.map((part, index) => (
+    <Fragment key={part}>
+      {index > 0 ? <span className={styles.slash}> / </span> : null}
+      {part}
+    </Fragment>
+  ));
+}
+
+/**
+ * The headword with its other gender in shorthand (el abuelo/a, este/a/os/as),
+ * the grammar label (with a plural worth knowing), and the English with the
+ * other gender's or the plural's beside it.
+ */
+function EntryHead({ entry }: { entry: Entry }) {
+  const forms = cardForms(entry);
+  return (
+    <>
+      <div className={styles.head}>
+        <span className={styles.es}>
+          {forms.spanish.map((run, index) =>
+            run.quiet ? (
+              <span key={index} className={styles.slash}>
+                {run.text}
+              </span>
+            ) : (
+              <Fragment key={index}>{run.text}</Fragment>
+            ),
+          )}
+        </span>
+        <span className={styles.grammar}>{forms.grammar.join(" · ")}</span>
+      </div>
+      <p className={styles.en}>
+        <Paired parts={forms.english} />
+        {forms.englishPlural ? (
+          <>
+            <span className={styles.slash}> / </span>
+            <span className={styles.plural}>pl.</span> {forms.englishPlural}
+          </>
+        ) : null}
+      </p>
+    </>
   );
 }
 
@@ -162,13 +208,7 @@ export default function DictionaryScreen() {
       <ul className={styles.list}>
         {filtered.map((entry) => (
           <li key={entry.id} className={styles.entry}>
-            <div className={styles.head}>
-              <span className={styles.es}>
-                {canonicalAnswer(entry, "en→es", { requireArticle: true })}
-              </span>
-              <span className={styles.grammar}>{entry.pos}</span>
-            </div>
-            <p className={styles.en}>{entry.en.join(", ")}</p>
+            <EntryHead entry={entry} />
             {entry.notes ? <p className={styles.note}>{entry.notes}</p> : null}
             {entry.pos === "verb" ? (
               <button

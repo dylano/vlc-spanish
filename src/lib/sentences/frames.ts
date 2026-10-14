@@ -180,6 +180,30 @@ export interface RenderContext {
   random: () => number;
   /** Which entries sentences may use, e.g. only words already practiced. Defaults to all. */
   eligible?: (entry: Entry) => boolean;
+  /**
+   * Frames already used in this session. A word's frames are tried unused ones
+   * first, so a session does not say "Hay cebollas en la mesa" and then "Hay
+   * calabazas en la mesa"; a used one is still taken when nothing else fits.
+   */
+  usedFrames?: Set<string>;
+}
+
+/**
+ * The frames and slots an entry can sit in, in the order to try them: shuffled,
+ * with frames this session has not used yet first. Rendering one records it.
+ */
+export function framesToTry(
+  targets: Map<string, { frame: Frame; slot: string }[]>,
+  entryId: string,
+  context: Pick<RenderContext, "random" | "usedFrames">,
+): { frame: Frame; slot: string }[] {
+  const options = shuffled(targets.get(entryId) ?? [], context.random);
+  const used = context.usedFrames;
+  if (!used || used.size === 0) return options;
+  return [
+    ...options.filter((option) => !used.has(option.frame.id)),
+    ...options.filter((option) => used.has(option.frame.id)),
+  ];
 }
 
 type Gender = "m" | "f";

@@ -110,18 +110,18 @@ describe("direct object pronouns in sentences", () => {
 
 describe("people and third person", () => {
   it("uses him, her or them for a person, agreeing with their gender", () => {
-    for (const id of ["pronoun-person", "pronoun-person-plural", "pronoun-person-profession"]) {
+    for (const id of ["often-person", "often-people-when", "often-profession-when"]) {
       for (const sentence of renders(id)) {
         const pronoun = sentence.fills.p!;
         const english = { lo: "him", la: "her", los: "them", las: "them" }[pronoun];
-        expect(sentence.en, sentence.es).toMatch(new RegExp(` ${english}\\.$`));
+        expect(sentence.en.split("\n")[1], sentence.es).toMatch(new RegExp(` ${english}( |\\.$)`));
         expect(sentence.slots.p!.gender).toBe(sentence.slots.c!.gender === "f" ? "f" : "m");
       }
     }
   });
 
   it("puts the personal a before a person, contracting with el", () => {
-    for (const sentence of renders("pronoun-person-profession")) {
+    for (const sentence of renders("often-profession-when")) {
       expect(sentence.es).toMatch(/^¿\p{L}+ (al|a la) /u);
     }
   });
@@ -180,6 +180,41 @@ describe("two actions, and a thing mentioned first", () => {
   });
 });
 
+describe("answers that say how often", () => {
+  it("puts a short adverb before the pronoun, and nunca needs no no", () => {
+    for (const sentence of [...renders("often-person"), ...renders("often-drink")]) {
+      const answer = sentence.es.split("\n")[1]!;
+      expect(answer, answer).toMatch(
+        /^(Siempre|Nunca|A veces|Normalmente|A menudo) (lo|la|los|las) \p{L}+\.$/u,
+      );
+      expect(answer).not.toMatch(/\bno\b/);
+      expect(sentence.en.split("\n")[1]).toMatch(
+        /^I (always|never|sometimes|normally|often) [a-z]+ (it|him|her|them)\.$/,
+      );
+    }
+  });
+
+  it("puts a longer phrase after the verb, starting the answer with the pronoun", () => {
+    for (const sentence of [...renders("often-people-when"), ...renders("often-buy-plural")]) {
+      const answer = sentence.es.split("\n")[1]!;
+      expect(answer, answer).toMatch(
+        /^(Los|Las) \p{L}+ (todos los días|todas las semanas|una vez a la semana|dos veces a la semana|una vez al mes)\.$/u,
+      );
+      expect(sentence.en.split("\n")[1]).toMatch(/^I [a-z]+ them /);
+    }
+  });
+
+  it("asks about things in general without an article, and the pronoun still agrees", () => {
+    for (const sentence of renders("often-drink-when")) {
+      expect(sentence.es).toMatch(/^¿Bebes \p{L}+\?\n/u);
+      // agua, leche: la; café, té, vino: lo.
+      expect(sentence.fills.p).toBe(
+        ["agua", "leche", "cerveza"].includes(sentence.fills.c!) ? "la" : "lo",
+      );
+    }
+  });
+});
+
 describe("direct object pronouns in exercises", () => {
   const targets = gapTargets(pronounFrames, { dictionary: entries });
 
@@ -196,7 +231,7 @@ describe("direct object pronouns in exercises", () => {
   });
 
   it("treats le for a person as wrong, not a slip: the class uses lo", () => {
-    const personTargets = gapTargets([frame("pronoun-person")], { dictionary: entries });
+    const personTargets = gapTargets([frame("often-person")], { dictionary: entries });
     const gap = renderGap("lo", personTargets, context(3)) as Gap;
     const blank = gap.blanks.find((candidate) => candidate.entryId === "lo")!;
     const result = gradeGap(gap, blank, "le", entry("lo"), entries);
