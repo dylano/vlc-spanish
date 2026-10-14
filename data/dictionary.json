@@ -5138,6 +5138,52 @@
       "notes": "Direct object pronoun for a feminine plural noun, before the verb: ¿Las servilletas? Las traigo. Same spelling as the article.",
       "tags": ["common-words"],
       "added": "2026-10-13"
+    },
+    {
+      "id": "soso",
+      "es": "soso",
+      "en": ["bland", "tasteless", "dull"],
+      "pos": "adj",
+      "forms": {
+        "f": "sosa"
+      },
+      "notes": "Of food, lacking salt or flavor: la sopa está sosa. Of a person, dull or boring.",
+      "tags": ["food"],
+      "added": "2026-10-14"
+    },
+    {
+      "id": "picante",
+      "es": "picante",
+      "en": ["spicy", "hot"],
+      "pos": "adj",
+      "notes": "Hot as in spicy; hot as in temperature is caliente. Same form for both genders.",
+      "tags": ["food"],
+      "added": "2026-10-14"
+    },
+    {
+      "id": "preparar",
+      "es": "preparar",
+      "en": ["to prepare", "to make", "to get ready"],
+      "pos": "verb",
+      "verb": {
+        "reflexive": false,
+        "regular": true
+      },
+      "tags": ["verbs", "food"],
+      "added": "2026-10-14"
+    },
+    {
+      "id": "consumir",
+      "es": "consumir",
+      "en": ["to consume"],
+      "pos": "verb",
+      "verb": {
+        "reflexive": false,
+        "regular": true
+      },
+      "notes": "More formal than comer or beber. On a label, 'consumir preferentemente antes de' is best before.",
+      "tags": ["verbs", "food"],
+      "added": "2026-10-14"
     }
   ]
 }

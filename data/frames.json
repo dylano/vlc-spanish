@@ -2900,7 +2900,7 @@
       "slots": {
         "v": {
           "kind": "verb",
-          "ids": ["querer", "preferir"],
+          "ids": ["querer", "preferir", "preparar"],
           "subject": "@"
         },
         "c": {
@@ -2924,7 +2924,7 @@
       "slots": {
         "v": {
           "kind": "verb",
-          "ids": ["querer", "preferir"],
+          "ids": ["querer", "preferir", "preparar"],
           "subject": "@"
         },
         "c": {
@@ -2949,7 +2949,7 @@
       "slots": {
         "v": {
           "kind": "verb",
-          "ids": ["querer", "preferir"],
+          "ids": ["querer", "preferir", "preparar"],
           "subject": "@"
         },
         "c": {
@@ -2974,7 +2974,7 @@
       "slots": {
         "v": {
           "kind": "verb",
-          "ids": ["querer", "preferir"],
+          "ids": ["querer", "preferir", "preparar"],
           "subject": "@"
         },
         "c": {
@@ -2999,7 +2999,7 @@
       "slots": {
         "v": {
           "kind": "verb",
-          "ids": ["querer", "preferir"],
+          "ids": ["querer", "preferir", "preparar"],
           "subject": "@"
         },
         "c": {
@@ -3022,7 +3022,7 @@
       "slots": {
         "v": {
           "kind": "verb",
-          "ids": ["querer", "preferir"],
+          "ids": ["querer", "preferir", "preparar"],
           "subject": "@"
         },
         "c": {
@@ -3046,7 +3046,7 @@
       "slots": {
         "v": {
           "kind": "verb",
-          "ids": ["querer", "preferir"],
+          "ids": ["querer", "preferir", "preparar"],
           "subject": "@"
         },
         "c": {
@@ -3069,7 +3069,7 @@
       "slots": {
         "v": {
           "kind": "verb",
-          "ids": ["querer", "preferir"],
+          "ids": ["querer", "preferir", "preparar"],
           "subject": "@"
         },
         "c": {
@@ -3093,7 +3093,7 @@
       "slots": {
         "v": {
           "kind": "verb",
-          "ids": ["querer", "preferir"],
+          "ids": ["querer", "preferir", "preparar"],
           "subject": "@"
         },
         "c": {
@@ -4360,6 +4360,137 @@
         }
       },
       "cloze": ["p", "w", "a", "c"]
+    },
+    {
+      "id": "taste-spicy",
+      "grammar": ["food", "ser-trait"],
+      "es": "{c:el} es {a}.",
+      "en": "{c:the} is {a}.",
+      "slots": {
+        "c": {
+          "kind": "noun",
+          "ids": ["chorizo", "salsa", "pimienta"]
+        },
+        "a": {
+          "kind": "adj",
+          "ids": ["picante"],
+          "agree": "c"
+        }
+      },
+      "cloze": ["a", "c"]
+    },
+    {
+      "id": "taste-spicy-plate",
+      "grammar": ["food", "ser-trait", "plural"],
+      "es": "{c:el} son {a}.",
+      "en": "{c:the} are {a}.",
+      "slots": {
+        "c": {
+          "kind": "noun",
+          "ids": ["nachos", "salchicha"],
+          "number": "pl"
+        },
+        "a": {
+          "kind": "adj",
+          "ids": ["picante"],
+          "agree": "c"
+        }
+      },
+      "cloze": ["a", "c"]
+    },
+    {
+      "id": "taste-bland",
+      "grammar": ["food", "ser-estar", "adj-agreement"],
+      "es": "{c:el} está {a}.",
+      "en": "{c:the} is {a}.",
+      "slots": {
+        "c": {
+          "kind": "noun",
+          "ids": ["arroz", "pollo", "ensalada", "tortilla", "salsa", "salmon"]
+        },
+        "a": {
+          "kind": "adj",
+          "ids": ["soso"],
+          "agree": "c"
+        }
+      },
+      "cloze": ["a", "c"]
+    },
+    {
+      "id": "taste-bland-plate",
+      "grammar": ["food", "ser-estar", "adj-agreement", "plural"],
+      "es": "{c:el} están {a}.",
+      "en": "{c:the} are {a}.",
+      "slots": {
+        "c": {
+          "kind": "noun",
+          "ids": ["patata", "garbanzo", "lenteja", "judia", "croqueta"],
+          "number": "pl"
+        },
+        "a": {
+          "kind": "adj",
+          "ids": ["soso"],
+          "agree": "c"
+        }
+      },
+      "cloze": ["a", "c"]
+    },
+    {
+      "id": "consume-often",
+      "grammar": ["food", "verb-conjugation", "frequency"],
+      "subjects": ["yo", "tu", "el", "nosotros", "vosotros", "ellos"],
+      "es": "{v} {c} {f}.",
+      "en": "{S} {v} {c} {f}.",
+      "slots": {
+        "v": {
+          "kind": "verb",
+          "ids": ["consumir"],
+          "subject": "@"
+        },
+        "c": {
+          "kind": "noun",
+          "ids": ["pan", "leche", "agua", "cafe", "arroz", "queso", "aceite-de-oliva"]
+        },
+        "f": {
+          "kind": "word",
+          "ids": [
+            "todos-los-dias",
+            "a-menudo",
+            "a-veces",
+            "todas-las-semanas",
+            "una-vez-a-la-semana"
+          ]
+        }
+      },
+      "cloze": ["v", "c", "f"]
+    },
+    {
+      "id": "pronoun-prepare",
+      "grammar": ["object-pronouns", "verb-conjugation", "questions", "food"],
+      "es": "¿{v} {c:el}?\nSí, {p} {w}.",
+      "en": "Do you {v} {c:the}?\nYes, I {w} {p}.",
+      "slots": {
+        "v": {
+          "kind": "verb",
+          "ids": ["preparar"],
+          "subject": "tu"
+        },
+        "c": {
+          "kind": "noun",
+          "ids": ["ensalada", "tortilla", "cafe", "te", "salsa", "arroz", "pollo"]
+        },
+        "p": {
+          "kind": "pronoun",
+          "agree": "c"
+        },
+        "w": {
+          "kind": "verb",
+          "ids": ["preparar"],
+          "subject": "yo",
+          "same": "v"
+        }
+      },
+      "cloze": ["p", "w", "c"]
     }
   ]
 }
