@@ -20,6 +20,99 @@
   margin: 10px 0 0;
 }
 
+/* What's new: a card under the greeting, board 1 on the canvas's Release note page. */
+.note {
+  display: flex;
+  gap: 8px;
+  margin-top: 22px;
+  padding: 14px 16px;
+  border: 1px solid var(--raised-edge);
+  border-left: 3px solid var(--accent);
+  border-radius: 6px;
+  background: var(--raised);
+  transition: opacity 180ms ease;
+}
+
+/* Dismissed: a quick fade, then it is gone. The twin keeps the rows in place. */
+.noteLeaving {
+  opacity: 0;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .note {
+    transition: none;
+  }
+}
+
+/* The note's invisible twin (see HomeScreen): never seen, focused or read out,
+   and the first thing to shrink when the screen is short. */
+.noteBalance {
+  visibility: hidden;
+}
+
+/* Home grows with its content rather than shrinking it, so the twin cannot give
+   way on its own. Below about 730px of height it stopped fitting and added scroll
+   (measured with a three-line note); on those screens the note simply pushes the
+   rows down, as there is no room for it otherwise. */
+@media (max-height: 740px) {
+  .noteBalance {
+    display: none;
+  }
+}
+
+.noteText {
+  flex: 1;
+  min-width: 0;
+}
+
+.noteLabel {
+  font-size: var(--label-size);
+  letter-spacing: var(--label-tracking);
+  text-transform: uppercase;
+  color: var(--accent);
+  margin: 0;
+}
+
+.noteTitle {
+  font-family: var(--serif);
+  font-size: 1.375rem;
+  line-height: 1.2;
+  margin: 4px 0 0;
+}
+
+.noteBody {
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: var(--muted);
+  margin: 6px 0 0;
+}
+
+/* A 44px target, pulled into the card's corner. */
+.noteDismiss {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  margin: -12px -14px 0 0;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+}
+
+.noteDismiss svg {
+  width: 14px;
+  height: 14px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.75;
+  stroke-linecap: round;
+}
+
 .actions {
   flex: 1;
   display: flex;

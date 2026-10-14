@@ -116,6 +116,17 @@ tangled into components.
   **Problem words · N** row opens the list. It replaced three Focus rows (new words, problem words,
   and a "Select specific exercise mode" toggle) after the "Home focus" boards on the canvas: new words
   already arrive through the reserved share, and choosing modes and categories belongs on one screen.
+- **What's new** — a short note on Home, under the greeting, about the latest change: a card with
+  a green edge, "NEW · 13 OCTOBER" (the date in the device's language, like Home's own), a title, a line or two of text and a **×** (board 1 on the
+  canvas's "Release note" page; a quieter note at the foot of Home and one in the Dictionary's
+  note style were judged too easy to miss). It shows for **7 days from its date** (`SHOW_DAYS` in
+  `src/lib/releaseNote.ts`), to new users too, and × fades it out (180 ms, none with reduced motion)
+  and hides it on that device for good: the device
+  remembers the dismissed note's date, and only a note dated later shows. Only the latest note
+  exists. The note does not move the practice rows: an invisible twin of it below them keeps them
+  centred where they are without one (it fits down to about 740px of screen height; on shorter
+  screens the twin is left out and the note pushes the rows down, there being no room otherwise). See
+  [Writing the release note](#writing-the-release-note).
 - **Custom practice** (`/custom`) — on top, **All words | Problem words · N**; then **Exercise
   modes** and **Categories** as pills, each row led by **All**. Choosing a pill narrows to it,
   several can be chosen, and clearing the last one goes back to All. With Problem words chosen the
@@ -232,13 +243,15 @@ rev-parse` locally, marked "+ local changes" when the tree is dirty), injected a
 ## Data
 
 The dictionary ships with the app (see [Working on the dictionary](#working-on-the-dictionary)).
-Everything else lives in the browser's **local storage** (`src/app/local.ts`), under five keys:
+Everything else lives in the browser's **local storage** (`src/app/local.ts`), under six keys:
 
 - `vlc-spanish:name` — the name given on first start.
 - `vlc-spanish:theme` — `light` or `dark` once chosen in Settings; absent means follow the device.
 - `vlc-spanish:session-size` — words per session from Settings; absent means 15.
 - `vlc-spanish:custom` — the last Custom practice choice: which words, and the chosen modes and
   categories (empty lists mean All).
+- `vlc-spanish:note-dismissed` — the date of the last release note dismissed with ×; a note dated
+  later shows, an edit to the same note does not.
 - `vlc-spanish:progress` — one scheduling record per entry per direction (`en→es` and `es→en` are
   separate cards, and a word is normally practiced in one direction before the other). It is saved
   whenever an answer is recorded, so leaving mid-session loses nothing.
@@ -272,6 +285,30 @@ scheduled separately in each direction. The home-screen totals are deliberately 
 and as due when either direction is ready. That matches what a session serves, since a mixed session
 asks each word at most once. Counting cards instead produces totals that exceed the dictionary size
 and a "new" count that ignores words drilled spanish → english.
+
+## Writing the release note
+
+The note on Home is `data/release-note.json`, shipped with the build like the dictionary:
+
+```json
+{
+  "date": "2026-10-14",
+  "title": "Object pronouns",
+  "body": "Sentences now practise *lo, la, los* and *las*: ¿Compras el pan? Sí, lo compro."
+}
+```
+
+- **When**: edit it in the same push as the change it announces. `date` is the first day it shows,
+  normally the deploy day; it then shows for 7 days, so an old note simply stops showing and there is
+  nothing to remove. A future date waits until that day.
+- **Text**: a title of a few words and a body of a sentence or two. Spanish words go in
+  `*asterisks*` for italics; there is no other formatting.
+- **A new note** replaces the old one and needs a **later date**: a dismissal is remembered as the
+  dismissed note's date, so a new note shows to everyone, while fixing a typo in the current one
+  does not bring it back. Two notes on the same date would hide the second; move it to the next day.
+- **No note**: the file may hold `null`. A file that does not parse shows no note rather than
+  breaking Home, and fails the tests (`src/lib/releaseNote.test.ts`), so CI catches it.
+- Claude Code reminds you after a significant update and offers a draft.
 
 ## Working on the dictionary
 
@@ -566,13 +603,6 @@ were dropped then):
   a grocery-label "NEW!" sticker was tried and dropped, and colour on the category pill (amber,
   green outline, tint, dashed) was left undecided. No practice mode or view for new words alone:
   marking the categories is enough. It may return as part of a new presentation for the categories.
-- **A "what's new" note on Home** (requested 2026-10-13, not started): a different take on the
-  marker above. A short release note written by hand with a deploy ("Added: direct object pronouns —
-  lo, la, los, las — in sentence practice"), shown on Home for a few days or until it is dismissed.
-  Home has room below its rows. To settle: where the text lives (a small file in `data/`, shipped
-  with the build like the dictionary), how long it shows (a date on the note, compared with today),
-  and remembering a dismissal per note in local storage, so the next note shows again. Board 1 on the
-  canvas's "New words" page (a notice card under the greeting) is a starting point for the look.
 
 ## Choosing words
 

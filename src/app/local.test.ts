@@ -7,9 +7,11 @@ import {
   NAME_KEY,
   PROGRESS_KEY,
   readCustom,
+  readNoteDismissed,
   readName,
   readProgress,
   writeCustom,
+  writeNoteDismissed,
   writeName,
   writeProgress,
 } from "./local.ts";
@@ -100,5 +102,17 @@ describe("custom practice choices", () => {
         memoryStorage({ [CUSTOM_KEY]: '{"words": 3, "exercises": [1, "gap"], "tags": "x"}' }),
       ),
     ).toEqual({ words: "all", exercises: ["gap"], tags: [] });
+  });
+});
+
+describe("dismissed release note", () => {
+  it("remembers the date of the note dismissed, and ignores anything else", () => {
+    const store = memoryStorage();
+    expect(readNoteDismissed(store)).toBeUndefined();
+    writeNoteDismissed("2026-10-13", store);
+    expect(readNoteDismissed(store)).toBe("2026-10-13");
+    expect(
+      readNoteDismissed(memoryStorage({ "vlc-spanish:note-dismissed": "soon" })),
+    ).toBeUndefined();
   });
 });
