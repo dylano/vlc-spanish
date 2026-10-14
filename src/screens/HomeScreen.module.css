@@ -32,6 +32,22 @@
   background: var(--raised);
 }
 
+/* The note's invisible twin (see HomeScreen): never seen, focused or read out,
+   and the first thing to shrink when the screen is short. */
+.noteBalance {
+  visibility: hidden;
+}
+
+/* Home grows with its content rather than shrinking it, so the twin cannot give
+   way on its own. Below about 730px of height it stopped fitting and added scroll
+   (measured with a three-line note); on those screens the note simply pushes the
+   rows down, as there is no room for it otherwise. */
+@media (max-height: 740px) {
+  .noteBalance {
+    display: none;
+  }
+}
+
 .noteText {
   flex: 1;
   min-width: 0;

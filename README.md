@@ -122,7 +122,9 @@ tangled into components.
   note style were judged too easy to miss). It shows for **7 days from its date** (`SHOW_DAYS` in
   `src/lib/releaseNote.ts`), to new users too, and × hides it on that device for good: the device
   remembers the dismissed note's date, and only a note dated later shows. Only the latest note
-  exists. See
+  exists. The note does not move the practice rows: an invisible twin of it below them keeps them
+  centred where they are without one (it fits down to about 740px of screen height; on shorter
+  screens the twin is left out and the note pushes the rows down, there being no room otherwise). See
   [Writing the release note](#writing-the-release-note).
 - **Custom practice** (`/custom`) — on top, **All words | Problem words · N**; then **Exercise
   modes** and **Categories** as pills, each row led by **All**. Choosing a pill narrows to it,

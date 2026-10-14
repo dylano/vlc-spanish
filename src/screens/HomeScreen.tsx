@@ -124,6 +124,15 @@ export default function HomeScreen() {
           </Link>
         ) : null}
       </div>
+
+      {/* An invisible twin of the note, below the rows: with the same space above
+          and below them, the rows stay centred where they are without a note, and
+          the note sits in the gap over them. Short screens leave it out (see the CSS). */}
+      {note ? (
+        <div className={styles.noteBalance} aria-hidden="true">
+          <Note note={note} onDismiss={() => undefined} />
+        </div>
+      ) : null}
     </section>
   );
 }
