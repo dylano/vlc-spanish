@@ -1,8 +1,22 @@
 # Spanish vocab
 
-A vocabulary drilling app for an elementary Peninsular Spanish class: one dictionary, spaced-repetition
-progress, and quizzes that grade the way a teacher would — accepting the feminine form, noticing a
-missing accent, insisting on the article.
+Vocabulary and sentence practice for an elementary Peninsular Spanish class: a searchable
+dictionary, spaced-repetition scheduling, and exercises from single words to generated sentences.
+
+<table>
+  <tr>
+    <td><img src="docs/screenshots/home.png" width="200" alt="Home: General practice, Custom practice and a what's-new note"></td>
+    <td><img src="docs/screenshots/custom.png" width="200" alt="Custom practice: exercise modes and categories chosen as pills"></td>
+    <td><img src="docs/screenshots/exercise.png" width="200" alt="Fill in the Blank: a wrong pronoun, with the note abrigo is masculine, so lo"></td>
+    <td><img src="docs/screenshots/conjugation.png" width="200" alt="Dictionary: the present tense of volver, with the o to ue stem change marked"></td>
+  </tr>
+  <tr>
+    <td align="center">Home</td>
+    <td align="center">Custom practice</td>
+    <td align="center">Fill in the Blank</td>
+    <td align="center">Dictionary: conjugation</td>
+  </tr>
+</table>
 
 It is a **single-user, fully static app**. There is no server and no account: the learner gives a
 name on first start, and their progress lives in the browser's local storage on that device.
@@ -87,6 +101,7 @@ data/
   glue.json                function words and phrases (clock times) sentences may use
   release-note.json        the "what's new" note on Home (see Writing the release note)
 design/README.md           links to the design canvases, where screens are mocked up first
+docs/screenshots/          the phone screenshots at the top of this README
 .github/workflows/         checks on every PR (see Deploying)
 ```
 
