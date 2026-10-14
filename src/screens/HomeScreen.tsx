@@ -1,7 +1,11 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { Link } from "react-router";
+import { readNoteDismissed, writeNoteDismissed } from "../app/local.ts";
+import { releaseNote } from "../app/releaseNote.ts";
 import { useStore } from "../app/store-context.ts";
+import { today } from "../lib/dates.ts";
 import { problemWords } from "../lib/problems.ts";
+import { emphasis, visibleNote, type ReleaseNote } from "../lib/releaseNote.ts";
 import styles from "./HomeScreen.module.css";
 
 const DATE_FORMAT: Intl.DateTimeFormatOptions = {
@@ -9,6 +13,33 @@ const DATE_FORMAT: Intl.DateTimeFormatOptions = {
   day: "numeric",
   month: "long",
 };
+
+const NOTE_DATE: Intl.DateTimeFormatOptions = { day: "numeric", month: "long" };
+
+/** The "what's new" card under the greeting, with × to dismiss it on this device. */
+function Note({ note, onDismiss }: { note: ReleaseNote; onDismiss: () => void }) {
+  const [y, m, d] = note.date.split("-").map(Number);
+  // In the device's language, like the date at the top of Home.
+  const when = new Intl.DateTimeFormat(undefined, NOTE_DATE).format(new Date(y!, m! - 1, d));
+  return (
+    <aside className={styles.note} aria-label="What's new">
+      <div className={styles.noteText}>
+        <p className={styles.noteLabel}>New · {when}</p>
+        <p className={styles.noteTitle}>{note.title}</p>
+        <p className={styles.noteBody}>
+          {emphasis(note.body).map((run, index) =>
+            run.italic ? <i key={index}>{run.text}</i> : <span key={index}>{run.text}</span>,
+          )}
+        </p>
+      </div>
+      <button type="button" className={styles.noteDismiss} aria-label="Dismiss" onClick={onDismiss}>
+        <svg viewBox="0 0 20 20" aria-hidden="true">
+          <path d="M5 5l10 10M15 5L5 15" />
+        </svg>
+      </button>
+    </aside>
+  );
+}
 
 function Chevron() {
   return (
@@ -32,6 +63,8 @@ function Chevron() {
 export default function HomeScreen() {
   const { name, counts, entries, progress } = useStore();
   const troubled = useMemo(() => problemWords(entries, progress).length, [entries, progress]);
+  const [dismissed, setDismissed] = useState(readNoteDismissed);
+  const note = visibleNote(releaseNote, today(), dismissed);
 
   const { due, unseen } = counts;
   // A practice session already tops itself up with new words, so it is worth
@@ -44,6 +77,16 @@ export default function HomeScreen() {
         {new Intl.DateTimeFormat(undefined, DATE_FORMAT).format(new Date())}
       </p>
       <h1 className={styles.greeting}>Hola{name ? `, ${name}` : ""}</h1>
+
+      {note ? (
+        <Note
+          note={note}
+          onDismiss={() => {
+            writeNoteDismissed(note.date);
+            setDismissed(note.date);
+          }}
+        />
+      ) : null}
 
       <div className={styles.actions}>
         {/* Two ways to start a session, the same size: everything mixed, or a

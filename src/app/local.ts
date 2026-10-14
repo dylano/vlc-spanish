@@ -2,8 +2,8 @@ import { progressBlobSchema, type ProgressBlob } from "../lib/schema.ts";
 
 /*
  * Everything the app remembers lives in this browser's local storage: the
- * learner's name, their progress, two settings (theme, session length) and the
- * last Custom practice choices. There is no server and no account, so
+ * learner's name, their progress, two settings (theme, session length), the
+ * last Custom practice choices and the release note they dismissed. There is no server and no account, so
  * progress belongs to one browser on one device.
  */
 
@@ -19,6 +19,7 @@ export const PROGRESS_KEY = "vlc-spanish:progress";
 export const THEME_KEY = "vlc-spanish:theme";
 export const SESSION_SIZE_KEY = "vlc-spanish:session-size";
 export const CUSTOM_KEY = "vlc-spanish:custom";
+export const NOTE_DISMISSED_KEY = "vlc-spanish:note-dismissed";
 
 export type Theme = "light" | "dark";
 
@@ -127,6 +128,24 @@ export function writeCustom(choice: CustomChoice, store: Storage | undefined = s
     store?.setItem(CUSTOM_KEY, JSON.stringify(choice));
   } catch {
     // The choice still applies for this visit.
+  }
+}
+
+/** The date of the last release note dismissed on this device, if any. */
+export function readNoteDismissed(store: Storage | undefined = storage()): string | undefined {
+  try {
+    const date = store?.getItem(NOTE_DISMISSED_KEY);
+    return date && /^\d{4}-\d{2}-\d{2}$/.test(date) ? date : undefined;
+  } catch {
+    return undefined;
+  }
+}
+
+export function writeNoteDismissed(date: string, store: Storage | undefined = storage()): void {
+  try {
+    store?.setItem(NOTE_DISMISSED_KEY, date);
+  } catch {
+    // Dismissed for this visit; it may show again next time.
   }
 }
 
