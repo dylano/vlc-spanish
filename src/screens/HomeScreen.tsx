@@ -1,8 +1,9 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router";
-import { readNoteDismissed, writeNoteDismissed } from "../app/local.ts";
+import { readNoteDismissed, takeJustUpdated, writeNoteDismissed } from "../app/local.ts";
 import { releaseNote } from "../app/releaseNote.ts";
 import { useStore } from "../app/store-context.ts";
+import { useUpdateCheck } from "../app/update.ts";
 import { today } from "../lib/dates.ts";
 import { problemWords } from "../lib/problems.ts";
 import { emphasis, visibleNote, type ReleaseNote } from "../lib/releaseNote.ts";
@@ -55,6 +56,49 @@ function Note({
   );
 }
 
+/** How long "Updated" stays before it fades, and the fade; the fade matches the CSS. */
+const UPDATED_SHOWN_MS = 3000;
+const UPDATED_FADE_MS = 300;
+
+/**
+ * Said once, after Home has reloaded onto a newer build: a small pill at the foot
+ * of the screen that fades after a few seconds. Tapping it dismisses it sooner.
+ */
+function UpdatedToast() {
+  const [phase, setPhase] = useState<"shown" | "leaving" | "gone">("shown");
+
+  useEffect(() => {
+    if (phase === "gone") return undefined;
+    const still = globalThis.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+    const timer = setTimeout(
+      () => {
+        setPhase(phase === "shown" ? "leaving" : "gone");
+      },
+      phase === "shown" ? UPDATED_SHOWN_MS : still ? 0 : UPDATED_FADE_MS,
+    );
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [phase]);
+
+  if (phase === "gone") return null;
+  return (
+    <button
+      type="button"
+      role="status"
+      className={`${styles.updated} ${phase === "leaving" ? styles.updatedLeaving : ""}`}
+      onClick={() => {
+        setPhase("leaving");
+      }}
+    >
+      <svg viewBox="0 0 20 20" aria-hidden="true">
+        <path d="M4 10.5l4 4 8-9" />
+      </svg>
+      Updated to the latest version
+    </button>
+  );
+}
+
 function Chevron() {
   return (
     <svg
@@ -78,6 +122,9 @@ export default function HomeScreen() {
   const { name, counts, entries, progress } = useStore();
   const troubled = useMemo(() => problemWords(entries, progress).length, [entries, progress]);
   const [dismissed, setDismissed] = useState(readNoteDismissed);
+  // Read once: the flag is cleared as it is read, so this shows once per update.
+  const [updated] = useState(takeJustUpdated);
+  useUpdateCheck();
   const [leaving, setLeaving] = useState(false);
   const note = visibleNote(releaseNote, today(), dismissed);
 
@@ -157,6 +204,7 @@ export default function HomeScreen() {
           <Note note={note} onDismiss={() => undefined} />
         </div>
       ) : null}
+      {updated ? <UpdatedToast /> : null}
     </section>
   );
 }

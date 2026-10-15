@@ -6,14 +6,18 @@ import {
   LOCAL_USER,
   NAME_KEY,
   PROGRESS_KEY,
+  markJustUpdated,
   readCustom,
   readNoteDismissed,
   readName,
   readProgress,
+  readUpdateChecked,
+  takeJustUpdated,
   writeCustom,
   writeNoteDismissed,
   writeName,
   writeProgress,
+  writeUpdateChecked,
 } from "./local.ts";
 
 function memoryStorage(initial: Record<string, string> = {}) {
@@ -22,6 +26,9 @@ function memoryStorage(initial: Record<string, string> = {}) {
     getItem: (key: string) => data.get(key) ?? null,
     setItem: (key: string, value: string) => {
       data.set(key, value);
+    },
+    removeItem: (key: string) => {
+      data.delete(key);
     },
     data,
   };
@@ -114,5 +121,25 @@ describe("dismissed release note", () => {
     expect(
       readNoteDismissed(memoryStorage({ "vlc-spanish:note-dismissed": "soon" })),
     ).toBeUndefined();
+  });
+});
+
+describe("update check", () => {
+  it("remembers when it last checked, and ignores anything that is not a time", () => {
+    const store = memoryStorage();
+    expect(readUpdateChecked(store)).toBeUndefined();
+    writeUpdateChecked(1_800_000_000_000, store);
+    expect(readUpdateChecked(store)).toBe(1_800_000_000_000);
+    expect(
+      readUpdateChecked(memoryStorage({ "vlc-spanish:update-checked": "soon" })),
+    ).toBeUndefined();
+  });
+
+  it("says Updated once after the reload, then not again", () => {
+    const store = memoryStorage();
+    expect(takeJustUpdated(store)).toBe(false);
+    markJustUpdated(store);
+    expect(takeJustUpdated(store)).toBe(true);
+    expect(takeJustUpdated(store)).toBe(false);
   });
 });

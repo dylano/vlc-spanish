@@ -183,3 +183,46 @@
   color: var(--muted);
   margin: 0;
 }
+
+/* "Updated to the latest version", after Home reloads onto a newer build: a pill
+   floating just above the nav (its height measured into --nav-height), centred. */
+.updated {
+  position: fixed;
+  left: 50%;
+  bottom: calc(var(--nav-height, 0px) + 16px);
+  transform: translateX(-50%);
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  border: none;
+  border-radius: 999px;
+  background: var(--ink);
+  color: var(--paper);
+  font-size: 0.8125rem;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: opacity 300ms ease;
+}
+
+.updated svg {
+  width: 14px;
+  height: 14px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.updatedLeaving {
+  opacity: 0;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .updated {
+    transition: none;
+  }
+}

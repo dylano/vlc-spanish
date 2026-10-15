@@ -22,10 +22,32 @@ function commitLabel(): string {
   }
 }
 
+/** Worked out once per build: baked into the app, and published as version.json. */
+const COMMIT = commitLabel();
+
+/**
+ * Publishes the build's commit as /version.json beside the app. The app compares
+ * it with its own __COMMIT__ to notice that a newer build is live (see
+ * src/app/update.ts): one value, written in two places by the same build.
+ */
+const versionFile = {
+  name: "version-file",
+  apply: "build" as const,
+  generateBundle(this: {
+    emitFile: (file: { type: "asset"; fileName: string; source: string }) => void;
+  }) {
+    this.emitFile({
+      type: "asset",
+      fileName: "version.json",
+      source: `${JSON.stringify({ commit: COMMIT })}\n`,
+    });
+  },
+};
+
 // https://vite.dev/config/
 export default defineConfig({
   define: {
-    __COMMIT__: JSON.stringify(commitLabel()),
+    __COMMIT__: JSON.stringify(COMMIT),
   },
   staged: {
     "*": "vp check --fix",
@@ -54,5 +76,5 @@ export default defineConfig({
       },
     ],
   },
-  plugins: lazyPlugins(() => [react(), babel({ presets: [reactCompilerPreset()] })]),
+  plugins: lazyPlugins(() => [react(), babel({ presets: [reactCompilerPreset()] }), versionFile]),
 });
