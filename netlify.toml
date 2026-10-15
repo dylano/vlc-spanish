@@ -18,6 +18,12 @@ for = "/sw.js"
 [headers.values]
 Cache-Control = "no-cache"
 
+# Which build is live: always asked of the server, never a cached answer.
+[[headers]]
+for = "/version.json"
+[headers.values]
+Cache-Control = "no-cache"
+
 [[headers]]
 for = "/manifest.webmanifest"
 [headers.values]

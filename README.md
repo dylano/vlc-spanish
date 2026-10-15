@@ -76,6 +76,7 @@ src/lib/          pure logic, no React, thoroughly tested
   problems.ts       the Problem words list: misses per word, most first, and which words are on it
   forms.ts          a Dictionary card's other forms: el abuelo/a, este/a/os/as, a surprising plural
   releaseNote.ts    the "what's new" note: when it shows, and its *italics*
+  update.ts         when Home checks for a newer build, and whether the live one is newer
   commits.ts        recent commits from GitHub, for the Version screen
   random.ts         seedable shuffle
   sentences/        sentence frames: renderer and checks (frames.ts), gaps (gap.ts), mistakes
@@ -84,7 +85,8 @@ src/lib/          pure logic, no React, thoroughly tested
   dates.ts          ISO calendar-date maths in whole local days
   slug.ts           stable entry ids
 src/
-  app/            store (context), local storage (local.ts), theme (theme.ts), the bundled
+  app/            store (context), local storage (local.ts), theme (theme.ts), the update check
+                  (update.ts), the bundled
                   dictionary, sentence data and release note, and the shells
   screens/        one file per screen, each with a CSS module beside it
                   (ConjugationDialog is the Dictionary's verb table, a dialog rather than a screen)
@@ -137,6 +139,19 @@ tangled into components.
   **Problem words · N** row opens the list. It replaced three Focus rows (new words, problem words,
   and a "Select specific exercise mode" toggle) after the "Home focus" boards on the canvas: new words
   already arrive through the reserved share, and choosing modes and categories belongs on one screen.
+- **Staying up to date** — an installed app resumed from the background keeps running the build
+  it had (on iOS for days), and a home-screen app has no refresh button. So Home asks the site which
+  build is live, when it opens and when the app comes back to it, at most every 6 hours
+  (`CHECK_EVERY_MS` in `src/lib/update.ts`, the time kept in `vlc-spanish:update-checked`). If a newer
+  build is live it reloads quietly — Home is never mid-session, so nothing is lost, and if a session
+  has started before the answer arrives it waits for the next visit — then shows "✓ Updated to the
+  latest version" in a pill above the nav for about 3 seconds before it fades (a tap dismisses it
+  sooner). Board D on the canvas's "Update notice" page; a visible "Update now" prompt (board B) was
+  the alternative, but a student who never tapped it would stay behind. The live build is
+  `/version.json`, written by the build from the same commit Settings shows (`__COMMIT__`, from
+  `commitLabel()` in `vite.config.ts`), and served uncached. Each deploy is its own site, so a PR
+  preview compares only with itself, and the dev server never checks. A fresh launch needs none of
+  this: the service worker loads the page network-first.
 - **What's new** — a short note on Home, under the greeting, about the latest change: a card with
   a green edge, "NEW · 13 OCTOBER" (the date in the device's language, like Home's own), a title, a line or two of text and a **×** (board 1 on the
   canvas's "Release note" page; a quieter note at the foot of Home and one in the Dictionary's
@@ -278,7 +293,7 @@ rev-parse` locally, marked "+ local changes" when the tree is dirty), injected a
 ## Data
 
 The dictionary ships with the app (see [Working on the dictionary](#working-on-the-dictionary)).
-Everything else lives in the browser's **local storage** (`src/app/local.ts`), under six keys:
+Everything else lives in the browser's **local storage** (`src/app/local.ts`), under seven keys:
 
 - `vlc-spanish:name` — the name given on first start.
 - `vlc-spanish:theme` — `light` or `dark` once chosen in Settings; absent means follow the device.
@@ -287,6 +302,9 @@ Everything else lives in the browser's **local storage** (`src/app/local.ts`), u
   categories (empty lists mean All).
 - `vlc-spanish:note-dismissed` — the date of the last release note dismissed with ×; a note dated
   later shows, an edit to the same note does not.
+- `vlc-spanish:update-checked` — when Home last asked which build is live; it asks again after 6
+  hours. (Session storage also holds `vlc-spanish:just-updated` for the moment between reloading
+  onto a newer build and saying so.)
 - `vlc-spanish:progress` — one scheduling record per entry per direction (`en→es` and `es→en` are
   separate cards, and a word is normally practiced in one direction before the other). It is saved
   whenever an answer is recorded, so leaving mid-session loses nothing.
@@ -797,7 +815,9 @@ property of the Netlify site, not something in `netlify.toml` — it is set at c
 (`netlify sites:create --name vlc-spanish`) or in the Netlify UI.
 
 The site is fully static: `pnpm run build` validates the dictionary and frames, type-checks and
-builds to `dist/`. There are no functions and no environment variables.
+builds to `dist/`, writing `version.json` beside the app for Home's update check. There are no
+functions and no environment variables. `netlify.toml` serves `sw.js`, the manifest and
+`version.json` uncached.
 
 **Checks on GitHub** (`.github/workflows/checks.yml`) run on every pull request and every push to
 `main`: `vp check` (format, lint, types), `vp test`, and the dictionary and frame validators, on

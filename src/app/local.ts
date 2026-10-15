@@ -3,7 +3,8 @@ import { progressBlobSchema, type ProgressBlob } from "../lib/schema.ts";
 /*
  * Everything the app remembers lives in this browser's local storage: the
  * learner's name, their progress, two settings (theme, session length), the
- * last Custom practice choices and the release note they dismissed. There is no server and no account, so
+ * last Custom practice choices, the release note they dismissed and when the app
+ * last checked for a newer build. There is no server and no account, so
  * progress belongs to one browser on one device.
  */
 
@@ -20,6 +21,9 @@ export const THEME_KEY = "vlc-spanish:theme";
 export const SESSION_SIZE_KEY = "vlc-spanish:session-size";
 export const CUSTOM_KEY = "vlc-spanish:custom";
 export const NOTE_DISMISSED_KEY = "vlc-spanish:note-dismissed";
+export const UPDATE_CHECKED_KEY = "vlc-spanish:update-checked";
+/** In session storage: set just before reloading onto a newer build, read once after. */
+export const JUST_UPDATED_KEY = "vlc-spanish:just-updated";
 
 export type Theme = "light" | "dark";
 
@@ -146,6 +150,55 @@ export function writeNoteDismissed(date: string, store: Storage | undefined = st
     store?.setItem(NOTE_DISMISSED_KEY, date);
   } catch {
     // Dismissed for this visit; it may show again next time.
+  }
+}
+
+/** When Home last asked which build is live (ms since the epoch), if ever. */
+export function readUpdateChecked(store: Storage | undefined = storage()): number | undefined {
+  try {
+    const value = Number(store?.getItem(UPDATE_CHECKED_KEY));
+    return Number.isFinite(value) && value > 0 ? value : undefined;
+  } catch {
+    return undefined;
+  }
+}
+
+export function writeUpdateChecked(time: number, store: Storage | undefined = storage()): void {
+  try {
+    store?.setItem(UPDATE_CHECKED_KEY, String(time));
+  } catch {
+    // It will simply ask again next time.
+  }
+}
+
+type RemovableStorage = Storage & Pick<globalThis.Storage, "removeItem">;
+
+/** Session storage: survives the reload onto a new build, not closing the app. */
+function sessionStore(): RemovableStorage | undefined {
+  try {
+    return globalThis.sessionStorage ?? undefined;
+  } catch {
+    return undefined;
+  }
+}
+
+/** Note that the app is about to reload onto a newer build, so Home can say so after. */
+export function markJustUpdated(store: RemovableStorage | undefined = sessionStore()): void {
+  try {
+    store?.setItem(JUST_UPDATED_KEY, "1");
+  } catch {
+    // The update still happens; it just is not announced.
+  }
+}
+
+/** Whether the app has just reloaded onto a newer build. Reading it clears it: said once. */
+export function takeJustUpdated(store: RemovableStorage | undefined = sessionStore()): boolean {
+  try {
+    const updated = store?.getItem(JUST_UPDATED_KEY) === "1";
+    if (updated) store?.removeItem(JUST_UPDATED_KEY);
+    return updated;
+  } catch {
+    return false;
   }
 }
 
