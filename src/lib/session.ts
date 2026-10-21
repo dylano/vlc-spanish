@@ -903,7 +903,7 @@ function rankedCards(options: BuildSessionOptions): Card[] {
       ? [...shuffle(wrong, random), ...shuffle(due, random), ...shuffle(rest, random)]
       : [
           ...interleaveNew(
-            dedupeByEntry(shuffle(due, random), config),
+            dedupeByEntry(missedFirst(shuffle(due, random)), config),
             balanceTags(shuffle(fresh, random), config.tags, random),
           ),
           ...shuffle(otherDirection, random),
@@ -942,6 +942,17 @@ export function balanceTags(
     for (const list of lists) if (row < list.length) out.push(list[row]!);
   }
   return out;
+}
+
+/**
+ * Due cards answered wrong last time first, the rest in the order given. A
+ * missed word is due the next day, but in a crowd of other due words it was
+ * often left out of the next session by the shuffle; first in line, it comes
+ * back at the next visit. Answered right, it rejoins the rest.
+ */
+function missedFirst(cards: Card[]): Card[] {
+  const missed = (card: Card) => card.progress.lastResult === "wrong";
+  return [...cards.filter(missed), ...cards.filter((card) => !missed(card))];
 }
 
 /** Reviews with a new word in every third place, each list continuing once the other runs out. */

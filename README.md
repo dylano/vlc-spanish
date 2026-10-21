@@ -668,7 +668,10 @@ a "new" marker on categories (2026-10-14; the release note covers it).
 Every session draws words from `rankedCards` in `src/lib/session.ts`, which sorts them into four
 bands:
 
-1. **Due** — reviews whose date has come.
+1. **Due** — reviews whose date has come, **words missed last time first** (`missedFirst`), the
+   rest shuffled. A missed word is due the next day, but in a crowd of other due words the shuffle
+   often left it out of the next session, so the repeats a learner saw were mostly words they already
+   knew; first in line, it comes back at the very next visit. Answered right, it rejoins the rest.
 2. **New** — words never practiced in **either** direction, each offered in one direction only.
 3. **Other direction** — the unpracticed direction of a word already met. It is not new to the
    learner, so it waits until there are no new words left rather than taking their place.
@@ -798,7 +801,12 @@ and the rival entries are passed to `grade()` so answering `estar` for `ser` exp
 instead of just failing. The validator warns about any entry with no gloss of its own and no hint.
 
 Three results feed the scheduler: `correct` advances normally, `hard` advances with reduced ease,
-`wrong` lapses the card to tomorrow. Answers also carry a strength. Typing is **recall**; picking the
+`wrong` lapses the card to tomorrow. The ladder for a word is 1 day, then 3, then the interval times
+its ease — except that a word **typed right on its very first asking** starts at
+`KNOWN_FIRST_INTERVAL` (4 days) and skips the 1- and 3-day steps: the class has covered the
+dictionary, so it is usually known, and for a student practising twice a week the 1-day step made
+every word from one visit due again at the next. A miss, an "almost", or a first answer picked
+rather than typed takes the usual ladder, and so does a word relearned after a miss. Answers also carry a strength. Typing is **recall**; picking the
 word out of a set (multiple choice, matching) is **recognition**, which is weaker evidence, so a
 correct recognition answer leaves ease alone and can never schedule a word more than
 `RECOGNITION_MAX_INTERVAL` (7) days out. It never shortens an interval already earned by recall, and a

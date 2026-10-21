@@ -4,6 +4,7 @@ import {
   EASE_FLOOR,
   EASE_START,
   forgiveMisses,
+  KNOWN_FIRST_INTERVAL,
   isDue,
   MAX_INTERVAL,
   RECOGNITION_MAX_INTERVAL,
@@ -73,8 +74,11 @@ describe("new cards", () => {
 });
 
 describe("sm-2 progression", () => {
-  it("walks the 1 → 3 → ease ladder on correct answers", () => {
-    const first = schedule(newCard(), "correct", TODAY);
+  it("walks the 1 → 3 → ease ladder on correct answers after a miss", () => {
+    // A word missed before starts again at the bottom; ease is left at the start
+    // here so the arithmetic below stays readable.
+    const relearning: Progress = { ...newCard(), lapses: 1, lastResult: "wrong" };
+    const first = schedule(relearning, "correct", TODAY);
     expect(first.interval).toBe(1);
     expect(first.due).toBe("2026-09-16");
 
@@ -86,6 +90,21 @@ describe("sm-2 progression", () => {
     // 3 days * ease (2.5 + two 0.1 bumps = 2.7) = 8.1 → 8
     expect(third.interval).toBe(8);
     expect(third.reps).toBe(3);
+  });
+
+  it("skips the 1-day and 3-day steps for a word typed right on its first asking", () => {
+    const first = schedule(newCard(), "correct", TODAY);
+    expect(first.interval).toBe(KNOWN_FIRST_INTERVAL);
+    expect(first.due).toBe("2026-09-19");
+    expect(first.reps).toBe(2);
+    // From there it grows as usual: 4 days * ease 2.7 = 10.8 → 11.
+    expect(schedule(first, "correct", first.due).interval).toBe(11);
+  });
+
+  it("keeps the 1-day step for a first answer that was almost, or picked rather than typed", () => {
+    expect(schedule(newCard(), "hard", TODAY).interval).toBe(1);
+    expect(schedule(newCard(), "correct", TODAY, "recognition").interval).toBe(1);
+    expect(schedule(newCard(), "wrong", TODAY).interval).toBe(1);
   });
 
   it("raises ease on correct answers and caps it", () => {

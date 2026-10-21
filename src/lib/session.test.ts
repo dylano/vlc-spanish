@@ -152,6 +152,33 @@ describe("buildSession", () => {
     expect(card?.progress.direction).toBe("en→es");
   });
 
+  it("puts due words missed last time ahead of the other due words", () => {
+    const due = entries.map(
+      (entry, index) =>
+        [
+          entry,
+          "en→es" as Direction,
+          {
+            due: "2026-09-01",
+            reps: 2,
+            lastResult: index === entries.length - 1 ? "wrong" : "correct",
+          },
+        ] as [Entry, Direction, Partial<ReturnType<typeof sm2.create>>],
+    );
+    const missed = entries.at(-1)!.id;
+    for (let seed = 1; seed <= 10; seed++) {
+      const cards = buildSession({
+        entries,
+        progress: withProgress(due),
+        userId: "dylan",
+        config: { ...DEFAULT_CONFIG, size: entries.length, direction: "en→es", scope: "due" },
+        today: TODAY,
+        random: seeded(seed),
+      });
+      expect(cards[0]?.entry.id).toBe(missed);
+    }
+  });
+
   it("puts due cards before unseen ones", () => {
     const progress = withProgress([[entries[0]!, "en→es", { due: "2026-09-01", reps: 3 }]]);
     const cards = buildSession({
