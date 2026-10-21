@@ -63,8 +63,9 @@ export interface Card {
   /** Entries that share this prompt's gloss, so a near-miss can be explained. */
   confusableWith: Entry[];
   /**
-   * The entry's hint, present only when the prompt is ambiguous without it. A
-   * hint on a word whose gloss is already unique would just be noise.
+   * The entry's hint, shown under the prompt: what sets it apart when its gloss
+   * is shared (ser and estar are both "to be"), or when the English points at a
+   * more common Spanish word outside the dictionary ("time" for vez, not tiempo).
    */
   hint?: string;
   /** The options for a multiple-choice card, in display order. */
@@ -985,7 +986,7 @@ function toCard(
     progress: progressFor(progress, userId, entry, direction, today),
     prompt,
     confusableWith,
-    hint: confusableWith.length > 0 ? entry.hint : undefined,
+    hint: entry.hint,
   };
 }
 

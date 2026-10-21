@@ -310,16 +310,18 @@ describe("buildSession", () => {
     }
   });
 
-  it("carries the hint only when the prompt is shared", () => {
+  it("carries an entry's hint whenever it has one, shared gloss or not", () => {
+    // vez is the only "time" in the dictionary, but learners reach for tiempo.
     const cards = buildSession({
       entries: [
         { ...ser, hint: "identity, traits, origin" },
         { ...estar, hint: "location, temporary states" },
-        { ...word("hoy", ["today"]), hint: "never needed" },
+        { ...word("vez", ["time", "occasion"]), hint: "as in once, twice" },
+        word("hoy", ["today"]),
       ],
       progress: emptyProgress(),
       userId: "dylan",
-      config: { ...DEFAULT_CONFIG, size: 3, direction: "en→es" },
+      config: { ...DEFAULT_CONFIG, size: 4, direction: "en→es" },
       today: TODAY,
       random: seeded(10),
     });
@@ -327,6 +329,7 @@ describe("buildSession", () => {
     expect(hints).toEqual({
       ser: "identity, traits, origin",
       estar: "location, temporary states",
+      vez: "as in once, twice",
       hoy: undefined,
     });
   });

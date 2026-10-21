@@ -623,6 +623,7 @@
         "pl": "veces"
       },
       "notes": "Time as in an occasion: una vez, dos veces. Not clock time.",
+      "hint": "as in once, twice",
       "tags": ["frequency"],
       "added": "2026-09-15"
     },
