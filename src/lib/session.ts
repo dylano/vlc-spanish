@@ -63,8 +63,9 @@ export interface Card {
   /** Entries that share this prompt's gloss, so a near-miss can be explained. */
   confusableWith: Entry[];
   /**
-   * The entry's hint, present only when the prompt is ambiguous without it. A
-   * hint on a word whose gloss is already unique would just be noise.
+   * The entry's hint, shown under the prompt: what sets it apart when its gloss
+   * is shared (ser and estar are both "to be"), or when the English points at a
+   * more common Spanish word outside the dictionary ("time" for vez, not tiempo).
    */
   hint?: string;
   /** The options for a multiple-choice card, in display order. */
@@ -903,7 +904,7 @@ function rankedCards(options: BuildSessionOptions): Card[] {
       ? [...shuffle(wrong, random), ...shuffle(due, random), ...shuffle(rest, random)]
       : [
           ...interleaveNew(
-            dedupeByEntry(shuffle(due, random), config),
+            dedupeByEntry(missedFirst(shuffle(due, random)), config),
             balanceTags(shuffle(fresh, random), config.tags, random),
           ),
           ...shuffle(otherDirection, random),
@@ -944,6 +945,17 @@ export function balanceTags(
   return out;
 }
 
+/**
+ * Due cards answered wrong last time first, the rest in the order given. A
+ * missed word is due the next day, but in a crowd of other due words it was
+ * often left out of the next session by the shuffle; first in line, it comes
+ * back at the next visit. Answered right, it rejoins the rest.
+ */
+function missedFirst(cards: Card[]): Card[] {
+  const missed = (card: Card) => card.progress.lastResult === "wrong";
+  return [...cards.filter(missed), ...cards.filter((card) => !missed(card))];
+}
+
 /** Reviews with a new word in every third place, each list continuing once the other runs out. */
 function interleaveNew(reviews: Card[], fresh: Card[]): Card[] {
   const out: Card[] = [];
@@ -974,7 +986,7 @@ function toCard(
     progress: progressFor(progress, userId, entry, direction, today),
     prompt,
     confusableWith,
-    hint: confusableWith.length > 0 ? entry.hint : undefined,
+    hint: entry.hint,
   };
 }
 

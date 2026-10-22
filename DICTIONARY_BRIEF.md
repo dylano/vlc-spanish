@@ -155,9 +155,11 @@ One or two sentences. Sentence case, no exclamation marks.
 **`hint`** — the quiz prompts with an English gloss, preferring one no other entry uses. When every
 gloss is shared, the prompt alone cannot say which word is meant: `ser` and `estar` are both only
 "to be". Give each such entry a short hint naming what sets it apart, lowercase, a few words:
-`"identity, traits, origin"` for `ser`, `"location, temporary states"` for `estar`. It is shown
-under the prompt only when the gloss is shared, so do not add one to entries that do not need it —
-adding a distinct gloss to `en` is usually the better fix when one exists.
+`"identity, traits, origin"` for `ser`, `"location, temporary states"` for `estar`. Add one too when
+the gloss is the entry's own but would make a learner reach for a different, more common Spanish word
+that is not in the dictionary: `vez` is "time", which most learners answer with _tiempo_, so its hint
+is `"as in once, twice"`. The hint is shown under the prompt whenever an entry has one, so keep it to
+cases like these; adding a distinct gloss to `en` is usually the better fix when one exists.
 
 **`article`** — English → Spanish quizzes expect nouns with their article, because the article is
 how gender gets tested. Omit this field for ordinary nouns. Set it only for nouns Spanish normally

@@ -152,6 +152,33 @@ describe("buildSession", () => {
     expect(card?.progress.direction).toBe("en→es");
   });
 
+  it("puts due words missed last time ahead of the other due words", () => {
+    const due = entries.map(
+      (entry, index) =>
+        [
+          entry,
+          "en→es" as Direction,
+          {
+            due: "2026-09-01",
+            reps: 2,
+            lastResult: index === entries.length - 1 ? "wrong" : "correct",
+          },
+        ] as [Entry, Direction, Partial<ReturnType<typeof sm2.create>>],
+    );
+    const missed = entries.at(-1)!.id;
+    for (let seed = 1; seed <= 10; seed++) {
+      const cards = buildSession({
+        entries,
+        progress: withProgress(due),
+        userId: "dylan",
+        config: { ...DEFAULT_CONFIG, size: entries.length, direction: "en→es", scope: "due" },
+        today: TODAY,
+        random: seeded(seed),
+      });
+      expect(cards[0]?.entry.id).toBe(missed);
+    }
+  });
+
   it("puts due cards before unseen ones", () => {
     const progress = withProgress([[entries[0]!, "en→es", { due: "2026-09-01", reps: 3 }]]);
     const cards = buildSession({
@@ -283,16 +310,18 @@ describe("buildSession", () => {
     }
   });
 
-  it("carries the hint only when the prompt is shared", () => {
+  it("carries an entry's hint whenever it has one, shared gloss or not", () => {
+    // vez is the only "time" in the dictionary, but learners reach for tiempo.
     const cards = buildSession({
       entries: [
         { ...ser, hint: "identity, traits, origin" },
         { ...estar, hint: "location, temporary states" },
-        { ...word("hoy", ["today"]), hint: "never needed" },
+        { ...word("vez", ["time", "occasion"]), hint: "as in once, twice" },
+        word("hoy", ["today"]),
       ],
       progress: emptyProgress(),
       userId: "dylan",
-      config: { ...DEFAULT_CONFIG, size: 3, direction: "en→es" },
+      config: { ...DEFAULT_CONFIG, size: 4, direction: "en→es" },
       today: TODAY,
       random: seeded(10),
     });
@@ -300,6 +329,7 @@ describe("buildSession", () => {
     expect(hints).toEqual({
       ser: "identity, traits, origin",
       estar: "location, temporary states",
+      vez: "as in once, twice",
       hoy: undefined,
     });
   });

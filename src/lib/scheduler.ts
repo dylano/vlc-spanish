@@ -17,6 +17,15 @@ export const EASE_CEILING = 3.0;
 export const FIRST_INTERVAL = 1;
 export const SECOND_INTERVAL = 3;
 
+/**
+ * The first interval for a word typed right on its very first asking, in days.
+ * The class has already covered the dictionary, so such a word is usually
+ * known: it skips the 1-day step and the 3-day one after it. For a student
+ * practising twice a week, the 1-day step meant every word from one visit was
+ * due again at the next, and early visits were largely repeats.
+ */
+export const KNOWN_FIRST_INTERVAL = 4;
+
 /** Multiplier applied to the previous interval on a "hard" answer. */
 const HARD_MULTIPLIER_FLOOR = 1.2;
 
@@ -101,10 +110,20 @@ export const sm2: Scheduler = {
       };
     }
 
-    const reps = progress.reps + 1;
+    // Right first time, by recall, on a word never answered before. A miss, an
+    // "almost", or a first answer by recognition takes the usual ladder.
+    const knownAlready =
+      progress.reps === 0 &&
+      progress.lapses === 0 &&
+      progress.lastResult === undefined &&
+      result === "correct" &&
+      strength === "recall";
+    const reps = knownAlready ? 2 : progress.reps + 1;
     let interval: number;
     const multiplierEase = recognized ? progress.ease : ease;
-    if (reps === 1) {
+    if (knownAlready) {
+      interval = KNOWN_FIRST_INTERVAL;
+    } else if (reps === 1) {
       interval = FIRST_INTERVAL;
     } else if (reps === 2) {
       interval = SECOND_INTERVAL;

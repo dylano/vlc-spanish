@@ -178,7 +178,9 @@ tangled into components.
 - **Quiz** — one prompt at a time, typed answer, inline verdict, progress bar, and a summary
   listing what to look at again. Nouns are prompted with "include the article"; the other way round, a Spanish noun is
   shown with its article (_la manzana_, _el agua_, _el/la estudiante_), as in the Dictionary. A session is full
-  screen with no main nav; the × in the header ends it (every answer is already saved). The header
+  screen with no main nav; the × in the header ends it (every answer you have moved past is saved; a
+  wrong answer still showing its feedback is saved only when Next is pressed, so it is lost if the
+  session is closed first). The header
   names the current exercise in the accent colour. The progress bar and the "4 of 15" counter count
   **words**, not steps — a matching round advances it by four and a two-blank gap by two — so a
   session always reads its full length; counting steps made the same session look a different length
@@ -307,7 +309,8 @@ Everything else lives in the browser's **local storage** (`src/app/local.ts`), u
   onto a newer build and saying so.)
 - `vlc-spanish:progress` — one scheduling record per entry per direction (`en→es` and `es→en` are
   separate cards, and a word is normally practiced in one direction before the other). It is saved
-  whenever an answer is recorded, so leaving mid-session loses nothing.
+  whenever an answer is recorded — as a card is left, so a right answer straight away and a wrong
+  one when Next is pressed — and leaving mid-session loses nothing else.
 
 The progress records still carry a `userId`, from when the app had several users on a server; it is
 always `"me"` (`LOCAL_USER`), which keeps the schema valid without a migration.
@@ -668,7 +671,10 @@ a "new" marker on categories (2026-10-14; the release note covers it).
 Every session draws words from `rankedCards` in `src/lib/session.ts`, which sorts them into four
 bands:
 
-1. **Due** — reviews whose date has come.
+1. **Due** — reviews whose date has come, **words missed last time first** (`missedFirst`), the
+   rest shuffled. A missed word is due the next day, but in a crowd of other due words the shuffle
+   often left it out of the next session, so the repeats a learner saw were mostly words they already
+   knew; first in line, it comes back at the very next visit. Answered right, it rejoins the rest.
 2. **New** — words never practiced in **either** direction, each offered in one direction only.
 3. **Other direction** — the unpracticed direction of a word already met. It is not new to the
    learner, so it waits until there are no new words left rather than taking their place.
@@ -791,14 +797,22 @@ because the naive version of the rule gets a real case wrong:
 
 Some English glosses are claimed by more than one word — `to be` is both `ser` and `estar`. The
 session builder prefers a gloss no other entry uses. Where none exists, the entry's `hint` is shown
-beside the grammar line (`verb · identity, traits, origin`) so the prompt says which word it wants,
+beside the grammar line (`verb · identity, traits, origin`) so the prompt says which word it wants.
+A hint shows whenever an entry has one, also for a gloss that is the entry's own but points at a more
+common Spanish word outside the dictionary: "time" alone gets _tiempo_, so `vez` shows
+`noun · as in once, twice`,
 (`promptDetail` in `src/screens/quiz/shared.ts`; a noun's line names no gender — the article is what
 the prompt is testing, so it would answer the question),
 and the rival entries are passed to `grade()` so answering `estar` for `ser` explains the difference
 instead of just failing. The validator warns about any entry with no gloss of its own and no hint.
 
 Three results feed the scheduler: `correct` advances normally, `hard` advances with reduced ease,
-`wrong` lapses the card to tomorrow. Answers also carry a strength. Typing is **recall**; picking the
+`wrong` lapses the card to tomorrow. The ladder for a word is 1 day, then 3, then the interval times
+its ease — except that a word **typed right on its very first asking** starts at
+`KNOWN_FIRST_INTERVAL` (4 days) and skips the 1- and 3-day steps: the class has covered the
+dictionary, so it is usually known, and for a student practising twice a week the 1-day step made
+every word from one visit due again at the next. A miss, an "almost", or a first answer picked
+rather than typed takes the usual ladder, and so does a word relearned after a miss. Answers also carry a strength. Typing is **recall**; picking the
 word out of a set (multiple choice, matching) is **recognition**, which is weaker evidence, so a
 correct recognition answer leaves ease alone and can never schedule a word more than
 `RECOGNITION_MAX_INTERVAL` (7) days out. It never shortens an interval already earned by recall, and a
