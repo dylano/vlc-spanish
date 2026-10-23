@@ -538,6 +538,21 @@ from the dictionary. The frame supplies the word order in both languages; the re
   from trait frames: "My son is very big eater" is what including them produces.
 - **Word pairings are the frame's job.** Routines are split by time of day so morning activities get
   morning times — without that the renderer happily produces _desayunamos por la tarde_.
+- **Neighbourhoods** (`barrio-*`, `place-*`, tagged `hay-estar`, `tener`, `position`): describing a
+  barrio with _hay_ and _tener_ — _En mi barrio hay un cine_, _Mi ciudad tiene muchos parques_,
+  _En mi barrio no hay hotel_ (bare after _no hay_, as Spanish says it) — and saying where a known
+  place is with _estar_: _El cine está cerca del parque_, _La biblioteca está entre el banco y la
+  tienda_, and both together, _En mi barrio hay un bar. Está al lado de la estación._ _hay_ is a
+  dictionary entry filling a `word` slot and _está_ a verb slot agreeing with its place, so Fill in
+  the Blank and Find the Mistake can test both. The English keeps _there is_ for _hay_ and _has_ for
+  _tener_, so each cue points to one structure. Adjectives describe the barrio, its venues and its
+  public places (_Las tiendas de mi barrio son caras_); _pero_ pairs only traits that contrast
+  (_moderno pero caro_), never _tranquilo pero ruidoso_. _mucho_ before an uncountable (_mucha vida
+  nocturna_) has frames of its own, since its English there is _a lot of_, not _many_. Two limits:
+  sentences about having one of something use only _mi barrio_ (a city with one bus stop reads
+  oddly), and a preposition that is a `word` slot (_al lado de_, _delante de_, _detrás de_) only
+  takes feminine places, since _de el_ only contracts to _del_ after a frame's own words, as in
+  _cerca de_ and _lejos de_.
 
 ```sh
 vp run validate:frames                     # schema, placeholders, vocabulary, every slot fillable
@@ -611,11 +626,18 @@ result really reads differently:
 | agreement (pronoun)    | _¿Tienes el queso? Sí, la tengo._  | it stands for queso, masculine singular, so lo           |
 | article                | _Trabaja en una hospital._         | hospital is masculine: un hospital                       |
 | word                   | _Hablo con mi sobrino._ ("cousin") | the sentence means cousin: primo                         |
+| hay-estar              | _En mi barrio está un cine._       | hay says what there is: hay un cine                      |
 
 A **word** swap puts in another word that fits the slot exactly as the right one does — same gender
 and number (so the article shown stays right), same person for a verb — and that means something
 else, so only the English cue gives it away. It never uses a word sharing a gloss or the headword,
 since that could be just as right.
+
+**hay and estar** are swapped only in frames tagged `hay-estar`, where the swap is plainly wrong:
+_hay_ becomes _está_ or _están_, agreeing with what follows it, and _estar_ becomes _hay_ only when
+its subject is shown with _el_ or _la_ (_El cine hay cerca_: "estar says where something known is:
+el cine está"). After _hay un cine_, a following _Está cerca_ is never broken that way, since _Hay
+cerca_ would not read as a clear mistake.
 
 Article swaps are never made on a common-gender noun (_la estudiante_ is fine) or on a contracted
 _al_/_del_, which has no article left to swap. **Which break is used is weighted**, because uniform

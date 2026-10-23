@@ -79,16 +79,44 @@ describe("making a mistake", () => {
       );
   });
 
+  it("puts está for hay, agreeing with what follows, and explains hay", () => {
+    const found = mistakes("hay");
+    expect(found.length).toBeGreaterThan(0);
+    for (const mistake of found) {
+      expect(mistake.kind).toBe("hay-estar");
+      expect(mistake.right).toBe("hay");
+      const plural = mistake.sentence.frameId.endsWith("-many");
+      expect(mistake.wrong).toBe(plural ? "están" : "está");
+      const negated = mistake.sentence.frameId === "barrio-has-none";
+      expect(mistake.explanation).toMatch(
+        negated ? /^hay says what there is: no hay / : /^hay says what there is: hay /,
+      );
+    }
+  });
+
+  it("puts hay for estar only after something known, never after hay", () => {
+    const found = mistakes("estar", 200).filter((m) => m.kind === "hay-estar");
+    expect(found.length).toBeGreaterThan(0);
+    for (const mistake of found) {
+      expect(mistake.wrong).toBe("hay");
+      expect(mistake.sentence.es).not.toMatch(/\bhay\b/i);
+      expect(mistake.explanation).toMatch(/^estar says where something known is: (el|la|los|las) /);
+    }
+  });
+
   it("always changes exactly the broken text, and the rest of the sentence reads as before", () => {
-    for (const id of ["timido", "cenar", "hospital", "enfermero", "levantarse", "alto"]) {
+    for (const id of ["timido", "cenar", "hospital", "enfermero", "levantarse", "alto", "hay"]) {
       for (const mistake of mistakes(id, 20)) {
         const shown = broken(mistake);
         expect(normalize(shown)).not.toBe(normalize(mistake.sentence.es));
-        // Case-insensitive: a broken word that starts the sentence is capitalized.
-        const restored = normalize(shown).replace(
-          normalize(mistake.wrong),
-          normalize(mistake.right),
-        );
+        // Put the right text back where the broken text is shown: the same word
+        // can appear elsewhere (entre la estación y la tienda). Case-insensitive:
+        // a broken word that starts the sentence is capitalized.
+        const tokens = mistakeTokens(mistake);
+        const first = tokens.findIndex((token) => token.broken);
+        const restored = tokens
+          .map((token, index) => (index === first ? mistake.right : token.broken ? "" : token.text))
+          .join("");
         expect(normalize(restored)).toBe(normalize(mistake.sentence.es));
       }
     }

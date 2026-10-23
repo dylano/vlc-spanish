@@ -27,7 +27,7 @@ import {
  * should be.
  */
 
-export type MistakeKind = "agreement" | "number" | "person" | "article" | "word";
+export type MistakeKind = "agreement" | "number" | "person" | "article" | "word" | "hay-estar";
 
 export interface Mistake {
   /** The sentence as it should read. */
@@ -181,6 +181,60 @@ function wordSwap(
   return undefined;
 }
 
+/** A noun slot as shown, article and all, in lower case: "el cine", "muchos parques". */
+function phraseText(sentence: RenderedSentence, slot: string): string {
+  return sentence.segments
+    .filter((part) => part.slot === slot && part.text !== "")
+    .map((part) => part.text)
+    .join(" ")
+    .toLowerCase();
+}
+
+/**
+ * hay put where estar belongs, or the other way round. hay becomes está or
+ * están, agreeing with what follows it. estar becomes hay only when its subject
+ * is shown with el or la — something known; after "hay un cine. Está cerca",
+ * "Hay cerca" would not be a clear mistake.
+ */
+function hayEstarBreak(
+  frame: Frame,
+  sentence: RenderedSentence,
+  slot: string,
+  entry: Entry,
+  right: string,
+): Break | undefined {
+  if (entry.id === "hay") {
+    const at = sentence.segments.findIndex((part) => part.slot === slot);
+    const noun = sentence.segments
+      .slice(at + 1)
+      .find((part) => part.slot && frame.slots[part.slot]?.kind === "noun")?.slot;
+    if (!noun) return undefined;
+    const number = sentence.slots[noun]?.number ?? "sg";
+    const negated = /\bno\s$/i.test(sentence.segments[at - 1]?.text ?? "");
+    const what = sentence.segments
+      .slice(at + 1)
+      .filter((part) => part.slot && part.slot !== noun && frame.slots[part.slot]?.kind === "adj")
+      .map((part) => part.text);
+    return {
+      kind: "hay-estar",
+      article: false,
+      wrong: number === "pl" ? "están" : "está",
+      right,
+      explanation: `hay says what there is: ${negated ? "no " : ""}hay ${[...what, phraseText(sentence, noun)].join(" ")}`,
+    };
+  }
+  const detail = sentence.slots[slot];
+  if (entry.id !== "estar" || !detail?.agreesWith) return undefined;
+  if (!frame.es.includes(`{${detail.agreesWith}:el}`)) return undefined;
+  return {
+    kind: "hay-estar",
+    article: false,
+    wrong: "hay",
+    right,
+    explanation: `estar says where something known is: ${phraseText(sentence, detail.agreesWith)} ${right}`,
+  };
+}
+
 /** Every way this slot of this sentence can be broken, each producing different text. */
 function breaksFor(
   frame: Frame,
@@ -305,6 +359,14 @@ function breaksFor(
       });
     }
     return out;
+  }
+
+  // hay says what there is (hay un cine, hay muchos parques); estar says where
+  // something known is (el cine está cerca). Swapped, either is plainly wrong,
+  // so only frames written for the contrast offer it.
+  if (frame.grammar.includes("hay-estar")) {
+    const hayEstar = hayEstarBreak(frame, sentence, slot, entry, right);
+    if (hayEstar) out.push(hayEstar);
   }
 
   const swap = wordSwap(frame, sentence, slot, entry, dictionary, random);

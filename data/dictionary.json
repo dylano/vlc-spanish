@@ -3198,6 +3198,15 @@
       "added": "2026-09-21"
     },
     {
+      "id": "hay",
+      "es": "hay",
+      "en": ["there is", "there are", "there's"],
+      "pos": "phrase",
+      "notes": "From haber; one form for singular and plural: hay un parque, hay muchos parques. It says what there is; to say where something known is, use estar: el parque está cerca.",
+      "tags": ["common-words"],
+      "added": "2026-10-23"
+    },
+    {
       "id": "mas",
       "es": "más",
       "en": ["more", "most"],
