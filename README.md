@@ -239,7 +239,8 @@ tangled into components.
 - **Dictionary** — search both languages (accent-insensitive, so `timido` finds `tímido`), filter
   by tag, read the notes. A card shows a word's **other forms** (`src/lib/forms.ts`): the other
   gender in shorthand on the headword when only the ending changes — _el abuelo/a_, _el
-  profesor/a_, _el diseñador/a de moda_, _simpático/a_ — keeping the masculine's article, since
+  profesor/a_, _el diseñador/a de moda_, _simpático/a_, _bien comunicado/a_ (a noun phrase changes
+  its first word, an adjective phrase its last) — keeping the masculine's article, since
   learners know _el_ becomes _la_; _este/a/os/as_ and _ese/a/os/as_ also take their plural endings,
   with "this / pl. these" beneath. Under a noun the English pairs the same way when the feminine's
   differs ("nephew / niece"). A feminine that drops an accent is written out (_el bailarín / la

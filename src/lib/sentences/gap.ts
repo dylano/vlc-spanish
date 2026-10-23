@@ -11,6 +11,7 @@ import type { Entry, VerbEntry } from "../schema.ts";
 import { verbForm } from "./conjugate.ts";
 import { SUBJECTS, type Subject } from "./english.ts";
 import {
+  adjectivePlural,
   directObjectAgreement,
   framesToTry,
   DIRECT_OBJECT,
@@ -18,7 +19,6 @@ import {
   likeForm,
   renderFrame,
   slotCandidates,
-  adjectivePlural,
   spanishPlural,
   type Frame,
   type RenderContext,

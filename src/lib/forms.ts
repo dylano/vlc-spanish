@@ -5,7 +5,7 @@ import type { Entry } from "./schema.ts";
  * What a Dictionary card shows besides the headword (board D on the canvas's
  * "Dictionary forms" page). The other gender goes in shorthand on the headword
  * when only the ending changes — el abuelo/a, el profesor/a, simpático/a,
- * este/a/os/as — with the article left as the masculine's: learners know el
+ * este/a/os/as, bien comunicado/a — with the article left as the masculine's: learners know el
  * becomes la. A feminine that drops an accent is written out (el bailarín / la
  * bailarina), and a different word is not paired at all: padre and madre each
  * have their own entry. The grammar label adds a plural that is not just -s or
@@ -40,17 +40,30 @@ export function regularPlural(singular: string, plural: string): boolean {
 const fold = (text: string) => text.normalize("NFD").replace(/\p{Diacritic}/gu, "");
 
 /**
- * How the feminine relates to the masculine, on the first word (the rest of a
- * phrase like "de moda" is the same): a shorthand ending, written out because
- * an accent drops, or unrelated.
+ * Which word of a phrase takes the gender: a noun's first (diseñador de moda),
+ * an adjective's last (bien comunicado), as in adjectivePlural.
+ */
+function inflectingWord(entry: Entry, words: string[]): number {
+  return entry.pos === "adj" ? words.length - 1 : 0;
+}
+
+/**
+ * How the feminine relates to the masculine, on the word that inflects (the
+ * rest of the phrase, "de moda" or "bien", is the same): a shorthand ending,
+ * written out because an accent drops, or unrelated.
  */
 function feminineKind(
+  entry: Entry,
   masculine: string,
   feminine: string,
 ): "o" | "plus" | "e" | "accent" | undefined {
-  const [m = "", ...rest] = masculine.split(" ");
-  const [f = "", ...fRest] = feminine.split(" ");
-  if (rest.join(" ") !== fRest.join(" ")) return undefined;
+  const mWords = masculine.split(" ");
+  const fWords = feminine.split(" ");
+  const at = inflectingWord(entry, mWords);
+  if (mWords.length !== fWords.length) return undefined;
+  if (mWords.some((word, index) => index !== at && word !== fWords[index])) return undefined;
+  const m = mWords[at]!;
+  const f = fWords[at]!;
   if (m.endsWith("o") && f === `${m.slice(0, -1)}a`) return "o";
   if (f === `${m}a`) return "plus";
   if (m.endsWith("e") && f === `${m.slice(0, -1)}a`) return "e";
@@ -58,9 +71,15 @@ function feminineKind(
   return undefined;
 }
 
-/** The headword with the shorthand ending after its first word: el diseñador/a de moda. */
-function withEnding(head: string, word: string, ending: string): Run[] {
-  const at = head.indexOf(word.split(" ")[0]!) + word.split(" ")[0]!.length;
+/**
+ * The headword with the shorthand ending after the word that inflects: el
+ * diseñador/a de moda, bien comunicado/a. The head is the entry with any
+ * article in front, so the word is found by counting from where the entry starts.
+ */
+function withEnding(entry: Entry, head: string, ending: string): Run[] {
+  const words = entry.es.split(" ");
+  const through = words.slice(0, inflectingWord(entry, words) + 1).join(" ");
+  const at = head.length - entry.es.length + through.length;
   const runs: Run[] = [{ text: head.slice(0, at) }, { text: ending, quiet: true }];
   if (at < head.length) runs.push({ text: head.slice(at) });
   return runs;
@@ -76,7 +95,7 @@ export function cardForms(entry: Entry): CardForms {
     (entry.pos === "noun" && entry.gender === "m") || entry.pos === "adj"
       ? entry.forms?.f
       : undefined;
-  const kind = feminine ? feminineKind(entry.es, feminine) : undefined;
+  const kind = feminine ? feminineKind(entry, entry.es, feminine) : undefined;
   // este/a/os/as: the plural is the surprising one, so its endings join the shorthand.
   const pluralEndings =
     kind === "e" && entry.pos === "adj" && entry.forms?.pl === `${entry.es.slice(0, -1)}os`
@@ -90,7 +109,7 @@ export function cardForms(entry: Entry): CardForms {
       { text: entry.pos === "noun" ? `la ${feminine}` : feminine },
     ];
   } else if (feminine && kind) {
-    out.spanish = withEnding(head, entry.es, pluralEndings ?? "/a");
+    out.spanish = withEnding(entry, head, pluralEndings ?? "/a");
   }
 
   if (entry.pos === "noun" && kind) {
