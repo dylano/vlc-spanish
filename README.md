@@ -101,7 +101,7 @@ data/
   dictionary.json          the dictionary, bundled into the app at build time
   frames.json              sentence frames
   glue.json                function words and phrases (clock times) sentences may use
-  release-note.json        the "what's new" note on Home (see Writing the release note)
+  release-note.json        the "what's new" notes, newest first (see Writing the release note)
 design/README.md           links to the design canvases, where screens are mocked up first
 docs/screenshots/          the phone screenshots at the top of this README
 .github/workflows/         checks on every PR (see Deploying)
@@ -158,8 +158,8 @@ tangled into components.
   note style were judged too easy to miss). It shows for **7 days from its date** (`SHOW_DAYS` in
   `src/lib/releaseNote.ts`), to new users too, and × fades it out (180 ms, none with reduced motion)
   and hides it on that device for good: the device
-  remembers the dismissed note's date, and only a note dated later shows. Only the latest note
-  exists. The note does not move the practice rows: an invisible twin of it below them keeps them
+  remembers the dismissed note's date, and only a note dated later shows. The file keeps every
+  note, but only the latest one that has started ever shows; an older one never comes back. The note does not move the practice rows: an invisible twin of it below them keeps them
   centred where they are without one. Below 740px of screen height (a breakpoint in the CSS) there
   is no room for both, so the twin is left out and the note pushes the rows down. See
   [Writing the release note](#writing-the-release-note).
@@ -344,14 +344,22 @@ and a "new" count that ignores words drilled spanish → english.
 
 ## Writing the release note
 
-The note on Home is `data/release-note.json`, shipped with the build like the dictionary:
+The notes are `data/release-note.json`, shipped with the build like the dictionary: every note
+so far, **newest first**. Home shows only the latest one that has started.
 
 ```json
-{
-  "date": "2026-10-14",
-  "title": "Object pronouns",
-  "body": "Sentences now practise *lo, la, los* and *las*: ¿Compras el pan? Sí, lo compro."
-}
+[
+  {
+    "date": "2026-10-23",
+    "title": "Barrios",
+    "body": "New words for the city and neighborhood unit, and sentences that practice *hay* and *estar*: …"
+  },
+  {
+    "date": "2026-10-13",
+    "title": "Direct object pronouns",
+    "body": "Sentences now practice *lo, la, los* and *las*: ¿Compras el pan? Sí, lo compro."
+  }
+]
 ```
 
 - **When**: edit it in the same push as the change it announces. `date` is the first day it shows,
@@ -359,11 +367,13 @@ The note on Home is `data/release-note.json`, shipped with the build like the di
   nothing to remove. A future date waits until that day.
 - **Text**: a title of a few words and a body of a sentence or two. Spanish words go in
   `*asterisks*` for italics; there is no other formatting.
-- **A new note** replaces the old one and needs a **later date**: a dismissal is remembered as the
+- **A new note** goes at the top and needs a **later date**: a dismissal is remembered as the
   dismissed note's date, so a new note shows to everyone, while fixing a typo in the current one
-  does not bring it back. Two notes on the same date would hide the second; move it to the next day.
-- **No note**: the file may hold `null`. A file that does not parse shows no note rather than
-  breaking Home, and fails the tests (`src/lib/releaseNote.test.ts`), so CI catches it.
+  does not bring it back. Old notes stay in the file as the history; they never show again on Home.
+  Two notes may not share a date (the schema refuses it, since the second would never show).
+- **No note**: an empty list. A file that does not parse shows no note rather than breaking Home,
+  and fails the tests (`src/lib/releaseNote.test.ts`), so CI catches it, along with notes out of
+  order.
 - **What earns a note**: usually a big new chunk of words or grammar (a new grammar topic, a large
   word batch), and not much more than one a week, so everyone gets a chance to see each one.
   Smaller changes show in the recent commit history (Settings → Version). When a new branch starts,
@@ -538,6 +548,22 @@ from the dictionary. The frame supplies the word order in both languages; the re
   from trait frames: "My son is very big eater" is what including them produces.
 - **Word pairings are the frame's job.** Routines are split by time of day so morning activities get
   morning times — without that the renderer happily produces _desayunamos por la tarde_.
+- **Neighbourhoods** (`barrio-*`, `place-*`, tagged `hay-estar`, `tener`, `position`): describing a
+  barrio with _hay_ and _tener_ — _En mi barrio hay un cine_, _Mi ciudad tiene muchos parques_,
+  _En mi barrio no hay hotel_ (bare after _no hay_, as Spanish says it) — and saying where a known
+  place is with _estar_: _El cine está cerca del parque_, _La biblioteca está entre el banco y la
+  tienda_, and both together, _En mi barrio hay un bar. Está al lado de la estación._ _hay_ is a
+  dictionary entry filling a `word` slot and _está_ a verb slot agreeing with its place, so Fill in
+  the Blank and Find the Mistake can test both. The English keeps _there is_ for _hay_ and _has_ for
+  _tener_, so each cue points to one structure. Adjectives describe the barrio, its venues and its
+  public places (_Las tiendas de mi barrio son caras_); _pero_ pairs only traits that contrast
+  (_moderno pero caro_), never _tranquilo pero ruidoso_. _mucho_ before an uncountable (_mucha vida
+  nocturna_) has frames of its own, since its English there is _a lot of_, not _many_; so does
+  _Mi barrio tiene mucha vida_, whose English is "My neighborhood is very lively". Two limits:
+  sentences about having one of something use only _mi barrio_ (a city with one bus stop reads
+  oddly), and a preposition that is a `word` slot (_al lado de_, _delante de_, _detrás de_) only
+  takes feminine places, since _de el_ only contracts to _del_ after a frame's own words, as in
+  _cerca de_ and _lejos de_.
 
 ```sh
 vp run validate:frames                     # schema, placeholders, vocabulary, every slot fillable
@@ -611,11 +637,18 @@ result really reads differently:
 | agreement (pronoun)    | _¿Tienes el queso? Sí, la tengo._  | it stands for queso, masculine singular, so lo           |
 | article                | _Trabaja en una hospital._         | hospital is masculine: un hospital                       |
 | word                   | _Hablo con mi sobrino._ ("cousin") | the sentence means cousin: primo                         |
+| hay-estar              | _En mi barrio está un cine._       | hay says what there is: hay un cine                      |
 
 A **word** swap puts in another word that fits the slot exactly as the right one does — same gender
 and number (so the article shown stays right), same person for a verb — and that means something
 else, so only the English cue gives it away. It never uses a word sharing a gloss or the headword,
 since that could be just as right.
+
+**hay and estar** are swapped only in frames tagged `hay-estar`, where the swap is plainly wrong:
+_hay_ becomes _está_ or _están_, agreeing with what follows it, and _estar_ becomes _hay_ only when
+its subject is shown with _el_ or _la_ (_El cine hay cerca_: "estar says where something known is:
+el cine está"). After _hay un cine_, a following _Está cerca_ is never broken that way, since _Hay
+cerca_ would not read as a clear mistake.
 
 Article swaps are never made on a common-gender noun (_la estudiante_ is fine) or on a contracted
 _al_/_del_, which has no article left to swap. **Which break is used is weighted**, because uniform
@@ -768,7 +801,9 @@ Worth knowing before you change `grade.ts`, because the tests encode all of it:
   that takes _el_ in the singular (`elSingular`, as in `el agua fría`) is asked and shown that way,
   with `las` in the plural; it stays feminine for agreement. A noun's `article` field relaxes this for words Spanish
   uses bare: `"none"` for months (answer shown as `enero`) and `"optional"` for days (shown as
-  `el lunes`). Either way the article is accepted but not asked for, and a wrong one is only `hard`. An other-gender noun (`abuela` for `abuelo`) or a conjugated
+  `el lunes`). Either way the article is accepted but not asked for, and a wrong one is only `hard`.
+  A noun's `bare` list holds other Spanish said without an article, like a name: _Correos_ for
+  _la oficina de correos_ is correct as typed. An other-gender noun (`abuela` for `abuelo`) or a conjugated
   verb (`me acuesto` for `acostarse`) is accepted but downgraded to `hard` rather than silently
   passing — they are different words than the prompt asked for. The exception is a noun whose
   feminine answers to the **same gloss the prompt showed** (`nurse` is both `enfermero` and

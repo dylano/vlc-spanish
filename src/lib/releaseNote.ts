@@ -2,10 +2,10 @@ import { z } from "zod";
 import { daysBetween, type IsoDate } from "./dates.ts";
 
 /*
- * The "what's new" note on Home: one short note, written by hand in
- * data/release-note.json and shipped with a deploy, shown for a week from its
- * date or until it is dismissed on this device. Only the latest note exists; a
- * new one replaces it.
+ * The "what's new" note on Home: short notes, written by hand in
+ * data/release-note.json and shipped with a deploy. The file keeps every note,
+ * newest first; Home shows only the latest one that has started, for a week
+ * from its date or until it is dismissed on this device.
  */
 
 /** Days a note shows, counting its date as the first. */
@@ -20,20 +20,41 @@ export const releaseNoteSchema = z.object({
 });
 export type ReleaseNote = z.infer<typeof releaseNoteSchema>;
 
-/** The file holds one note, or null for none. */
-export const releaseNoteFileSchema = releaseNoteSchema.nullable();
+/**
+ * The file holds every note, newest first. Dates are unique: a dismissal is
+ * remembered by date, so a second note on the same day would never show.
+ */
+export const releaseNoteFileSchema = z
+  .array(releaseNoteSchema)
+  .refine((notes) => new Set(notes.map((note) => note.date)).size === notes.length, {
+    message: "two notes share a date",
+  });
+
+/** The latest note whose date has come, whatever order the file is in. */
+export function currentNote(
+  notes: readonly ReleaseNote[],
+  today: IsoDate,
+): ReleaseNote | undefined {
+  let latest: ReleaseNote | undefined;
+  for (const note of notes) {
+    if (note.date <= today && (!latest || note.date > latest.date)) latest = note;
+  }
+  return latest;
+}
 
 /**
- * The note to show today, or undefined: none, not yet, over a week old, or
- * dismissed. `dismissedThrough` is the date of the last note dismissed on this
- * device; only a note dated later shows. Editing a note keeps it dismissed; a
- * second note on the same date would not show, so a new note takes a new date.
+ * The note to show today, or undefined: none yet, the latest over a week old,
+ * or dismissed. Only the latest note that has started can show; an older one
+ * never comes back, even when the latest is dismissed. `dismissedThrough` is
+ * the date of the last note dismissed on this device; only a note dated later
+ * shows, so editing a note keeps it dismissed.
  */
 export function visibleNote(
-  note: ReleaseNote | null | undefined,
+  notes: readonly ReleaseNote[],
   today: IsoDate,
   dismissedThrough: IsoDate | undefined,
 ): ReleaseNote | undefined {
+  const note = currentNote(notes, today);
   if (!note || (dismissedThrough !== undefined && note.date <= dismissedThrough)) return undefined;
   const age = daysBetween(note.date, today);
   return age >= 0 && age < SHOW_DAYS ? note : undefined;

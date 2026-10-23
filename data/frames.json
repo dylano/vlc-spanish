@@ -4716,6 +4716,1193 @@
         }
       },
       "cloze": ["p", "w", "f", "c"]
+    },
+    {
+      "id": "barrio-has-place",
+      "grammar": ["hay-estar", "articles"],
+      "es": "En mi {n} {h} {p:un}.",
+      "en": "In my {n} there is{h:none} {p:a}.",
+      "slots": {
+        "n": {
+          "kind": "noun",
+          "ids": ["barrio"]
+        },
+        "h": {
+          "kind": "word",
+          "ids": ["hay"]
+        },
+        "p": {
+          "kind": "noun",
+          "ids": [
+            "cine",
+            "escuela",
+            "hospital",
+            "bar",
+            "parque",
+            "centro-comercial",
+            "estacion-de-metro",
+            "biblioteca",
+            "parada-de-autobus",
+            "polideportivo",
+            "estadio",
+            "hotel",
+            "estacion-de-tren",
+            "oficina-de-correos",
+            "monumento",
+            "restaurante",
+            "supermercado",
+            "banco",
+            "gimnasio",
+            "universidad",
+            "zona-verde",
+            "calle-peatonal",
+            "cajero-automatico"
+          ]
+        }
+      },
+      "cloze": ["h", "p"]
+    },
+    {
+      "id": "barrio-has-many",
+      "grammar": ["hay-estar", "adj-agreement", "plural"],
+      "es": "En mi {n} {h} {q} {p}.",
+      "en": "In my {n} there are{h:none} {q} {p}.",
+      "slots": {
+        "n": {
+          "kind": "noun",
+          "ids": ["barrio", "ciudad"]
+        },
+        "h": {
+          "kind": "word",
+          "ids": ["hay"]
+        },
+        "q": {
+          "kind": "adj",
+          "ids": ["mucho", "poco", "demasiado"],
+          "agree": "p"
+        },
+        "p": {
+          "kind": "noun",
+          "ids": [
+            "cine",
+            "escuela",
+            "bar",
+            "parque",
+            "biblioteca",
+            "parada-de-autobus",
+            "hotel",
+            "monumento",
+            "restaurante",
+            "supermercado",
+            "banco",
+            "gimnasio",
+            "tienda",
+            "zona-verde",
+            "calle-peatonal",
+            "cajero-automatico",
+            "estacion-de-metro",
+            "servicios",
+            "semaforo",
+            "farola",
+            "contenedor-de-basura"
+          ],
+          "number": "pl"
+        }
+      },
+      "cloze": ["q", "h", "p"]
+    },
+    {
+      "id": "barrio-has-little",
+      "grammar": ["hay-estar", "adj-agreement"],
+      "es": "En mi {n} {h} {q} {p}.",
+      "en": "In my {n} there is{h:none} little {p}.{q:none}",
+      "slots": {
+        "n": {
+          "kind": "noun",
+          "ids": ["barrio", "ciudad"]
+        },
+        "h": {
+          "kind": "word",
+          "ids": ["hay"]
+        },
+        "q": {
+          "kind": "adj",
+          "ids": ["poco"],
+          "agree": "p"
+        },
+        "p": {
+          "kind": "noun",
+          "ids": ["vida-nocturna", "oferta-cultural"]
+        }
+      },
+      "cloze": ["q", "h"]
+    },
+    {
+      "id": "barrio-has-none",
+      "grammar": ["hay-estar", "negation"],
+      "es": "En mi {n} no {h} {p}.",
+      "en": "In my {n} there is{h:none} no {p}.",
+      "slots": {
+        "n": {
+          "kind": "noun",
+          "ids": ["barrio"]
+        },
+        "h": {
+          "kind": "word",
+          "ids": ["hay"]
+        },
+        "p": {
+          "kind": "noun",
+          "ids": [
+            "cine",
+            "escuela",
+            "hospital",
+            "bar",
+            "parque",
+            "centro-comercial",
+            "estacion-de-metro",
+            "biblioteca",
+            "parada-de-autobus",
+            "polideportivo",
+            "estadio",
+            "hotel",
+            "estacion-de-tren",
+            "oficina-de-correos",
+            "monumento",
+            "restaurante",
+            "supermercado",
+            "banco",
+            "gimnasio",
+            "universidad",
+            "zona-verde",
+            "calle-peatonal",
+            "cajero-automatico"
+          ]
+        }
+      },
+      "cloze": ["h", "p"]
+    },
+    {
+      "id": "barrio-tiene-place",
+      "grammar": ["tener", "articles", "third-person"],
+      "es": "Mi {n} {v} {p:un}.",
+      "en": "My {n} {v} {p:a}.",
+      "slots": {
+        "n": {
+          "kind": "noun",
+          "ids": ["barrio"]
+        },
+        "v": {
+          "kind": "verb",
+          "ids": ["tener"],
+          "subject": "n"
+        },
+        "p": {
+          "kind": "noun",
+          "ids": [
+            "cine",
+            "escuela",
+            "hospital",
+            "bar",
+            "parque",
+            "centro-comercial",
+            "estacion-de-metro",
+            "biblioteca",
+            "parada-de-autobus",
+            "polideportivo",
+            "estadio",
+            "hotel",
+            "estacion-de-tren",
+            "oficina-de-correos",
+            "monumento",
+            "restaurante",
+            "supermercado",
+            "banco",
+            "gimnasio",
+            "universidad",
+            "zona-verde",
+            "calle-peatonal",
+            "cajero-automatico"
+          ]
+        }
+      },
+      "cloze": ["p", "v"]
+    },
+    {
+      "id": "barrio-tiene-many",
+      "grammar": ["tener", "adj-agreement", "plural"],
+      "es": "Mi {n} {v} {q} {p}.",
+      "en": "My {n} {v} {q} {p}.",
+      "slots": {
+        "n": {
+          "kind": "noun",
+          "ids": ["barrio", "ciudad"]
+        },
+        "v": {
+          "kind": "verb",
+          "ids": ["tener"],
+          "subject": "n"
+        },
+        "q": {
+          "kind": "adj",
+          "ids": ["mucho", "poco", "demasiado"],
+          "agree": "p"
+        },
+        "p": {
+          "kind": "noun",
+          "ids": [
+            "cine",
+            "escuela",
+            "bar",
+            "parque",
+            "biblioteca",
+            "parada-de-autobus",
+            "hotel",
+            "monumento",
+            "restaurante",
+            "supermercado",
+            "banco",
+            "gimnasio",
+            "tienda",
+            "zona-verde",
+            "calle-peatonal",
+            "cajero-automatico",
+            "estacion-de-metro",
+            "servicios",
+            "semaforo",
+            "farola",
+            "contenedor-de-basura"
+          ],
+          "number": "pl"
+        }
+      },
+      "cloze": ["q", "p", "v"]
+    },
+    {
+      "id": "barrio-tiene-a-lot-of",
+      "grammar": ["tener", "adj-agreement"],
+      "es": "Mi {n} {v} {q} {p}.",
+      "en": "My {n} {v} a lot of {p}.{q:none}",
+      "slots": {
+        "n": {
+          "kind": "noun",
+          "ids": ["barrio", "ciudad"]
+        },
+        "v": {
+          "kind": "verb",
+          "ids": ["tener"],
+          "subject": "n"
+        },
+        "q": {
+          "kind": "adj",
+          "ids": ["mucho"],
+          "agree": "p"
+        },
+        "p": {
+          "kind": "noun",
+          "ids": ["vida-nocturna", "oferta-cultural"]
+        }
+      },
+      "cloze": ["q", "p"]
+    },
+    {
+      "id": "barrio-tiene-mucha-vida",
+      "grammar": ["tener", "adj-agreement"],
+      "es": "Mi {n} {v} {q} {p}.",
+      "en": "My {n} is{v:none} very lively.{q:none}{p:none}",
+      "slots": {
+        "n": {
+          "kind": "noun",
+          "ids": ["barrio", "ciudad"]
+        },
+        "v": {
+          "kind": "verb",
+          "ids": ["tener"],
+          "subject": "n"
+        },
+        "q": {
+          "kind": "adj",
+          "ids": ["mucho"],
+          "agree": "p"
+        },
+        "p": {
+          "kind": "noun",
+          "ids": ["vida"]
+        }
+      },
+      "cloze": ["p", "q", "v"]
+    },
+    {
+      "id": "barrio-is",
+      "grammar": ["ser-trait", "adj-agreement"],
+      "es": "Mi {n} es {a}.",
+      "en": "My {n} is {a}.",
+      "slots": {
+        "n": {
+          "kind": "noun",
+          "ids": ["barrio", "ciudad"]
+        },
+        "a": {
+          "kind": "adj",
+          "ids": [
+            "ruidoso",
+            "tranquilo",
+            "moderno",
+            "historico",
+            "antiguo",
+            "sucio",
+            "limpio",
+            "caro",
+            "barato",
+            "elegante",
+            "grande",
+            "pequeno",
+            "nuevo",
+            "viejo",
+            "feo"
+          ],
+          "agree": "n"
+        }
+      },
+      "cloze": ["a"]
+    },
+    {
+      "id": "barrio-is-very",
+      "grammar": ["ser-trait", "adj-agreement"],
+      "es": "Mi {n} es {q} {a}.",
+      "en": "My {n} is {q} {a}.",
+      "slots": {
+        "n": {
+          "kind": "noun",
+          "ids": ["barrio", "ciudad"]
+        },
+        "a": {
+          "kind": "adj",
+          "ids": [
+            "ruidoso",
+            "tranquilo",
+            "moderno",
+            "historico",
+            "antiguo",
+            "sucio",
+            "limpio",
+            "caro",
+            "barato",
+            "elegante",
+            "grande",
+            "pequeno",
+            "nuevo",
+            "viejo",
+            "feo"
+          ],
+          "agree": "n"
+        },
+        "q": {
+          "kind": "word",
+          "ids": ["muy", "bastante"]
+        }
+      },
+      "cloze": ["a", "q"]
+    },
+    {
+      "id": "barrio-is-but",
+      "grammar": ["ser-trait", "adj-agreement"],
+      "es": "Mi {n} es {a} pero {b}.",
+      "en": "My {n} is {a} but {b}.",
+      "slots": {
+        "n": {
+          "kind": "noun",
+          "ids": ["barrio", "ciudad"]
+        },
+        "a": {
+          "kind": "adj",
+          "ids": ["moderno", "elegante", "historico", "limpio", "nuevo", "grande"],
+          "agree": "n"
+        },
+        "b": {
+          "kind": "adj",
+          "ids": ["caro", "ruidoso"],
+          "agree": "n"
+        }
+      },
+      "cloze": ["b", "a"]
+    },
+    {
+      "id": "barrio-venue-is",
+      "grammar": ["ser-trait", "adj-agreement"],
+      "es": "{p:el} de mi {n} es {a}.",
+      "en": "{p:the} in my {n} is {a}.",
+      "slots": {
+        "n": {
+          "kind": "noun",
+          "ids": ["barrio", "ciudad"]
+        },
+        "p": {
+          "kind": "noun",
+          "ids": [
+            "bar",
+            "hotel",
+            "restaurante",
+            "cine",
+            "centro-comercial",
+            "gimnasio",
+            "polideportivo",
+            "supermercado",
+            "tienda"
+          ]
+        },
+        "a": {
+          "kind": "adj",
+          "ids": [
+            "ruidoso",
+            "tranquilo",
+            "moderno",
+            "historico",
+            "antiguo",
+            "sucio",
+            "limpio",
+            "caro",
+            "barato",
+            "elegante",
+            "grande",
+            "pequeno",
+            "nuevo",
+            "viejo",
+            "feo"
+          ],
+          "agree": "p"
+        }
+      },
+      "cloze": ["a", "p"]
+    },
+    {
+      "id": "barrio-venues-are",
+      "grammar": ["ser-trait", "adj-agreement", "plural"],
+      "es": "{p:el} de mi {n} son {a}.",
+      "en": "{p:the} in my {n} are {a}.",
+      "slots": {
+        "n": {
+          "kind": "noun",
+          "ids": ["barrio", "ciudad"]
+        },
+        "p": {
+          "kind": "noun",
+          "ids": [
+            "bar",
+            "hotel",
+            "restaurante",
+            "cine",
+            "centro-comercial",
+            "gimnasio",
+            "polideportivo",
+            "supermercado",
+            "tienda"
+          ],
+          "number": "pl"
+        },
+        "a": {
+          "kind": "adj",
+          "ids": [
+            "ruidoso",
+            "tranquilo",
+            "moderno",
+            "historico",
+            "antiguo",
+            "sucio",
+            "limpio",
+            "caro",
+            "barato",
+            "elegante",
+            "grande",
+            "pequeno",
+            "nuevo",
+            "viejo",
+            "feo"
+          ],
+          "agree": "p"
+        }
+      },
+      "cloze": ["a", "p"]
+    },
+    {
+      "id": "barrio-public-place-is",
+      "grammar": ["ser-trait", "adj-agreement"],
+      "es": "{p:el} de mi {n} es {a}.",
+      "en": "{p:the} in my {n} is {a}.",
+      "slots": {
+        "n": {
+          "kind": "noun",
+          "ids": ["barrio", "ciudad"]
+        },
+        "p": {
+          "kind": "noun",
+          "ids": [
+            "parque",
+            "biblioteca",
+            "estacion-de-metro",
+            "estacion-de-tren",
+            "calle-peatonal",
+            "zona-verde",
+            "escuela",
+            "hospital",
+            "universidad",
+            "estadio",
+            "aeropuerto"
+          ]
+        },
+        "a": {
+          "kind": "adj",
+          "ids": [
+            "ruidoso",
+            "tranquilo",
+            "moderno",
+            "antiguo",
+            "sucio",
+            "limpio",
+            "grande",
+            "pequeno",
+            "nuevo",
+            "viejo",
+            "feo"
+          ],
+          "agree": "p"
+        }
+      },
+      "cloze": ["a", "p"]
+    },
+    {
+      "id": "barrio-public-places-are",
+      "grammar": ["ser-trait", "adj-agreement", "plural"],
+      "es": "{p:el} de mi {n} son {a}.",
+      "en": "{p:the} in my {n} are {a}.",
+      "slots": {
+        "n": {
+          "kind": "noun",
+          "ids": ["barrio", "ciudad"]
+        },
+        "p": {
+          "kind": "noun",
+          "ids": [
+            "parque",
+            "biblioteca",
+            "estacion-de-metro",
+            "calle-peatonal",
+            "zona-verde",
+            "escuela"
+          ],
+          "number": "pl"
+        },
+        "a": {
+          "kind": "adj",
+          "ids": [
+            "ruidoso",
+            "tranquilo",
+            "moderno",
+            "antiguo",
+            "sucio",
+            "limpio",
+            "grande",
+            "pequeno",
+            "nuevo",
+            "viejo",
+            "feo"
+          ],
+          "agree": "p"
+        }
+      },
+      "cloze": ["a", "p"]
+    },
+    {
+      "id": "place-well-connected",
+      "grammar": ["ser-estar", "adj-agreement"],
+      "es": "{p:el} está {w} {c}.",
+      "en": "{p:the} is {w} {c}.",
+      "slots": {
+        "p": {
+          "kind": "noun",
+          "ids": [
+            "barrio",
+            "ciudad",
+            "hotel",
+            "estadio",
+            "aeropuerto",
+            "universidad",
+            "hospital",
+            "polideportivo",
+            "centro-comercial",
+            "biblioteca",
+            "escuela"
+          ]
+        },
+        "w": {
+          "kind": "word",
+          "ids": ["bien", "mal"]
+        },
+        "c": {
+          "kind": "adj",
+          "ids": ["comunicado"],
+          "agree": "p"
+        }
+      },
+      "cloze": ["w", "c"]
+    },
+    {
+      "id": "place-is-near",
+      "grammar": ["hay-estar", "position"],
+      "es": "{p:el} {v} {w}.",
+      "en": "{p:the} {v} {w}.",
+      "slots": {
+        "p": {
+          "kind": "noun",
+          "ids": [
+            "cine",
+            "escuela",
+            "hospital",
+            "bar",
+            "parque",
+            "centro-comercial",
+            "estacion-de-metro",
+            "biblioteca",
+            "parada-de-autobus",
+            "polideportivo",
+            "estadio",
+            "hotel",
+            "estacion-de-tren",
+            "oficina-de-correos",
+            "monumento",
+            "restaurante",
+            "supermercado",
+            "banco",
+            "gimnasio",
+            "universidad",
+            "cajero-automatico",
+            "contenedor-de-basura"
+          ]
+        },
+        "v": {
+          "kind": "verb",
+          "ids": ["estar"],
+          "subject": "p"
+        },
+        "w": {
+          "kind": "word",
+          "ids": ["cerca", "lejos"]
+        }
+      },
+      "cloze": ["v", "w"]
+    },
+    {
+      "id": "places-are-near",
+      "grammar": ["hay-estar", "position", "plural"],
+      "es": "{p:el} {v} {w}.",
+      "en": "{p:the} {v} {w}.",
+      "slots": {
+        "p": {
+          "kind": "noun",
+          "ids": [
+            "cine",
+            "escuela",
+            "bar",
+            "parque",
+            "centro-comercial",
+            "estacion-de-metro",
+            "biblioteca",
+            "parada-de-autobus",
+            "polideportivo",
+            "hotel",
+            "monumento",
+            "restaurante",
+            "supermercado",
+            "banco",
+            "gimnasio",
+            "cajero-automatico",
+            "contenedor-de-basura"
+          ],
+          "number": "pl"
+        },
+        "v": {
+          "kind": "verb",
+          "ids": ["estar"],
+          "subject": "p"
+        },
+        "w": {
+          "kind": "word",
+          "ids": ["cerca", "lejos"]
+        }
+      },
+      "cloze": ["v", "w"]
+    },
+    {
+      "id": "place-near-place",
+      "grammar": ["hay-estar", "position", "contraction"],
+      "es": "{p:el} {v} cerca de {q:el}.",
+      "en": "{p:the} {v} near {q:the}.",
+      "slots": {
+        "p": {
+          "kind": "noun",
+          "ids": [
+            "cine",
+            "escuela",
+            "hospital",
+            "bar",
+            "parque",
+            "centro-comercial",
+            "estacion-de-metro",
+            "biblioteca",
+            "parada-de-autobus",
+            "polideportivo",
+            "estadio",
+            "hotel",
+            "estacion-de-tren",
+            "oficina-de-correos",
+            "monumento",
+            "restaurante",
+            "supermercado",
+            "banco",
+            "gimnasio",
+            "universidad",
+            "cajero-automatico",
+            "contenedor-de-basura"
+          ]
+        },
+        "v": {
+          "kind": "verb",
+          "ids": ["estar"],
+          "subject": "p"
+        },
+        "q": {
+          "kind": "noun",
+          "ids": [
+            "cine",
+            "hospital",
+            "bar",
+            "parque",
+            "centro-comercial",
+            "estacion-de-metro",
+            "biblioteca",
+            "parada-de-autobus",
+            "polideportivo",
+            "hotel",
+            "estacion-de-tren",
+            "oficina-de-correos",
+            "monumento",
+            "restaurante",
+            "supermercado",
+            "banco",
+            "tienda",
+            "escuela"
+          ]
+        }
+      },
+      "cloze": ["v", "q", "p"]
+    },
+    {
+      "id": "place-far-from-place",
+      "grammar": ["hay-estar", "position", "contraction"],
+      "es": "{p:el} {v} lejos de {q:el}.",
+      "en": "{p:the} {v} far from {q:the}.",
+      "slots": {
+        "p": {
+          "kind": "noun",
+          "ids": [
+            "cine",
+            "escuela",
+            "hospital",
+            "bar",
+            "parque",
+            "centro-comercial",
+            "estacion-de-metro",
+            "biblioteca",
+            "parada-de-autobus",
+            "polideportivo",
+            "estadio",
+            "hotel",
+            "estacion-de-tren",
+            "oficina-de-correos",
+            "monumento",
+            "restaurante",
+            "supermercado",
+            "banco",
+            "gimnasio",
+            "universidad",
+            "cajero-automatico",
+            "contenedor-de-basura"
+          ]
+        },
+        "v": {
+          "kind": "verb",
+          "ids": ["estar"],
+          "subject": "p"
+        },
+        "q": {
+          "kind": "noun",
+          "ids": [
+            "cine",
+            "hospital",
+            "bar",
+            "parque",
+            "centro-comercial",
+            "estacion-de-metro",
+            "biblioteca",
+            "parada-de-autobus",
+            "polideportivo",
+            "hotel",
+            "estacion-de-tren",
+            "oficina-de-correos",
+            "monumento",
+            "restaurante",
+            "supermercado",
+            "banco",
+            "tienda",
+            "escuela"
+          ]
+        }
+      },
+      "cloze": ["v", "q", "p"]
+    },
+    {
+      "id": "place-next-to-place",
+      "grammar": ["hay-estar", "position", "articles"],
+      "es": "{p:el} {v} {w} {q:el}.",
+      "en": "{p:the} {v} {w} {q:the}.",
+      "slots": {
+        "p": {
+          "kind": "noun",
+          "ids": [
+            "cine",
+            "escuela",
+            "hospital",
+            "bar",
+            "parque",
+            "centro-comercial",
+            "estacion-de-metro",
+            "biblioteca",
+            "parada-de-autobus",
+            "polideportivo",
+            "estadio",
+            "hotel",
+            "estacion-de-tren",
+            "oficina-de-correos",
+            "monumento",
+            "restaurante",
+            "supermercado",
+            "banco",
+            "gimnasio",
+            "universidad",
+            "cajero-automatico",
+            "contenedor-de-basura"
+          ]
+        },
+        "v": {
+          "kind": "verb",
+          "ids": ["estar"],
+          "subject": "p"
+        },
+        "w": {
+          "kind": "word",
+          "ids": ["al-lado-de", "delante-de", "detras-de"]
+        },
+        "q": {
+          "kind": "noun",
+          "ids": [
+            "cine",
+            "hospital",
+            "bar",
+            "parque",
+            "centro-comercial",
+            "estacion-de-metro",
+            "biblioteca",
+            "parada-de-autobus",
+            "polideportivo",
+            "hotel",
+            "estacion-de-tren",
+            "oficina-de-correos",
+            "monumento",
+            "restaurante",
+            "supermercado",
+            "banco",
+            "tienda",
+            "escuela"
+          ],
+          "gender": "f"
+        }
+      },
+      "cloze": ["w", "v", "q"]
+    },
+    {
+      "id": "place-between-places",
+      "grammar": ["hay-estar", "position", "articles"],
+      "es": "{p:el} {v} {w} {q:el} y {r:el}.",
+      "en": "{p:the} {v} {w} {q:the} and {r:the}.",
+      "slots": {
+        "p": {
+          "kind": "noun",
+          "ids": [
+            "cine",
+            "escuela",
+            "hospital",
+            "bar",
+            "parque",
+            "centro-comercial",
+            "estacion-de-metro",
+            "biblioteca",
+            "parada-de-autobus",
+            "polideportivo",
+            "estadio",
+            "hotel",
+            "estacion-de-tren",
+            "oficina-de-correos",
+            "monumento",
+            "restaurante",
+            "supermercado",
+            "banco",
+            "gimnasio",
+            "universidad",
+            "cajero-automatico",
+            "contenedor-de-basura"
+          ]
+        },
+        "v": {
+          "kind": "verb",
+          "ids": ["estar"],
+          "subject": "p"
+        },
+        "w": {
+          "kind": "word",
+          "ids": ["entre"]
+        },
+        "q": {
+          "kind": "noun",
+          "ids": [
+            "cine",
+            "hospital",
+            "bar",
+            "parque",
+            "centro-comercial",
+            "estacion-de-metro",
+            "biblioteca",
+            "parada-de-autobus",
+            "polideportivo",
+            "hotel",
+            "estacion-de-tren",
+            "oficina-de-correos",
+            "monumento",
+            "restaurante",
+            "supermercado",
+            "banco",
+            "tienda",
+            "escuela"
+          ]
+        },
+        "r": {
+          "kind": "noun",
+          "ids": [
+            "cine",
+            "hospital",
+            "bar",
+            "parque",
+            "centro-comercial",
+            "estacion-de-metro",
+            "biblioteca",
+            "parada-de-autobus",
+            "polideportivo",
+            "hotel",
+            "estacion-de-tren",
+            "oficina-de-correos",
+            "monumento",
+            "restaurante",
+            "supermercado",
+            "banco",
+            "tienda",
+            "escuela"
+          ]
+        }
+      },
+      "cloze": ["w", "v", "q"]
+    },
+    {
+      "id": "barrio-has-it-is-near",
+      "grammar": ["hay-estar", "position", "contraction"],
+      "es": "En mi {n} {h} {p:un}. {v} cerca de {q:el}.",
+      "en": "In my {n} there is{h:none} {p:a}. It {v} near {q:the}.",
+      "slots": {
+        "n": {
+          "kind": "noun",
+          "ids": ["barrio"]
+        },
+        "h": {
+          "kind": "word",
+          "ids": ["hay"]
+        },
+        "p": {
+          "kind": "noun",
+          "ids": [
+            "cine",
+            "escuela",
+            "hospital",
+            "bar",
+            "parque",
+            "centro-comercial",
+            "estacion-de-metro",
+            "biblioteca",
+            "parada-de-autobus",
+            "polideportivo",
+            "estadio",
+            "hotel",
+            "estacion-de-tren",
+            "oficina-de-correos",
+            "monumento",
+            "restaurante",
+            "supermercado",
+            "banco",
+            "gimnasio",
+            "universidad",
+            "cajero-automatico"
+          ]
+        },
+        "v": {
+          "kind": "verb",
+          "ids": ["estar"],
+          "subject": "p"
+        },
+        "q": {
+          "kind": "noun",
+          "ids": [
+            "cine",
+            "hospital",
+            "bar",
+            "parque",
+            "centro-comercial",
+            "estacion-de-metro",
+            "biblioteca",
+            "parada-de-autobus",
+            "polideportivo",
+            "hotel",
+            "estacion-de-tren",
+            "oficina-de-correos",
+            "monumento",
+            "restaurante",
+            "supermercado",
+            "banco",
+            "tienda",
+            "escuela"
+          ]
+        }
+      },
+      "cloze": ["h", "v", "p"]
+    },
+    {
+      "id": "barrio-has-it-is-next-to",
+      "grammar": ["hay-estar", "position", "articles"],
+      "es": "En mi {n} {h} {p:un}. {v} {w} {q:el}.",
+      "en": "In my {n} there is{h:none} {p:a}. It {v} {w} {q:the}.",
+      "slots": {
+        "n": {
+          "kind": "noun",
+          "ids": ["barrio"]
+        },
+        "h": {
+          "kind": "word",
+          "ids": ["hay"]
+        },
+        "p": {
+          "kind": "noun",
+          "ids": [
+            "cine",
+            "escuela",
+            "hospital",
+            "bar",
+            "parque",
+            "centro-comercial",
+            "estacion-de-metro",
+            "biblioteca",
+            "parada-de-autobus",
+            "polideportivo",
+            "estadio",
+            "hotel",
+            "estacion-de-tren",
+            "oficina-de-correos",
+            "monumento",
+            "restaurante",
+            "supermercado",
+            "banco",
+            "gimnasio",
+            "universidad",
+            "cajero-automatico"
+          ]
+        },
+        "v": {
+          "kind": "verb",
+          "ids": ["estar"],
+          "subject": "p"
+        },
+        "w": {
+          "kind": "word",
+          "ids": ["al-lado-de", "delante-de", "detras-de"]
+        },
+        "q": {
+          "kind": "noun",
+          "ids": [
+            "cine",
+            "hospital",
+            "bar",
+            "parque",
+            "centro-comercial",
+            "estacion-de-metro",
+            "biblioteca",
+            "parada-de-autobus",
+            "polideportivo",
+            "hotel",
+            "estacion-de-tren",
+            "oficina-de-correos",
+            "monumento",
+            "restaurante",
+            "supermercado",
+            "banco",
+            "tienda",
+            "escuela"
+          ],
+          "gender": "f"
+        }
+      },
+      "cloze": ["h", "v", "w"]
+    },
+    {
+      "id": "days-go-to-place",
+      "grammar": ["days", "contraction", "verb-conjugation"],
+      "subjects": ["yo", "tu", "nosotros", "vosotros", "ellos"],
+      "es": "Los {d} {v} a {w:el}.",
+      "en": "On {d} {S} {v} to {w:the}.",
+      "slots": {
+        "d": {
+          "kind": "noun",
+          "tags": ["days"],
+          "number": "pl"
+        },
+        "v": {
+          "kind": "verb",
+          "ids": ["ir"],
+          "subject": "@"
+        },
+        "w": {
+          "kind": "noun",
+          "ids": [
+            "cine",
+            "parque",
+            "polideportivo",
+            "biblioteca",
+            "centro-comercial",
+            "bar",
+            "estadio",
+            "oficina-de-correos",
+            "cajero-automatico",
+            "monumento",
+            "zona-verde",
+            "calle-peatonal"
+          ]
+        }
+      },
+      "cloze": ["w", "v", "d"]
     }
   ]
 }

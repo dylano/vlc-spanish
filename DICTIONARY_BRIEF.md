@@ -64,6 +64,7 @@ interface NounEntry extends EntryBase {
   number?: "pl" | "sg"; // "pl": the headword itself is plural (los padres); "sg": no plural (la ropa interior)
   elSingular?: boolean; // feminine but el/un in the singular: el agua, un águila
   enF?: string[]; // English for forms.f, most natural first; required alongside forms.f
+  bare?: string[]; // other Spanish said without an article, accepted as correct: ["Correos"]
   forms?: { f?: string; m?: string; pl?: string };
 }
 

@@ -65,7 +65,13 @@ function worst(a: Result, b: Result): Result {
  * different words or different forms than the prompt asked for, so they are
  * accepted but downgraded rather than silently marked right.
  */
-type CandidateKind = "exact" | "inflection" | "other-gender" | "conjugation" | "missing-reflexive";
+type CandidateKind =
+  | "exact"
+  | "inflection"
+  | "bare"
+  | "other-gender"
+  | "conjugation"
+  | "missing-reflexive";
 
 interface Candidate {
   text: string;
@@ -135,6 +141,8 @@ export function spanishCandidates(entry: Entry, prompt?: string): Candidate[] {
           label: "the masculine",
         });
       }
+      // No article to check: a name is said bare (voy a Correos).
+      for (const text of entry.bare ?? []) out.push({ text, kind: "bare" });
       break;
     }
     case "adj": {
@@ -279,6 +287,7 @@ function findBestMatch(entry: Entry, answer: string, prompt?: string): Match | u
 const SEVERITY_BY_KIND: Record<CandidateKind, number> = {
   exact: 0,
   inflection: 1,
+  bare: 1,
   "missing-reflexive": 2,
   "other-gender": 3,
   conjugation: 4,
@@ -333,6 +342,7 @@ function gradeSpanish(entry: Entry, answer: string, opts: GradeOptions): Grade {
   switch (match.candidate.kind) {
     case "exact":
     case "inflection":
+    case "bare":
       break;
     case "missing-reflexive":
       result = worst(result, "hard");
@@ -363,7 +373,10 @@ function gradeSpanish(entry: Entry, answer: string, opts: GradeOptions): Grade {
   // Articles, nouns only.
   if (entry.pos === "noun") {
     const wanted = match.candidate.article;
-    if (match.hadArticle && wanted && match.article !== wanted) {
+    if (match.candidate.kind === "bare" && match.hadArticle) {
+      result = worst(result, "hard");
+      notes.push(`${match.candidate.text} goes without an article`);
+    } else if (match.hadArticle && wanted && match.article !== wanted) {
       result = worst(result, requireArticle ? "wrong" : "hard");
       // Name the gender of the form actually matched: "el camarera" is a mistake
       // about camarera, which is feminine even though camarero is not.

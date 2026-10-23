@@ -2235,7 +2235,7 @@
       "forms": {
         "pl": "hospitales"
       },
-      "tags": ["workplaces"],
+      "tags": ["workplaces", "barrio"],
       "added": "2026-09-16"
     },
     {
@@ -2261,7 +2261,7 @@
         "pl": "bares"
       },
       "notes": "In Spain a bar serves coffee and breakfast as much as drinks, so it is often closer to a café.",
-      "tags": ["workplaces"],
+      "tags": ["workplaces", "barrio"],
       "added": "2026-09-16"
     },
     {
@@ -2334,7 +2334,7 @@
         "pl": "escuelas"
       },
       "notes": "In Spain a primary or secondary school is usually 'el colegio' (el cole); escuela is common for specialist schools, as in escuela de idiomas.",
-      "tags": ["workplaces"],
+      "tags": ["workplaces", "barrio"],
       "added": "2026-09-16"
     },
     {
@@ -3198,6 +3198,15 @@
       "added": "2026-09-21"
     },
     {
+      "id": "hay",
+      "es": "hay",
+      "en": ["there is", "there are", "there's"],
+      "pos": "phrase",
+      "notes": "From haber; one form for singular and plural: hay un parque, hay muchos parques. It says what there is; to say where something known is, use estar: el parque está cerca.",
+      "tags": ["common-words"],
+      "added": "2026-10-23"
+    },
+    {
       "id": "mas",
       "es": "más",
       "en": ["more", "most"],
@@ -3379,7 +3388,8 @@
       },
       "notes": "For people 'mayor' is the polite word.",
       "tags": ["common-words"],
-      "added": "2026-09-21"
+      "added": "2026-09-21",
+      "hint": "old as in aged, worn"
     },
     {
       "id": "otro",
@@ -5185,6 +5195,439 @@
       "notes": "More formal than comer or beber. On a label, 'consumir preferentemente antes de' is best before.",
       "tags": ["verbs", "food"],
       "added": "2026-10-14"
+    },
+    {
+      "id": "barrio",
+      "es": "barrio",
+      "en": ["neighborhood", "neighbourhood", "district", "area"],
+      "pos": "noun",
+      "gender": "m",
+      "forms": {
+        "pl": "barrios"
+      },
+      "tags": ["barrio"],
+      "added": "2026-10-23"
+    },
+    {
+      "id": "ciudad",
+      "es": "ciudad",
+      "en": ["city", "town"],
+      "pos": "noun",
+      "gender": "f",
+      "forms": {
+        "pl": "ciudades"
+      },
+      "tags": ["barrio"],
+      "added": "2026-10-23"
+    },
+    {
+      "id": "ruidoso",
+      "es": "ruidoso",
+      "en": ["noisy", "loud"],
+      "pos": "adj",
+      "forms": {
+        "f": "ruidosa"
+      },
+      "tags": ["barrio"],
+      "added": "2026-10-23"
+    },
+    {
+      "id": "tranquilo",
+      "es": "tranquilo",
+      "en": ["quiet", "peaceful", "calm", "tranquil"],
+      "pos": "adj",
+      "forms": {
+        "f": "tranquila"
+      },
+      "tags": ["barrio"],
+      "added": "2026-10-23"
+    },
+    {
+      "id": "moderno",
+      "es": "moderno",
+      "en": ["modern"],
+      "pos": "adj",
+      "forms": {
+        "f": "moderna"
+      },
+      "tags": ["barrio"],
+      "added": "2026-10-23"
+    },
+    {
+      "id": "historico",
+      "es": "histórico",
+      "en": ["historic", "historical"],
+      "pos": "adj",
+      "forms": {
+        "f": "histórica"
+      },
+      "tags": ["barrio"],
+      "added": "2026-10-23"
+    },
+    {
+      "id": "antiguo",
+      "es": "antiguo",
+      "en": ["ancient", "old", "antique", "former"],
+      "pos": "adj",
+      "forms": {
+        "f": "antigua"
+      },
+      "hint": "old as in historic, long-standing",
+      "notes": "Old as in long-standing or historic: un barrio antiguo. Old as in aged or worn is viejo. Before a noun it means former: mi antiguo trabajo.",
+      "tags": ["barrio"],
+      "added": "2026-10-23"
+    },
+    {
+      "id": "sucio",
+      "es": "sucio",
+      "en": ["dirty"],
+      "pos": "adj",
+      "forms": {
+        "f": "sucia"
+      },
+      "tags": ["barrio"],
+      "added": "2026-10-23"
+    },
+    {
+      "id": "limpio",
+      "es": "limpio",
+      "en": ["clean"],
+      "pos": "adj",
+      "forms": {
+        "f": "limpia"
+      },
+      "tags": ["barrio"],
+      "added": "2026-10-23"
+    },
+    {
+      "id": "caro",
+      "es": "caro",
+      "en": ["expensive", "pricey", "dear"],
+      "pos": "adj",
+      "forms": {
+        "f": "cara"
+      },
+      "tags": ["barrio"],
+      "added": "2026-10-23"
+    },
+    {
+      "id": "barato",
+      "es": "barato",
+      "en": ["cheap", "inexpensive"],
+      "pos": "adj",
+      "forms": {
+        "f": "barata"
+      },
+      "tags": ["barrio"],
+      "added": "2026-10-23"
+    },
+    {
+      "id": "elegante",
+      "es": "elegante",
+      "en": ["elegant", "stylish", "classy"],
+      "pos": "adj",
+      "tags": ["barrio"],
+      "added": "2026-10-23"
+    },
+    {
+      "id": "comunicado",
+      "es": "comunicado",
+      "en": ["connected", "served by transport"],
+      "pos": "adj",
+      "forms": {
+        "f": "comunicada"
+      },
+      "hint": "by transport: bien or mal comunicado",
+      "notes": "With estar and bien or mal: el barrio está bien comunicado, well connected by public transport; mal comunicado, poorly connected.",
+      "tags": ["barrio"],
+      "added": "2026-10-23"
+    },
+    {
+      "id": "zona-verde",
+      "es": "zona verde",
+      "en": ["green space", "green area", "park area"],
+      "pos": "noun",
+      "gender": "f",
+      "forms": {
+        "pl": "zonas verdes"
+      },
+      "tags": ["barrio"],
+      "added": "2026-10-23"
+    },
+    {
+      "id": "cine",
+      "es": "cine",
+      "en": ["cinema", "movie theater", "movies"],
+      "pos": "noun",
+      "gender": "m",
+      "forms": {
+        "pl": "cines"
+      },
+      "tags": ["barrio"],
+      "added": "2026-10-23"
+    },
+    {
+      "id": "calle-peatonal",
+      "es": "calle peatonal",
+      "en": ["pedestrian street", "pedestrianised street", "pedestrianized street"],
+      "pos": "noun",
+      "gender": "f",
+      "forms": {
+        "pl": "calles peatonales"
+      },
+      "tags": ["barrio"],
+      "added": "2026-10-23"
+    },
+    {
+      "id": "servicios",
+      "es": "servicios",
+      "en": ["amenities", "services", "facilities"],
+      "pos": "noun",
+      "gender": "m",
+      "number": "pl",
+      "notes": "Amenities: shops, health centre, transport. On its own, el servicio often means the toilet in Spain.",
+      "tags": ["barrio"],
+      "added": "2026-10-23"
+    },
+    {
+      "id": "oferta-cultural",
+      "es": "oferta cultural",
+      "en": ["cultural life", "cultural offering", "arts and culture", "culture", "cultural scene"],
+      "pos": "noun",
+      "gender": "f",
+      "number": "sg",
+      "notes": "What a place offers in museums, theatre and concerts: una ciudad con mucha oferta cultural.",
+      "tags": ["barrio"],
+      "added": "2026-10-23"
+    },
+    {
+      "id": "vida",
+      "es": "vida",
+      "en": ["life"],
+      "pos": "noun",
+      "gender": "f",
+      "forms": {
+        "pl": "vidas"
+      },
+      "notes": "Mi barrio tiene mucha vida: my neighborhood is lively, with lots going on. Vida nocturna is the nightlife.",
+      "tags": ["barrio"],
+      "added": "2026-10-23"
+    },
+    {
+      "id": "vida-nocturna",
+      "es": "vida nocturna",
+      "en": ["nightlife", "night life"],
+      "pos": "noun",
+      "gender": "f",
+      "number": "sg",
+      "tags": ["barrio"],
+      "added": "2026-10-23"
+    },
+    {
+      "id": "parque",
+      "es": "parque",
+      "en": ["park"],
+      "pos": "noun",
+      "gender": "m",
+      "forms": {
+        "pl": "parques"
+      },
+      "tags": ["barrio"],
+      "added": "2026-10-23"
+    },
+    {
+      "id": "centro-comercial",
+      "es": "centro comercial",
+      "en": ["shopping centre", "shopping center", "mall", "shopping mall"],
+      "pos": "noun",
+      "gender": "m",
+      "forms": {
+        "pl": "centros comerciales"
+      },
+      "tags": ["barrio"],
+      "added": "2026-10-23"
+    },
+    {
+      "id": "estacion-de-metro",
+      "es": "estación de metro",
+      "en": ["metro station", "underground station", "subway station", "tube station"],
+      "pos": "noun",
+      "gender": "f",
+      "forms": {
+        "pl": "estaciones de metro"
+      },
+      "tags": ["barrio"],
+      "added": "2026-10-23"
+    },
+    {
+      "id": "biblioteca",
+      "es": "biblioteca",
+      "en": ["library"],
+      "pos": "noun",
+      "gender": "f",
+      "forms": {
+        "pl": "bibliotecas"
+      },
+      "notes": "False friend: a library. A bookshop is una librería.",
+      "tags": ["barrio"],
+      "added": "2026-10-23"
+    },
+    {
+      "id": "parada-de-autobus",
+      "es": "parada de autobús",
+      "en": ["bus stop"],
+      "pos": "noun",
+      "gender": "f",
+      "forms": {
+        "pl": "paradas de autobús"
+      },
+      "tags": ["barrio"],
+      "added": "2026-10-23"
+    },
+    {
+      "id": "polideportivo",
+      "es": "polideportivo",
+      "en": ["sports centre", "sports center", "leisure centre"],
+      "pos": "noun",
+      "gender": "m",
+      "forms": {
+        "pl": "polideportivos"
+      },
+      "tags": ["barrio"],
+      "added": "2026-10-23"
+    },
+    {
+      "id": "estadio",
+      "es": "estadio",
+      "en": ["stadium"],
+      "pos": "noun",
+      "gender": "m",
+      "forms": {
+        "pl": "estadios"
+      },
+      "tags": ["barrio"],
+      "added": "2026-10-23"
+    },
+    {
+      "id": "hotel",
+      "es": "hotel",
+      "en": ["hotel"],
+      "pos": "noun",
+      "gender": "m",
+      "forms": {
+        "pl": "hoteles"
+      },
+      "tags": ["barrio"],
+      "added": "2026-10-23"
+    },
+    {
+      "id": "estacion-de-tren",
+      "es": "estación de tren",
+      "en": ["train station", "railway station"],
+      "pos": "noun",
+      "gender": "f",
+      "forms": {
+        "pl": "estaciones de tren"
+      },
+      "tags": ["barrio"],
+      "added": "2026-10-23"
+    },
+    {
+      "id": "aeropuerto",
+      "es": "aeropuerto",
+      "en": ["airport"],
+      "pos": "noun",
+      "gender": "m",
+      "forms": {
+        "pl": "aeropuertos"
+      },
+      "tags": ["barrio"],
+      "added": "2026-10-23"
+    },
+    {
+      "id": "semaforo",
+      "es": "semáforo",
+      "en": ["traffic light", "traffic lights", "stoplight"],
+      "pos": "noun",
+      "gender": "m",
+      "forms": {
+        "pl": "semáforos"
+      },
+      "tags": ["barrio"],
+      "added": "2026-10-23"
+    },
+    {
+      "id": "cajero-automatico",
+      "es": "cajero automático",
+      "en": ["ATM", "cash machine", "cashpoint"],
+      "pos": "noun",
+      "gender": "m",
+      "forms": {
+        "pl": "cajeros automáticos"
+      },
+      "notes": "Often just el cajero, which can also mean the cashier.",
+      "tags": ["barrio"],
+      "added": "2026-10-23"
+    },
+    {
+      "id": "oficina-de-correos",
+      "es": "oficina de correos",
+      "en": ["post office"],
+      "bare": ["Correos"],
+      "pos": "noun",
+      "gender": "f",
+      "forms": {
+        "pl": "oficinas de correos"
+      },
+      "notes": "Often just Correos, the name of the postal service: voy a Correos.",
+      "tags": ["barrio"],
+      "added": "2026-10-23"
+    },
+    {
+      "id": "monumento",
+      "es": "monumento",
+      "en": ["monument", "landmark"],
+      "pos": "noun",
+      "gender": "m",
+      "forms": {
+        "pl": "monumentos"
+      },
+      "tags": ["barrio"],
+      "added": "2026-10-23"
+    },
+    {
+      "id": "contenedor-de-basura",
+      "es": "contenedor de basura",
+      "en": [
+        "trash container",
+        "rubbish container",
+        "garbage container",
+        "street bin",
+        "wheelie bin",
+        "garbage bin",
+        "rubbish bin"
+      ],
+      "pos": "noun",
+      "gender": "m",
+      "forms": {
+        "pl": "contenedores de basura"
+      },
+      "hint": "the big one on the street",
+      "notes": "The small bin indoors is la papelera.",
+      "tags": ["barrio"],
+      "added": "2026-10-23"
+    },
+    {
+      "id": "farola",
+      "es": "farola",
+      "en": ["streetlight", "street lamp", "lamppost"],
+      "pos": "noun",
+      "gender": "f",
+      "forms": {
+        "pl": "farolas"
+      },
+      "tags": ["barrio"],
+      "added": "2026-10-23"
     }
   ]
 }
