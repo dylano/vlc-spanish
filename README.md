@@ -558,7 +558,8 @@ from the dictionary. The frame supplies the word order in both languages; the re
   _tener_, so each cue points to one structure. Adjectives describe the barrio, its venues and its
   public places (_Las tiendas de mi barrio son caras_); _pero_ pairs only traits that contrast
   (_moderno pero caro_), never _tranquilo pero ruidoso_. _mucho_ before an uncountable (_mucha vida
-  nocturna_) has frames of its own, since its English there is _a lot of_, not _many_. Two limits:
+  nocturna_) has frames of its own, since its English there is _a lot of_, not _many_; so does
+  _Mi barrio tiene mucha vida_, whose English is "My neighborhood is very lively". Two limits:
   sentences about having one of something use only _mi barrio_ (a city with one bus stop reads
   oddly), and a preposition that is a `word` slot (_al lado de_, _delante de_, _detrás de_) only
   takes feminine places, since _de el_ only contracts to _del_ after a frame's own words, as in

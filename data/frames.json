@@ -5006,6 +5006,33 @@
       "cloze": ["q", "p"]
     },
     {
+      "id": "barrio-tiene-mucha-vida",
+      "grammar": ["tener", "adj-agreement"],
+      "es": "Mi {n} {v} {q} {p}.",
+      "en": "My {n} is{v:none} very lively.{q:none}{p:none}",
+      "slots": {
+        "n": {
+          "kind": "noun",
+          "ids": ["barrio", "ciudad"]
+        },
+        "v": {
+          "kind": "verb",
+          "ids": ["tener"],
+          "subject": "n"
+        },
+        "q": {
+          "kind": "adj",
+          "ids": ["mucho"],
+          "agree": "p"
+        },
+        "p": {
+          "kind": "noun",
+          "ids": ["vida"]
+        }
+      },
+      "cloze": ["p", "q", "v"]
+    },
+    {
       "id": "barrio-is",
       "grammar": ["ser-trait", "adj-agreement"],
       "es": "Mi {n} es {a}.",
