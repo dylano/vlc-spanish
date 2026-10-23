@@ -272,6 +272,16 @@ export function spanishPlural(phrase: string): string {
   return [plural, ...rest].join(" ");
 }
 
+/**
+ * The plural of an adjective: the last word changes, since anything before it
+ * modifies it (bien comunicado → bien comunicados).
+ */
+export function adjectivePlural(phrase: string): string {
+  const words = phrase.split(" ");
+  const last = words.pop()!;
+  return [...words, spanishPlural(last)].join(" ");
+}
+
 function selects(entry: Entry, slot: Exclude<Slot, { kind: "glue" }>): boolean {
   if (slot.kind === "pronoun") return true;
   if (slot.ids && !slot.ids.includes(entry.id)) return false;
@@ -376,8 +386,8 @@ function adjFill(entry: AdjEntry, gender: Gender | "mf", number: NumberKind): Fi
   const feminine = gender === "f";
   let es: string;
   if (number === "sg") es = feminine ? (entry.forms?.f ?? entry.es) : entry.es;
-  else if (feminine && entry.forms?.f) es = spanishPlural(entry.forms.f);
-  else es = entry.forms?.pl ?? spanishPlural(entry.es);
+  else if (feminine && entry.forms?.f) es = adjectivePlural(entry.forms.f);
+  else es = entry.forms?.pl ?? adjectivePlural(entry.es);
   const en = number === "pl" && entry.enPl ? entry.enPl[0]! : entry.en[0]!;
   return { entryId: entry.id, es, en, gender, number };
 }

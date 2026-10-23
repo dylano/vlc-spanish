@@ -5315,8 +5315,8 @@
     {
       "id": "place-well-connected",
       "grammar": ["ser-estar", "adj-agreement"],
-      "es": "{p:el} está {w} {c}.",
-      "en": "{p:the} is {w} {c}.",
+      "es": "{p:el} está {c}.",
+      "en": "{p:the} is {c}.",
       "slots": {
         "p": {
           "kind": "noun",
@@ -5334,17 +5334,13 @@
             "escuela"
           ]
         },
-        "w": {
-          "kind": "word",
-          "ids": ["bien", "mal"]
-        },
         "c": {
           "kind": "adj",
-          "ids": ["comunicado"],
+          "ids": ["bien-comunicado", "mal-comunicado"],
           "agree": "p"
         }
       },
-      "cloze": ["w", "c"]
+      "cloze": ["c", "p"]
     },
     {
       "id": "place-is-near",

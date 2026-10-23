@@ -4,6 +4,7 @@ import glueFile from "../../../data/glue.json";
 import { entries } from "../../app/dictionary.ts";
 import type { Entry } from "../schema.ts";
 import {
+  adjectivePlural,
   checkFrame,
   frameSchema,
   framesFileSchema,
@@ -309,6 +310,12 @@ describe("rendering", () => {
     expect(spanishPlural("diseñadora de moda")).toBe("diseñadoras de moda");
     expect(spanishPlural("vez")).toBe("veces");
     expect(spanishPlural("profesor")).toBe("profesores");
+  });
+
+  it("pluralizes the last word of an adjective phrase", () => {
+    expect(adjectivePlural("bien comunicada")).toBe("bien comunicadas");
+    expect(adjectivePlural("simpático")).toBe("simpáticos");
+    expect(adjectivePlural("feliz")).toBe("felices");
   });
 });
 

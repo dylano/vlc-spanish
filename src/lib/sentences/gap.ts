@@ -18,6 +18,7 @@ import {
   likeForm,
   renderFrame,
   slotCandidates,
+  adjectivePlural,
   spanishPlural,
   type Frame,
   type RenderContext,
@@ -194,8 +195,8 @@ function formsOf(entry: Entry, dictionary: Entry[]): string[] {
       return [
         entry.es,
         feminine ?? "",
-        entry.forms?.pl ?? spanishPlural(entry.es),
-        feminine ? spanishPlural(feminine) : "",
+        entry.forms?.pl ?? adjectivePlural(entry.es),
+        feminine ? adjectivePlural(feminine) : "",
       ];
     }
     case "noun": {
