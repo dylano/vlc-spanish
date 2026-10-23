@@ -101,7 +101,7 @@ data/
   dictionary.json          the dictionary, bundled into the app at build time
   frames.json              sentence frames
   glue.json                function words and phrases (clock times) sentences may use
-  release-note.json        the "what's new" note on Home (see Writing the release note)
+  release-note.json        the "what's new" notes, newest first (see Writing the release note)
 design/README.md           links to the design canvases, where screens are mocked up first
 docs/screenshots/          the phone screenshots at the top of this README
 .github/workflows/         checks on every PR (see Deploying)
@@ -158,8 +158,8 @@ tangled into components.
   note style were judged too easy to miss). It shows for **7 days from its date** (`SHOW_DAYS` in
   `src/lib/releaseNote.ts`), to new users too, and × fades it out (180 ms, none with reduced motion)
   and hides it on that device for good: the device
-  remembers the dismissed note's date, and only a note dated later shows. Only the latest note
-  exists. The note does not move the practice rows: an invisible twin of it below them keeps them
+  remembers the dismissed note's date, and only a note dated later shows. The file keeps every
+  note, but only the latest one that has started ever shows; an older one never comes back. The note does not move the practice rows: an invisible twin of it below them keeps them
   centred where they are without one. Below 740px of screen height (a breakpoint in the CSS) there
   is no room for both, so the twin is left out and the note pushes the rows down. See
   [Writing the release note](#writing-the-release-note).
@@ -344,14 +344,22 @@ and a "new" count that ignores words drilled spanish → english.
 
 ## Writing the release note
 
-The note on Home is `data/release-note.json`, shipped with the build like the dictionary:
+The notes are `data/release-note.json`, shipped with the build like the dictionary: every note
+so far, **newest first**. Home shows only the latest one that has started.
 
 ```json
-{
-  "date": "2026-10-14",
-  "title": "Object pronouns",
-  "body": "Sentences now practise *lo, la, los* and *las*: ¿Compras el pan? Sí, lo compro."
-}
+[
+  {
+    "date": "2026-10-23",
+    "title": "Barrios",
+    "body": "New words for the city and neighborhood unit, and sentences that practice *hay* and *estar*: …"
+  },
+  {
+    "date": "2026-10-13",
+    "title": "Direct object pronouns",
+    "body": "Sentences now practice *lo, la, los* and *las*: ¿Compras el pan? Sí, lo compro."
+  }
+]
 ```
 
 - **When**: edit it in the same push as the change it announces. `date` is the first day it shows,
@@ -359,11 +367,13 @@ The note on Home is `data/release-note.json`, shipped with the build like the di
   nothing to remove. A future date waits until that day.
 - **Text**: a title of a few words and a body of a sentence or two. Spanish words go in
   `*asterisks*` for italics; there is no other formatting.
-- **A new note** replaces the old one and needs a **later date**: a dismissal is remembered as the
+- **A new note** goes at the top and needs a **later date**: a dismissal is remembered as the
   dismissed note's date, so a new note shows to everyone, while fixing a typo in the current one
-  does not bring it back. Two notes on the same date would hide the second; move it to the next day.
-- **No note**: the file may hold `null`. A file that does not parse shows no note rather than
-  breaking Home, and fails the tests (`src/lib/releaseNote.test.ts`), so CI catches it.
+  does not bring it back. Old notes stay in the file as the history; they never show again on Home.
+  Two notes may not share a date (the schema refuses it, since the second would never show).
+- **No note**: an empty list. A file that does not parse shows no note rather than breaking Home,
+  and fails the tests (`src/lib/releaseNote.test.ts`), so CI catches it, along with notes out of
+  order.
 - **What earns a note**: usually a big new chunk of words or grammar (a new grammar topic, a large
   word batch), and not much more than one a week, so everyone gets a chance to see each one.
   Smaller changes show in the recent commit history (Settings → Version). When a new branch starts,

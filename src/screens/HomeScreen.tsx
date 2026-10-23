@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router";
 import { readNoteDismissed, takeJustUpdated, writeNoteDismissed } from "../app/local.ts";
-import { releaseNote } from "../app/releaseNote.ts";
+import { releaseNotes } from "../app/releaseNote.ts";
 import { useStore } from "../app/store-context.ts";
 import { useUpdateCheck } from "../app/update.ts";
 import { today } from "../lib/dates.ts";
@@ -126,7 +126,7 @@ export default function HomeScreen() {
   const [updated] = useState(takeJustUpdated);
   useUpdateCheck();
   const [leaving, setLeaving] = useState(false);
-  const note = visibleNote(releaseNote, today(), dismissed);
+  const note = visibleNote(releaseNotes, today(), dismissed);
 
   const { due, unseen } = counts;
   // A practice session already tops itself up with new words, so it is worth
