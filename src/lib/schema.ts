@@ -89,6 +89,12 @@ export const nounEntrySchema = z.object({
    * `en` when the English does not change (profesora → teacher).
    */
   enF: z.array(nonEmpty).min(1).optional(),
+  /**
+   * Other Spanish that answers for this noun and is said without an article,
+   * like a name: Correos for la oficina de correos. Accepted as correct, never
+   * asked for or shown.
+   */
+  bare: z.array(nonEmpty).min(1).optional(),
   forms: z
     .object({ f: nonEmpty.optional(), m: nonEmpty.optional(), pl: nonEmpty.optional() })
     .optional(),

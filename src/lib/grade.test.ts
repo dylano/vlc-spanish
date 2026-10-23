@@ -332,6 +332,26 @@ describe("nouns with their own article usage", () => {
     expect(articleRequired(abuelo, asked)).toBe(true);
     expect(articleRequired(abuelo)).toBe(false);
   });
+
+  it("accepts a bare name for a noun, without its article", () => {
+    const oficina: NounEntry = {
+      ...base,
+      id: "oficina-de-correos",
+      es: "oficina de correos",
+      en: ["post office"],
+      pos: "noun",
+      gender: "f",
+      bare: ["Correos"],
+    };
+    expect(grade(oficina, "en→es", "correos", asked)).toEqual({
+      result: "correct",
+      expected: "la oficina de correos",
+    });
+    expect(grade(oficina, "en→es", "la oficina de correos", asked).result).toBe("correct");
+    const withArticle = grade(oficina, "en→es", "los correos", asked);
+    expect(withArticle.result).toBe("hard");
+    expect(withArticle.note).toBe("Correos goes without an article");
+  });
 });
 
 describe("en→es nouns and articles", () => {
