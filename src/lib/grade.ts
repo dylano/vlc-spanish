@@ -1,5 +1,5 @@
 import type { Direction, Entry } from "./schema.ts";
-import { directObjectAgreement, isDirectObject, spanishPlural } from "./sentences/frames.ts";
+import { adjectivePlural, directObjectAgreement, isDirectObject } from "./sentences/frames.ts";
 import {
   articleFor,
   articleOnlyDifference,
@@ -151,8 +151,8 @@ export function spanishCandidates(entry: Entry, prompt?: string): Candidate[] {
       out.push({ text: entry.es, kind: "exact" });
       const forms = new Set([
         entry.forms?.f,
-        entry.forms?.pl ?? spanishPlural(entry.es),
-        entry.forms?.f ? spanishPlural(entry.forms.f) : undefined,
+        entry.forms?.pl ?? adjectivePlural(entry.es),
+        entry.forms?.f ? adjectivePlural(entry.forms.f) : undefined,
       ]);
       for (const form of forms) {
         if (form && form !== entry.es) out.push({ text: form, kind: "inflection" });

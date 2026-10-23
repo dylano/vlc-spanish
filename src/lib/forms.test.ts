@@ -15,6 +15,11 @@ describe("the forms on a Dictionary card", () => {
     expect(shown(forms("trabajador").spanish)).toBe("trabajador[/a]");
   });
 
+  it("puts an adjective phrase's shorthand on its last word", () => {
+    expect(shown(forms("bien-comunicado").spanish)).toBe("bien comunicado[/a]");
+    expect(shown(forms("mal-comunicado").spanish)).toBe("mal comunicado[/a]");
+  });
+
   it("gives este and ese their plural endings, and the changed English plural", () => {
     expect(forms("este")).toMatchObject({
       english: ["this"],

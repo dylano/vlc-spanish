@@ -5330,15 +5330,26 @@
       "added": "2026-10-23"
     },
     {
-      "id": "comunicado",
-      "es": "comunicado",
-      "en": ["connected", "served by transport"],
+      "id": "bien-comunicado",
+      "es": "bien comunicado",
+      "en": ["well connected"],
       "pos": "adj",
       "forms": {
-        "f": "comunicada"
+        "f": "bien comunicada"
       },
-      "hint": "by transport: bien or mal comunicado",
-      "notes": "With estar and bien or mal: el barrio está bien comunicado, well connected by public transport; mal comunicado, poorly connected.",
+      "notes": "By public transport, used with estar: el barrio está bien comunicado.",
+      "tags": ["barrio"],
+      "added": "2026-10-23"
+    },
+    {
+      "id": "mal-comunicado",
+      "es": "mal comunicado",
+      "en": ["poorly connected", "badly connected"],
+      "pos": "adj",
+      "forms": {
+        "f": "mal comunicada"
+      },
+      "notes": "By public transport, used with estar: la universidad está mal comunicada.",
       "tags": ["barrio"],
       "added": "2026-10-23"
     },
