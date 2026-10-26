@@ -197,7 +197,8 @@ tangled into components.
   separate Check. A right answer moves on by itself, a miss waits for Next. Keys a–d or 1–4 answer
   and Enter moves on, on a computer. A wrong pick says what the picked word means. Started from
   Custom practice, or by URL: `/quiz?exercise=choice` (combines with `scope` and `tags`).
-- **Match Pairs** — rounds of four: Spanish in one column, English in the other, each shuffled. Tap
+- **Match Pairs** — rounds of four: English on the left, Spanish on the right, each shuffled; the
+  columns share their rows, so a word that wraps to two lines keeps its row level with the other side. Tap
   a tile on either side, then its partner; a right pair locks, a wrong one flashes red and clears.
   Chosen by name it is the session length rounded to whole rounds (four at 15). Rounds were six pairs until that felt tedious to finish. A round draws from one tag where it can and never holds two
   interchangeable words (a shared English gloss or headword). A word matched without ever being in

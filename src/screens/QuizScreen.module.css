@@ -426,16 +426,21 @@
 /* Matching. Two columns of ruled rows, Spanish in the serif like a headword and
    English in the interface face like its gloss. The selection and the verdict
    use the same margin bar as multiple choice. */
+/* The columns share their rows (subgrid), so a tile that wraps to two lines
+   makes its row taller on both sides and the rows stay level. --rows is the
+   number of pairs, set on the grid. */
 .matchGrid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-rows: repeat(var(--rows), auto);
   column-gap: 16px;
   margin-top: 4px;
 }
 
 .matchColumn {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-row: 1 / span var(--rows);
+  grid-template-rows: subgrid;
   border-top: 1px solid var(--rule);
 }
 
@@ -466,9 +471,11 @@
   line-height: 1.15;
 }
 
+/* Sized to match the Spanish beside it: the serif's small x-height makes its
+   1.25rem read about as large as 1.0625rem of the sans. */
 .tileEnglish {
-  font-size: 0.9375rem;
-  line-height: 1.3;
+  font-size: 1.0625rem;
+  line-height: 1.25;
 }
 
 .tileSelected {

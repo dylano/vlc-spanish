@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
 import SessionShell from "../../app/SessionShell.tsx";
 import { canonicalAnswer } from "../../lib/grade.ts";
 import { shuffle } from "../../lib/random.ts";
@@ -136,8 +136,9 @@ export default function MatchExercise({ round, position, label, onDone }: MatchE
       <div className={styles.question}>
         <h1 className={styles.instruction}>Tap a word, then its partner</h1>
 
-        <div className={styles.matchGrid}>
-          {(["es", "en"] as const).map((side) => (
+        <div className={styles.matchGrid} style={{ "--rows": cards.length } as CSSProperties}>
+          {/* English on the left: the known language first, then the Spanish to find. */}
+          {(["en", "es"] as const).map((side) => (
             <div
               key={side}
               className={styles.matchColumn}
