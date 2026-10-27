@@ -6738,6 +6738,154 @@
       "cloze": ["q", "a"]
     },
     {
+      "id": "which-place-prefer",
+      "grammar": ["questions", "verb-conjugation", "articles"],
+      "es": "¿{q} {v}, {a:el} o {b:el}?",
+      "en": "Which do you {v}, {a:the} or {b:the}?{q:none}",
+      "slots": {
+        "q": {
+          "kind": "word",
+          "ids": ["cual"]
+        },
+        "v": {
+          "kind": "verb",
+          "ids": ["preferir"],
+          "subject": "tu"
+        },
+        "a": {
+          "kind": "noun",
+          "ids": [
+            "cine",
+            "parque",
+            "biblioteca",
+            "polideportivo",
+            "centro-comercial",
+            "bar",
+            "restaurante",
+            "gimnasio",
+            "estadio"
+          ]
+        },
+        "b": {
+          "kind": "noun",
+          "ids": [
+            "cine",
+            "parque",
+            "biblioteca",
+            "polideportivo",
+            "centro-comercial",
+            "bar",
+            "restaurante",
+            "gimnasio",
+            "estadio"
+          ]
+        }
+      },
+      "cloze": ["q", "a", "v"]
+    },
+    {
+      "id": "which-is-your-clothing",
+      "grammar": ["questions", "articles"],
+      "es": "¿{q} es tu {c}?",
+      "en": "{q} is your {c}?",
+      "slots": {
+        "q": {
+          "kind": "word",
+          "ids": ["cual"]
+        },
+        "c": {
+          "kind": "noun",
+          "ids": [
+            "chaqueta",
+            "camiseta",
+            "camisa",
+            "bolso",
+            "falda",
+            "vestido",
+            "jersey",
+            "bufanda",
+            "gorro",
+            "abrigo",
+            "cinturon",
+            "mochila",
+            "estuche",
+            "cuaderno",
+            "libro"
+          ]
+        }
+      },
+      "cloze": ["q", "c"]
+    },
+    {
+      "id": "which-are-your-things",
+      "grammar": ["questions", "plural"],
+      "es": "¿Cuáles son tus {c}?",
+      "en": "Which are your {c}?",
+      "slots": {
+        "c": {
+          "kind": "noun",
+          "ids": [
+            "zapato",
+            "bota",
+            "sandalia",
+            "vaqueros",
+            "gafas",
+            "gafas-de-sol",
+            "libro",
+            "cuaderno"
+          ],
+          "number": "pl"
+        }
+      },
+      "cloze": ["c"]
+    },
+    {
+      "id": "which-is-your-relative",
+      "grammar": ["questions"],
+      "es": "¿{q} es tu {n}?",
+      "en": "{q} one is your {n}?",
+      "slots": {
+        "q": {
+          "kind": "word",
+          "ids": ["cual"]
+        },
+        "n": {
+          "kind": "noun",
+          "tags": ["family"],
+          "number": "sg",
+          "exclude": ["mujer"]
+        }
+      },
+      "cloze": ["q", "n"]
+    },
+    {
+      "id": "which-is-your-place",
+      "grammar": ["questions"],
+      "es": "¿{q} es tu {w}?",
+      "en": "{q} is your {w}?",
+      "slots": {
+        "q": {
+          "kind": "word",
+          "ids": ["cual"]
+        },
+        "w": {
+          "kind": "noun",
+          "ids": [
+            "barrio",
+            "escuela",
+            "universidad",
+            "gimnasio",
+            "hotel",
+            "parada-de-autobus",
+            "estacion-de-metro",
+            "despacho",
+            "biblioteca"
+          ]
+        }
+      },
+      "cloze": ["q", "w"]
+    },
+    {
       "id": "when-go-to-place",
       "grammar": ["questions", "days", "contraction"],
       "es": "¿{q} {v} a {p:el}?\nLos {d}.",
@@ -6825,6 +6973,442 @@
         }
       },
       "cloze": ["q", "c"]
+    },
+    {
+      "id": "where-do-you",
+      "grammar": ["questions", "verb-conjugation"],
+      "subjects": ["tu", "vosotros", "ellos"],
+      "es": "¿{q} {v}?",
+      "en": "Where do {S} {v:base}?{q:none}",
+      "slots": {
+        "q": {
+          "kind": "word",
+          "ids": ["donde"]
+        },
+        "v": {
+          "kind": "verb",
+          "ids": ["vivir", "trabajar", "estudiar"],
+          "subject": "@"
+        }
+      },
+      "cloze": ["q", "v"]
+    },
+    {
+      "id": "where-does-relative",
+      "grammar": ["questions", "third-person"],
+      "es": "¿{q} {v} tu {n}?",
+      "en": "Where does your {n} {v:base}?{q:none}",
+      "slots": {
+        "q": {
+          "kind": "word",
+          "ids": ["donde"]
+        },
+        "n": {
+          "kind": "noun",
+          "tags": ["family"],
+          "number": "sg",
+          "exclude": ["mujer"]
+        },
+        "v": {
+          "kind": "verb",
+          "ids": ["vivir", "trabajar", "estudiar"],
+          "subject": "n"
+        }
+      },
+      "cloze": ["q", "v"]
+    },
+    {
+      "id": "where-is-your-thing",
+      "grammar": ["questions", "ser-estar"],
+      "es": "¿{q} {v} tu {c}?",
+      "en": "Where {v} your {c}?{q:none}",
+      "slots": {
+        "q": {
+          "kind": "word",
+          "ids": ["donde"]
+        },
+        "c": {
+          "kind": "noun",
+          "ids": [
+            "chaqueta",
+            "camiseta",
+            "camisa",
+            "bolso",
+            "falda",
+            "vestido",
+            "jersey",
+            "bufanda",
+            "gorro",
+            "abrigo",
+            "cinturon",
+            "mochila",
+            "estuche",
+            "cuaderno",
+            "libro",
+            "boligrafo",
+            "lapiz"
+          ]
+        },
+        "v": {
+          "kind": "verb",
+          "ids": ["estar"],
+          "subject": "c"
+        }
+      },
+      "cloze": ["q", "c"]
+    },
+    {
+      "id": "where-are-your-things",
+      "grammar": ["questions", "ser-estar", "plural"],
+      "es": "¿{q} {v} tus {c}?",
+      "en": "Where {v} your {c}?{q:none}",
+      "slots": {
+        "q": {
+          "kind": "word",
+          "ids": ["donde"]
+        },
+        "c": {
+          "kind": "noun",
+          "ids": [
+            "zapato",
+            "bota",
+            "sandalia",
+            "vaqueros",
+            "gafas",
+            "gafas-de-sol",
+            "libro",
+            "cuaderno"
+          ],
+          "number": "pl"
+        },
+        "v": {
+          "kind": "verb",
+          "ids": ["estar"],
+          "subject": "c"
+        }
+      },
+      "cloze": ["v", "q"]
+    },
+    {
+      "id": "what-is-relative-like",
+      "grammar": ["questions", "ser-estar"],
+      "es": "¿{q} es tu {n}?",
+      "en": "What is your {n} like?{q:none}",
+      "slots": {
+        "q": {
+          "kind": "word",
+          "ids": ["como"]
+        },
+        "n": {
+          "kind": "noun",
+          "tags": ["family"],
+          "number": "sg",
+          "exclude": ["mujer"]
+        }
+      },
+      "cloze": ["q"]
+    },
+    {
+      "id": "how-is-relative",
+      "grammar": ["questions", "ser-estar"],
+      "es": "¿{q} está tu {n}?",
+      "en": "{q} is your {n}?",
+      "slots": {
+        "q": {
+          "kind": "word",
+          "ids": ["como"]
+        },
+        "n": {
+          "kind": "noun",
+          "tags": ["family"],
+          "number": "sg",
+          "exclude": ["mujer"]
+        }
+      },
+      "cloze": ["q"]
+    },
+    {
+      "id": "how-many-relatives",
+      "grammar": ["questions", "adj-agreement", "plural"],
+      "es": "¿{q} {n} {v}?",
+      "en": "{q} {n} do you have?{v:none}",
+      "slots": {
+        "q": {
+          "kind": "adj",
+          "ids": ["cuanto"],
+          "agree": "n"
+        },
+        "n": {
+          "kind": "noun",
+          "ids": ["hermano", "primo", "hijo", "tio", "sobrino", "nieto", "hermanos", "abuelos"],
+          "number": "pl"
+        },
+        "v": {
+          "kind": "verb",
+          "ids": ["tener"],
+          "subject": "tu"
+        }
+      },
+      "cloze": ["q", "v"]
+    },
+    {
+      "id": "how-many-clothes",
+      "grammar": ["questions", "adj-agreement", "plural"],
+      "es": "¿{q} {c} {v}?",
+      "en": "{q} {c} do you have?{v:none}",
+      "slots": {
+        "q": {
+          "kind": "adj",
+          "ids": ["cuanto"],
+          "agree": "c"
+        },
+        "c": {
+          "kind": "noun",
+          "ids": [
+            "chaqueta",
+            "camiseta",
+            "camisa",
+            "falda",
+            "vestido",
+            "jersey",
+            "bufanda",
+            "gorro",
+            "abrigo",
+            "zapato",
+            "bota",
+            "sandalia"
+          ],
+          "number": "pl"
+        },
+        "v": {
+          "kind": "verb",
+          "ids": ["tener"],
+          "subject": "tu"
+        }
+      },
+      "cloze": ["q", "c"]
+    },
+    {
+      "id": "how-much-drink",
+      "grammar": ["questions", "adj-agreement"],
+      "es": "¿{q} {c} {v}?",
+      "en": "{q} {c} do you drink?{v:none}",
+      "slots": {
+        "q": {
+          "kind": "adj",
+          "ids": ["cuanto"],
+          "agree": "c"
+        },
+        "c": {
+          "kind": "noun",
+          "ids": ["agua", "leche", "cafe", "te", "vino", "cerveza"]
+        },
+        "v": {
+          "kind": "verb",
+          "ids": ["beber"],
+          "subject": "tu"
+        }
+      },
+      "cloze": ["q", "c"]
+    },
+    {
+      "id": "what-do-you-at-time",
+      "grammar": ["questions", "verb-conjugation", "time-of-day"],
+      "subjects": ["tu", "vosotros", "ellos"],
+      "es": "¿{q} {v} {t}?",
+      "en": "What do {S} {v:base} {t}?{q:none}",
+      "slots": {
+        "q": {
+          "kind": "word",
+          "ids": ["que"]
+        },
+        "v": {
+          "kind": "verb",
+          "ids": ["beber", "leer", "estudiar", "comprar"],
+          "subject": "@"
+        },
+        "t": {
+          "kind": "word",
+          "ids": ["por-la-manana", "por-la-tarde", "por-la-noche"]
+        }
+      },
+      "cloze": ["q", "v"]
+    },
+    {
+      "id": "what-do-you-do-days",
+      "grammar": ["questions", "verb-conjugation", "days"],
+      "subjects": ["tu", "vosotros", "ellos"],
+      "es": "¿{q} {v} los {d}?",
+      "en": "What do {S} {v:base} on {d}?{q:none}",
+      "slots": {
+        "q": {
+          "kind": "word",
+          "ids": ["que"]
+        },
+        "v": {
+          "kind": "verb",
+          "ids": ["hacer"],
+          "subject": "@"
+        },
+        "d": {
+          "kind": "noun",
+          "tags": ["days"],
+          "number": "pl"
+        }
+      },
+      "cloze": ["q", "v", "d"]
+    },
+    {
+      "id": "what-are-you-wearing",
+      "grammar": ["questions", "verb-conjugation", "clothing"],
+      "subjects": ["tu", "vosotros", "ellos"],
+      "es": "¿{q} {v}?",
+      "en": "What are {S} wearing?{q:none}{v:none}",
+      "slots": {
+        "q": {
+          "kind": "word",
+          "ids": ["que"]
+        },
+        "v": {
+          "kind": "verb",
+          "ids": ["llevar"],
+          "subject": "@"
+        }
+      },
+      "cloze": ["q", "v"]
+    },
+    {
+      "id": "who-buys",
+      "grammar": ["questions", "third-person", "articles"],
+      "es": "¿{q} {v} {c:el}?",
+      "en": "{q} {v} {c:the}?",
+      "slots": {
+        "q": {
+          "kind": "word",
+          "ids": ["quien"]
+        },
+        "v": {
+          "kind": "verb",
+          "ids": ["comprar"],
+          "subject": "el"
+        },
+        "c": {
+          "kind": "noun",
+          "ids": ["pan", "leche", "cafe", "queso", "vino", "agua", "pollo"]
+        }
+      },
+      "cloze": ["q", "c"]
+    },
+    {
+      "id": "who-is-the-profession",
+      "grammar": ["questions", "articles"],
+      "es": "¿{q} es {p:el}?",
+      "en": "{q} is {p:the}?",
+      "slots": {
+        "q": {
+          "kind": "word",
+          "ids": ["quien"]
+        },
+        "p": {
+          "kind": "noun",
+          "tags": ["professions"]
+        }
+      },
+      "cloze": ["q", "p"]
+    },
+    {
+      "id": "when-do-you",
+      "grammar": ["questions", "verb-conjugation", "daily-routine"],
+      "subjects": ["tu", "vosotros", "ellos"],
+      "es": "¿{q} {v}?",
+      "en": "When do {S} {v:base}?{q:none}",
+      "slots": {
+        "q": {
+          "kind": "word",
+          "ids": ["cuando-2"]
+        },
+        "v": {
+          "kind": "verb",
+          "ids": [
+            "levantarse",
+            "ducharse",
+            "desayunar",
+            "comer",
+            "cenar",
+            "acostarse",
+            "ir-al-trabajo",
+            "hacer-deporte",
+            "hacer-la-compra"
+          ],
+          "subject": "@"
+        }
+      },
+      "cloze": ["q", "v"]
+    },
+    {
+      "id": "when-does-relative",
+      "grammar": ["questions", "third-person", "daily-routine"],
+      "es": "¿{q} {v} tu {n}?",
+      "en": "When does your {n} {v:base}?{q:none}",
+      "slots": {
+        "q": {
+          "kind": "word",
+          "ids": ["cuando-2"]
+        },
+        "n": {
+          "kind": "noun",
+          "tags": ["family"],
+          "number": "sg",
+          "exclude": ["mujer"]
+        },
+        "v": {
+          "kind": "verb",
+          "ids": [
+            "levantarse",
+            "ducharse",
+            "desayunar",
+            "comer",
+            "cenar",
+            "acostarse",
+            "ir-al-trabajo",
+            "hacer-deporte",
+            "hacer-la-compra"
+          ],
+          "subject": "n"
+        }
+      },
+      "cloze": ["q", "v"]
+    },
+    {
+      "id": "why-dont-you-go",
+      "grammar": ["questions", "negation", "contraction"],
+      "es": "¿{q} no {v} a {p:el}?",
+      "en": "Why don't you {v:base} to {p:the}?{q:none}",
+      "slots": {
+        "q": {
+          "kind": "word",
+          "ids": ["por-que"]
+        },
+        "v": {
+          "kind": "verb",
+          "ids": ["ir"],
+          "subject": "tu"
+        },
+        "p": {
+          "kind": "noun",
+          "ids": [
+            "cine",
+            "parque",
+            "polideportivo",
+            "biblioteca",
+            "centro-comercial",
+            "gimnasio",
+            "restaurante",
+            "bar"
+          ]
+        }
+      },
+      "cloze": ["q", "p"]
     }
   ]
 }
