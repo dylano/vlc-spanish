@@ -550,6 +550,14 @@ from the dictionary. The frame supplies the word order in both languages; the re
   from trait frames: "My son is very big eater" is what including them produces.
 - **Word pairings are the frame's job.** Routines are split by time of day so morning activities get
   morning times — without that the renderer happily produces _desayunamos por la tarde_.
+- **Questions** (tagged `questions`): a question word with an answer, mostly on barrio words —
+  _¿Dónde está el cine? Está cerca del parque._, _¿Cómo es tu barrio? Es tranquilo._, _¿Cuántos
+  parques hay en tu ciudad? Hay muchos._, _¿Qué hay en tu barrio? Hay un cine._, _¿Quién vive en el
+  norte? Mi tía._, _¿Cuál prefieres, el té o el café?_, _¿Cuándo vas al cine? Los sábados._, _¿Por
+  qué llevas un abrigo? Porque hace frío._ The question word is a `word` slot with `{q:none}` in the
+  English, which says it its own way ("What is your neighborhood like?" for _¿Cómo es…?_). Fill in
+  the Blank tests the word, a missing accent being `hard` and _porque_ for _por qué_ `wrong`; Find
+  the Mistake does not swap question words, only _cuánto_'s agreement (_¿Cuánto parques…?_).
 - **Weather and seasons** (`weather-*`, `season-*`, `*-place-is`, `my-city-climate`): the weather
   phrases with a month or a season, in pairings that fit (_En invierno nieva_, _En verano hace
   calor_; the compass points too, _En el norte llueve_), and the climate adjectives describing a

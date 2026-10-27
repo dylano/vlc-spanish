@@ -6385,6 +6385,446 @@
         }
       },
       "cloze": ["d", "a", "c"]
+    },
+    {
+      "id": "where-is-place",
+      "grammar": ["questions", "position"],
+      "es": "¿{q} {v} {p:el}?\n{w} {l}.",
+      "en": "Where {v} {p:the}?{q:none}\nIt {w} {l}.",
+      "slots": {
+        "q": {
+          "kind": "word",
+          "ids": ["donde"]
+        },
+        "p": {
+          "kind": "noun",
+          "ids": [
+            "cine",
+            "escuela",
+            "hospital",
+            "bar",
+            "parque",
+            "centro-comercial",
+            "estacion-de-metro",
+            "biblioteca",
+            "parada-de-autobus",
+            "polideportivo",
+            "estadio",
+            "hotel",
+            "estacion-de-tren",
+            "oficina-de-correos",
+            "monumento",
+            "restaurante",
+            "supermercado",
+            "banco",
+            "gimnasio",
+            "cajero-automatico"
+          ]
+        },
+        "v": {
+          "kind": "verb",
+          "ids": ["estar"],
+          "subject": "p"
+        },
+        "w": {
+          "kind": "verb",
+          "ids": ["estar"],
+          "subject": "p",
+          "same": "v"
+        },
+        "l": {
+          "kind": "word",
+          "ids": ["cerca", "lejos"]
+        }
+      },
+      "cloze": ["q", "l", "w"]
+    },
+    {
+      "id": "where-is-place-near",
+      "grammar": ["questions", "position", "contraction"],
+      "es": "¿{q} {v} {p:el}?\n{w} cerca de {r:el}.",
+      "en": "Where {v} {p:the}?{q:none}\nIt {w} near {r:the}.",
+      "slots": {
+        "q": {
+          "kind": "word",
+          "ids": ["donde"]
+        },
+        "p": {
+          "kind": "noun",
+          "ids": [
+            "cine",
+            "escuela",
+            "hospital",
+            "bar",
+            "parque",
+            "centro-comercial",
+            "estacion-de-metro",
+            "biblioteca",
+            "parada-de-autobus",
+            "polideportivo",
+            "estadio",
+            "hotel",
+            "estacion-de-tren",
+            "oficina-de-correos",
+            "monumento",
+            "restaurante",
+            "supermercado",
+            "banco",
+            "gimnasio",
+            "cajero-automatico"
+          ]
+        },
+        "v": {
+          "kind": "verb",
+          "ids": ["estar"],
+          "subject": "p"
+        },
+        "w": {
+          "kind": "verb",
+          "ids": ["estar"],
+          "subject": "p",
+          "same": "v"
+        },
+        "r": {
+          "kind": "noun",
+          "ids": [
+            "cine",
+            "hospital",
+            "bar",
+            "parque",
+            "centro-comercial",
+            "estacion-de-metro",
+            "biblioteca",
+            "parada-de-autobus",
+            "polideportivo",
+            "hotel",
+            "estacion-de-tren",
+            "oficina-de-correos",
+            "monumento",
+            "restaurante",
+            "supermercado",
+            "banco",
+            "tienda",
+            "escuela"
+          ]
+        }
+      },
+      "cloze": ["q", "r", "w"]
+    },
+    {
+      "id": "what-is-barrio-like",
+      "grammar": ["questions", "ser-trait", "adj-agreement"],
+      "es": "¿{q} es tu {n}?\nEs {a}.",
+      "en": "What is your {n} like?{q:none}\nIt is {a}.",
+      "slots": {
+        "q": {
+          "kind": "word",
+          "ids": ["como"]
+        },
+        "n": {
+          "kind": "noun",
+          "ids": ["barrio", "ciudad"]
+        },
+        "a": {
+          "kind": "adj",
+          "ids": [
+            "ruidoso",
+            "tranquilo",
+            "moderno",
+            "historico",
+            "antiguo",
+            "sucio",
+            "limpio",
+            "caro",
+            "barato",
+            "elegante",
+            "grande",
+            "pequeno",
+            "nuevo",
+            "viejo",
+            "feo"
+          ],
+          "agree": "n"
+        }
+      },
+      "cloze": ["q", "a"]
+    },
+    {
+      "id": "how-many-places",
+      "grammar": ["questions", "hay-estar", "adj-agreement", "plural"],
+      "es": "¿{q} {p} hay en tu {n}?\nHay {a}.",
+      "en": "How many {p} are there in your {n}?{q:none}\nThere are {a}.",
+      "slots": {
+        "q": {
+          "kind": "adj",
+          "ids": ["cuanto"],
+          "agree": "p"
+        },
+        "p": {
+          "kind": "noun",
+          "ids": [
+            "cine",
+            "escuela",
+            "bar",
+            "parque",
+            "biblioteca",
+            "parada-de-autobus",
+            "hotel",
+            "monumento",
+            "restaurante",
+            "supermercado",
+            "banco",
+            "gimnasio",
+            "tienda",
+            "zona-verde",
+            "calle-peatonal",
+            "cajero-automatico",
+            "estacion-de-metro",
+            "semaforo",
+            "farola"
+          ],
+          "number": "pl"
+        },
+        "n": {
+          "kind": "noun",
+          "ids": ["barrio", "ciudad"]
+        },
+        "a": {
+          "kind": "adj",
+          "ids": ["mucho", "poco"],
+          "agree": "p"
+        }
+      },
+      "cloze": ["q", "a"]
+    },
+    {
+      "id": "what-is-in-barrio",
+      "grammar": ["questions", "hay-estar", "articles"],
+      "es": "¿{q} hay en tu {n}?\nHay {p:un}.",
+      "en": "What is there in your {n}?{q:none}\nThere is {p:a}.",
+      "slots": {
+        "q": {
+          "kind": "word",
+          "ids": ["que"]
+        },
+        "n": {
+          "kind": "noun",
+          "ids": ["barrio"]
+        },
+        "p": {
+          "kind": "noun",
+          "ids": [
+            "cine",
+            "escuela",
+            "hospital",
+            "bar",
+            "parque",
+            "centro-comercial",
+            "estacion-de-metro",
+            "biblioteca",
+            "parada-de-autobus",
+            "polideportivo",
+            "estadio",
+            "hotel",
+            "monumento",
+            "restaurante",
+            "supermercado",
+            "banco",
+            "gimnasio",
+            "zona-verde",
+            "calle-peatonal"
+          ]
+        }
+      },
+      "cloze": ["q", "p"]
+    },
+    {
+      "id": "who-lives-in-region",
+      "grammar": ["questions", "articles"],
+      "es": "¿{q} vive en {d:el}?\nMi {n}.",
+      "en": "Who lives in {d:the}?{q:none}\nMy {n}.",
+      "slots": {
+        "q": {
+          "kind": "word",
+          "ids": ["quien"]
+        },
+        "d": {
+          "kind": "noun",
+          "ids": ["norte", "sur", "este-2", "oeste"]
+        },
+        "n": {
+          "kind": "noun",
+          "tags": ["family"],
+          "number": "sg",
+          "exclude": ["mujer"]
+        }
+      },
+      "cloze": ["q", "d"]
+    },
+    {
+      "id": "who-works-at",
+      "grammar": ["questions", "articles"],
+      "es": "¿{q} trabaja en {w:el}?\nMi {n}.",
+      "en": "Who works at {w:the}?{q:none}\nMy {n}.",
+      "slots": {
+        "q": {
+          "kind": "word",
+          "ids": ["quien"]
+        },
+        "w": {
+          "kind": "noun",
+          "tags": ["workplaces"],
+          "exclude": ["periodico", "empresa", "despacho"]
+        },
+        "n": {
+          "kind": "noun",
+          "tags": ["family"],
+          "number": "sg",
+          "exclude": ["mujer"]
+        }
+      },
+      "cloze": ["q", "w"]
+    },
+    {
+      "id": "which-drink-prefer",
+      "grammar": ["questions", "verb-conjugation", "articles"],
+      "es": "¿{q} {v}, {a:el} o {b:el}?",
+      "en": "Which do you {v}, {a} or {b}?{q:none}",
+      "slots": {
+        "q": {
+          "kind": "word",
+          "ids": ["cual"]
+        },
+        "v": {
+          "kind": "verb",
+          "ids": ["preferir"],
+          "subject": "tu"
+        },
+        "a": {
+          "kind": "noun",
+          "ids": ["cafe", "te", "cerveza", "vino", "agua", "leche"]
+        },
+        "b": {
+          "kind": "noun",
+          "ids": ["cafe", "te", "cerveza", "vino", "agua", "leche"]
+        }
+      },
+      "cloze": ["q", "v"]
+    },
+    {
+      "id": "which-season-prefer",
+      "grammar": ["questions", "verb-conjugation", "seasons"],
+      "es": "¿{q} {v}, {a:el} o {b:el}?",
+      "en": "Which do you {v}, {a} or {b}?{q:none}",
+      "slots": {
+        "q": {
+          "kind": "word",
+          "ids": ["cual"]
+        },
+        "v": {
+          "kind": "verb",
+          "ids": ["preferir"],
+          "subject": "tu"
+        },
+        "a": {
+          "kind": "noun",
+          "ids": ["invierno", "primavera", "verano", "otono"]
+        },
+        "b": {
+          "kind": "noun",
+          "ids": ["invierno", "primavera", "verano", "otono"]
+        }
+      },
+      "cloze": ["q", "a"]
+    },
+    {
+      "id": "when-go-to-place",
+      "grammar": ["questions", "days", "contraction"],
+      "es": "¿{q} {v} a {p:el}?\nLos {d}.",
+      "en": "When do you {v} to {p:the}?{q:none}\nOn {d}.",
+      "slots": {
+        "q": {
+          "kind": "word",
+          "ids": ["cuando-2"]
+        },
+        "v": {
+          "kind": "verb",
+          "ids": ["ir"],
+          "subject": "tu"
+        },
+        "p": {
+          "kind": "noun",
+          "ids": [
+            "cine",
+            "parque",
+            "polideportivo",
+            "biblioteca",
+            "centro-comercial",
+            "bar",
+            "estadio",
+            "gimnasio",
+            "supermercado"
+          ]
+        },
+        "d": {
+          "kind": "noun",
+          "tags": ["days"],
+          "number": "pl"
+        }
+      },
+      "cloze": ["q", "d"]
+    },
+    {
+      "id": "why-cold-clothing",
+      "grammar": ["questions", "weather", "articles"],
+      "es": "¿{q} {v} {c:un}?\nPorque {x}.",
+      "en": "Why are you wearing {c:a}?{q:none}{v:none}\nBecause {x}.",
+      "slots": {
+        "q": {
+          "kind": "word",
+          "ids": ["por-que"]
+        },
+        "v": {
+          "kind": "verb",
+          "ids": ["llevar"],
+          "subject": "tu"
+        },
+        "c": {
+          "kind": "noun",
+          "ids": ["abrigo", "bufanda", "chaqueta", "gorro", "jersey"]
+        },
+        "x": {
+          "kind": "word",
+          "ids": ["hace-frio", "hace-viento"]
+        }
+      },
+      "cloze": ["q", "x"]
+    },
+    {
+      "id": "why-hot-clothing",
+      "grammar": ["questions", "weather", "articles"],
+      "es": "¿{q} {v} {c:un}?\nPorque {x}.",
+      "en": "Why are you wearing {c:a}?{q:none}{v:none}\nBecause {x}.",
+      "slots": {
+        "q": {
+          "kind": "word",
+          "ids": ["por-que"]
+        },
+        "v": {
+          "kind": "verb",
+          "ids": ["llevar"],
+          "subject": "tu"
+        },
+        "c": {
+          "kind": "noun",
+          "ids": ["camiseta", "banador", "falda", "vestido"]
+        },
+        "x": {
+          "kind": "word",
+          "ids": ["hace-calor"]
+        }
+      },
+      "cloze": ["q", "c"]
     }
   ]
 }
