@@ -655,7 +655,6 @@ result really reads differently:
 | person (verb)          | _Mi primo os vestís a las seis._   | for primo it is se viste                                 |
 | number (gustar)        | _Me gusta los zapatos._            | los zapatos is plural, so me gustan                      |
 | agreement (pronoun)    | _¿Tienes el queso? Sí, la tengo._  | it stands for queso, masculine singular, so lo           |
-| article                | _Trabaja en una hospital._         | hospital is masculine: un hospital                       |
 | word                   | _Hablo con mi sobrino._ ("cousin") | the sentence means cousin: primo                         |
 | hay-estar              | _En mi barrio está un cine._       | hay says what there is: hay un cine                      |
 | muy-mucho              | _Mi barrio es mucho tranquilo._    | before an adjective it is muy: muy tranquilo             |
@@ -676,15 +675,17 @@ _mucho_ when an adjective follows it (_Mi barrio es mucho tranquilo_), and the a
 becomes _muy_ when it follows a verb (_Trabajas muy_: "after a verb it is mucho: trabajas mucho").
 Both are always wrong, so no frame tag is needed; the word beside the slot decides.
 
-Article swaps are never made on a common-gender noun (_la estudiante_ is fine) or on a contracted
-_al_/_del_, which has no article left to swap. **Which break is used is weighted**, because uniform
-choice let whichever kind is always available take over — first article swaps, then, once word
-swaps existed, word swaps. A form break (agreement, number, person) is used
-`FORM_SHARE` (75%) of the time when a word also offers a swap; a noun, which offers only a swap or
-its article, uses its article `NOUN_ARTICLE_SHARE` (30%) of the time; a word whose every frame can
-only swap an article is passed over except `ARTICLE_SHARE` (10%) of the time. Word swaps still lead,
-since the dictionary is mostly nouns. The English cue is always shown: without it a verb in
-the wrong person can still be a grammatical sentence (_Vamos al trabajo_ for "I go to work").
+**No article swaps** (_Trabaja en una hospital_). They were the easiest mistake to spot and nearly
+every noun offered one, so even held to about one mistake in eight they meant reading a whole
+sentence, often two, for one letter. Gender is still tested: an English → Spanish noun card wants
+its article, and adjectives break their agreement. A noun's mistake is now a word swap.
+
+**Which break is used is weighted**, because uniform choice let whichever kind is always available
+take over — first article swaps, then, once word swaps existed, word swaps. A form break
+(agreement, number, person, _hay_/_estar_, _muy_/_mucho_) is used `FORM_SHARE` (75%) of the time when
+a word also offers a swap. Word swaps still lead, since the dictionary is mostly nouns. The English
+cue is always shown: without it a verb in the wrong person can still be a grammatical sentence
+(_Vamos al trabajo_ for "I go to work").
 
 - **Tapping**: any word of the broken text finds it, including every word of a phrase (_os vestís_).
 - **The fix** (`gradeFix`): the corrected text, or just the one word that changed when only one did
