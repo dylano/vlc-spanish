@@ -117,8 +117,9 @@ The file is:
 runs become a single hyphen, no leading or trailing hyphen. `"a menudo"` → `"a-menudo"`,
 `"tímido"` → `"timido"`. If two entries would collide (e.g. two senses of `para`), suffix the second
 `-2`. Ids are permanent, so do not encode meaning or tags in them. A word that is genuinely two parts
-of speech (`deportista`, sporty and athlete) is two entries with the same `es`; the app accepts
-either meaning when it prompts with the Spanish.
+of speech (`deportista`, sporty and athlete) is two entries with the same `es`. Prompting with the
+Spanish, the app accepts either meaning only when the two prompts look the same (`mucho`, adjective
+and adverb); a noun shows its article (`el/la deportista`, `el este`), which tells them apart.
 
 **`en`** — every answer a learner could reasonably type, most natural first. This list is what
 grading accepts, so be generous: `["nice", "friendly", "likeable"]`, not just `["nice"]`. Verbs use

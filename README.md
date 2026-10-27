@@ -550,6 +550,16 @@ from the dictionary. The frame supplies the word order in both languages; the re
   from trait frames: "My son is very big eater" is what including them produces.
 - **Word pairings are the frame's job.** Routines are split by time of day so morning activities get
   morning times — without that the renderer happily produces _desayunamos por la tarde_.
+- **Weather and seasons** (`weather-*`, `season-*`, `*-place-is`, `my-city-climate`): the weather
+  phrases with a month or a season, in pairings that fit (_En invierno nieva_, _En verano hace
+  calor_; the compass points too, _En el norte llueve_), and the climate adjectives describing a
+  season, a place, a region or the city (_La primavera es
+  templada_, _La selva es húmeda_, _Mi ciudad es muy seca_), and _el clima_ with them (_Mi ciudad
+  tiene un clima templado_, _El desierto tiene un clima árido_), where agreement is the test:
+  _clima_ ends in -a but is masculine. The English drops the article Spanish
+  keeps (_El invierno es frío_, "Winter is cold"). The frames that take any `weather` word (_…por la
+  mañana_, _…todos los días_) are limited to `pos: "phrase"`, since the category also holds the
+  adjectives and seasons: _Frío por la mañana_ is not a sentence.
 - **Neighbourhoods** (`barrio-*`, `place-*`, tagged `hay-estar`, `tener`, `position`): describing a
   barrio with _hay_ and _tener_ — _En mi barrio hay un cine_, _Mi ciudad tiene muchos parques_,
   _En mi barrio no hay hotel_ (bare after _no hay_, as Spanish says it) — and saying where a known
@@ -813,8 +823,10 @@ Worth knowing before you change `grade.ts`, because the tests encode all of it:
   `grade()` is given the gloss shown (`opts.prompt`), so `nieta` is right for "grandchild" and only
   "almost" for "grandson".
 - **es→en**: a leading `to` or `the/a/an` is stripped before comparing, and any gloss listed in the
-  entry's `en` array counts. So does a gloss of any other entry with the same headword: the prompt shows only
-  `deportista`, so `sporty` (the adjective) and `athlete` (the noun) are both right on either card.
+  entry's `en` array counts. So does a gloss of any other entry whose **prompt looks the same**:
+  _mucho_ the adjective and the adverb both show "mucho", so "many" and "a lot" are right on either
+  card. A noun's prompt carries its article, so _el este_ ("east") does not take "this", nor _la
+  mañana_ "tomorrow".
 
 When nothing matches, three checks run in order before an answer is called wrong — each exists
 because the naive version of the rule gets a real case wrong:

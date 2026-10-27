@@ -455,7 +455,20 @@ describe("en→es numbers", () => {
 });
 
 describe("es→en", () => {
-  it("accepts the meaning of another entry with the same headword", () => {
+  it("accepts the meaning of another entry with the same prompt", () => {
+    const much: AdjEntry = { ...base, id: "mucho", es: "mucho", en: ["many"], pos: "adj" };
+    const aLot: Entry = { ...base, id: "mucho-2", es: "mucho", en: ["a lot"], pos: "adv" };
+    const dictionary = [much, aLot, simpatico];
+    expect(grade(much, "es→en", "a lot", { dictionary })).toEqual({
+      result: "correct",
+      expected: "many",
+    });
+    expect(grade(aLot, "es→en", "many", { dictionary }).result).toBe("correct");
+    // Only a shared prompt counts, not any word in the dictionary.
+    expect(grade(much, "es→en", "friendly", { dictionary }).result).toBe("wrong");
+  });
+
+  it("tells a noun from its homograph by the article its prompt shows", () => {
     const sporty: AdjEntry = {
       ...base,
       id: "deportista",
@@ -471,14 +484,11 @@ describe("es→en", () => {
       pos: "noun",
       gender: "mf",
     };
-    const dictionary = [sporty, athlete, simpatico];
-    expect(grade(sporty, "es→en", "athlete", { dictionary })).toEqual({
-      result: "correct",
-      expected: "sporty",
-    });
-    expect(grade(athlete, "es→en", "sporty", { dictionary }).result).toBe("correct");
-    // Only a shared headword counts, not any word in the dictionary.
-    expect(grade(sporty, "es→en", "friendly", { dictionary }).result).toBe("wrong");
+    const dictionary = [sporty, athlete];
+    // "deportista" and "el/la deportista": the prompts differ, so each wants its own meaning.
+    expect(grade(sporty, "es→en", "athlete", { dictionary }).result).toBe("wrong");
+    expect(grade(athlete, "es→en", "sporty", { dictionary }).result).toBe("wrong");
+    expect(grade(athlete, "es→en", "athlete", { dictionary }).result).toBe("correct");
   });
 
   it("accepts any listed english answer", () => {

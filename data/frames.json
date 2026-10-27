@@ -1008,7 +1008,8 @@
       "slots": {
         "x": {
           "kind": "word",
-          "tags": ["weather"]
+          "tags": ["weather"],
+          "pos": "phrase"
         },
         "t": {
           "kind": "word",
@@ -1026,7 +1027,8 @@
       "slots": {
         "x": {
           "kind": "word",
-          "tags": ["weather"]
+          "tags": ["weather"],
+          "pos": "phrase"
         },
         "f": {
           "kind": "word",
@@ -5899,6 +5901,490 @@
         }
       },
       "cloze": ["w", "v", "d"]
+    },
+    {
+      "id": "weather-winter",
+      "grammar": ["weather", "seasons"],
+      "es": "En {s} {x}.",
+      "en": "In {s} {x}.",
+      "slots": {
+        "s": {
+          "kind": "noun",
+          "ids": ["invierno"]
+        },
+        "x": {
+          "kind": "word",
+          "ids": ["hace-frio", "nieva", "llueve", "hace-viento", "esta-nublado"]
+        }
+      },
+      "cloze": ["x", "s"]
+    },
+    {
+      "id": "weather-summer",
+      "grammar": ["weather", "seasons"],
+      "es": "En {s} {x}.",
+      "en": "In {s} {x}.",
+      "slots": {
+        "s": {
+          "kind": "noun",
+          "ids": ["verano"]
+        },
+        "x": {
+          "kind": "word",
+          "ids": ["hace-calor"]
+        }
+      },
+      "cloze": ["x", "s"]
+    },
+    {
+      "id": "weather-spring-autumn",
+      "grammar": ["weather", "seasons"],
+      "es": "En {s} {x}.",
+      "en": "In {s} {x}.",
+      "slots": {
+        "s": {
+          "kind": "noun",
+          "ids": ["primavera", "otono"]
+        },
+        "x": {
+          "kind": "word",
+          "ids": ["llueve", "hace-viento", "esta-nublado"]
+        }
+      },
+      "cloze": ["x", "s"]
+    },
+    {
+      "id": "season-winter-is",
+      "grammar": ["weather", "seasons", "ser-trait", "adj-agreement"],
+      "es": "{s:el} es {a}.",
+      "en": "{s} is {a}.",
+      "slots": {
+        "s": {
+          "kind": "noun",
+          "ids": ["invierno"]
+        },
+        "a": {
+          "kind": "adj",
+          "ids": ["frio", "lluvioso", "humedo", "seco"],
+          "agree": "s"
+        }
+      },
+      "cloze": ["a", "s"]
+    },
+    {
+      "id": "season-summer-is",
+      "grammar": ["weather", "seasons", "ser-trait", "adj-agreement"],
+      "es": "{s:el} es {a}.",
+      "en": "{s} is {a}.",
+      "slots": {
+        "s": {
+          "kind": "noun",
+          "ids": ["verano"]
+        },
+        "a": {
+          "kind": "adj",
+          "ids": ["calido", "seco", "humedo"],
+          "agree": "s"
+        }
+      },
+      "cloze": ["a", "s"]
+    },
+    {
+      "id": "season-spring-autumn-is",
+      "grammar": ["weather", "seasons", "ser-trait", "adj-agreement"],
+      "es": "{s:el} es {a}.",
+      "en": "{s} is {a}.",
+      "slots": {
+        "s": {
+          "kind": "noun",
+          "ids": ["primavera", "otono"]
+        },
+        "a": {
+          "kind": "adj",
+          "ids": ["templado", "lluvioso", "humedo", "calido"],
+          "agree": "s"
+        }
+      },
+      "cloze": ["a", "s"]
+    },
+    {
+      "id": "dry-place-is",
+      "grammar": ["weather", "ser-trait", "adj-agreement", "articles"],
+      "es": "{g:el} es {a}.",
+      "en": "{g:the} is {a}.",
+      "slots": {
+        "g": {
+          "kind": "noun",
+          "ids": ["desierto"],
+          "number": "sg"
+        },
+        "a": {
+          "kind": "adj",
+          "ids": ["arido", "seco"],
+          "agree": "g"
+        }
+      },
+      "cloze": ["a", "g"]
+    },
+    {
+      "id": "wet-place-is",
+      "grammar": ["weather", "ser-trait", "adj-agreement", "articles"],
+      "es": "{g:el} es {a}.",
+      "en": "{g:the} is {a}.",
+      "slots": {
+        "g": {
+          "kind": "noun",
+          "ids": ["selva", "bosque"],
+          "number": "sg"
+        },
+        "a": {
+          "kind": "adj",
+          "ids": ["humedo", "lluvioso"],
+          "agree": "g"
+        }
+      },
+      "cloze": ["a", "g"]
+    },
+    {
+      "id": "tropical-place-is",
+      "grammar": ["weather", "ser-trait", "adj-agreement", "articles"],
+      "es": "{g:el} es {a}.",
+      "en": "{g:the} is {a}.",
+      "slots": {
+        "g": {
+          "kind": "noun",
+          "ids": ["selva", "isla", "costa"],
+          "number": "sg"
+        },
+        "a": {
+          "kind": "adj",
+          "ids": ["tropical", "calido", "humedo"],
+          "agree": "g"
+        }
+      },
+      "cloze": ["a", "g"]
+    },
+    {
+      "id": "my-city-climate",
+      "grammar": ["weather", "ser-trait", "adj-agreement"],
+      "es": "Mi {n} es {q} {a}.",
+      "en": "My {n} is {q} {a}.",
+      "slots": {
+        "n": {
+          "kind": "noun",
+          "ids": ["ciudad"]
+        },
+        "q": {
+          "kind": "word",
+          "ids": ["muy", "bastante"]
+        },
+        "a": {
+          "kind": "adj",
+          "ids": ["frio", "calido", "humedo", "seco", "lluvioso"],
+          "agree": "n"
+        }
+      },
+      "cloze": ["a", "q"]
+    },
+    {
+      "id": "city-has-climate",
+      "grammar": ["weather", "tener", "adj-agreement"],
+      "es": "Mi {n} {v} {c:un} {a}.",
+      "en": "My {n} {v} {a:a} {c}.",
+      "slots": {
+        "n": {
+          "kind": "noun",
+          "ids": ["ciudad"]
+        },
+        "v": {
+          "kind": "verb",
+          "ids": ["tener"],
+          "subject": "n"
+        },
+        "c": {
+          "kind": "noun",
+          "ids": ["clima"]
+        },
+        "a": {
+          "kind": "adj",
+          "ids": ["templado", "tropical", "frio", "arido", "seco", "calido", "humedo", "lluvioso"],
+          "agree": "c"
+        }
+      },
+      "cloze": ["a", "c", "v"]
+    },
+    {
+      "id": "climate-of-city-is",
+      "grammar": ["weather", "ser-trait", "adj-agreement"],
+      "es": "{c:el} de mi {n} es {a}.",
+      "en": "{c:the} in my {n} is {a}.",
+      "slots": {
+        "c": {
+          "kind": "noun",
+          "ids": ["clima"]
+        },
+        "n": {
+          "kind": "noun",
+          "ids": ["ciudad"]
+        },
+        "a": {
+          "kind": "adj",
+          "ids": ["templado", "tropical", "frio", "arido", "seco", "calido", "humedo", "lluvioso"],
+          "agree": "c"
+        }
+      },
+      "cloze": ["a", "c"]
+    },
+    {
+      "id": "desert-has-climate",
+      "grammar": ["weather", "tener", "adj-agreement", "articles"],
+      "es": "{g:el} {v} {c:un} {a}.",
+      "en": "{g:the} {v} {a:a} {c}.",
+      "slots": {
+        "g": {
+          "kind": "noun",
+          "ids": ["desierto"]
+        },
+        "v": {
+          "kind": "verb",
+          "ids": ["tener"],
+          "subject": "g"
+        },
+        "c": {
+          "kind": "noun",
+          "ids": ["clima"]
+        },
+        "a": {
+          "kind": "adj",
+          "ids": ["arido", "seco"],
+          "agree": "c"
+        }
+      },
+      "cloze": ["a", "c", "v"]
+    },
+    {
+      "id": "tropical-place-has-climate",
+      "grammar": ["weather", "tener", "adj-agreement", "articles"],
+      "es": "{g:el} {v} {c:un} {a}.",
+      "en": "{g:the} {v} {a:a} {c}.",
+      "slots": {
+        "g": {
+          "kind": "noun",
+          "ids": ["selva", "isla", "costa"]
+        },
+        "v": {
+          "kind": "verb",
+          "ids": ["tener"],
+          "subject": "g"
+        },
+        "c": {
+          "kind": "noun",
+          "ids": ["clima"]
+        },
+        "a": {
+          "kind": "adj",
+          "ids": ["tropical", "calido", "humedo", "lluvioso"],
+          "agree": "c"
+        }
+      },
+      "cloze": ["a", "c", "v"]
+    },
+    {
+      "id": "mountain-has-climate",
+      "grammar": ["weather", "tener", "adj-agreement", "articles"],
+      "es": "{g:el} {v} {c:un} {a}.",
+      "en": "{g:the} {v} {a:a} {c}.",
+      "slots": {
+        "g": {
+          "kind": "noun",
+          "ids": ["montana"]
+        },
+        "v": {
+          "kind": "verb",
+          "ids": ["tener"],
+          "subject": "g"
+        },
+        "c": {
+          "kind": "noun",
+          "ids": ["clima"]
+        },
+        "a": {
+          "kind": "adj",
+          "ids": ["frio", "seco"],
+          "agree": "c"
+        }
+      },
+      "cloze": ["a", "c", "v"]
+    },
+    {
+      "id": "live-in-region",
+      "grammar": ["verb-conjugation", "articles"],
+      "subjects": ["yo", "tu", "nosotros", "vosotros", "ellos"],
+      "es": "{v} en {d:el}.",
+      "en": "{S} {v} in {d:the}.",
+      "slots": {
+        "v": {
+          "kind": "verb",
+          "ids": ["vivir"],
+          "subject": "@"
+        },
+        "d": {
+          "kind": "noun",
+          "ids": ["norte", "sur", "este-2", "oeste"]
+        }
+      },
+      "cloze": ["d", "v"]
+    },
+    {
+      "id": "relative-lives-in-region",
+      "grammar": ["third-person", "articles"],
+      "es": "Mi {n} vive en {d:el}.",
+      "en": "My {n} lives in {d:the}.",
+      "slots": {
+        "n": {
+          "kind": "noun",
+          "tags": ["family"],
+          "number": "sg",
+          "exclude": ["mujer"]
+        },
+        "d": {
+          "kind": "noun",
+          "ids": ["norte", "sur", "este-2", "oeste"]
+        }
+      },
+      "cloze": ["d", "n"]
+    },
+    {
+      "id": "place-in-region",
+      "grammar": ["ser-estar", "articles"],
+      "es": "Mi {n} está en {d:el}.",
+      "en": "My {n} is in {d:the}.",
+      "slots": {
+        "n": {
+          "kind": "noun",
+          "ids": ["ciudad", "barrio"]
+        },
+        "d": {
+          "kind": "noun",
+          "ids": ["norte", "sur", "este-2", "oeste"]
+        }
+      },
+      "cloze": ["d"]
+    },
+    {
+      "id": "weather-north",
+      "grammar": ["weather", "articles"],
+      "es": "En {d:el} {x}.",
+      "en": "In {d:the} {x}.",
+      "slots": {
+        "d": {
+          "kind": "noun",
+          "ids": ["norte"]
+        },
+        "x": {
+          "kind": "word",
+          "ids": ["hace-frio", "llueve", "nieva", "esta-nublado", "hace-viento"]
+        }
+      },
+      "cloze": ["d", "x"]
+    },
+    {
+      "id": "weather-south",
+      "grammar": ["weather", "articles"],
+      "es": "En {d:el} {x}.",
+      "en": "In {d:the} {x}.",
+      "slots": {
+        "d": {
+          "kind": "noun",
+          "ids": ["sur"]
+        },
+        "x": {
+          "kind": "word",
+          "ids": ["hace-calor"]
+        }
+      },
+      "cloze": ["d", "x"]
+    },
+    {
+      "id": "north-has-climate",
+      "grammar": ["weather", "tener", "adj-agreement", "articles"],
+      "es": "{d:el} {v} {c:un} {a}.",
+      "en": "{d:the} {v} {a:a} {c}.",
+      "slots": {
+        "d": {
+          "kind": "noun",
+          "ids": ["norte"]
+        },
+        "v": {
+          "kind": "verb",
+          "ids": ["tener"],
+          "subject": "d"
+        },
+        "c": {
+          "kind": "noun",
+          "ids": ["clima"]
+        },
+        "a": {
+          "kind": "adj",
+          "ids": ["frio", "lluvioso", "humedo"],
+          "agree": "c"
+        }
+      },
+      "cloze": ["d", "a", "c"]
+    },
+    {
+      "id": "south-has-climate",
+      "grammar": ["weather", "tener", "adj-agreement", "articles"],
+      "es": "{d:el} {v} {c:un} {a}.",
+      "en": "{d:the} {v} {a:a} {c}.",
+      "slots": {
+        "d": {
+          "kind": "noun",
+          "ids": ["sur"]
+        },
+        "v": {
+          "kind": "verb",
+          "ids": ["tener"],
+          "subject": "d"
+        },
+        "c": {
+          "kind": "noun",
+          "ids": ["clima"]
+        },
+        "a": {
+          "kind": "adj",
+          "ids": ["calido", "seco", "arido"],
+          "agree": "c"
+        }
+      },
+      "cloze": ["d", "a", "c"]
+    },
+    {
+      "id": "east-has-climate",
+      "grammar": ["weather", "tener", "adj-agreement", "articles"],
+      "es": "{d:el} {v} {c:un} {a}.",
+      "en": "{d:the} {v} {a:a} {c}.",
+      "slots": {
+        "d": {
+          "kind": "noun",
+          "ids": ["este-2"]
+        },
+        "v": {
+          "kind": "verb",
+          "ids": ["tener"],
+          "subject": "d"
+        },
+        "c": {
+          "kind": "noun",
+          "ids": ["clima"]
+        },
+        "a": {
+          "kind": "adj",
+          "ids": ["templado", "calido", "humedo"],
+          "agree": "c"
+        }
+      },
+      "cloze": ["d", "a", "c"]
     }
   ]
 }

@@ -2733,6 +2733,166 @@
       "added": "2026-09-21"
     },
     {
+      "id": "clima",
+      "es": "clima",
+      "en": ["climate"],
+      "pos": "noun",
+      "gender": "m",
+      "forms": {
+        "pl": "climas"
+      },
+      "notes": "Masculine despite ending in -a: el clima, un clima templado. The weather on a given day is 'el tiempo'.",
+      "tags": ["weather"],
+      "added": "2026-10-27"
+    },
+    {
+      "id": "templado",
+      "es": "templado",
+      "en": ["temperate", "mild"],
+      "pos": "adj",
+      "forms": {
+        "f": "templada"
+      },
+      "notes": "Of a climate: un clima templado, neither very hot nor very cold. Of water or food, lukewarm.",
+      "tags": ["weather"],
+      "added": "2026-10-27"
+    },
+    {
+      "id": "tropical",
+      "es": "tropical",
+      "en": ["tropical"],
+      "pos": "adj",
+      "notes": "Same for both genders: una isla tropical, un clima tropical.",
+      "tags": ["weather"],
+      "added": "2026-10-27"
+    },
+    {
+      "id": "frio",
+      "es": "frío",
+      "en": ["cold"],
+      "pos": "adj",
+      "forms": {
+        "f": "fría"
+      },
+      "notes": "Describes things and places: el agua fría, un invierno frío. The weather is 'hace frío'; a person feeling cold, 'tengo frío'.",
+      "tags": ["weather"],
+      "added": "2026-10-27"
+    },
+    {
+      "id": "arido",
+      "es": "árido",
+      "en": ["arid"],
+      "pos": "adj",
+      "forms": {
+        "f": "árida"
+      },
+      "notes": "Very dry, with little rain: un desierto árido. Mostly for land and climate.",
+      "tags": ["weather"],
+      "added": "2026-10-27"
+    },
+    {
+      "id": "seco",
+      "es": "seco",
+      "en": ["dry"],
+      "pos": "adj",
+      "forms": {
+        "f": "seca"
+      },
+      "notes": "Un clima seco, un verano seco. Also in 'los frutos secos', nuts and dried fruit.",
+      "tags": ["weather"],
+      "added": "2026-10-27"
+    },
+    {
+      "id": "calido",
+      "es": "cálido",
+      "en": ["warm"],
+      "pos": "adj",
+      "forms": {
+        "f": "cálida"
+      },
+      "notes": "Of a climate or a welcome: un clima cálido. Hot food is 'caliente'; hot weather, 'hace calor'.",
+      "tags": ["weather"],
+      "added": "2026-10-27"
+    },
+    {
+      "id": "humedo",
+      "es": "húmedo",
+      "en": ["humid", "damp", "moist", "wet"],
+      "pos": "adj",
+      "forms": {
+        "f": "húmeda"
+      },
+      "notes": "Of air and climate, humid: Valencia es muy húmeda en verano. Of things, damp.",
+      "tags": ["weather"],
+      "added": "2026-10-27"
+    },
+    {
+      "id": "lluvioso",
+      "es": "lluvioso",
+      "en": ["rainy"],
+      "pos": "adj",
+      "forms": {
+        "f": "lluviosa"
+      },
+      "notes": "Un otoño lluvioso, a rainy autumn. The verb is 'llover': llueve.",
+      "tags": ["weather"],
+      "added": "2026-10-27"
+    },
+    {
+      "id": "invierno",
+      "es": "invierno",
+      "en": ["winter"],
+      "pos": "noun",
+      "gender": "m",
+      "article": "optional",
+      "forms": {
+        "pl": "inviernos"
+      },
+      "notes": "Seasons are lowercase. 'En invierno' or 'en el invierno', both common.",
+      "tags": ["weather"],
+      "added": "2026-10-27"
+    },
+    {
+      "id": "primavera",
+      "es": "primavera",
+      "en": ["spring"],
+      "pos": "noun",
+      "gender": "f",
+      "article": "optional",
+      "forms": {
+        "pl": "primaveras"
+      },
+      "notes": "Feminine, unlike the other seasons: la primavera.",
+      "tags": ["weather"],
+      "added": "2026-10-27"
+    },
+    {
+      "id": "verano",
+      "es": "verano",
+      "en": ["summer"],
+      "pos": "noun",
+      "gender": "m",
+      "article": "optional",
+      "forms": {
+        "pl": "veranos"
+      },
+      "tags": ["weather"],
+      "added": "2026-10-27"
+    },
+    {
+      "id": "otono",
+      "es": "otoño",
+      "en": ["autumn", "fall"],
+      "pos": "noun",
+      "gender": "m",
+      "article": "optional",
+      "forms": {
+        "pl": "otoños"
+      },
+      "tags": ["weather"],
+      "added": "2026-10-27"
+    },
+    {
       "id": "volcan",
       "es": "volcán",
       "en": ["volcano"],
@@ -2880,6 +3040,48 @@
       "notes": "A large waterfall; a smaller one is 'la cascada'.",
       "tags": ["geography"],
       "added": "2026-09-21"
+    },
+    {
+      "id": "norte",
+      "es": "norte",
+      "en": ["north"],
+      "pos": "noun",
+      "gender": "m",
+      "number": "sg",
+      "notes": "Lowercase in Spanish: vivo en el norte.",
+      "tags": ["geography"],
+      "added": "2026-10-27"
+    },
+    {
+      "id": "sur",
+      "es": "sur",
+      "en": ["south"],
+      "pos": "noun",
+      "gender": "m",
+      "number": "sg",
+      "tags": ["geography"],
+      "added": "2026-10-27"
+    },
+    {
+      "id": "este-2",
+      "es": "este",
+      "en": ["east"],
+      "pos": "noun",
+      "gender": "m",
+      "number": "sg",
+      "notes": "With el it is the east: en el este. Without, este is 'this': este libro.",
+      "tags": ["geography"],
+      "added": "2026-10-27"
+    },
+    {
+      "id": "oeste",
+      "es": "oeste",
+      "en": ["west"],
+      "pos": "noun",
+      "gender": "m",
+      "number": "sg",
+      "tags": ["geography"],
+      "added": "2026-10-27"
     },
     {
       "id": "chaqueta",
