@@ -658,6 +658,7 @@ result really reads differently:
 | article                | _Trabaja en una hospital._         | hospital is masculine: un hospital                       |
 | word                   | _Hablo con mi sobrino._ ("cousin") | the sentence means cousin: primo                         |
 | hay-estar              | _En mi barrio está un cine._       | hay says what there is: hay un cine                      |
+| muy-mucho              | _Mi barrio es mucho tranquilo._    | before an adjective it is muy: muy tranquilo             |
 
 A **word** swap puts in another word that fits the slot exactly as the right one does — same gender
 and number (so the article shown stays right), same person for a verb — and that means something
@@ -669,6 +670,11 @@ _hay_ becomes _está_ or _están_, agreeing with what follows it, and _estar_ be
 its subject is shown with _el_ or _la_ (_El cine hay cerca_: "estar says where something known is:
 el cine está"). After _hay un cine_, a following _Está cerca_ is never broken that way, since _Hay
 cerca_ would not read as a clear mistake.
+
+**muy and mucho**, the mix-up English speakers make between "very" and "a lot": _muy_ becomes
+_mucho_ when an adjective follows it (_Mi barrio es mucho tranquilo_), and the adverb _mucho_
+becomes _muy_ when it follows a verb (_Trabajas muy_: "after a verb it is mucho: trabajas mucho").
+Both are always wrong, so no frame tag is needed; the word beside the slot decides.
 
 Article swaps are never made on a common-gender noun (_la estudiante_ is fine) or on a contracted
 _al_/_del_, which has no article left to swap. **Which break is used is weighted**, because uniform

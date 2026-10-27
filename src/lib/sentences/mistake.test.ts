@@ -104,8 +104,32 @@ describe("making a mistake", () => {
     }
   });
 
+  it("puts mucho for muy before an adjective, and muy for mucho after a verb", () => {
+    const muy = mistakes("muy").filter((m) => m.kind === "muy-mucho");
+    expect(muy.length).toBeGreaterThan(0);
+    for (const mistake of muy) {
+      expect(mistake.wrong).toBe("mucho");
+      expect(mistake.explanation).toMatch(/^before an adjective it is muy: muy \p{L}+$/u);
+    }
+    const mucho = mistakes("mucho-2").filter((m) => m.kind === "muy-mucho");
+    expect(mucho.length).toBeGreaterThan(0);
+    for (const mistake of mucho) {
+      expect(mistake.wrong).toBe("muy");
+      expect(mistake.explanation).toMatch(/^after a verb it is mucho: \p{Ll}+ mucho$/u);
+    }
+  });
+
   it("always changes exactly the broken text, and the rest of the sentence reads as before", () => {
-    for (const id of ["timido", "cenar", "hospital", "enfermero", "levantarse", "alto", "hay"]) {
+    for (const id of [
+      "timido",
+      "cenar",
+      "hospital",
+      "enfermero",
+      "levantarse",
+      "alto",
+      "hay",
+      "muy",
+    ]) {
       for (const mistake of mistakes(id, 20)) {
         const shown = broken(mistake);
         expect(normalize(shown)).not.toBe(normalize(mistake.sentence.es));

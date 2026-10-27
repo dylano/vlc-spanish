@@ -27,7 +27,14 @@ import {
  * should be.
  */
 
-export type MistakeKind = "agreement" | "number" | "person" | "article" | "word" | "hay-estar";
+export type MistakeKind =
+  | "agreement"
+  | "number"
+  | "person"
+  | "article"
+  | "word"
+  | "hay-estar"
+  | "muy-mucho";
 
 export interface Mistake {
   /** The sentence as it should read. */
@@ -235,6 +242,48 @@ function hayEstarBreak(
   };
 }
 
+/** The slot of the nearest filled word before (-1) or after (1) this one. */
+function neighbour(sentence: RenderedSentence, slot: string, step: 1 | -1): string | undefined {
+  const filled = sentence.segments.filter((part) => part.slot && !part.article);
+  const at = filled.findIndex((part) => part.slot === slot);
+  return filled[at + step]?.slot;
+}
+
+/**
+ * The mix-up English speakers make between "very" and "a lot": mucho before an
+ * adjective (es mucho tranquilo) or muy after a verb (trabajo muy). Both are
+ * always wrong, so the break needs no frame tag, only the word beside it.
+ */
+function muyMuchoBreak(
+  frame: Frame,
+  sentence: RenderedSentence,
+  slot: string,
+  entry: Entry,
+  right: string,
+): Break | undefined {
+  const after = neighbour(sentence, slot, 1);
+  if (entry.id === "muy" && after && frame.slots[after]?.kind === "adj") {
+    return {
+      kind: "muy-mucho",
+      article: false,
+      wrong: "mucho",
+      right,
+      explanation: `before an adjective it is muy: muy ${wordText(sentence, after)}`,
+    };
+  }
+  const before = neighbour(sentence, slot, -1);
+  if (entry.id === "mucho-2" && before && frame.slots[before]?.kind === "verb") {
+    return {
+      kind: "muy-mucho",
+      article: false,
+      wrong: "muy",
+      right,
+      explanation: `after a verb it is mucho: ${wordText(sentence, before).toLowerCase()} mucho`,
+    };
+  }
+  return undefined;
+}
+
 /** Every way this slot of this sentence can be broken, each producing different text. */
 function breaksFor(
   frame: Frame,
@@ -368,6 +417,9 @@ function breaksFor(
     const hayEstar = hayEstarBreak(frame, sentence, slot, entry, right);
     if (hayEstar) out.push(hayEstar);
   }
+
+  const muyMucho = muyMuchoBreak(frame, sentence, slot, entry, right);
+  if (muyMucho) out.push(muyMucho);
 
   const swap = wordSwap(frame, sentence, slot, entry, dictionary, random);
   if (swap) out.push(swap);
