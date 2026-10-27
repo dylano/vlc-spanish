@@ -550,6 +550,31 @@ from the dictionary. The frame supplies the word order in both languages; the re
   from trait frames: "My son is very big eater" is what including them produces.
 - **Word pairings are the frame's job.** Routines are split by time of day so morning activities get
   morning times — without that the renderer happily produces _desayunamos por la tarde_.
+- **Questions** (tagged `questions`), two kinds. **With an answer**, mostly on barrio words:
+  _¿Dónde está el cine? Está cerca del parque._, _¿Cómo es tu barrio? Es tranquilo._, _¿Cuántos
+  parques hay en tu ciudad? Hay muchos._, _¿Qué hay en tu barrio? Hay un cine._, _¿Quién vive en el
+  norte? Mi tía._, _¿Cuándo vas al cine? Los sábados._, _¿Por qué llevas un abrigo? Porque hace
+  frío._ **On their own**, for Translate and Fill in the Blank: _¿Dónde trabaja tu madre?_, _¿Dónde
+  están tus gafas?_, _¿Cómo es tu hermano?_ ("What is your brother like?") beside _¿Cómo está tu
+  madre?_ ("How is your mother?") for ser against estar, _¿Cuántas primas tienes?_ and _¿Cuánta
+  agua bebes?_ for all four forms of _cuánto_, _¿Qué haces los sábados?_, _¿Quién es la
+  camarera?_, _¿Cuándo te levantas?_, _¿Por qué no vas al cine?_, and for _cuál_ _¿Cuál es tu
+  chaqueta?_, _¿Cuáles son tus botas?_ and _¿Cuál prefieres, el té o el café?_. _cuál_ gets no
+  answers: _La negra_ ("the black one") needs el/la with an adjective, which the class has not met.
+  The question word is a `word` slot, often with `{q:none}` in the English, which says it its own
+  way ("What is your neighborhood like?" for _¿Cómo es…?_). Fill in the Blank tests the word, a
+  missing accent being `hard` and _porque_ for _por qué_ `wrong`; Find the Mistake does not swap
+  question words, only _cuánto_'s agreement (_¿Cuánto parques…?_).
+- **Weather and seasons** (`weather-*`, `season-*`, `*-place-is`, `my-city-climate`): the weather
+  phrases with a month or a season, in pairings that fit (_En invierno nieva_, _En verano hace
+  calor_; the compass points too, _En el norte llueve_), and the climate adjectives describing a
+  season, a place, a region or the city (_La primavera es
+  templada_, _La selva es húmeda_, _Mi ciudad es muy seca_), and _el clima_ with them (_Mi ciudad
+  tiene un clima templado_, _El desierto tiene un clima árido_), where agreement is the test:
+  _clima_ ends in -a but is masculine. The English drops the article Spanish
+  keeps (_El invierno es frío_, "Winter is cold"). The frames that take any `weather` word (_…por la
+  mañana_, _…todos los días_) are limited to `pos: "phrase"`, since the category also holds the
+  adjectives and seasons: _Frío por la mañana_ is not a sentence.
 - **Neighbourhoods** (`barrio-*`, `place-*`, tagged `hay-estar`, `tener`, `position`): describing a
   barrio with _hay_ and _tener_ — _En mi barrio hay un cine_, _Mi ciudad tiene muchos parques_,
   _En mi barrio no hay hotel_ (bare after _no hay_, as Spanish says it) — and saying where a known
@@ -637,9 +662,9 @@ result really reads differently:
 | person (verb)          | _Mi primo os vestís a las seis._   | for primo it is se viste                                 |
 | number (gustar)        | _Me gusta los zapatos._            | los zapatos is plural, so me gustan                      |
 | agreement (pronoun)    | _¿Tienes el queso? Sí, la tengo._  | it stands for queso, masculine singular, so lo           |
-| article                | _Trabaja en una hospital._         | hospital is masculine: un hospital                       |
 | word                   | _Hablo con mi sobrino._ ("cousin") | the sentence means cousin: primo                         |
 | hay-estar              | _En mi barrio está un cine._       | hay says what there is: hay un cine                      |
+| muy-mucho              | _Mi barrio es mucho tranquilo._    | before an adjective it is muy: muy tranquilo             |
 
 A **word** swap puts in another word that fits the slot exactly as the right one does — same gender
 and number (so the article shown stays right), same person for a verb — and that means something
@@ -652,15 +677,22 @@ its subject is shown with _el_ or _la_ (_El cine hay cerca_: "estar says where s
 el cine está"). After _hay un cine_, a following _Está cerca_ is never broken that way, since _Hay
 cerca_ would not read as a clear mistake.
 
-Article swaps are never made on a common-gender noun (_la estudiante_ is fine) or on a contracted
-_al_/_del_, which has no article left to swap. **Which break is used is weighted**, because uniform
-choice let whichever kind is always available take over — first article swaps, then, once word
-swaps existed, word swaps. A form break (agreement, number, person) is used
-`FORM_SHARE` (75%) of the time when a word also offers a swap; a noun, which offers only a swap or
-its article, uses its article `NOUN_ARTICLE_SHARE` (30%) of the time; a word whose every frame can
-only swap an article is passed over except `ARTICLE_SHARE` (10%) of the time. Word swaps still lead,
-since the dictionary is mostly nouns. The English cue is always shown: without it a verb in
-the wrong person can still be a grammatical sentence (_Vamos al trabajo_ for "I go to work").
+**muy and mucho**, the mix-up English speakers make between "very" and "a lot": _muy_ becomes
+_mucho_ when an adjective follows it (_Mi barrio es mucho tranquilo_), and the adverb _mucho_
+becomes _muy_ when it follows a verb (_Trabajas muy_: "after a verb it is mucho: trabajas mucho").
+Both are always wrong, so no frame tag is needed; the word beside the slot decides.
+
+**No article swaps** (_Trabaja en una hospital_). They were the easiest mistake to spot and nearly
+every noun offered one, so even held to about one mistake in eight they meant reading a whole
+sentence, often two, for one letter. Gender is still tested: an English → Spanish noun card wants
+its article, and adjectives break their agreement. A noun's mistake is now a word swap.
+
+**Which break is used is weighted**, because uniform choice let whichever kind is always available
+take over — first article swaps, then, once word swaps existed, word swaps. A form break
+(agreement, number, person, _hay_/_estar_, _muy_/_mucho_) is used `FORM_SHARE` (75%) of the time when
+a word also offers a swap. Word swaps still lead, since the dictionary is mostly nouns. The English
+cue is always shown: without it a verb in the wrong person can still be a grammatical sentence
+(_Vamos al trabajo_ for "I go to work").
 
 - **Tapping**: any word of the broken text finds it, including every word of a phrase (_os vestís_).
 - **The fix** (`gradeFix`): the corrected text, or just the one word that changed when only one did
@@ -813,8 +845,10 @@ Worth knowing before you change `grade.ts`, because the tests encode all of it:
   `grade()` is given the gloss shown (`opts.prompt`), so `nieta` is right for "grandchild" and only
   "almost" for "grandson".
 - **es→en**: a leading `to` or `the/a/an` is stripped before comparing, and any gloss listed in the
-  entry's `en` array counts. So does a gloss of any other entry with the same headword: the prompt shows only
-  `deportista`, so `sporty` (the adjective) and `athlete` (the noun) are both right on either card.
+  entry's `en` array counts. So does a gloss of any other entry whose **prompt looks the same**:
+  _mucho_ the adjective and the adverb both show "mucho", so "many" and "a lot" are right on either
+  card. A noun's prompt carries its article, so _el este_ ("east") does not take "this", nor _la
+  mañana_ "tomorrow".
 
 When nothing matches, three checks run in order before an answer is called wrong — each exists
 because the naive version of the rule gets a real case wrong:

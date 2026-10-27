@@ -21,13 +21,13 @@ import {
 /*
  * Find the Mistake: a correct rendered sentence with exactly one slot broken in
  * a way that is unambiguously wrong. Most breaks change a form the sentence
- * itself decides — agreement, person, article; a "word" break swaps in another
+ * itself decides — agreement, number, person; a "word" break swaps in another
  * word that fits just as well (primo for sobrino), which only the English cue
  * shows is wrong. Either way the cue plus the rest of the Spanish show what it
  * should be.
  */
 
-export type MistakeKind = "agreement" | "number" | "person" | "article" | "word" | "hay-estar";
+export type MistakeKind = "agreement" | "number" | "person" | "word" | "hay-estar" | "muy-mucho";
 
 export interface Mistake {
   /** The sentence as it should read. */
@@ -35,8 +35,6 @@ export interface Mistake {
   slot: string;
   entryId: string;
   kind: MistakeKind;
-  /** Whether the broken text is the slot's article rather than its word. */
-  article: boolean;
   /** The broken text, as shown. */
   wrong: string;
   /** The text it should be. */
@@ -54,25 +52,12 @@ export interface MistakeToken {
   broken: boolean;
 }
 
-const OTHER_ARTICLE: Record<string, string> = {
-  el: "la",
-  la: "el",
-  los: "las",
-  las: "los",
-  un: "una",
-  una: "un",
-  unos: "unas",
-  unas: "unos",
-};
-
-/**
- * How often an article swap is used when the word could be broken another way,
- * and how often a word that can *only* have its article swapped is used at all.
- * Swapping el for la is the easiest mistake to spot and almost every noun offers
- * one, so uniform choice made them 43% of all mistakes; at this share they are
- * about 13%.
+/*
+ * No break swaps an article (el for la). It was the easiest mistake to spot and
+ * nearly every noun offered one, and finding it meant reading a whole sentence
+ * for one letter. Gender is still tested: an english → spanish noun card wants
+ * its article, and adjectives break their agreement.
  */
-const ARTICLE_SHARE = 0.1;
 
 /**
  * When a word can be broken by its form and also swapped for another word, how
@@ -80,9 +65,6 @@ const ARTICLE_SHARE = 0.1;
  * so without this they were three quarters of all mistakes.
  */
 const FORM_SHARE = 0.75;
-
-/** For a noun, which can only be swapped or have its article broken: how often the article. */
-const NOUN_ARTICLE_SHARE = 0.3;
 
 /**
  * In a frame with a direct object pronoun, how often the mistake is the pronoun
@@ -172,7 +154,6 @@ function wordSwap(
     if (!wrong || normalize(wrong) === normalize(right)) continue;
     return {
       kind: "word",
-      article: false,
       wrong,
       right,
       explanation: `the sentence means ${entry.en[0]!.replace(/^to /, "")}: ${right}`,
@@ -217,7 +198,6 @@ function hayEstarBreak(
       .map((part) => part.text);
     return {
       kind: "hay-estar",
-      article: false,
       wrong: number === "pl" ? "están" : "está",
       right,
       explanation: `hay says what there is: ${negated ? "no " : ""}hay ${[...what, phraseText(sentence, noun)].join(" ")}`,
@@ -228,11 +208,50 @@ function hayEstarBreak(
   if (!frame.es.includes(`{${detail.agreesWith}:el}`)) return undefined;
   return {
     kind: "hay-estar",
-    article: false,
     wrong: "hay",
     right,
     explanation: `estar says where something known is: ${phraseText(sentence, detail.agreesWith)} ${right}`,
   };
+}
+
+/** The slot of the nearest filled word before (-1) or after (1) this one. */
+function neighbour(sentence: RenderedSentence, slot: string, step: 1 | -1): string | undefined {
+  const filled = sentence.segments.filter((part) => part.slot && !part.article);
+  const at = filled.findIndex((part) => part.slot === slot);
+  return filled[at + step]?.slot;
+}
+
+/**
+ * The mix-up English speakers make between "very" and "a lot": mucho before an
+ * adjective (es mucho tranquilo) or muy after a verb (trabajo muy). Both are
+ * always wrong, so the break needs no frame tag, only the word beside it.
+ */
+function muyMuchoBreak(
+  frame: Frame,
+  sentence: RenderedSentence,
+  slot: string,
+  entry: Entry,
+  right: string,
+): Break | undefined {
+  const after = neighbour(sentence, slot, 1);
+  if (entry.id === "muy" && after && frame.slots[after]?.kind === "adj") {
+    return {
+      kind: "muy-mucho",
+      wrong: "mucho",
+      right,
+      explanation: `before an adjective it is muy: muy ${wordText(sentence, after)}`,
+    };
+  }
+  const before = neighbour(sentence, slot, -1);
+  if (entry.id === "mucho-2" && before && frame.slots[before]?.kind === "verb") {
+    return {
+      kind: "muy-mucho",
+      wrong: "muy",
+      right,
+      explanation: `after a verb it is mucho: ${wordText(sentence, before).toLowerCase()} mucho`,
+    };
+  }
+  return undefined;
 }
 
 /** Every way this slot of this sentence can be broken, each producing different text. */
@@ -258,7 +277,6 @@ function breaksFor(
     if (otherGender !== right) {
       out.push({
         kind: "agreement",
-        article: false,
         wrong: otherGender,
         right,
         explanation: `${noun} is ${describe(gender, number)}, so ${right}`,
@@ -268,7 +286,6 @@ function breaksFor(
     if (otherNumber !== right) {
       out.push({
         kind: "number",
-        article: false,
         wrong: otherNumber,
         right,
         explanation: `${noun} is ${describe(gender, number)}, so ${right}`,
@@ -283,7 +300,6 @@ function breaksFor(
     if (other && other !== right) {
       out.push({
         kind: "agreement",
-        article: false,
         wrong: other,
         right,
         explanation: `it describes ${noun}, who is ${gender === "f" ? "female" : "male"}, so ${right}`,
@@ -300,37 +316,18 @@ function breaksFor(
     out.push(
       {
         kind: "agreement",
-        article: false,
         wrong: DIRECT_OBJECT[gender === "f" ? "m" : "f"][number],
         right,
         explanation,
       },
       {
         kind: "number",
-        article: false,
         wrong: DIRECT_OBJECT[gender][number === "pl" ? "sg" : "pl"],
         right,
         explanation,
       },
     );
     return out;
-  }
-
-  // Swapping el/la only breaks a noun with one gender, and only an article the
-  // sentence still shows (a contracted "al" has none to swap).
-  if (spec.kind === "noun" && entry.pos === "noun" && entry.gender !== "mf") {
-    const article = sentence.segments.find((part) => part.slot === slot && part.article);
-    const swapped = article ? OTHER_ARTICLE[article.text.toLowerCase()] : undefined;
-    if (article && swapped) {
-      const noun = wordText(sentence, slot);
-      out.push({
-        kind: "article",
-        article: true,
-        wrong: swapped,
-        right: article.text,
-        explanation: `${noun} is ${detail.gender === "f" ? "feminine" : "masculine"}: ${article.text.toLowerCase()} ${noun}`,
-      });
-    }
   }
 
   // Gustar and the like: break the agreement with what is liked (me gusta los
@@ -349,7 +346,6 @@ function breaksFor(
     if (otherNumber && normalize(otherNumber) !== normalize(right)) {
       out.push({
         kind: "number",
-        article: false,
         wrong: otherNumber,
         right,
         explanation:
@@ -369,6 +365,9 @@ function breaksFor(
     if (hayEstar) out.push(hayEstar);
   }
 
+  const muyMucho = muyMuchoBreak(frame, sentence, slot, entry, right);
+  if (muyMucho) out.push(muyMucho);
+
   const swap = wordSwap(frame, sentence, slot, entry, dictionary, random);
   if (swap) out.push(swap);
 
@@ -386,7 +385,6 @@ function breaksFor(
       if (!wrong || normalize(wrong) === normalize(right)) continue;
       out.push({
         kind: "person",
-        article: false,
         wrong,
         right,
         explanation: `for ${subjectText} it is ${right}`,
@@ -406,13 +404,6 @@ function findMistake(
 ): Mistake | undefined {
   const entry = context.dictionary.find((candidate) => candidate.id === entryId);
   if (!entry) return undefined;
-
-  // Swapping el for la is the easiest break to spot and nearly every noun offers
-  // one, so it was becoming half of all mistakes. A frame that can break a form —
-  // agreement, number, person — wins; an article swap is what is left when the
-  // word offers nothing else, plus the occasional turn.
-  const wantArticle = context.random() < ARTICLE_SHARE;
-  let fallback: Mistake | undefined;
 
   for (const { frame, slot } of framesToTry(targets, entryId, context).slice(0, 8)) {
     const sentence = renderFrame(frame, context, { [slot]: entryId });
@@ -445,27 +436,13 @@ function findMistake(
     if (breaks.length === 0) continue;
 
     // A form break (agreement, number, person) leads when the word offers one; a
-    // word swap is close to always available, so unweighted it took over. A noun
-    // has no form break, only its meaning (a swap) and its gender (the article),
-    // and both are fair to test, so it mixes the two.
-    const form = breaks.find((option) => !option.article && option.kind !== "word");
+    // word swap is close to always available, so unweighted it took over.
+    const form = breaks.find((option) => option.kind !== "word");
     const swap = breaks.find((option) => option.kind === "word");
-    const article = breaks.find((option) => option.article);
-    let chosen: Break;
-    if (form) chosen = swap && context.random() >= FORM_SHARE ? swap : form;
-    else if (swap) chosen = article && context.random() < NOUN_ARTICLE_SHARE ? article : swap;
-    else chosen = breaks[0]!;
-    if (wantArticle && article) chosen = article;
-    const made = { sentence, slot, entryId, ...chosen, accepts: acceptsFor(chosen) };
-    // An article chosen over a swap or a form break is a choice; an article that
-    // is all this frame offers waits, in case another frame offers more.
-    if (!chosen.article || form || swap) return made;
-    fallback ??= made;
+    const chosen = form && swap ? (context.random() < FORM_SHARE ? form : swap) : (form ?? swap)!;
+    return { sentence, slot, entryId, ...chosen, accepts: acceptsFor(chosen) };
   }
-  // Every frame for this word can only swap its article. Leave it to the next
-  // word in the session unless this is the occasional article turn: nouns whose
-  // sentences offer nothing harder were most of the mistakes.
-  return wantArticle ? fallback : undefined;
+  return undefined;
 }
 
 /**
@@ -499,7 +476,7 @@ function acceptsFor(chosen: Break): string[] {
 export function mistakeTokens(mistake: Mistake): MistakeToken[] {
   const tokens: MistakeToken[] = [];
   for (const segment of mistake.sentence.segments) {
-    const broken = segment.slot === mistake.slot && Boolean(segment.article) === mistake.article;
+    const broken = segment.slot === mistake.slot && !segment.article;
     let text = broken ? mistake.wrong : segment.text;
     // Keep the capital if the broken text starts a sentence (the renderer gave it one).
     if (broken && /^\p{Lu}/u.test(segment.text)) {

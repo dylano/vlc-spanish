@@ -62,9 +62,14 @@ describe("making a mistake", () => {
     for (const mistake of found) expect(mistake.explanation).toMatch(/^for .+ it is /);
   });
 
-  it("swaps an article on a noun with one gender, never on a common-gender noun", () => {
-    expect(mistakes("hospital").some((m) => m.kind === "article")).toBe(true);
-    expect(mistakes("estudiante").some((m) => m.kind === "article")).toBe(false);
+  it("never swaps an article: one letter is too little to hunt for in a sentence", () => {
+    const articles = ["el", "la", "los", "las", "un", "una", "unos", "unas"];
+    for (const id of ["hospital", "manzana", "cine", "biblioteca", "zapato"]) {
+      // Only breaks of the noun itself: a pronoun frame may break lo or la instead.
+      for (const mistake of mistakes(id).filter((m) => m.entryId === id)) {
+        expect(articles, mistake.sentence.es).not.toContain(mistake.wrong.toLowerCase());
+      }
+    }
   });
 
   it("breaks a profession's gender to disagree with the person", () => {
@@ -104,8 +109,32 @@ describe("making a mistake", () => {
     }
   });
 
+  it("puts mucho for muy before an adjective, and muy for mucho after a verb", () => {
+    const muy = mistakes("muy").filter((m) => m.kind === "muy-mucho");
+    expect(muy.length).toBeGreaterThan(0);
+    for (const mistake of muy) {
+      expect(mistake.wrong).toBe("mucho");
+      expect(mistake.explanation).toMatch(/^before an adjective it is muy: muy \p{L}+$/u);
+    }
+    const mucho = mistakes("mucho-2").filter((m) => m.kind === "muy-mucho");
+    expect(mucho.length).toBeGreaterThan(0);
+    for (const mistake of mucho) {
+      expect(mistake.wrong).toBe("muy");
+      expect(mistake.explanation).toMatch(/^after a verb it is mucho: \p{Ll}+ mucho$/u);
+    }
+  });
+
   it("always changes exactly the broken text, and the rest of the sentence reads as before", () => {
-    for (const id of ["timido", "cenar", "hospital", "enfermero", "levantarse", "alto", "hay"]) {
+    for (const id of [
+      "timido",
+      "cenar",
+      "hospital",
+      "enfermero",
+      "levantarse",
+      "alto",
+      "hay",
+      "muy",
+    ]) {
       for (const mistake of mistakes(id, 20)) {
         const shown = broken(mistake);
         expect(normalize(shown)).not.toBe(normalize(mistake.sentence.es));
@@ -190,7 +219,7 @@ describe("a verb the English does not say", () => {
 });
 
 describe("choosing what to break", () => {
-  it("prefers a form to an article, since swapping el for la is the easiest", () => {
+  it("prefers a form break to a word swap, and still uses both", () => {
     const targets = gapTargets(sentences.frames, { dictionary: entries });
     const kinds: Record<string, number> = {};
     const ids = [...targets.keys()];
@@ -200,7 +229,8 @@ describe("choosing what to break", () => {
     }
     const total = Object.values(kinds).reduce((sum, count) => sum + count, 0);
     expect(total).toBeGreaterThan(50);
-    expect(kinds.article ?? 0).toBeLessThan(total * 0.25);
+    expect(kinds.word ?? 0).toBeGreaterThan(0);
+    expect(total - (kinds.word ?? 0)).toBeGreaterThan(0);
   });
 });
 

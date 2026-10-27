@@ -432,15 +432,16 @@ function nearMiss(entry: Entry, answer: string, expected: string, opts: GradeOpt
 }
 
 /**
- * English answers accepted for a spanish prompt. The prompt shows only the
- * headword, so when two entries share it (deportista the adjective and the
- * noun) nothing tells the learner which is meant, and either meaning is right.
+ * English answers accepted for a spanish prompt. When two entries show the
+ * same prompt (mucho the adjective and the adverb), nothing tells the learner
+ * which is meant, and either meaning is right. A noun's prompt carries its
+ * article, so el este ("east") is not este ("this"), nor la mañana mañana.
  */
 function englishAnswers(entry: Entry, dictionary: Entry[] = []): string[] {
-  const headword = normalize(entry.es);
-  const homographs = dictionary.filter(
-    (other) => other.id !== entry.id && normalize(other.es) === headword,
-  );
+  const shown = (other: Entry) =>
+    normalize(canonicalAnswer(other, "en→es", { requireArticle: true }));
+  const prompt = shown(entry);
+  const homographs = dictionary.filter((other) => other.id !== entry.id && shown(other) === prompt);
   return [...entry.en, ...homographs.flatMap((other) => other.en)];
 }
 
