@@ -55,6 +55,11 @@
   border-bottom: 1px solid var(--rule);
 }
 
+/* Rules only between entries: nothing follows the last one. */
+.row:last-child {
+  border-bottom: none;
+}
+
 .date {
   display: flex;
   align-items: center;
