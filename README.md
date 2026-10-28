@@ -162,9 +162,11 @@ tangled into components.
   note, but only the latest one that has started ever shows; an older one never comes back. The note does not move the practice rows: an invisible twin of it below them keeps them
   centred where they are without one. Below 740px of screen height (a breakpoint in the CSS) there
   is no room for both, so the twin is left out and the note pushes the rows down. See
-  [Writing the release note](#writing-the-release-note). The label is a link to **What's new**
-  (below, under Settings), every note so far: since a note leaves Home after a week, it is how
-  people learn the others are kept.
+  [Writing the release note](#writing-the-release-note). The whole card is a link to **What's
+  new** (below, under Settings), every note so far: since a note leaves Home after a week, it is
+  how people learn the others are kept. The link is the label's, stretched over the card in CSS,
+  so a screen reader hears "New · 27 October, see all notes" rather than the whole note, and × sits
+  above it and only dismisses.
 - **Custom practice** (`/custom`) — on top, **All words | Problem words · N**; then **Exercise
   modes** and **Categories** as pills, each row led by **All**. Choosing a pill narrows to it,
   several can be chosen, and clearing the last one goes back to All. With Problem words chosen the

@@ -37,7 +37,8 @@ function Note({
       aria-label="What's new"
     >
       <div className={styles.noteText}>
-        {/* The way to every note, since this one goes after a week: the label opens What's new. */}
+        {/* The way to every note, since this one goes after a week: the label's link
+            stretches over the whole card (see the CSS), so a tap anywhere opens What's new. */}
         <p className={styles.noteLabel}>
           <Link to="/whats-new" className={styles.noteLink}>
             New · {when}

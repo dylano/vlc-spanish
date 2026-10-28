@@ -22,6 +22,7 @@
 
 /* What's new: a card under the greeting, board 1 on the canvas's Release note page. */
 .note {
+  position: relative;
   display: flex;
   gap: 8px;
   margin-top: 22px;
@@ -30,7 +31,20 @@
   border-left: 3px solid var(--accent);
   border-radius: 6px;
   background: var(--raised);
-  transition: opacity 180ms ease;
+  transition:
+    opacity 180ms ease,
+    border-color 150ms ease;
+}
+
+/* The whole card opens What's new (the label's link stretches over it), so it
+   answers a hover or a keyboard focus as one. */
+.note:hover {
+  border-color: var(--accent);
+}
+
+.note:has(.noteLink:focus-visible) {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }
 
 /* Dismissed: a quick fade, then it is gone. The twin keeps the rows in place. */
@@ -74,15 +88,24 @@
   margin: 0;
 }
 
-/* A tall touch target without moving anything: the padding is taken back by the margin. */
 .noteLink {
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  padding: 14px 8px 14px 0;
-  margin: -14px 0;
   color: inherit;
   text-decoration: none;
+}
+
+.noteLink:focus-visible {
+  outline: none;
+}
+
+/* Stretched over the card: tapping anywhere on it follows the link. */
+.noteLink::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
 }
 
 .noteLinkChevron {
@@ -110,7 +133,10 @@
 }
 
 /* A 44px target, pulled into the card's corner. */
+/* Above the stretched link, so × still only dismisses. */
 .noteDismiss {
+  position: relative;
+  z-index: 1;
   flex: none;
   display: flex;
   align-items: center;
