@@ -67,6 +67,11 @@
   border-bottom: 1px solid var(--rule);
 }
 
+/* Rules only between entries: nothing follows the last one. */
+.row:last-child {
+  border-bottom: none;
+}
+
 .subject {
   margin: 0;
   font-family: var(--serif);
@@ -97,4 +102,11 @@
   letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--accent);
+}
+
+.intro {
+  margin: 0 0 10px;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: var(--muted);
 }

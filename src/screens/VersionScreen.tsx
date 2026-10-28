@@ -5,6 +5,9 @@ import styles from "./VersionScreen.module.css";
 
 const DATE_FORMAT: Intl.DateTimeFormatOptions = { day: "numeric", month: "short" };
 
+/** How many commits the screen lists; the whole history is on GitHub, linked from Settings. */
+const SHOWN = 10;
+
 /**
  * What this build is, and what went into the ones around it. The messages come
  * from GitHub when the screen opens; offline, the build's own commit is still
@@ -17,7 +20,7 @@ export default function VersionScreen() {
 
   useEffect(() => {
     const abort = new AbortController();
-    fetchCommits(10, abort.signal)
+    fetchCommits(SHOWN, abort.signal)
       .then(setCommits)
       .catch((error: unknown) => {
         if (!abort.signal.aborted) setFailed(true);
@@ -36,7 +39,7 @@ export default function VersionScreen() {
         </svg>
         Settings
       </Link>
-      <h1 className={styles.title}>Version</h1>
+      <h1 className={styles.title}>Recent Commits</h1>
       <p className={styles.running}>
         This build is <span className={styles.hash}>{__COMMIT__}</span>
       </p>

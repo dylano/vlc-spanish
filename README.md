@@ -75,7 +75,7 @@ src/lib/          pure logic, no React, thoroughly tested
   conjugation.ts    a verb's present-tense table for the Dictionary, with what to notice marked
   problems.ts       the Problem words list: misses per word, most first, and which words are on it
   forms.ts          a Dictionary card's other forms: el abuelo/a, este/a/os/as, a surprising plural
-  releaseNote.ts    the "what's new" note: when it shows, and its *italics*
+  releaseNote.ts    the "what's new" notes: which one Home shows, the history, dates and *italics*
   update.ts         when Home checks for a newer build, and whether the live one is newer
   commits.ts        recent commits from GitHub, for the Version screen
   random.ts         seedable shuffle
@@ -153,7 +153,7 @@ tangled into components.
   preview compares only with itself, and the dev server never checks. A fresh launch needs none of
   this: the service worker loads the page network-first.
 - **What's new** — a short note on Home, under the greeting, about the latest change: a card with
-  a green edge, "NEW · 13 OCTOBER" (the date in the device's language, like Home's own), a title, a line or two of text and a **×** (board 1 on the
+  a green edge, "NEW · 13 OCTOBER ›" (the date in the device's language, like Home's own), a title, a line or two of text and a **×** (board 1 on the
   canvas's "Release note" page; a quieter note at the foot of Home and one in the Dictionary's
   note style were judged too easy to miss). It shows for **7 days from its date** (`SHOW_DAYS` in
   `src/lib/releaseNote.ts`), to new users too, and × fades it out (180 ms, none with reduced motion)
@@ -162,7 +162,11 @@ tangled into components.
   note, but only the latest one that has started ever shows; an older one never comes back. The note does not move the practice rows: an invisible twin of it below them keeps them
   centred where they are without one. Below 740px of screen height (a breakpoint in the CSS) there
   is no room for both, so the twin is left out and the note pushes the rows down. See
-  [Writing the release note](#writing-the-release-note).
+  [Writing the release note](#writing-the-release-note). The whole card is a link to **What's
+  new** (below, under Settings), every note so far: since a note leaves Home after a week, it is
+  how people learn the others are kept. The link is the label's, stretched over the card in CSS,
+  so a screen reader hears "New · 27 October, see all notes" rather than the whole note, and × sits
+  above it and only dismisses.
 - **Custom practice** (`/custom`) — on top, **All words | Problem words · N**; then **Exercise
   modes** and **Categories** as pills, each row led by **All**. Choosing a pill narrows to it,
   several can be chosen, and clearing the last one goes back to All. With Problem words chosen the
@@ -290,9 +294,19 @@ rev-parse` locally, marked "+ local changes" when the tree is dirty), injected a
   `define` in `vite.config.ts`. It opens **Version** (`/version`), which lists the last ten commits
   with their messages, **read from GitHub when the screen opens** (`src/lib/commits.ts`, the public
   repo's API, no key): baking them into the build would go stale on the next push, and the messages
-  are only interesting with a connection. The commit this build came from is marked in the list.
+  are only interesting with a connection. The commit this build came from is marked in the list,
+  under a line saying these are the most recent. Across from the version in the footer,
+  **vlc-spanish@github ↗** (GitHub's mark, an arrow out) opens the repository in a new tab, for anyone
+  chasing the details.
   Offline it says so and still shows the build's own commit, which is baked in; the browser's own
   cache often answers anyway.
+  Above the version, a **What's new** row (with the latest note's title and date under it) opens
+  **What's new** (`/whats-new`): every release note whose date has come, newest first, the latest
+  marked, each with its date, title and text as Home showed it, and a link on to Version at the foot.
+  The row is hidden while there are no notes. Boards A1 and A2 on the canvas's "Release note history"
+  page; the other options put the notes inside the Version screen, beside or among the commits
+  (board D threaded each note above the change that shipped it). The notes are written for
+  learners and the commits for the developer, so they get separate screens, one tap apart.
 
 ## Data
 
@@ -371,7 +385,8 @@ so far, **newest first**. Home shows only the latest one that has started.
   `*asterisks*` for italics; there is no other formatting.
 - **A new note** goes at the top and needs a **later date**: a dismissal is remembered as the
   dismissed note's date, so a new note shows to everyone, while fixing a typo in the current one
-  does not bring it back. Old notes stay in the file as the history; they never show again on Home.
+  does not bring it back. Old notes stay in the file as the history, listed under Settings → What's
+  new; they never show again on Home.
   Two notes may not share a date (the schema refuses it, since the second would never show).
 - **No note**: an empty list. A file that does not parse shows no note rather than breaking Home,
   and fails the tests (`src/lib/releaseNote.test.ts`), so CI catches it, along with notes out of
@@ -718,7 +733,8 @@ Phases 1 and 2 are complete and deployed at [vlc-spanish.netlify.app](https://vl
   `vp run render:frames` how many sentences they can make)
 - **Problem words**: a list of every word missed, most first, with Practice these
 - **What's new**: a release note on Home, written by hand in `data/release-note.json`
-- **Settings**: name, session length (10–30 words), light or dark, and the recent commits
+- **Settings**: name, session length (10–30 words), light or dark, every release note (What's new),
+  and the recent commits
 - **Single-user and fully static**: name on first start, everything in local storage, no server;
   installable PWA with the app shell cached offline
 

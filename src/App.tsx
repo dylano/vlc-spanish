@@ -10,6 +10,7 @@ import QuizScreen from "./screens/QuizScreen.tsx";
 import SettingsScreen from "./screens/SettingsScreen.tsx";
 import VersionScreen from "./screens/VersionScreen.tsx";
 import WelcomeScreen from "./screens/WelcomeScreen.tsx";
+import WhatsNewScreen from "./screens/WhatsNewScreen.tsx";
 
 /** Until a name is given, the welcome screen is the whole app. */
 function Gate() {
@@ -28,6 +29,7 @@ function Gate() {
         <Route path="custom" element={<CustomPracticeScreen />} />
         <Route path="problems" element={<ProblemWordsScreen />} />
         <Route path="version" element={<VersionScreen />} />
+        <Route path="whats-new" element={<WhatsNewScreen />} />
         <Route path="*" element={<HomeScreen />} />
       </Route>
     </Routes>
