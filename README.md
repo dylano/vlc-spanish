@@ -292,7 +292,10 @@ rev-parse` locally, marked "+ local changes" when the tree is dirty), injected a
   `define` in `vite.config.ts`. It opens **Version** (`/version`), which lists the last ten commits
   with their messages, **read from GitHub when the screen opens** (`src/lib/commits.ts`, the public
   repo's API, no key): baking them into the build would go stale on the next push, and the messages
-  are only interesting with a connection. The commit this build came from is marked in the list.
+  are only interesting with a connection. The commit this build came from is marked in the list,
+  under a line saying these are the most recent. Across from the version in the footer,
+  **vlc-spanish@github ↗** (GitHub's mark, an arrow out) opens the repository in a new tab, for anyone
+  chasing the details.
   Offline it says so and still shows the build's own commit, which is baked in; the browser's own
   cache often answers anyway.
   Above the version, a **What's new** row (with the latest note's title and date under it) opens
