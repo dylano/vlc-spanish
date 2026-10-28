@@ -5,7 +5,8 @@ import { daysBetween, type IsoDate } from "./dates.ts";
  * The "what's new" note on Home: short notes, written by hand in
  * data/release-note.json and shipped with a deploy. The file keeps every note,
  * newest first; Home shows only the latest one that has started, for a week
- * from its date or until it is dismissed on this device.
+ * from its date or until it is dismissed on this device. Settings → What's new
+ * lists every one that has started.
  */
 
 /** Days a note shows, counting its date as the first. */
@@ -29,6 +30,19 @@ export const releaseNoteFileSchema = z
   .refine((notes) => new Set(notes.map((note) => note.date)).size === notes.length, {
     message: "two notes share a date",
   });
+
+/** Every note whose date has come, newest first: the What's new screen. */
+export function noteHistory(notes: readonly ReleaseNote[], today: IsoDate): ReleaseNote[] {
+  return notes.filter((note) => note.date <= today).sort((a, b) => b.date.localeCompare(a.date));
+}
+
+/** A note's date as the app shows it, in the device's language: "27 October". */
+export function noteDate(date: IsoDate, locale?: string): string {
+  const [y, m, d] = date.split("-").map(Number);
+  return new Intl.DateTimeFormat(locale, { day: "numeric", month: "long" }).format(
+    new Date(y!, m! - 1, d),
+  );
+}
 
 /** The latest note whose date has come, whatever order the file is in. */
 export function currentNote(

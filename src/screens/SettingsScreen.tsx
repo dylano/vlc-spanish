@@ -1,7 +1,10 @@
 import { useMemo, useState, type FormEvent } from "react";
 import { Link } from "react-router";
 import { SESSION_SIZES, type Theme } from "../app/local.ts";
+import { releaseNotes } from "../app/releaseNote.ts";
 import { useStore } from "../app/store-context.ts";
+import { today } from "../lib/dates.ts";
+import { noteDate, noteHistory } from "../lib/releaseNote.ts";
 import styles from "./SettingsScreen.module.css";
 
 export default function SettingsScreen() {
@@ -12,6 +15,7 @@ export default function SettingsScreen() {
   const sections = useMemo(() => new Set(entries.flatMap((entry) => entry.tags)).size, [entries]);
   const practiced = Object.keys(progress.entries).length;
   const changed = draft.trim() !== "" && draft.trim() !== name;
+  const latest = noteHistory(releaseNotes, today())[0];
 
   function save(event: FormEvent) {
     event.preventDefault();
@@ -117,6 +121,21 @@ export default function SettingsScreen() {
       </div>
 
       <div className={styles.spacer} />
+      {/* Every release note, for learners (board A1); the version line below is
+          the same history as commits. */}
+      {latest ? (
+        <Link to="/whats-new" className={styles.whatsNew}>
+          <span>
+            What’s new
+            <span className={styles.whatsNewLatest}>
+              Latest: {latest.title} · {noteDate(latest.date)}
+            </span>
+          </span>
+          <svg className={styles.chevron} viewBox="0 0 20 20" aria-hidden="true">
+            <path d="M7 4l6 6-6 6" />
+          </svg>
+        </Link>
+      ) : null}
       {/* Which deployment this is, for telling builds apart; the screen behind it
           names the commits, read from GitHub. */}
       <Link to="/version" className={styles.version}>

@@ -6,7 +6,8 @@ import { useStore } from "../app/store-context.ts";
 import { useUpdateCheck } from "../app/update.ts";
 import { today } from "../lib/dates.ts";
 import { problemWords } from "../lib/problems.ts";
-import { emphasis, visibleNote, type ReleaseNote } from "../lib/releaseNote.ts";
+import NoteBody from "../app/NoteBody.tsx";
+import { noteDate, visibleNote, type ReleaseNote } from "../lib/releaseNote.ts";
 import styles from "./HomeScreen.module.css";
 
 const DATE_FORMAT: Intl.DateTimeFormatOptions = {
@@ -14,8 +15,6 @@ const DATE_FORMAT: Intl.DateTimeFormatOptions = {
   day: "numeric",
   month: "long",
 };
-
-const NOTE_DATE: Intl.DateTimeFormatOptions = { day: "numeric", month: "long" };
 
 /** How long the note takes to fade once dismissed; matches the CSS. */
 const NOTE_FADE_MS = 180;
@@ -30,21 +29,27 @@ function Note({
   onDismiss: () => void;
   leaving?: boolean;
 }) {
-  const [y, m, d] = note.date.split("-").map(Number);
   // In the device's language, like the date at the top of Home.
-  const when = new Intl.DateTimeFormat(undefined, NOTE_DATE).format(new Date(y!, m! - 1, d));
+  const when = noteDate(note.date);
   return (
     <aside
       className={`${styles.note} ${leaving ? styles.noteLeaving : ""}`}
       aria-label="What's new"
     >
       <div className={styles.noteText}>
-        <p className={styles.noteLabel}>New · {when}</p>
+        {/* The way to every note, since this one goes after a week: the label opens What's new. */}
+        <p className={styles.noteLabel}>
+          <Link to="/whats-new" className={styles.noteLink}>
+            New · {when}
+            <span className="visually-hidden">, see all notes</span>
+            <svg className={styles.noteLinkChevron} viewBox="0 0 20 20" aria-hidden="true">
+              <path d="M7 4l6 6-6 6" />
+            </svg>
+          </Link>
+        </p>
         <p className={styles.noteTitle}>{note.title}</p>
         <p className={styles.noteBody}>
-          {emphasis(note.body).map((run, index) =>
-            run.italic ? <i key={index}>{run.text}</i> : <span key={index}>{run.text}</span>,
-          )}
+          <NoteBody body={note.body} />
         </p>
       </div>
       <button type="button" className={styles.noteDismiss} aria-label="Dismiss" onClick={onDismiss}>

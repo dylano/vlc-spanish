@@ -3,6 +3,8 @@ import raw from "../../data/release-note.json";
 import {
   currentNote,
   emphasis,
+  noteDate,
+  noteHistory,
   releaseNoteFileSchema,
   SHOW_DAYS,
   visibleNote,
@@ -41,6 +43,16 @@ describe("the release note", () => {
     const close = { ...next, date: "2026-10-16" };
     expect(visibleNote([close, note], "2026-10-17", close.date)).toBeUndefined();
     expect(visibleNote([close, note], "2026-10-23", undefined)).toBeUndefined();
+  });
+
+  it("lists every note that has started, newest first, for What's new", () => {
+    const later = { ...next, date: "2026-11-30" };
+    expect(noteHistory([note, next, later], "2026-10-28")).toEqual([next, note]);
+    expect(noteHistory([], "2026-10-28")).toEqual([]);
+  });
+
+  it("writes a note's date as day and month", () => {
+    expect(noteDate("2026-10-27", "en-GB")).toBe("27 October");
   });
 
   it("shows nothing when there are no notes", () => {

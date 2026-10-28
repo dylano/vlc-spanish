@@ -74,6 +74,27 @@
   margin: 0;
 }
 
+/* A tall touch target without moving anything: the padding is taken back by the margin. */
+.noteLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 14px 8px 14px 0;
+  margin: -14px 0;
+  color: inherit;
+  text-decoration: none;
+}
+
+.noteLinkChevron {
+  width: 10px;
+  height: 10px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
 .noteTitle {
   font-family: var(--serif);
   font-size: 1.375rem;
