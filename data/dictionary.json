@@ -3965,6 +3965,51 @@
       "added": "2026-09-21"
     },
     {
+      "id": "todo-recto",
+      "es": "todo recto",
+      "en": ["straight ahead", "straight on", "straight"],
+      "pos": "adv",
+      "notes": "Giving directions: siga todo recto, keep going straight on. In Latin America it is often 'derecho', which in Spain sounds like 'a la derecha'.",
+      "tags": ["position"],
+      "added": "2026-10-29"
+    },
+    {
+      "id": "a-la-izquierda",
+      "es": "a la izquierda",
+      "en": ["on the left", "left"],
+      "pos": "adv",
+      "notes": "Before a place it takes 'de': a la izquierda del banco. Gira a la izquierda: turn left.",
+      "tags": ["position"],
+      "added": "2026-10-29"
+    },
+    {
+      "id": "a-la-derecha",
+      "es": "a la derecha",
+      "en": ["on the right", "right"],
+      "pos": "adv",
+      "notes": "Before a place it takes 'de': a la derecha de la farmacia. Not 'derecho', which is straight on in Latin America.",
+      "tags": ["position"],
+      "added": "2026-10-29"
+    },
+    {
+      "id": "en-la-esquina",
+      "es": "en la esquina",
+      "en": ["on the corner", "at the corner"],
+      "pos": "adv",
+      "notes": "La esquina is a street corner. The inside corner of a room is el rincón.",
+      "tags": ["position"],
+      "added": "2026-10-29"
+    },
+    {
+      "id": "al-final-de",
+      "es": "al final de",
+      "en": ["at the end of"],
+      "pos": "prep",
+      "notes": "De + el contracts: al final de la calle, al final del pasillo.",
+      "tags": ["position"],
+      "added": "2026-10-29"
+    },
+    {
       "id": "gustar",
       "es": "gustar",
       "en": ["to like"],
