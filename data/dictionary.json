@@ -3970,7 +3970,7 @@
       "en": ["straight ahead", "straight on", "straight"],
       "pos": "adv",
       "notes": "Giving directions: siga todo recto, keep going straight on. In Latin America it is often 'derecho', which in Spain sounds like 'a la derecha'.",
-      "tags": ["location"],
+      "tags": ["position"],
       "added": "2026-10-29"
     },
     {
@@ -3979,7 +3979,7 @@
       "en": ["on the left", "left"],
       "pos": "adv",
       "notes": "Before a place it takes 'de': a la izquierda del banco. Gira a la izquierda: turn left.",
-      "tags": ["location"],
+      "tags": ["position"],
       "added": "2026-10-29"
     },
     {
@@ -3988,7 +3988,7 @@
       "en": ["on the right", "right"],
       "pos": "adv",
       "notes": "Before a place it takes 'de': a la derecha de la farmacia. Not 'derecho', which is straight on in Latin America.",
-      "tags": ["location"],
+      "tags": ["position"],
       "added": "2026-10-29"
     },
     {
@@ -3997,7 +3997,7 @@
       "en": ["on the corner", "at the corner"],
       "pos": "adv",
       "notes": "La esquina is a street corner. The inside corner of a room is el rincón.",
-      "tags": ["location"],
+      "tags": ["position"],
       "added": "2026-10-29"
     },
     {
@@ -4006,7 +4006,7 @@
       "en": ["at the end of"],
       "pos": "prep",
       "notes": "De + el contracts: al final de la calle, al final del pasillo.",
-      "tags": ["location"],
+      "tags": ["position"],
       "added": "2026-10-29"
     },
     {
