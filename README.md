@@ -194,9 +194,15 @@ tangled into components.
   Exercise names, grouped: Words — **Translate** (typed), **Multiple Choice**,
   **Match Pairs**; Sentences — **Translate**, **Fill in the Blank**, **Find the Mistake**. Both groups
   have a Translate; the prompt (one word or a sentence) tells them apart.
-  The summary adds a score per exercise when the session used more than one, and is labelled with
+  The summary adds a score per exercise when the session used more than one (there the two are
+  "Translate a word" and "Translate a sentence", with no headings to tell them apart), and is labelled with
   where the session came from: General practice, Custom practice, Problem words, or the exercise's
-  name when there was only one.
+  name when there was only one. Beside **Done**, **↻ Another round** starts a new session with the
+  same settings: the same URL opened again, which draws new words and sentences from the progress
+  just saved, so it is never a replay (hence not "Repeat"). The quiz route is keyed by the
+  navigation, so the same URL still builds a fresh session; the history entry is replaced, not
+  added. "Another round" takes a little more of the row than Done; below 380px wide each button
+  gets a row of its own (board A2 on the canvas's "Go again" page).
 - **Multiple Choice** — the same session with four options; touching one answers it, with no
   separate Check. A right answer moves on by itself, a miss waits for Next. Keys a–d or 1–4 answer
   and Enter moves on, on a computer. A wrong pick says what the picked word means. Started from
