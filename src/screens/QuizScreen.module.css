@@ -353,6 +353,51 @@
   cursor: pointer;
 }
 
+/* The summary's two ways out: another round (outlined, with ↻) beside Done.
+   The longer label gets a little more of the row; on narrow phones each takes
+   a row of its own. */
+.summaryActions {
+  display: grid;
+  grid-template-columns: 1.35fr 1fr;
+  gap: 10px;
+}
+
+@media (max-width: 379px) {
+  .summaryActions {
+    grid-template-columns: 1fr;
+  }
+}
+
+.buttonSecondary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 52px;
+  padding: 0 12px;
+  border: 1px solid var(--accent);
+  border-radius: 6px;
+  background: transparent;
+  color: var(--accent);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.buttonIcon {
+  flex: none;
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
 /* Multiple choice. Each option is a ruled row like a dictionary line. Touching
    one answers: the right option gets a green bar and a lighter ground, a wrong
    pick a red bar and a strike-through. */

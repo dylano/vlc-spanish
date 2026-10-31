@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes } from "react-router";
+import { BrowserRouter, Route, Routes, useLocation } from "react-router";
 import AppShell from "./app/AppShell.tsx";
 import { StoreProvider } from "./app/store.tsx";
 import { useStore } from "./app/store-context.ts";
@@ -15,13 +15,16 @@ import WhatsNewScreen from "./screens/WhatsNewScreen.tsx";
 /** Until a name is given, the welcome screen is the whole app. */
 function Gate() {
   const { name } = useStore();
+  const location = useLocation();
   if (!name) return <WelcomeScreen />;
 
   return (
     <Routes>
       {/* Outside the shell: a session is full screen, sized to the space above
           the keyboard, with no main nav. */}
-      <Route path="quiz" element={<QuizScreen />} />
+      {/* Keyed by the navigation, so "Another round" (the same URL again) builds a
+          fresh session rather than reusing the finished one. */}
+      <Route path="quiz" element={<QuizScreen key={location.key} />} />
       <Route element={<AppShell />}>
         <Route index element={<HomeScreen />} />
         <Route path="dictionary" element={<DictionaryScreen />} />

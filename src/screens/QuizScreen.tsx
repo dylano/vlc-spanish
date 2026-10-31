@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { useNavigate, useSearchParams } from "react-router";
+import { useLocation, useNavigate, useSearchParams } from "react-router";
 import SessionShell from "../app/SessionShell.tsx";
 import { LOCAL_USER } from "../app/local.ts";
 import { sentences } from "../app/sentences.ts";
@@ -72,6 +72,15 @@ const EXERCISE_LABEL = Object.fromEntries(
   EXERCISES.map((exercise) => [exercise.id, exercise.label]),
 ) as Record<Exercise, string>;
 
+/**
+ * The summary's per-exercise rows have no Words/Sentences headings, as Custom
+ * practice does, and no prompt to tell the two Translates apart, so they say it.
+ */
+const SUMMARY_LABEL: Partial<Record<Exercise, string>> = {
+  typed: "Translate a word",
+  translate: "Translate a sentence",
+};
+
 interface Answered {
   card: Card;
   grade: Grade;
@@ -88,6 +97,7 @@ export default function QuizScreen() {
   const { entries, progress, recordResults, sessionSize } = useStore();
   const [params] = useSearchParams();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const config = useMemo<QuizConfig>(() => {
     const scope = params.get("scope");
@@ -234,15 +244,31 @@ export default function QuizScreen() {
         position={{ index: totalWords, total: totalWords }}
         label={label}
         footer={
-          <button
-            type="button"
-            className={styles.button}
-            onClick={() => {
-              void navigate("/");
-            }}
-          >
-            Done
-          </button>
+          <div className={styles.summaryActions}>
+            {/* The same settings (the URL) again: new words and sentences, not a replay. */}
+            <button
+              type="button"
+              className={styles.buttonSecondary}
+              onClick={() => {
+                void navigate(`/quiz${location.search}`, { replace: true });
+              }}
+            >
+              <svg className={styles.buttonIcon} viewBox="0 0 20 20" aria-hidden="true">
+                <path d="M16 10a6 6 0 1 1-1.76-4.24" />
+                <path d="M16 3.5v3.5h-3.5" />
+              </svg>
+              Another round
+            </button>
+            <button
+              type="button"
+              className={styles.button}
+              onClick={() => {
+                void navigate("/");
+              }}
+            >
+              Done
+            </button>
+          </div>
         }
       >
         <section className={styles.summary}>
@@ -282,7 +308,7 @@ export default function QuizScreen() {
             <ul className={styles.breakdown}>
               {byExercise.map((exercise) => (
                 <li key={exercise.id} className={styles.breakdownRow}>
-                  <span>{exercise.label}</span>
+                  <span>{SUMMARY_LABEL[exercise.id] ?? exercise.label}</span>
                   <span className={styles.breakdownScore}>
                     {exercise.ungraded
                       ? `${exercise.total} translated`
