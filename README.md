@@ -77,6 +77,7 @@ src/lib/          pure logic, no React, thoroughly tested
   forms.ts          a Dictionary card's other forms: el abuelo/a, este/a/os/as, a surprising plural
   releaseNote.ts    the "what's new" notes: which one Home shows, the history, dates and *italics*
   update.ts         when Home checks for a newer build, and whether the live one is newer
+  anotherRound.ts   the summary's "go again" phrases, never the same one twice running
   commits.ts        recent commits from GitHub, for the Version screen
   random.ts         seedable shuffle
   sentences/        sentence frames: renderer and checks (frames.ts), gaps (gap.ts), mistakes
@@ -197,7 +198,10 @@ tangled into components.
   The summary adds a score per exercise when the session used more than one (there the two are
   "Translate a word" and "Translate a sentence", with no headings to tell them apart), and is labelled with
   where the session came from: General practice, Custom practice, Problem words, or the exercise's
-  name when there was only one. Beside **Done**, **↻ Another round** starts a new session with the
+  name when there was only one. Beside **Done**, **↻ Another round** (or one of a dozen others,
+  picked at random per session for fun: _Run it back_, _Hit me again_, _¡Otra vez!_, _¿Repetimos?_,
+  _¡A por otra!_…, the Spanish ones marked `lang="es"`; never the same one twice running, in
+  `src/lib/anotherRound.ts`) starts a new session with the
   same settings: the same URL opened again, which draws new words and sentences from the progress
   just saved, so it is never a replay (hence not "Repeat"). The quiz route is keyed by the
   navigation, so the same URL still builds a fresh session; the history entry is replaced, not
