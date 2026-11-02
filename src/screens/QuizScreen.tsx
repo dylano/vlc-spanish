@@ -1,9 +1,10 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useLocation, useNavigate, useSearchParams } from "react-router";
 import SessionShell from "../app/SessionShell.tsx";
 import { LOCAL_USER } from "../app/local.ts";
 import { sentences } from "../app/sentences.ts";
 import { useStore } from "../app/store-context.ts";
+import { pickAnotherRound } from "../lib/anotherRound.ts";
 import { today } from "../lib/dates.ts";
 import { canonicalAnswer, type Grade } from "../lib/grade.ts";
 import { schedule } from "../lib/scheduler.ts";
@@ -71,6 +72,9 @@ function tagsParam(value: string | null): string[] | undefined {
 const EXERCISE_LABEL = Object.fromEntries(
   EXERCISES.map((exercise) => [exercise.id, exercise.label]),
 ) as Record<Exercise, string>;
+
+/** The phrase the last session's summary showed, for as long as the app is open. */
+let lastAnotherRound: string | undefined;
 
 /**
  * The summary's per-exercise rows have no Words/Sentences headings, as Custom
@@ -144,6 +148,13 @@ export default function QuizScreen() {
 
   const [index, setIndex] = useState(0);
   const [answered, setAnswered] = useState<Answered[]>([]);
+  // Picked once per session, so the button does not change while it is read,
+  // and never the phrase the last session showed. Recorded in an effect (which
+  // may safely run twice), so the initializer stays pure.
+  const [again] = useState(() => pickAnotherRound(lastAnotherRound));
+  useEffect(() => {
+    lastAnotherRound = again.text;
+  }, [again]);
 
   // The summary is labelled with where the session came from. Each item's header
   // names its own exercise, so a mixed session always shows which one is up.
@@ -257,7 +268,7 @@ export default function QuizScreen() {
                 <path d="M16 10a6 6 0 1 1-1.76-4.24" />
                 <path d="M16 3.5v3.5h-3.5" />
               </svg>
-              Another round
+              <span lang={again.lang}>{again.text}</span>
             </button>
             <button
               type="button"
