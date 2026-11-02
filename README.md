@@ -784,9 +784,14 @@ A Problem words session has its own order:
 words wrong last time, then due, then the rest of the list.
 
 On top of the order, a mixed session **reserves `NEW_SHARE` (40%) of its length for words the app has
-not asked yet**: once only that many slots are left, they go to new words whatever the exercise
-weights would have chosen. Without it the session fills with reviews — due words come first and every
-exercise can use them — and new words dwindled to a trickle within a few sessions.
+not asked yet**, **spread through the session**: each step takes a new word with the share of the
+steps left still owed to them, and once only that many slots are left they go to new words whatever
+the exercise weights would have chosen. Without it the session fills with reviews — due words come
+first and every exercise can use them — and new words dwindled to a trickle within a few sessions.
+They used to be saved for the end, where they arrived as one block of the exercise that introduces
+them (typing, or Multiple Choice when typing is left out): ten multiple choice in a row closing a
+Custom practice session, and in simulation about a quarter of General practice sessions ending on
+five or more of one kind. Spread, almost none do, with as many new words as before.
 
 Why the reserved share: a word answered today comes back tomorrow, then in three days, so without it
 the previous day's words fill every session and new words stop arriving after the first day.

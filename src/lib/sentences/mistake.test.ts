@@ -406,3 +406,48 @@ describe("sentence sessions right after practicing", () => {
     expect(sentenceItems).toBeGreaterThan(20);
   });
 });
+
+describe("new words in a mixed session", () => {
+  // Half the dictionary practiced, as a few weeks into the class: plenty due, and
+  // plenty never asked.
+  const half: ProgressBlob = { userId: "dylan", entries: {} };
+  entries.filter(isDrillable).forEach((e, i) => {
+    if (i % 2 === 0) {
+      half.entries[e.id] = {
+        "en→es": {
+          userId: "dylan",
+          entryId: e.id,
+          direction: "en→es",
+          due: "2026-09-17",
+          interval: 3,
+          ease: 2.5,
+          reps: 2,
+          lapses: 0,
+        },
+      };
+    }
+  });
+
+  it("are spread through the session, so it does not end on a block of them", () => {
+    // Saved for the end, the reserved new words came as one block of the
+    // exercise that introduces them: typing, or without it ten multiple choice
+    // in a row. About one session in four ended on five or more of one kind.
+    let blocks = 0;
+    for (let seed = 1; seed <= 30; seed++) {
+      const kinds = buildMixedSession({
+        entries,
+        progress: half,
+        userId: "dylan",
+        config: { ...DEFAULT_CONFIG, format: "mixed", size: 20 },
+        today: "2026-09-17",
+        random: seeded(seed),
+        sentences,
+      }).map((item) => (isMatchRound(item) ? "match" : item.exercise));
+      let tail = 0;
+      for (let i = kinds.length - 1; i >= 0 && kinds[i] === kinds.at(-1); i--) tail++;
+      if (tail >= 5) blocks++;
+    }
+    expect(blocks).toBeLessThanOrEqual(1);
+    // Thirty full sessions with sentences: a few seconds, more on a busy machine.
+  }, 20_000);
+});

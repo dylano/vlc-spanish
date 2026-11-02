@@ -654,9 +654,21 @@ export function buildMixedSession(sessionOptions: BuildSessionOptions): SessionI
   let planned = 0;
 
   while (budget > 0 && remaining.length > 0) {
-    // Once only the reserved slots are left, they go to new words, whatever the
-    // weights would otherwise have picked.
-    if (planned < quota && budget <= quota - planned) {
+    const last = plan.at(-1)?.exercise;
+    let run = 0;
+    for (let i = plan.length - 1; i >= 0 && plan[i]!.exercise === last; i--) run++;
+
+    // New words are spread through the session: each step takes one with the
+    // share of the steps left that are still owed to them. Saved for the end, they
+    // arrived as a block of one exercise (ten multiple choice in a row, with
+    // typing left out). Once only the owed slots are left they must go to new
+    // words, whatever the weights would have picked; until then a run of the
+    // introducing exercise is left to the usual limit.
+    const owed = quota - planned;
+    const mustIntroduce = owed > 0 && budget <= owed;
+    const mayIntroduce =
+      owed > 0 && !(last === introduce && run >= MAX_RUN) && random() < owed / budget;
+    if (mustIntroduce || mayIntroduce) {
       const index = remaining.findIndex(isNew);
       if (index >= 0) {
         const [card] = remaining.splice(index, 1);
@@ -666,9 +678,6 @@ export function buildMixedSession(sessionOptions: BuildSessionOptions): SessionI
         continue;
       }
     }
-    const last = plan.at(-1)?.exercise;
-    let run = 0;
-    for (let i = plan.length - 1; i >= 0 && plan[i]!.exercise === last; i--) run++;
 
     // What can still be asked at all: chosen, and not exhausted.
     const possible: Record<Exercise, boolean> = {
