@@ -195,6 +195,7 @@ function formsOf(entry: Entry, dictionary: Entry[]): string[] {
       return [
         entry.es,
         feminine ?? "",
+        entry.forms?.apocope ?? "",
         entry.forms?.pl ?? adjectivePlural(entry.es),
         feminine ? adjectivePlural(feminine) : "",
       ];
@@ -244,6 +245,11 @@ export function gradeGap(
 
   if (answer === "") return { result: "wrong", expected };
   if (accepts.includes(answer)) return { result: "correct", expected };
+
+  // Tener que with its que left off (tengo for tengo que): the verb was right.
+  if (accepts.some((accepted) => accepted.endsWith(" que") && accepted.slice(0, -4) === answer)) {
+    return { result: "wrong", expected, note: `don't forget que: ${expected}` };
+  }
 
   const nearAccent = detail.accepts.find((accepted) =>
     differsOnlyByAccent(normalize(accepted), answer),
@@ -307,6 +313,18 @@ export function gradeGap(
       const noun =
         segments.find((part) => part.slot === detail.agreesWith && !part.article)?.text ?? "";
       const nounDetail = gap.sentence.slots[detail.agreesWith];
+      // The full masculine where the short one belongs: the gender was right.
+      if (
+        entry.pos === "adj" &&
+        entry.forms?.apocope === expected &&
+        foldAccents(normalize(entry.es)) === foldAccents(answer)
+      ) {
+        return {
+          result: "wrong",
+          expected,
+          note: `before a masculine noun, ${entry.es} shortens: ${expected} ${noun}`,
+        };
+      }
       return {
         result: "wrong",
         expected,

@@ -103,7 +103,13 @@ export const nounEntrySchema = z.object({
 export const adjEntrySchema = z.object({
   ...entryBase,
   pos: z.literal("adj"),
-  forms: z.object({ f: nonEmpty.optional(), pl: nonEmpty.optional() }).optional(),
+  /**
+   * `apocope` is the short form before a masculine singular noun: alguno →
+   * algún (algún libro). Sentences use it where a slot is marked `before`.
+   */
+  forms: z
+    .object({ f: nonEmpty.optional(), pl: nonEmpty.optional(), apocope: nonEmpty.optional() })
+    .optional(),
   /**
    * English for the plural, when it differs: este → ["these"]. Sentences use it
    * for a plural noun; most adjectives read the same in English either way.

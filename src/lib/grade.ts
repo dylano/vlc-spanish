@@ -151,6 +151,7 @@ export function spanishCandidates(entry: Entry, prompt?: string): Candidate[] {
       out.push({ text: entry.es, kind: "exact" });
       const forms = new Set([
         entry.forms?.f,
+        entry.forms?.apocope,
         entry.forms?.pl ?? adjectivePlural(entry.es),
         entry.forms?.f ? adjectivePlural(entry.forms.f) : undefined,
       ]);

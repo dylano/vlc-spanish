@@ -75,7 +75,16 @@ export const slotSchema = z.discriminatedUnion("kind", [
      */
     gender: z.enum(["m", "f"]).optional(),
   }),
-  z.object({ kind: z.literal("adj"), ...select, agree: z.string() }),
+  z.object({
+    kind: z.literal("adj"),
+    ...select,
+    agree: z.string(),
+    /**
+     * The adjective comes before its noun, so a masculine singular takes its
+     * short form where it has one: algún libro, ningún cine.
+     */
+    before: z.boolean().optional(),
+  }),
   z.object({
     kind: z.literal("verb"),
     ...select,
@@ -381,11 +390,17 @@ function nounFill(
   };
 }
 
-function adjFill(entry: AdjEntry, gender: Gender | "mf", number: NumberKind): Filled {
+function adjFill(
+  entry: AdjEntry,
+  gender: Gender | "mf",
+  number: NumberKind,
+  before = false,
+): Filled {
   // Common-gender nouns still need a gender for agreement; they were given one.
   const feminine = gender === "f";
   let es: string;
-  if (number === "sg") es = feminine ? (entry.forms?.f ?? entry.es) : entry.es;
+  if (number === "sg" && !feminine && before && entry.forms?.apocope) es = entry.forms.apocope;
+  else if (number === "sg") es = feminine ? (entry.forms?.f ?? entry.es) : entry.es;
   else if (feminine && entry.forms?.f) es = adjectivePlural(entry.forms.f);
   else es = entry.forms?.pl ?? adjectivePlural(entry.es);
   const en = number === "pl" && entry.enPl ? entry.enPl[0]! : entry.en[0]!;
@@ -622,13 +637,21 @@ function fillSlot(
     case "adj": {
       const noun = filled.get(slot.agree);
       if (entry.pos !== "adj" || !noun) return undefined;
-      return adjFill(entry, noun.gender ?? "m", noun.number ?? "sg");
+      return adjFill(entry, noun.gender ?? "m", noun.number ?? "sg", slot.before);
     }
     case "verb": {
       if (entry.pos !== "verb") return undefined;
       // An infinitive is itself something liked, and singular: me gusta leer.
+      // {a:base} is its bare English, after another verb: "I have to study".
       if (slot.subject === "inf") {
-        return { entryId: entry.id, es: entry.es, en: entry.en[0]!, number: "sg" };
+        const en = entry.en[0]!;
+        return {
+          entryId: entry.id,
+          es: entry.es,
+          en,
+          enBase: en.replace(/^to\s+/, ""),
+          number: "sg",
+        };
       }
       const who = subjectOf(slot.subject, filled, frameSubject);
       if (!who) return undefined;

@@ -321,3 +321,28 @@ describe("choosing a frame", () => {
     expect(firstUsed).toBe(all.length - usedFrames.size);
   });
 });
+
+describe("tener que + infinitive", () => {
+  it("conjugates tener, keeps the infinitive, and says it in English without a second 'to'", () => {
+    const sentence = renderFrame(frame("relative-has-to"), context(1), { a: "estudiar" })!;
+    expect(sentence.es).toMatch(/^Mi \p{L}+ tiene que estudiar\.$/u);
+    expect(sentence.en).toMatch(/^My [a-z-]+ has to study\.$/);
+  });
+
+  it("calls a missing que by name in a gap", () => {
+    const gap = gapFrom(
+      "have-to",
+      "v",
+      { a: "estudiar" },
+      (made) => made.sentence.subject === "yo",
+    );
+    expect(gradeGap(gap, gap.blank, "tengo que", entry("tener-que"), entries).result).toBe(
+      "correct",
+    );
+    expect(gradeGap(gap, gap.blank, "tengo", entry("tener-que"), entries)).toEqual({
+      result: "wrong",
+      expected: "tengo que",
+      note: "don't forget que: tengo que",
+    });
+  });
+});
