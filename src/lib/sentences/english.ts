@@ -101,6 +101,7 @@ const IRREGULAR_PLURAL: Record<string, string> = {
   squid: "squid",
   salmon: "salmon",
   tuna: "tuna",
+  shrimp: "shrimp",
   // Usually unchanged in the plural, like the fish above.
   zucchini: "zucchini",
   man: "men",

@@ -44,6 +44,7 @@ describe("english nouns", () => {
     expect(pluralize("brother")).toBe("brothers");
     expect(pluralize("fashion designer")).toBe("fashion designers");
     expect(pluralize("secretary")).toBe("secretaries");
+    expect(pluralize("shrimp")).toBe("shrimp");
     expect(pluralize("church")).toBe("churches");
     expect(pluralize("wife")).toBe("wives");
     expect(pluralize("Monday")).toBe("Mondays");
