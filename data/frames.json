@@ -655,7 +655,13 @@
         },
         "v": {
           "kind": "verb",
-          "ids": ["hacer-deporte", "hacer-la-compra", "ir-al-trabajo", "salir-del-trabajo"],
+          "ids": [
+            "hacer-deporte",
+            "hacer-la-compra",
+            "ir-al-trabajo",
+            "salir-del-trabajo",
+            "ir-de-compras"
+          ],
           "subject": "@"
         }
       },
@@ -828,7 +834,9 @@
             "jugar",
             "practicar",
             "trabajar",
-            "vivir"
+            "vivir",
+            "ir-de-compras",
+            "ir-de-viaje"
           ],
           "subject": "@"
         },
@@ -1782,7 +1790,9 @@
             "leer",
             "practicar",
             "salir",
-            "trabajar"
+            "trabajar",
+            "ir-de-compras",
+            "ir-de-viaje"
           ],
           "subject": "inf"
         },
@@ -1816,7 +1826,9 @@
             "leer",
             "practicar",
             "salir",
-            "trabajar"
+            "trabajar",
+            "ir-de-compras",
+            "ir-de-viaje"
           ],
           "subject": "inf"
         },
@@ -1877,7 +1889,9 @@
             "leer",
             "practicar",
             "salir",
-            "trabajar"
+            "trabajar",
+            "ir-de-compras",
+            "ir-de-viaje"
           ],
           "subject": "inf"
         },
@@ -5954,6 +5968,25 @@
       "cloze": ["x", "s"]
     },
     {
+      "id": "travel-in-season",
+      "grammar": ["seasons", "verb-conjugation"],
+      "subjects": ["yo", "tu", "nosotros", "vosotros", "ellos"],
+      "es": "En {s} {v}.",
+      "en": "In {s} {S} {v}.",
+      "slots": {
+        "s": {
+          "kind": "noun",
+          "ids": ["verano", "invierno", "primavera", "otono"]
+        },
+        "v": {
+          "kind": "verb",
+          "ids": ["ir-de-viaje"],
+          "subject": "@"
+        }
+      },
+      "cloze": ["v", "s"]
+    },
+    {
       "id": "season-winter-is",
       "grammar": ["weather", "seasons", "ser-trait", "adj-agreement"],
       "es": "{s:el} es {a}.",
@@ -7338,7 +7371,9 @@
             "acostarse",
             "ir-al-trabajo",
             "hacer-deporte",
-            "hacer-la-compra"
+            "hacer-la-compra",
+            "ir-de-compras",
+            "ir-de-viaje"
           ],
           "subject": "@"
         }
@@ -7372,7 +7407,9 @@
             "acostarse",
             "ir-al-trabajo",
             "hacer-deporte",
-            "hacer-la-compra"
+            "hacer-la-compra",
+            "ir-de-compras",
+            "ir-de-viaje"
           ],
           "subject": "n"
         }
@@ -7409,6 +7446,738 @@
         }
       },
       "cloze": ["q", "p"]
+    },
+    {
+      "id": "is-there-one-around-here",
+      "grammar": ["position", "hay", "articles", "questions"],
+      "es": "¿Hay {p:un} {w}?",
+      "en": "Is there {p:a} {w}?",
+      "slots": {
+        "p": {
+          "kind": "noun",
+          "ids": [
+            "cine",
+            "hospital",
+            "bar",
+            "parque",
+            "centro-comercial",
+            "estacion-de-metro",
+            "biblioteca",
+            "parada-de-autobus",
+            "polideportivo",
+            "hotel",
+            "oficina-de-correos",
+            "restaurante",
+            "supermercado",
+            "banco",
+            "gimnasio",
+            "cajero-automatico",
+            "tienda"
+          ]
+        },
+        "w": {
+          "kind": "word",
+          "ids": ["por-aqui"]
+        }
+      },
+      "cloze": ["w", "p"]
+    },
+    {
+      "id": "is-there-one-around-here-yes",
+      "grammar": ["position", "hay-estar", "articles", "questions"],
+      "es": "¿Hay {p:un} {w}?\nSí, {v} {l}.",
+      "en": "Is there {p:a} {w}?\nYes, it {v} {l}.",
+      "slots": {
+        "p": {
+          "kind": "noun",
+          "ids": [
+            "cine",
+            "hospital",
+            "bar",
+            "parque",
+            "centro-comercial",
+            "estacion-de-metro",
+            "biblioteca",
+            "parada-de-autobus",
+            "polideportivo",
+            "hotel",
+            "oficina-de-correos",
+            "restaurante",
+            "supermercado",
+            "banco",
+            "gimnasio",
+            "cajero-automatico",
+            "tienda"
+          ]
+        },
+        "w": {
+          "kind": "word",
+          "ids": ["por-aqui"]
+        },
+        "v": {
+          "kind": "verb",
+          "ids": ["estar"],
+          "subject": "p"
+        },
+        "l": {
+          "kind": "word",
+          "ids": ["cerca"]
+        }
+      },
+      "cloze": ["w", "v", "l"]
+    },
+    {
+      "id": "wear-pattern",
+      "grammar": ["clothing", "verb-conjugation", "articles"],
+      "subjects": ["yo", "tu", "nosotros", "vosotros", "ellos"],
+      "es": "{v} {c:un} {a}.",
+      "en": "{S} {v} {a:a} {c}.",
+      "slots": {
+        "v": {
+          "kind": "verb",
+          "ids": ["llevar", "comprar", "querer", "necesitar"],
+          "subject": "@"
+        },
+        "c": {
+          "kind": "noun",
+          "ids": [
+            "camisa",
+            "camiseta",
+            "falda",
+            "vestido",
+            "chaqueta",
+            "jersey",
+            "bufanda",
+            "traje"
+          ],
+          "number": "sg"
+        },
+        "a": {
+          "kind": "adj",
+          "ids": ["de-rayas", "de-cuadros", "estampado"],
+          "agree": "c"
+        }
+      },
+      "cloze": ["a", "c", "v"]
+    },
+    {
+      "id": "wear-pattern-plural",
+      "grammar": ["clothing", "verb-conjugation", "articles"],
+      "subjects": ["yo", "tu", "nosotros", "vosotros", "ellos"],
+      "es": "{v} {c} {a}.",
+      "en": "{S} {v} {a} {c}.",
+      "slots": {
+        "v": {
+          "kind": "verb",
+          "ids": ["llevar", "comprar", "querer", "necesitar"],
+          "subject": "@"
+        },
+        "c": {
+          "kind": "noun",
+          "ids": ["camisa", "camiseta", "falda", "vestido", "jersey", "bufanda"],
+          "number": "pl"
+        },
+        "a": {
+          "kind": "adj",
+          "ids": ["de-rayas", "de-cuadros", "estampado"],
+          "agree": "c"
+        }
+      },
+      "cloze": ["a", "c", "v"]
+    },
+    {
+      "id": "wear-short-sleeved",
+      "grammar": ["clothing", "verb-conjugation", "articles"],
+      "subjects": ["yo", "tu", "nosotros", "vosotros", "ellos"],
+      "es": "{v} {c:un} {a}.",
+      "en": "{S} {v} {a:a} {c}.",
+      "slots": {
+        "v": {
+          "kind": "verb",
+          "ids": ["llevar", "comprar", "querer", "necesitar"],
+          "subject": "@"
+        },
+        "c": {
+          "kind": "noun",
+          "ids": ["camisa", "camiseta", "vestido", "jersey"],
+          "number": "sg"
+        },
+        "a": {
+          "kind": "adj",
+          "ids": ["de-manga-corta", "de-manga-larga"],
+          "agree": "c"
+        }
+      },
+      "cloze": ["a", "c", "v"]
+    },
+    {
+      "id": "wear-sleeveless",
+      "grammar": ["clothing", "verb-conjugation", "articles"],
+      "subjects": ["yo", "tu", "nosotros", "vosotros", "ellos"],
+      "es": "{v} {c:un} {a}.",
+      "en": "{S} {v} {a:a} {c}.",
+      "slots": {
+        "v": {
+          "kind": "verb",
+          "ids": ["llevar", "comprar", "querer", "necesitar"],
+          "subject": "@"
+        },
+        "c": {
+          "kind": "noun",
+          "ids": ["camiseta", "vestido"]
+        },
+        "a": {
+          "kind": "adj",
+          "ids": ["de-tirantes"],
+          "agree": "c"
+        }
+      },
+      "cloze": ["a", "c", "v"]
+    },
+    {
+      "id": "buy-second-hand",
+      "grammar": ["clothing", "verb-conjugation", "articles"],
+      "subjects": ["yo", "tu", "nosotros", "vosotros", "ellos"],
+      "es": "{v} {c:un} {a}.",
+      "en": "{S} {v} {a:a} {c}.",
+      "slots": {
+        "v": {
+          "kind": "verb",
+          "ids": ["comprar", "querer", "necesitar"],
+          "subject": "@"
+        },
+        "c": {
+          "kind": "noun",
+          "ids": ["chaqueta", "abrigo", "traje", "bolso", "vestido", "jersey"],
+          "number": "sg"
+        },
+        "a": {
+          "kind": "adj",
+          "ids": ["de-segunda-mano"],
+          "agree": "c"
+        }
+      },
+      "cloze": ["a", "c", "v"]
+    },
+    {
+      "id": "is-there-any-around-here",
+      "grammar": ["position", "hay", "adj-agreement", "questions"],
+      "es": "¿Hay {q} {p} por aquí?",
+      "en": "Is there {p:a} around here?{q:none}",
+      "slots": {
+        "q": {
+          "kind": "adj",
+          "ids": ["alguno"],
+          "agree": "p",
+          "before": true
+        },
+        "p": {
+          "kind": "noun",
+          "ids": [
+            "cine",
+            "hospital",
+            "bar",
+            "parque",
+            "centro-comercial",
+            "estacion-de-metro",
+            "biblioteca",
+            "parada-de-autobus",
+            "polideportivo",
+            "hotel",
+            "oficina-de-correos",
+            "restaurante",
+            "supermercado",
+            "banco",
+            "gimnasio",
+            "cajero-automatico",
+            "tienda"
+          ]
+        }
+      },
+      "cloze": ["q", "p"]
+    },
+    {
+      "id": "buy-some-clothes",
+      "grammar": ["clothing", "adj-agreement", "plural"],
+      "subjects": ["yo", "tu", "nosotros", "vosotros", "ellos"],
+      "es": "{v} {q} {c}.",
+      "en": "{S} {v} {q} {c}.",
+      "slots": {
+        "v": {
+          "kind": "verb",
+          "ids": ["comprar", "necesitar", "querer"],
+          "subject": "@"
+        },
+        "q": {
+          "kind": "adj",
+          "ids": ["alguno"],
+          "agree": "c",
+          "before": true
+        },
+        "c": {
+          "kind": "noun",
+          "ids": [
+            "camisa",
+            "camiseta",
+            "falda",
+            "vestido",
+            "jersey",
+            "bufanda",
+            "zapato",
+            "bota",
+            "sandalia",
+            "traje"
+          ],
+          "number": "pl"
+        }
+      },
+      "cloze": ["q", "v"]
+    },
+    {
+      "id": "barrio-has-not-a-single",
+      "grammar": ["hay", "negation", "adj-agreement"],
+      "es": "En mi {n} no hay {q} {p}.",
+      "en": "In my {n} there is no {p}.{q:none}",
+      "slots": {
+        "n": {
+          "kind": "noun",
+          "ids": ["barrio"]
+        },
+        "q": {
+          "kind": "adj",
+          "ids": ["ninguno"],
+          "agree": "p",
+          "before": true
+        },
+        "p": {
+          "kind": "noun",
+          "ids": [
+            "cine",
+            "hospital",
+            "bar",
+            "parque",
+            "centro-comercial",
+            "estacion-de-metro",
+            "biblioteca",
+            "parada-de-autobus",
+            "polideportivo",
+            "hotel",
+            "oficina-de-correos",
+            "restaurante",
+            "supermercado",
+            "banco",
+            "gimnasio",
+            "cajero-automatico",
+            "tienda"
+          ]
+        }
+      },
+      "cloze": ["q", "p"]
+    },
+    {
+      "id": "have-no-clothing",
+      "grammar": ["negation", "adj-agreement", "clothing"],
+      "subjects": ["yo", "tu", "nosotros", "vosotros", "ellos"],
+      "es": "No {v} {q} {c}.",
+      "en": "{S} {v} no {c}.{q:none}",
+      "slots": {
+        "v": {
+          "kind": "verb",
+          "ids": ["tener"],
+          "subject": "@"
+        },
+        "q": {
+          "kind": "adj",
+          "ids": ["ninguno"],
+          "agree": "c",
+          "before": true
+        },
+        "c": {
+          "kind": "noun",
+          "ids": [
+            "abrigo",
+            "bufanda",
+            "chaqueta",
+            "gorro",
+            "jersey",
+            "traje",
+            "vestido",
+            "falda",
+            "bolso",
+            "cinturon"
+          ]
+        }
+      },
+      "cloze": ["q", "c"]
+    },
+    {
+      "id": "turn-left-at-corner",
+      "grammar": ["position", "verb-conjugation"],
+      "subjects": ["yo", "tu", "nosotros", "vosotros", "ellos"],
+      "es": "{v} {d} {e}.",
+      "en": "{S} {v} left at the corner.{d:none}{e:none}",
+      "slots": {
+        "v": {
+          "kind": "verb",
+          "ids": ["girar"],
+          "subject": "@"
+        },
+        "d": {
+          "kind": "word",
+          "ids": ["a-la-izquierda"]
+        },
+        "e": {
+          "kind": "word",
+          "ids": ["en-la-esquina"]
+        }
+      },
+      "cloze": ["v", "d"]
+    },
+    {
+      "id": "turn-right-at-corner",
+      "grammar": ["position", "verb-conjugation"],
+      "subjects": ["yo", "tu", "nosotros", "vosotros", "ellos"],
+      "es": "{v} {d} {e}.",
+      "en": "{S} {v} right at the corner.{d:none}{e:none}",
+      "slots": {
+        "v": {
+          "kind": "verb",
+          "ids": ["girar"],
+          "subject": "@"
+        },
+        "d": {
+          "kind": "word",
+          "ids": ["a-la-derecha"]
+        },
+        "e": {
+          "kind": "word",
+          "ids": ["en-la-esquina"]
+        }
+      },
+      "cloze": ["v", "d"]
+    },
+    {
+      "id": "have-to",
+      "grammar": ["tener-que", "infinitive", "verb-conjugation"],
+      "subjects": ["yo", "tu", "nosotros", "vosotros", "ellos"],
+      "es": "{v} {a}.",
+      "en": "{S} {v} {a:base}.",
+      "slots": {
+        "v": {
+          "kind": "verb",
+          "ids": ["tener-que"],
+          "subject": "@"
+        },
+        "a": {
+          "kind": "verb",
+          "ids": [
+            "estudiar",
+            "trabajar",
+            "leer",
+            "escribir",
+            "practicar",
+            "hacer-deporte",
+            "hacer-la-compra",
+            "hacer-la-cama",
+            "ir-al-trabajo",
+            "ir-de-compras",
+            "cenar",
+            "volver",
+            "salir"
+          ],
+          "subject": "inf"
+        }
+      },
+      "cloze": ["v", "a"]
+    },
+    {
+      "id": "have-to-on-days",
+      "grammar": ["tener-que", "infinitive", "days"],
+      "subjects": ["yo", "tu", "nosotros", "vosotros", "ellos"],
+      "es": "Los {d} {v} {a}.",
+      "en": "On {d} {S} {v} {a:base}.",
+      "slots": {
+        "d": {
+          "kind": "noun",
+          "tags": ["days"],
+          "number": "pl"
+        },
+        "v": {
+          "kind": "verb",
+          "ids": ["tener-que"],
+          "subject": "@"
+        },
+        "a": {
+          "kind": "verb",
+          "ids": [
+            "estudiar",
+            "trabajar",
+            "leer",
+            "escribir",
+            "practicar",
+            "hacer-deporte",
+            "hacer-la-compra",
+            "hacer-la-cama",
+            "ir-al-trabajo",
+            "ir-de-compras",
+            "cenar",
+            "volver",
+            "salir"
+          ],
+          "subject": "inf"
+        }
+      },
+      "cloze": ["v", "a"]
+    },
+    {
+      "id": "not-have-to-on-days",
+      "grammar": ["tener-que", "infinitive", "negation", "days"],
+      "subjects": ["yo", "tu", "nosotros", "vosotros", "ellos"],
+      "es": "Los {d} no {v} {a}.",
+      "en": "On {d} {S} {v:not} {a:base}.",
+      "slots": {
+        "d": {
+          "kind": "noun",
+          "ids": ["sabado", "domingo"],
+          "number": "pl"
+        },
+        "v": {
+          "kind": "verb",
+          "ids": ["tener-que"],
+          "subject": "@"
+        },
+        "a": {
+          "kind": "verb",
+          "ids": ["trabajar", "estudiar", "ir-al-trabajo"],
+          "subject": "inf"
+        }
+      },
+      "cloze": ["v", "d"]
+    },
+    {
+      "id": "relative-has-to",
+      "grammar": ["tener-que", "infinitive", "third-person"],
+      "es": "Mi {n} {v} {a}.",
+      "en": "My {n} {v} {a:base}.",
+      "slots": {
+        "n": {
+          "kind": "noun",
+          "tags": ["family"],
+          "number": "sg",
+          "exclude": ["mujer"]
+        },
+        "v": {
+          "kind": "verb",
+          "ids": ["tener-que"],
+          "subject": "n"
+        },
+        "a": {
+          "kind": "verb",
+          "ids": [
+            "estudiar",
+            "trabajar",
+            "leer",
+            "escribir",
+            "practicar",
+            "hacer-deporte",
+            "hacer-la-compra",
+            "hacer-la-cama",
+            "ir-al-trabajo",
+            "ir-de-compras",
+            "cenar",
+            "volver",
+            "salir"
+          ],
+          "subject": "inf"
+        }
+      },
+      "cloze": ["v", "a"]
+    },
+    {
+      "id": "do-you-have-to",
+      "grammar": ["tener-que", "infinitive", "questions"],
+      "es": "¿{v} {a}?",
+      "en": "Do you {v:base} {a:base}?",
+      "slots": {
+        "v": {
+          "kind": "verb",
+          "ids": ["tener-que"],
+          "subject": "tu"
+        },
+        "a": {
+          "kind": "verb",
+          "ids": [
+            "estudiar",
+            "trabajar",
+            "leer",
+            "escribir",
+            "practicar",
+            "hacer-deporte",
+            "hacer-la-compra",
+            "hacer-la-cama",
+            "ir-al-trabajo",
+            "ir-de-compras",
+            "cenar",
+            "volver",
+            "salir"
+          ],
+          "subject": "inf"
+        }
+      },
+      "cloze": ["v", "a"]
+    },
+    {
+      "id": "in-the-suitcase",
+      "grammar": ["travel", "hay", "articles"],
+      "es": "En la maleta hay {c:un}.",
+      "en": "There is {c:a} in the suitcase.",
+      "slots": {
+        "c": {
+          "kind": "noun",
+          "ids": [
+            "toalla",
+            "peine",
+            "cepillo-de-dientes",
+            "secador-de-pelo",
+            "cargador-de-movil",
+            "carne-de-identidad",
+            "tarjeta-de-credito"
+          ]
+        }
+      },
+      "cloze": ["c"]
+    },
+    {
+      "id": "in-the-suitcase-some",
+      "grammar": ["travel", "hay"],
+      "es": "En la maleta hay {c}.",
+      "en": "There is {c} in the suitcase.",
+      "slots": {
+        "c": {
+          "kind": "noun",
+          "ids": ["dinero", "crema-solar", "pasta-de-dientes", "champu"]
+        }
+      },
+      "cloze": ["c"]
+    },
+    {
+      "id": "pronoun-packing",
+      "grammar": ["object-pronouns", "verb-conjugation", "questions", "travel"],
+      "es": "¿{v} {c:el}?\nSí, {p} {w}.",
+      "en": "Do you {v} {c:the}?\nYes, I {w} {p}.",
+      "slots": {
+        "v": {
+          "kind": "verb",
+          "ids": ["tener", "necesitar"],
+          "subject": "tu"
+        },
+        "c": {
+          "kind": "noun",
+          "ids": [
+            "toalla",
+            "peine",
+            "cepillo-de-dientes",
+            "secador-de-pelo",
+            "cargador-de-movil",
+            "carne-de-identidad",
+            "tarjeta-de-credito",
+            "dinero",
+            "crema-solar",
+            "pasta-de-dientes",
+            "champu",
+            "maleta"
+          ]
+        },
+        "p": {
+          "kind": "pronoun",
+          "agree": "c"
+        },
+        "w": {
+          "kind": "verb",
+          "ids": ["tener", "necesitar"],
+          "subject": "yo",
+          "same": "v"
+        }
+      },
+      "cloze": ["p", "w", "c"]
+    },
+    {
+      "id": "have-to-buy",
+      "grammar": ["tener-que", "infinitive", "travel"],
+      "subjects": ["yo", "tu", "nosotros", "vosotros", "ellos"],
+      "es": "{v} comprar {c}.",
+      "en": "{S} {v} buy {c}.",
+      "slots": {
+        "v": {
+          "kind": "verb",
+          "ids": ["tener-que"],
+          "subject": "@"
+        },
+        "c": {
+          "kind": "noun",
+          "ids": ["crema-solar", "pasta-de-dientes", "champu"]
+        }
+      },
+      "cloze": ["v", "c"]
+    },
+    {
+      "id": "have-to-buy-one",
+      "grammar": ["tener-que", "infinitive", "travel", "articles"],
+      "subjects": ["yo", "tu", "nosotros", "vosotros", "ellos"],
+      "es": "{v} comprar {c:un}.",
+      "en": "{S} {v} buy {c:a}.",
+      "slots": {
+        "v": {
+          "kind": "verb",
+          "ids": ["tener-que"],
+          "subject": "@"
+        },
+        "c": {
+          "kind": "noun",
+          "ids": [
+            "toalla",
+            "peine",
+            "cepillo-de-dientes",
+            "secador-de-pelo",
+            "cargador-de-movil",
+            "maleta"
+          ]
+        }
+      },
+      "cloze": ["v", "c"]
+    },
+    {
+      "id": "have-no-travel-item",
+      "grammar": ["negation", "adj-agreement", "travel"],
+      "subjects": ["yo", "tu", "nosotros", "vosotros", "ellos"],
+      "es": "No {v} {q} {c}.",
+      "en": "{S} {v} no {c}.{q:none}",
+      "slots": {
+        "v": {
+          "kind": "verb",
+          "ids": ["tener"],
+          "subject": "@"
+        },
+        "q": {
+          "kind": "adj",
+          "ids": ["ninguno"],
+          "agree": "c",
+          "before": true
+        },
+        "c": {
+          "kind": "noun",
+          "ids": [
+            "toalla",
+            "peine",
+            "cepillo-de-dientes",
+            "secador-de-pelo",
+            "cargador-de-movil",
+            "maleta",
+            "tarjeta-de-credito"
+          ]
+        }
+      },
+      "cloze": ["q", "c"]
     }
   ]
 }

@@ -260,7 +260,8 @@ tangled into components.
   with "this / pl. these" beneath. Under a noun the English pairs the same way when the feminine's
   differs ("nephew / niece"). A feminine that drops an accent is written out (_el bailarín / la
   bailarina_), and a different word is not paired at all: _padre_ and _madre_ each have their own
-  entry. The grammar label adds a plural worth knowing, one that is not just the word plus -s or -es
+  entry. An adjective with a short form says so (_alguno/a · algún before a masculine noun_), and one
+  that never changes says that (_beis_, _de rayas_). The grammar label adds a plural worth knowing, one that is not just the word plus -s or -es
   (_noun · pl. lápices_, _pl. jerséis_, _pl. lunes_), or that a noun is _always plural_ (_las gafas_)
   or has _no plural_. Chosen on the canvas's "Dictionary forms" page (board D, plus board C's
   plurals): writing out both forms made the headword long, _el/la abuelo/a_ was too busy, a separate
@@ -496,7 +497,9 @@ from the dictionary. The frame supplies the word order in both languages; the re
   phrases, numbers as-is) and `glue` (a group in `data/glue.json`). A demonstrative is an `adj` slot
   placed before its noun (`{d} {c} es {a}` → _Esta chaqueta es nueva_), so it agrees, can be blanked
   and can be broken by Find the Mistake like any adjective; an adjective's `enPl` gives English that
-  changes in the plural (_these_, _those_). A noun slot's `gender` pins it (`"m"`, `"f"`) for a sentence that only
+  changes in the plural (_these_, _those_). An `adj` slot marked `before` puts a masculine singular in
+  its short form, `forms.apocope` in the dictionary: _¿Hay algún cine por aquí?_, _no hay ningún
+  hotel_; grading accepts the short form, and a gap answered with the full one says it shortens. A noun slot's `gender` pins it (`"m"`, `"f"`) for a sentence that only
   works one way — a beard belongs to _mi padre_, never _mi madre_ — and a word that cannot take that
   gender is passed over rather than rendered the other way.
 - **Glue words that are also entries** (`muy`, `bastante`, `también`, `cuando`) may fill a slot before
@@ -509,6 +512,13 @@ from the dictionary. The frame supplies the word order in both languages; the re
   What is liked is a noun slot or a verb slot with `subject: "inf"`, which renders the infinitive and
   counts as singular. Gap grading treats _me gusta_ for _me gustan_ as wrong (not a near miss) and
   says why; Find the Mistake breaks exactly that agreement.
+- **Tener que + infinitive** (frames tagged `tener-que`): _Tengo que estudiar_, _Mi tía tiene que
+  trabajar_, _Los domingos no tenemos que estudiar_, _¿Tienes que ir de compras?_. _tener que_ is a
+  verb entry conjugated through _tener_, so a gap blanks _tengo que_ and tests the person, and Find
+  the Mistake breaks the person; answering just _tengo_ is wrong with "don't forget que". The second
+  verb is a `subject: "inf"` slot, written `{a:base}` in the English for its bare form ("I have to
+  study", not "have to to study"). Reflexive infinitives (_tengo que levantarme_) wait for the engine
+  to put the pronoun on them.
 - **Direct object pronouns** (`lo`, `la`, `los`, `las`, frames tagged `object-pronouns`): a
   question and its answer — _¿Compras el pan? Sí, lo compro._ / _¿Queréis las servilletas? No, no
   las queremos._ A `pronoun` slot agrees with a noun slot (`agree`), so _el agua_ gets _la_; in
@@ -604,7 +614,8 @@ from the dictionary. The frame supplies the word order in both languages; the re
   barrio with _hay_ and _tener_ — _En mi barrio hay un cine_, _Mi ciudad tiene muchos parques_,
   _En mi barrio no hay hotel_ (bare after _no hay_, as Spanish says it) — and saying where a known
   place is with _estar_: _El cine está cerca del parque_, _La biblioteca está entre el banco y la
-  tienda_, and both together, _En mi barrio hay un bar. Está al lado de la estación._ _hay_ is a
+  tienda_, and both together, _En mi barrio hay un bar. Está al lado de la estación._ Asking
+  for one nearby: _¿Hay un cajero por aquí? Sí, está cerca._ _hay_ is a
   dictionary entry filling a `word` slot and _está_ a verb slot agreeing with its place, so Fill in
   the Blank and Find the Mistake can test both. The English keeps _there is_ for _hay_ and _has_ for
   _tener_, so each cue points to one structure. Adjectives describe the barrio, its venues and its

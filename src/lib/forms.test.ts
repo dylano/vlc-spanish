@@ -15,6 +15,13 @@ describe("the forms on a Dictionary card", () => {
     expect(shown(forms("trabajador").spanish)).toBe("trabajador[/a]");
   });
 
+  it("names an adjective's short form, and one that never changes", () => {
+    expect(forms("alguno").grammar).toEqual(["adj", "algún before a masculine noun"]);
+    expect(shown(forms("alguno").spanish)).toBe("alguno[/a]");
+    expect(forms("de-rayas").grammar).toEqual(["adj", "never changes"]);
+    expect(forms("beis").grammar).toEqual(["adj", "never changes"]);
+  });
+
   it("puts an adjective phrase's shorthand on its last word", () => {
     expect(shown(forms("bien-comunicado").spanish)).toBe("bien comunicado[/a]");
     expect(shown(forms("mal-comunicado").spanish)).toBe("mal comunicado[/a]");

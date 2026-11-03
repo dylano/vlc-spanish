@@ -127,7 +127,10 @@ export function cardForms(entry: Entry): CardForms {
 
   if (entry.pos === "adj") {
     if (entry.enPl && entry.enPl.join(", ") !== english) out.englishPlural = entry.enPl.join(", ");
-    if (!pluralEndings && entry.forms?.pl && !regularPlural(entry.es, entry.forms.pl)) {
+    if (entry.forms?.apocope) grammar.push(`${entry.forms.apocope} before a masculine noun`);
+    // beis, de rayas: one form for everything, which is worth saying in words.
+    if (entry.forms?.pl === entry.es && !entry.forms.f) grammar.push("never changes");
+    else if (!pluralEndings && entry.forms?.pl && !regularPlural(entry.es, entry.forms.pl)) {
       grammar.push(`pl. ${entry.forms.pl}`);
     }
   }

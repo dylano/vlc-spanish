@@ -15,7 +15,7 @@ across these tags:
 `physical-traits`, `character-traits`, `family`, `frequency`,
 `daily-activities`, `verbs`, `days`, `months`, `numbers`, `professions`, `workplaces`,
 `classroom-objects`, `weather`, `geography`, `clothing`,
-`common-words`, `time`, `position`, `colors`, `body`, `food`, `barrio`, `questions`
+`common-words`, `time`, `position`, `colors`, `body`, `food`, `barrio`, `questions`, `travel`
 
 Use exactly these tag strings. An entry may carry more than one tag. Add a new tag only if a word
 genuinely fits none of the above, and keep it kebab-case.
@@ -70,7 +70,7 @@ interface NounEntry extends EntryBase {
 
 interface AdjEntry extends EntryBase {
   pos: "adj";
-  forms?: { f?: string; pl?: string }; // omit f entirely for invariable adjectives
+  forms?: { f?: string; pl?: string; apocope?: string }; // omit f entirely for invariable adjectives; apocope: the short form before a masculine noun (algún)
   enPl?: string[]; // English plural when it differs: este → ["these"], ese → ["those"]
 }
 

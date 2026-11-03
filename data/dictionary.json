@@ -1150,6 +1150,19 @@
       "added": "2026-09-15"
     },
     {
+      "id": "tener-que",
+      "es": "tener que",
+      "en": ["to have to", "must"],
+      "pos": "verb",
+      "verb": {
+        "reflexive": false,
+        "regular": false
+      },
+      "notes": "Tener que + infinitive: tengo que estudiar, I have to study. Only tener changes; the second verb stays as it is: tienes que trabajar, tenemos que salir.",
+      "tags": ["verbs"],
+      "added": "2026-11-03"
+    },
+    {
       "id": "llamarse",
       "es": "llamarse",
       "en": ["to be called", "to be named"],
@@ -3121,6 +3134,17 @@
       "added": "2026-09-21"
     },
     {
+      "id": "pantalones",
+      "es": "pantalones",
+      "en": ["pants", "trousers"],
+      "pos": "noun",
+      "gender": "m",
+      "number": "pl",
+      "notes": "Always plural: los pantalones, unos pantalones. Pantalones cortos are shorts.",
+      "tags": ["clothing"],
+      "added": "2026-11-03"
+    },
+    {
       "id": "pantalones-cortos",
       "es": "pantalones cortos",
       "en": ["shorts"],
@@ -3204,7 +3228,7 @@
     {
       "id": "bolso",
       "es": "bolso",
-      "en": ["purse", "handbag", "bag"],
+      "en": ["handbag", "purse", "bag"],
       "pos": "noun",
       "gender": "m",
       "forms": {
@@ -3389,6 +3413,33 @@
       "notes": "After a verb or before an adjective it never changes: trabaja demasiado, es demasiado alto.",
       "tags": ["common-words"],
       "added": "2026-09-21"
+    },
+    {
+      "id": "alguno",
+      "es": "alguno",
+      "en": ["some", "any"],
+      "enPl": ["some", "a few"],
+      "pos": "adj",
+      "forms": {
+        "f": "alguna",
+        "apocope": "algún"
+      },
+      "notes": "Shortens before a masculine singular noun: algún libro, alguna mesa. In the plural it is some or a few: algunos amigos.",
+      "tags": ["common-words"],
+      "added": "2026-11-03"
+    },
+    {
+      "id": "ninguno",
+      "es": "ninguno",
+      "en": ["none", "not any", "not a single"],
+      "pos": "adj",
+      "forms": {
+        "f": "ninguna",
+        "apocope": "ningún"
+      },
+      "notes": "Shortens before a masculine singular noun: ningún libro, ninguna mesa. After a verb it needs no in front: no tengo ningún libro. Almost never plural.",
+      "tags": ["common-words"],
+      "added": "2026-11-03"
     },
     {
       "id": "un-poco",
@@ -3866,6 +3917,15 @@
       "added": "2026-09-21"
     },
     {
+      "id": "por-aqui",
+      "es": "por aquí",
+      "en": ["around here", "this way", "near here", "over here"],
+      "pos": "adv",
+      "notes": "Somewhere in this area: ¿Hay un banco por aquí? Is there a bank around here? Also which way to go: por aquí, por favor.",
+      "tags": ["position"],
+      "added": "2026-11-03"
+    },
+    {
       "id": "alli",
       "es": "allí",
       "en": ["there", "over there"],
@@ -4235,6 +4295,114 @@
       "added": "2026-09-30"
     },
     {
+      "id": "traje",
+      "es": "traje",
+      "en": ["suit"],
+      "pos": "noun",
+      "gender": "m",
+      "forms": {
+        "pl": "trajes"
+      },
+      "notes": "A suit. 'El traje de baño' is a swimsuit in Latin America; Spain says 'el bañador'.",
+      "tags": ["clothing"],
+      "added": "2026-11-03"
+    },
+    {
+      "id": "zapatillas-deportivas",
+      "es": "zapatillas deportivas",
+      "en": ["sneakers", "athletic shoes", "running shoes", "tennis shoes", "trainers"],
+      "pos": "noun",
+      "gender": "f",
+      "number": "pl",
+      "notes": "Usually just 'las zapatillas' in Spain. Mexico says 'los tenis'.",
+      "tags": ["clothing"],
+      "added": "2026-11-03"
+    },
+    {
+      "id": "de-manga-corta",
+      "es": "de manga corta",
+      "en": ["short-sleeved", "short-sleeve"],
+      "pos": "adj",
+      "forms": {
+        "pl": "de manga corta"
+      },
+      "notes": "Goes after the noun and never changes: una camiseta de manga corta, unas camisas de manga corta. Long sleeves: de manga larga.",
+      "tags": ["clothing"],
+      "added": "2026-11-03"
+    },
+    {
+      "id": "de-manga-larga",
+      "es": "de manga larga",
+      "en": ["long-sleeved", "long-sleeve"],
+      "pos": "adj",
+      "forms": {
+        "pl": "de manga larga"
+      },
+      "notes": "Goes after the noun and never changes: una camisa de manga larga. Short sleeves: de manga corta.",
+      "tags": ["clothing"],
+      "added": "2026-11-03"
+    },
+    {
+      "id": "de-tirantes",
+      "es": "de tirantes",
+      "en": ["sleeveless", "strappy", "with straps"],
+      "pos": "adj",
+      "forms": {
+        "pl": "de tirantes"
+      },
+      "notes": "With thin shoulder straps: una camiseta de tirantes is a tank top, un vestido de tirantes a strappy dress. Never changes.",
+      "tags": ["clothing"],
+      "added": "2026-11-03"
+    },
+    {
+      "id": "estampado",
+      "es": "estampado",
+      "en": ["printed", "patterned"],
+      "pos": "adj",
+      "forms": {
+        "f": "estampada"
+      },
+      "notes": "With a printed pattern on the fabric: una falda estampada, unos vestidos estampados. Unlike de rayas, it agrees with the noun.",
+      "tags": ["clothing"],
+      "added": "2026-11-03"
+    },
+    {
+      "id": "de-segunda-mano",
+      "es": "de segunda mano",
+      "en": ["secondhand", "second-hand", "used"],
+      "pos": "adj",
+      "forms": {
+        "pl": "de segunda mano"
+      },
+      "notes": "Goes after the noun and never changes: una chaqueta de segunda mano, una tienda de segunda mano.",
+      "tags": ["clothing"],
+      "added": "2026-11-03"
+    },
+    {
+      "id": "de-cuadros",
+      "es": "de cuadros",
+      "en": ["checkered", "plaid", "checked"],
+      "pos": "adj",
+      "forms": {
+        "pl": "de cuadros"
+      },
+      "notes": "Goes after the noun and never changes: una camisa de cuadros. Also 'a cuadros'.",
+      "tags": ["clothing"],
+      "added": "2026-11-03"
+    },
+    {
+      "id": "de-rayas",
+      "es": "de rayas",
+      "en": ["striped"],
+      "pos": "adj",
+      "forms": {
+        "pl": "de rayas"
+      },
+      "notes": "Goes after the noun and never changes: una camiseta de rayas. Also 'a rayas'.",
+      "tags": ["clothing"],
+      "added": "2026-11-03"
+    },
+    {
       "id": "musico",
       "es": "músico",
       "en": ["musician"],
@@ -4294,14 +4462,14 @@
     {
       "id": "hacer-la-compra",
       "es": "hacer la compra",
-      "en": ["to do the shopping", "to do the food shopping", "to go shopping"],
+      "en": ["to do the shopping", "to do the grocery shopping", "to do the food shopping"],
       "pos": "verb",
       "verb": {
         "reflexive": false,
         "regular": false,
         "irregularYo": "hago"
       },
-      "notes": "The weekly grocery shopping. 'Ir de compras' is shopping for pleasure.",
+      "notes": "The weekly grocery shopping. Going shopping for clothes or for fun is ir de compras.",
       "tags": ["daily-activities", "verbs", "food"],
       "added": "2026-09-30"
     },
@@ -5528,6 +5696,45 @@
       "added": "2026-10-14"
     },
     {
+      "id": "girar",
+      "es": "girar",
+      "en": ["to turn"],
+      "pos": "verb",
+      "verb": {
+        "reflexive": false,
+        "regular": true
+      },
+      "notes": "Giving directions: gira a la derecha, turn right; gire a la izquierda, to someone you call usted.",
+      "tags": ["verbs"],
+      "added": "2026-11-03"
+    },
+    {
+      "id": "ir-de-compras",
+      "es": "ir de compras",
+      "en": ["to go shopping"],
+      "pos": "verb",
+      "verb": {
+        "reflexive": false,
+        "regular": false
+      },
+      "notes": "Shopping for clothes, gifts or fun: los sábados voy de compras. The weekly food shop is hacer la compra.",
+      "tags": ["verbs"],
+      "added": "2026-11-03"
+    },
+    {
+      "id": "ir-de-viaje",
+      "es": "ir de viaje",
+      "en": ["to go on a trip", "to travel", "to take a trip"],
+      "pos": "verb",
+      "verb": {
+        "reflexive": false,
+        "regular": false
+      },
+      "notes": "Away from home for a while: en verano vamos de viaje. Also common reflexive: me voy de viaje, I am going away on a trip.",
+      "tags": ["verbs", "travel"],
+      "added": "2026-11-03"
+    },
+    {
       "id": "barrio",
       "es": "barrio",
       "en": ["neighborhood", "neighbourhood", "district", "area"],
@@ -5970,6 +6177,159 @@
       },
       "tags": ["barrio"],
       "added": "2026-10-23"
+    },
+    {
+      "id": "maleta",
+      "es": "maleta",
+      "en": ["suitcase"],
+      "pos": "noun",
+      "gender": "f",
+      "forms": {
+        "pl": "maletas"
+      },
+      "tags": ["travel"],
+      "added": "2026-11-03"
+    },
+    {
+      "id": "toalla",
+      "es": "toalla",
+      "en": ["towel"],
+      "pos": "noun",
+      "gender": "f",
+      "forms": {
+        "pl": "toallas"
+      },
+      "tags": ["travel"],
+      "added": "2026-11-03"
+    },
+    {
+      "id": "peine",
+      "es": "peine",
+      "en": ["comb"],
+      "pos": "noun",
+      "gender": "m",
+      "forms": {
+        "pl": "peines"
+      },
+      "tags": ["travel"],
+      "added": "2026-11-03"
+    },
+    {
+      "id": "cepillo-de-dientes",
+      "es": "cepillo de dientes",
+      "en": ["toothbrush"],
+      "pos": "noun",
+      "gender": "m",
+      "forms": {
+        "pl": "cepillos de dientes"
+      },
+      "tags": ["travel"],
+      "added": "2026-11-03"
+    },
+    {
+      "id": "pasta-de-dientes",
+      "es": "pasta de dientes",
+      "en": ["toothpaste"],
+      "pos": "noun",
+      "gender": "f",
+      "number": "sg",
+      "tags": ["travel"],
+      "added": "2026-11-03"
+    },
+    {
+      "id": "champu",
+      "es": "champú",
+      "en": ["shampoo"],
+      "pos": "noun",
+      "gender": "m",
+      "forms": {
+        "pl": "champús"
+      },
+      "tags": ["travel"],
+      "added": "2026-11-03"
+    },
+    {
+      "id": "secador-de-pelo",
+      "es": "secador de pelo",
+      "en": ["hair dryer", "hairdryer"],
+      "pos": "noun",
+      "gender": "m",
+      "forms": {
+        "pl": "secadores de pelo"
+      },
+      "tags": ["travel"],
+      "added": "2026-11-03"
+    },
+    {
+      "id": "crema-solar",
+      "es": "crema solar",
+      "en": ["sunscreen", "sunblock", "sun cream"],
+      "pos": "noun",
+      "gender": "f",
+      "forms": {
+        "pl": "cremas solares"
+      },
+      "tags": ["travel"],
+      "added": "2026-11-03"
+    },
+    {
+      "id": "medicamentos",
+      "es": "medicamentos",
+      "en": ["medicine", "medication", "medicines"],
+      "pos": "noun",
+      "gender": "m",
+      "number": "pl",
+      "notes": "Usually plural for the medicine you take with you: los medicamentos. One medicine is el medicamento.",
+      "tags": ["travel"],
+      "added": "2026-11-03"
+    },
+    {
+      "id": "cargador-de-movil",
+      "es": "cargador de móvil",
+      "en": ["phone charger", "charger"],
+      "pos": "noun",
+      "gender": "m",
+      "forms": {
+        "pl": "cargadores de móvil"
+      },
+      "notes": "El móvil is the Spain word for a cell phone; Latin America says el celular.",
+      "tags": ["travel"],
+      "added": "2026-11-03"
+    },
+    {
+      "id": "carne-de-identidad",
+      "es": "carné de identidad",
+      "en": ["ID card", "identity card"],
+      "pos": "noun",
+      "gender": "m",
+      "forms": {
+        "pl": "carnés de identidad"
+      },
+      "notes": "In Spain usually called el DNI. Also spelled carnet.",
+      "tags": ["travel"],
+      "added": "2026-11-03"
+    },
+    {
+      "id": "dinero",
+      "es": "dinero",
+      "en": ["money"],
+      "pos": "noun",
+      "gender": "m",
+      "number": "sg",
+      "tags": ["travel"],
+      "added": "2026-11-03"
+    },
+    {
+      "id": "tarjeta-de-credito",
+      "es": "tarjeta de crédito",
+      "en": ["credit card"],
+      "pos": "noun",
+      "gender": "f",
+      "forms": {
+        "pl": "tarjetas de crédito"
+      },
+      "tags": ["travel"],
+      "added": "2026-11-03"
     }
   ]
 }
