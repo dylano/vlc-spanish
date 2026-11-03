@@ -5792,7 +5792,7 @@
     {
       "id": "estacion-de-metro",
       "es": "estación de metro",
-      "en": ["subway station", "metro station", "underground station", "tube station"],
+      "en": ["metro station", "underground station", "subway station", "tube station"],
       "pos": "noun",
       "gender": "f",
       "forms": {
