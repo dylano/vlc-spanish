@@ -276,7 +276,10 @@ tangled into components.
   control: it started as a quiet small-caps toggle and was too easy to miss. With no filter on the
   row is two tabs — **All categories | Verbs only** (`QUICK_TAG`) — for the one category common
   enough to deserve a single tap; choosing it sets the filter like any other, so the tabs give way to
-  the filtered row.
+  the filtered row. With a category chosen, the word count gets a **Practice these** pill beside it,
+  the same one as on Problem words: it opens Custom practice set to All words and that category
+  (replacing the categories saved there, keeping the exercise modes), ready to start. It passes the
+  category as router state, `CustomPracticeState.tags`, as Problem words passes `words`.
   Every verb card has a **Conjugate** link that opens its present tense in a modal dialog over the
   list (`ConjugationDialog`, a native `<dialog>`: Escape or a tap on the dimmed list closes it). The
   table (`src/lib/conjugation.ts`) colours what to notice: a changed stem (_pref**ie**ro_, not in
