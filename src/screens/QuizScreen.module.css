@@ -234,6 +234,33 @@
   white-space: pre-wrap;
 }
 
+/* After a translation: three more of the same pattern. A quiet pill under the
+   comparison (board T1b on the canvas's "More like this" page), not a rival to Next. */
+.moreLikeThis {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  margin-top: 22px;
+  padding: 0 16px;
+  border: 1px solid var(--rule);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--accent);
+  font-family: inherit;
+  font-size: 0.875rem;
+  cursor: pointer;
+}
+
+.moreLikeThisIcon {
+  width: 16px;
+  height: 16px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+}
+
 .compareModel {
   font-family: var(--serif);
   font-size: 1.75rem;

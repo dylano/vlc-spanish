@@ -258,6 +258,21 @@ tangled into components.
   just as right. Nothing is
   scheduled, and the summary counts these as "translated" apart from the score. Enter submits, and
   Enter again moves on: once submitted the text box is gone, so the page listens for it.
+  **Practice more like this**: after the reveal, unless it was an exact match, a quiet pill under the
+  comparison adds three sentences of the same pattern straight after this one and moves on to the
+  first (`moreLikeThis` in `src/lib/sentences/translate.ts`; board T1b on the canvas's "More like
+  this" page). The learner judges their own translation, so they ask for it. "Like this" means the
+  same pattern with every slot re-rolled: the pattern is the structure, so its own words and any slot
+  with only one possible word stay (_tener que_, _hay_, _¿Dónde…?_) and the content varies (_Tenemos
+  que volver_ → _Tengo que leer_). Keeping one chosen word fixed was tried first and only drilled that
+  word (three sentences of _mucho_ after _Salís mucho_). Of the sentences a pattern can make, the three
+  that differ most (from the one missed and from each other, slot by slot) are chosen, so a small pattern
+  does not say "the computer" twice. No sentence already in the session comes back; when the
+  pattern runs dry, patterns sharing its first grammar tag fill in, and when nothing new can be made
+  the pill is not shown. The added sentences are ordinary Translate cards, so each can offer more in
+  turn, and the session grows (the progress bar with it). Translations stay unscored throughout. Some
+  structures span several patterns (a verb with _mucho_ in one, with _dos veces a la semana_ in
+  another); grouping those so the extra sentences mix them is a possible next step.
 - **Problem words** (`/problems`) — every word missed at least once, most missed first, with the
   count and, when the last answer was wrong, "recent miss" (`src/lib/problems.ts`: `lapses` summed over both
   directions; ties put a word still wrong first, then the lower ease). Only a **wrong** answer counts:

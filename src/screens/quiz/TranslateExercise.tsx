@@ -13,7 +13,16 @@ import type { ExerciseProps } from "./shared.ts";
  *
  * Mounted fresh for each card (the parent keys it).
  */
-export default function TranslateExercise({ card, position, label, onDone }: ExerciseProps) {
+export default function TranslateExercise({
+  card,
+  position,
+  label,
+  onDone,
+  onMore,
+}: ExerciseProps & {
+  /** Present when there are more sentences like this one to add. */
+  onMore?: () => void;
+}) {
   const sentence = card.translation!.sentence;
   const [answer, setAnswer] = useState("");
   const [submitted, setSubmitted] = useState(false);
@@ -104,6 +113,24 @@ export default function TranslateExercise({ card, position, label, onDone }: Exe
                 <p className={styles.compareModel}>{sentence.es}</p>
               </>
             )}
+            {/* The learner judges their own translation, so they ask for more: three
+                sentences of the same pattern, straight after this one. Not after an
+                exact match, which needs no more practice. */}
+            {!exact && onMore ? (
+              <button
+                type="button"
+                className={styles.moreLikeThis}
+                onClick={() => {
+                  onMore();
+                  submit();
+                }}
+              >
+                <svg className={styles.moreLikeThisIcon} viewBox="0 0 20 20" aria-hidden="true">
+                  <path d="M10 4v12M4 10h12" />
+                </svg>
+                Practice more like this
+              </button>
+            ) : null}
           </div>
         ) : (
           <>
