@@ -4163,7 +4163,7 @@
     {
       "id": "jersey",
       "es": "jersey",
-      "en": ["jumper", "sweater", "pullover"],
+      "en": ["sweater", "pullover", "jumper"],
       "pos": "noun",
       "gender": "m",
       "forms": {
