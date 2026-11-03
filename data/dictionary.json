@@ -3228,7 +3228,7 @@
     {
       "id": "bolso",
       "es": "bolso",
-      "en": ["purse", "handbag", "bag"],
+      "en": ["handbag", "purse", "bag"],
       "pos": "noun",
       "gender": "m",
       "forms": {
@@ -4381,7 +4381,7 @@
     {
       "id": "de-cuadros",
       "es": "de cuadros",
-      "en": ["plaid", "checked", "checkered"],
+      "en": ["checkered", "plaid", "checked"],
       "pos": "adj",
       "forms": {
         "pl": "de cuadros"
