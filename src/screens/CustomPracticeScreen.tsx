@@ -15,6 +15,8 @@ const PILL_LABEL: Record<string, string> = {
 /** How another screen opens this one set to a choice: Problem words' "Practice these". */
 export interface CustomPracticeState {
   words?: CustomChoice["words"];
+  /** Categories to start with, from the Dictionary's filter: all words, in those. */
+  tags?: string[];
 }
 
 /**
@@ -95,9 +97,12 @@ export default function CustomPracticeScreen() {
     // Drop anything saved that no longer exists, so a stale id cannot narrow a
     // session to nothing.
     return {
-      words: opened?.words ?? saved.words,
+      // A category handed over means all its words: problem words would grey it out.
+      words: opened?.tags ? "all" : (opened?.words ?? saved.words),
       exercises: saved.exercises.filter((id) => EXERCISES.some((exercise) => exercise.id === id)),
-      tags: saved.tags.filter((tag) => entries.some((entry) => entry.tags.includes(tag))),
+      tags: (opened?.tags ?? saved.tags).filter((tag) =>
+        entries.some((entry) => entry.tags.includes(tag)),
+      ),
     };
   });
 

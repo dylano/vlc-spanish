@@ -1,9 +1,11 @@
 import { Fragment, useMemo, useRef, useState } from "react";
+import { Link } from "react-router";
 import { useStore } from "../app/store-context.ts";
 import { cardForms } from "../lib/forms.ts";
 import { buildSearchIndex, search } from "../lib/search.ts";
 import type { Entry, VerbEntry } from "../lib/schema.ts";
 import ConjugationDialog from "./ConjugationDialog.tsx";
+import type { CustomPracticeState } from "./CustomPracticeScreen.tsx";
 import styles from "./DictionaryScreen.module.css";
 
 /** The category common enough to sit in the filter row as a one-tap shortcut. */
@@ -201,9 +203,25 @@ export default function DictionaryScreen() {
         </div>
       ) : null}
 
-      <p className={styles.count}>
-        {filtered.length} {filtered.length === 1 ? "word" : "words"}
-      </p>
+      {/* With a category chosen, practice it: Custom practice opens set to that
+          category, ready to start, as Problem words' Practice these does. */}
+      <div className={styles.toolbar}>
+        <p className={styles.count}>
+          {filtered.length} {filtered.length === 1 ? "word" : "words"}
+        </p>
+        {tag ? (
+          <Link
+            to="/custom"
+            state={{ tags: [tag] } satisfies CustomPracticeState}
+            className={styles.practice}
+          >
+            Practice these
+            <svg className={styles.practiceChevron} viewBox="0 0 20 20" aria-hidden="true">
+              <path d="M7 4l6 6-6 6" />
+            </svg>
+          </Link>
+        ) : null}
+      </div>
 
       <ul className={styles.list}>
         {filtered.map((entry) => (
