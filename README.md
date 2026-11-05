@@ -133,8 +133,8 @@ screen (Check, Next, Start practice); **secondary**, its outlined partner (Anoth
 such as the Home rows or an icon ×, keeps its own look through `className`. Choice controls (Custom
 practice modes and categories, multiple-choice options, match tiles, the Dictionary's category grid)
 are not actions and stay plain buttons. Translate a sentence still uses its own buttons for now.
-Labels set in capitals take a `casing`: `caps`, or `mixed` (as written, on a computer only; a phone
-keeps capitals), which the variants default to
+Labels set in capitals take a `casing`: `caps`, or `mixed` (title case, on a computer only; a phone
+keeps capitals; Spanish labels stay as written), which the variants default to
 and Save, Empezar and Conjugate ask for; other buttons, like Home's rows, keep their own type.
 
 On a computer, a Button can answer a key (`shortcut`), and shows it as a keycap after its label.

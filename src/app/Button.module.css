@@ -111,15 +111,21 @@
   }
 }
 
-/* Mixed case: the label as written, on a computer only; a phone keeps capitals,
-   which read better at its size. Same width as the keycaps above. The wide
-   tracking is for capitals, so it goes; the small labels grow, since lowercase at
-   11-12px reads smaller than capitals. */
+/* Mixed case, on a computer only; a phone keeps capitals, which read better at its
+   size. Same width as the keycaps above. Labels are written in sentence case and
+   shown in title case (Start Practice), except Spanish, which does not title-case
+   (¡Otra vez!). The wide tracking is for capitals, so it goes; the small labels
+   grow, since lowercase at 11-12px reads smaller than capitals. */
 @media (min-width: 600px) {
   button[data-casing="mixed"],
   a[data-casing="mixed"] {
-    text-transform: none;
+    text-transform: capitalize;
     letter-spacing: 0.01em;
+  }
+
+  [data-casing="mixed"]:lang(es),
+  [data-casing="mixed"] :lang(es) {
+    text-transform: none;
   }
 
   .pill[data-casing="mixed"],
