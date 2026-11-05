@@ -125,7 +125,7 @@ export default function CustomPracticeScreen() {
 
   return (
     <section className={styles.screen}>
-      <Button variant="back" to="/">
+      <Button variant="back" to="/" shortcut="Escape">
         Home
       </Button>
       <h1 className={styles.title}>Custom practice</h1>
@@ -183,7 +183,7 @@ export default function CustomPracticeScreen() {
       {/* Stuck above the nav: with every category listed, the end of the page is
           below the fold on a phone. */}
       <div className={styles.footer}>
-        <Button variant="primary" onClick={start}>
+        <Button variant="primary" shortcut="Enter" onClick={start}>
           Start practice
         </Button>
       </div>

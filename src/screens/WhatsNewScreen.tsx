@@ -15,7 +15,7 @@ export default function WhatsNewScreen() {
 
   return (
     <section className={styles.screen}>
-      <Button variant="back" to="/settings">
+      <Button variant="back" to="/settings" shortcut="Escape">
         Settings
       </Button>
       <h1 className={styles.title}>What’s new</h1>

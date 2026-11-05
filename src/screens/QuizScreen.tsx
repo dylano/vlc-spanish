@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useLocation, useNavigate, useSearchParams } from "react-router";
+import Button from "../app/Button.tsx";
 import SessionShell from "../app/SessionShell.tsx";
 import { LOCAL_USER } from "../app/local.ts";
 import { sentences } from "../app/sentences.ts";
@@ -212,15 +213,15 @@ export default function QuizScreen() {
     return (
       <SessionShell
         footer={
-          <button
-            type="button"
-            className={styles.button}
+          <Button
+            variant="primary"
+            shortcut="Enter"
             onClick={() => {
               void navigate("/");
             }}
           >
             Back
-          </button>
+          </Button>
         }
       >
         <section className={styles.empty}>
@@ -257,9 +258,9 @@ export default function QuizScreen() {
         footer={
           <div className={styles.summaryActions}>
             {/* The same settings (the URL) again: new words and sentences, not a replay. */}
-            <button
-              type="button"
+            <Button
               className={styles.buttonSecondary}
+              shortcut="r"
               onClick={() => {
                 void navigate(`/quiz${location.search}`, { replace: true });
               }}
@@ -269,16 +270,16 @@ export default function QuizScreen() {
                 <path d="M16 3.5v3.5h-3.5" />
               </svg>
               <span lang={again.lang}>{again.text}</span>
-            </button>
-            <button
-              type="button"
-              className={styles.button}
+            </Button>
+            <Button
+              variant="primary"
+              shortcut="Enter"
               onClick={() => {
                 void navigate("/");
               }}
             >
               Done
-            </button>
+            </Button>
           </div>
         }
       >

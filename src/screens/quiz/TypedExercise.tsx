@@ -181,6 +181,7 @@ export default function TypedExercise({ card, position, label, onDone }: Exercis
       footer={
         <Button
           variant="primary"
+          shortcut="Enter"
           type="submit"
           form="answer-form"
           // Stops the tap moving focus out of the input, which is what closes

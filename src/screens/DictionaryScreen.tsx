@@ -138,6 +138,7 @@ export default function DictionaryScreen() {
       <div className={`${styles.filter} ${tag ? styles.filterOn : ""}`}>
         <Button
           className={styles.filterOpen}
+          shortcut="f"
           aria-expanded={choosing}
           aria-controls="categories"
           onClick={() => {
@@ -207,7 +208,12 @@ export default function DictionaryScreen() {
           {filtered.length} {filtered.length === 1 ? "word" : "words"}
         </p>
         {tag ? (
-          <Button variant="pill" to="/custom" state={{ tags: [tag] } satisfies CustomPracticeState}>
+          <Button
+            variant="pill"
+            shortcut="p"
+            to="/custom"
+            state={{ tags: [tag] } satisfies CustomPracticeState}
+          >
             Practice these
           </Button>
         ) : null}

@@ -97,23 +97,6 @@ export default function MistakeExercise({ card, position, label, onDone }: Exerc
     }
   }
 
-  // Enter moves on from a miss even when nothing is focused, as after tapping a
-  // word that was fine. A focused field or button already submits on Enter, so
-  // those are left to do it, or the card would be finished twice.
-  useEffect(() => {
-    if (phase !== "done" || !grade || grade.result === "correct") return undefined;
-    function onKey(event: KeyboardEvent) {
-      if (event.key !== "Enter" || event.metaKey || event.ctrlKey || event.altKey) return;
-      if ((event.target as Element | null)?.closest("input, textarea, button, select")) return;
-      event.preventDefault();
-      finish(grade!, wrongTap === undefined ? answer : tokens[wrongTap]!.text);
-    }
-    globalThis.addEventListener("keydown", onKey);
-    return () => {
-      globalThis.removeEventListener("keydown", onKey);
-    };
-  });
-
   // Once answered, the broken words are replaced by the correct text, once.
   const firstBroken = tokens.findIndex((token) => token.broken && token.word);
   const rendered = tokens.map((token, index) => {
@@ -152,6 +135,7 @@ export default function MistakeExercise({ card, position, label, onDone }: Exerc
     phase === "fix" ? (
       <Button
         variant="primary"
+        shortcut="Enter"
         type="submit"
         form="mistake-form"
         onMouseDown={(event) => {
@@ -161,7 +145,7 @@ export default function MistakeExercise({ card, position, label, onDone }: Exerc
         Check
       </Button>
     ) : phase === "done" && grade && grade.result !== "correct" ? (
-      <Button variant="primary" type="submit" form="mistake-form">
+      <Button variant="primary" shortcut="Enter" type="submit" form="mistake-form">
         Next
       </Button>
     ) : undefined;

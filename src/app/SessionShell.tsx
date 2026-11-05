@@ -1,6 +1,6 @@
 import { useEffect, type ReactNode } from "react";
 import { useNavigate } from "react-router";
-import Button from "./Button.tsx";
+import Button, { Keycap } from "./Button.tsx";
 import styles from "./SessionShell.module.css";
 import { useVisualViewport } from "./useVisualViewport.ts";
 
@@ -68,6 +68,8 @@ export default function SessionShell({ position, label, footer, children }: Sess
               {label ? <span className={styles.exercise}>{label}</span> : null}
               <Button
                 className={styles.close}
+                shortcut="Escape"
+                keycap={false}
                 aria-label="End session"
                 // Same reason as the answer button: a tap here must not steal
                 // focus and drop the keyboard before navigation happens.
@@ -78,6 +80,7 @@ export default function SessionShell({ position, label, footer, children }: Sess
                   void navigate("/");
                 }}
               >
+                <Keycap shortcut="Escape" className={styles.closeKey} />
                 <svg
                   width="18"
                   height="18"

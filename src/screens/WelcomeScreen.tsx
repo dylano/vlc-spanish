@@ -43,7 +43,13 @@ export default function WelcomeScreen() {
           // eslint-disable-next-line jsx-a11y/no-autofocus -- the only thing on the screen
           autoFocus
         />
-        <Button type="submit" className={styles.addButton} disabled={name.trim() === ""} lang="es">
+        <Button
+          type="submit"
+          shortcut="Enter"
+          className={styles.addButton}
+          disabled={name.trim() === ""}
+          lang="es"
+        >
           Empezar
         </Button>
       </form>

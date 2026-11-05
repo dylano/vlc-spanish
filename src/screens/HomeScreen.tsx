@@ -170,7 +170,7 @@ export default function HomeScreen() {
             offer, so it stays when General has nothing left. */}
         <div className={styles.list}>
           {canPractice ? (
-            <Button to="/quiz?scope=due" className={styles.action}>
+            <Button to="/quiz?scope=due" className={styles.action} shortcut="g" keycap={false}>
               <span>
                 General practice
                 <span className={styles.subtitle}>Mixed exercises on the full dictionary</span>
@@ -180,7 +180,7 @@ export default function HomeScreen() {
           ) : (
             <p className={styles.nothing}>Nothing due right now. Come back later.</p>
           )}
-          <Button to="/custom" className={styles.action}>
+          <Button to="/custom" className={styles.action} shortcut="c" keycap={false}>
             <span>
               Custom practice
               <span className={styles.subtitle}>Select exercise modes and categories</span>
@@ -192,7 +192,7 @@ export default function HomeScreen() {
         {/* A reference, quieter than the two above: the list of words missed most.
             Drilling them is a Custom practice choice, reached from the list. */}
         {troubled > 0 ? (
-          <Button to="/problems" className={styles.problems}>
+          <Button to="/problems" className={styles.problems} shortcut="p" keycap={false}>
             <span>
               Problem words <span className={styles.count}>· {troubled}</span>
             </span>

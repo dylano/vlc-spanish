@@ -54,3 +54,38 @@
   stroke-linecap: round;
   stroke-linejoin: round;
 }
+
+/* Canvas board B: a keycap inside the button, after the label. Hidden unless the
+   window is wide enough for the whole column, as a computer's is and a phone's is not. */
+.keycap {
+  display: none;
+  min-width: 20px;
+  height: 20px;
+  margin-left: 6px;
+  padding: 0 5px;
+  border: 1px solid var(--rule);
+  border-bottom-width: 2px;
+  border-radius: 4px;
+  font-family: var(--sans);
+  font-size: 11px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: 0;
+  text-transform: none;
+  vertical-align: middle;
+  color: var(--muted);
+}
+
+/* On the solid block the keycap is drawn in the button's own text colour. */
+.primary .keycap {
+  border-color: color-mix(in srgb, currentColor 45%, transparent);
+  color: color-mix(in srgb, currentColor 85%, transparent);
+}
+
+@media (min-width: 600px) {
+  .keycap {
+    display: inline-grid;
+    place-items: center;
+  }
+}

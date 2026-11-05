@@ -122,7 +122,7 @@ export default function ProblemWordsScreen() {
 
   return (
     <section className={styles.screen}>
-      <Button variant="back" to="/">
+      <Button variant="back" to="/" shortcut="Escape">
         Home
       </Button>
       <h1 className={styles.title}>Problem words</h1>
@@ -143,6 +143,7 @@ export default function ProblemWordsScreen() {
             </span>
             <Button
               variant="pill"
+              shortcut="p"
               to="/custom"
               state={{ words: "problems" } satisfies CustomPracticeState}
             >

@@ -132,8 +132,18 @@ screen (Check, Next, Start practice); **pill**, an outlined way into practice wi
 (Practice these); and **back**, the quiet link above a title with a chevron before it. Anything else,
 such as the Home rows or an icon ×, keeps its own look through `className`. Choice controls (Custom
 practice modes and categories, multiple-choice options, match tiles, the Dictionary's category grid)
-are not actions and stay plain buttons. Button is the groundwork for keyboard shortcuts on desktop;
-the session summary and Translate a sentence still use their own buttons for now.
+are not actions and stay plain buttons. Translate a sentence still uses its own buttons for now.
+
+On a computer, a Button can answer a key (`shortcut`), and shows it as a keycap after its label.
+Keycaps appear only in a window wide enough for the whole column (600px), so not on a phone; the
+keys work regardless. One listener (`src/app/shortcuts.ts`) clicks the visible button for the key, so a
+key does exactly what a tap does. **↵** is each screen's main button (Start practice, Check, Next,
+Save, Empezar), **Esc** is a back link or ending a session, and letters are named for their button:
+on Home **G**eneral practice, **C**ustom practice and **P**roblem words (no keycaps there, where they
+were noise); **R** for another round on the summary; **P**ractice these; the
+Dictionary's **F**ilter. Letters never fire while typing in a field; ↵ is left to a focused field
+(its form submits) or a button reached from the keyboard; with a dialog open, only its buttons
+answer, and Esc closes it.
 
 `src/lib` deliberately has no React or network code in it. The grading and scheduling rules are the
 part of this app most worth getting right, so they are pure functions with tests rather than logic
