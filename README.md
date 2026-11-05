@@ -88,7 +88,7 @@ src/lib/          pure logic, no React, thoroughly tested
 src/
   app/            store (context), local storage (local.ts), theme (theme.ts), the update check
                   (update.ts), the bundled
-                  dictionary, sentence data and release note, and the shells
+                  dictionary, sentence data and release note, the shells, and Button (below)
   screens/        one file per screen, each with a CSS module beside it
                   (ConjugationDialog is the Dictionary's verb table, a dialog rather than a screen)
     quiz/           one component per exercise (typed and gaps, multiple choice, matching, find the
@@ -123,6 +123,31 @@ The shell is a CSS size container named `session`; exercises compact themselves 
 A session is built from progress once, when the quiz screen opens, and kept fixed while it runs.
 Progress is read from local storage synchronously on first render, so a session can never start from
 empty progress by mistake.
+
+### Buttons
+
+Every action is a `Button` (`src/app/Button.tsx`): a `<button>`, a link to another screen (`to`),
+or a link out (`href`). The shared looks are variants: **primary**, the solid block at the foot of a
+screen (Check, Next, Start practice); **secondary**, its outlined partner (Another round, Keep going); **pill**, an outlined way into practice with a chevron after it
+(Practice these); and **back**, the quiet link above a title with a chevron before it. Anything else,
+such as the Home rows or an icon ×, keeps its own look through `className`. Choice controls (Custom
+practice modes and categories, multiple-choice options, match tiles, the Dictionary's category grid)
+are not actions and stay plain buttons. Translate a sentence still uses its own buttons for now.
+Labels set in capitals take a `casing`: `caps`, or `mixed` (title case, on a computer only; a phone
+keeps capitals; Spanish labels stay as written), which the variants default to
+and Save, Empezar and Conjugate ask for; other buttons, like Home's rows, keep their own type.
+
+On a computer, a Button can answer a key (`shortcut`), and shows it as a keycap after its label.
+Keycaps appear only in a window wide enough for the whole column (600px), so not on a phone; the
+keys work regardless. One listener (`src/app/shortcuts.ts`) clicks the visible button for the key, so a
+key does exactly what a tap does. **↵** is each screen's main button (Start practice, Check, Next,
+Save, Empezar), **Esc** is a back link or ending a session (mid-session it asks first: _End this session?_, Esc again
+to keep going, ↵ to end; a tap on the × still ends at once, and the × shows no keycap), and letters are named for their button:
+on Home **G**eneral practice, **C**ustom practice and **P**roblem words (no keycaps there, where they
+were noise); **R** for another round on the summary; **P**ractice these; the
+Dictionary's **F**ilter. Letters never fire while typing in a field; ↵ is left to a focused field
+(its form submits) or a button reached from the keyboard; with a dialog open, only its buttons
+answer, and Esc closes it.
 
 `src/lib` deliberately has no React or network code in it. The grading and scheduling rules are the
 part of this app most worth getting right, so they are pure functions with tests rather than logic

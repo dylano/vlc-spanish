@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import Button from "../app/Button.tsx";
 import { conjugationTable } from "../lib/conjugation.ts";
 import type { Entry, VerbEntry } from "../lib/schema.ts";
 import styles from "./ConjugationDialog.module.css";
@@ -49,16 +50,11 @@ export default function ConjugationDialog({
             </div>
             <p className={styles.en}>{entry.en.join(", ")}</p>
           </div>
-          <button
-            type="button"
-            className={styles.close}
-            aria-label="Close"
-            onClick={() => ref.current?.close()}
-          >
+          <Button className={styles.close} aria-label="Close" onClick={() => ref.current?.close()}>
             <svg viewBox="0 0 12 12" aria-hidden="true">
               <path d="M3 3l6 6M9 3l-6 6" />
             </svg>
-          </button>
+          </Button>
         </div>
 
         <div className={styles.label}>

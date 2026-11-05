@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState, type FormEvent } from "react";
+import Button from "../../app/Button.tsx";
 import SessionShell from "../../app/SessionShell.tsx";
 import type { Grade, Result } from "../../lib/grade.ts";
 import { gradeFix, mistakeTokens } from "../../lib/sentences/mistake.ts";
@@ -96,23 +97,6 @@ export default function MistakeExercise({ card, position, label, onDone }: Exerc
     }
   }
 
-  // Enter moves on from a miss even when nothing is focused, as after tapping a
-  // word that was fine. A focused field or button already submits on Enter, so
-  // those are left to do it, or the card would be finished twice.
-  useEffect(() => {
-    if (phase !== "done" || !grade || grade.result === "correct") return undefined;
-    function onKey(event: KeyboardEvent) {
-      if (event.key !== "Enter" || event.metaKey || event.ctrlKey || event.altKey) return;
-      if ((event.target as Element | null)?.closest("input, textarea, button, select")) return;
-      event.preventDefault();
-      finish(grade!, wrongTap === undefined ? answer : tokens[wrongTap]!.text);
-    }
-    globalThis.addEventListener("keydown", onKey);
-    return () => {
-      globalThis.removeEventListener("keydown", onKey);
-    };
-  });
-
   // Once answered, the broken words are replaced by the correct text, once.
   const firstBroken = tokens.findIndex((token) => token.broken && token.word);
   const rendered = tokens.map((token, index) => {
@@ -149,20 +133,21 @@ export default function MistakeExercise({ card, position, label, onDone }: Exerc
 
   const footer =
     phase === "fix" ? (
-      <button
+      <Button
+        variant="primary"
+        shortcut="Enter"
         type="submit"
         form="mistake-form"
-        className={styles.button}
         onMouseDown={(event) => {
           event.preventDefault();
         }}
       >
         Check
-      </button>
+      </Button>
     ) : phase === "done" && grade && grade.result !== "correct" ? (
-      <button type="submit" form="mistake-form" className={styles.button}>
+      <Button variant="primary" shortcut="Enter" type="submit" form="mistake-form">
         Next
-      </button>
+      </Button>
     ) : undefined;
 
   return (

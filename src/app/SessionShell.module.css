@@ -114,3 +114,38 @@
 .frame[data-obscured] .footer {
   padding-bottom: 12px;
 }
+
+/* Esc mid-session: the conjugation dialog's card, with a question and two ways out. */
+.confirm {
+  width: calc(100% - 32px);
+  max-width: 26rem;
+  margin: auto;
+  padding: 24px;
+  border: 1px solid var(--raised-edge);
+  border-radius: 16px;
+  background: var(--raised);
+  color: var(--ink);
+  box-shadow: 0 12px 40px rgb(25 29 26 / 0.18);
+}
+
+.confirm:focus {
+  outline: none;
+}
+
+.confirm::backdrop {
+  background: var(--scrim);
+}
+
+.confirmTitle {
+  margin: 0 0 24px;
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: 1.75rem;
+  line-height: 1.15;
+}
+
+.confirmActions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}

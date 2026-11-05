@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import Button from "../../app/Button.tsx";
 import SessionShell from "../../app/SessionShell.tsx";
 import { useStore } from "../../app/store-context.ts";
 import { optionText } from "../../lib/choices.ts";
@@ -89,13 +90,18 @@ export default function ChoiceExercise({ card, position, label, onDone }: Exerci
     if (checked) feedbackRef.current?.scrollIntoView({ block: "nearest" });
   }, [checked]);
 
-  // On a computer: a–d or 1–4 to answer, Enter to move on.
+  // On a computer: a–d or 1–4 to answer. Enter after a miss is Next's own
+  // shortcut; here it only hurries a right answer past its pause.
   useEffect(() => {
     function onKey(event: KeyboardEvent) {
-      if (event.metaKey || event.ctrlKey || event.altKey) return;
+      if (event.defaultPrevented || event.metaKey || event.ctrlKey || event.altKey) return;
+      // Nothing answers behind the end-session dialog.
+      if (document.querySelector("dialog[open]")) return;
       if (event.key === "Enter") {
-        event.preventDefault();
-        finish();
+        if (picked?.correct) {
+          event.preventDefault();
+          finish();
+        }
         return;
       }
       const byLetter = LETTERS.indexOf(event.key.toLowerCase());
@@ -127,9 +133,9 @@ export default function ChoiceExercise({ card, position, label, onDone }: Exerci
       // after the learner has had a chance to read why.
       footer={
         checked && !picked?.correct ? (
-          <button type="button" className={styles.button} onClick={finish}>
+          <Button variant="primary" shortcut="Enter" onClick={finish}>
             Next
-          </button>
+          </Button>
         ) : undefined
       }
     >

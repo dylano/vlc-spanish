@@ -1,5 +1,6 @@
 import { BrowserRouter, Route, Routes, useLocation } from "react-router";
 import AppShell from "./app/AppShell.tsx";
+import { useShortcuts } from "./app/shortcuts.ts";
 import { StoreProvider } from "./app/store.tsx";
 import { useStore } from "./app/store-context.ts";
 import CustomPracticeScreen from "./screens/CustomPracticeScreen.tsx";
@@ -40,6 +41,7 @@ function Gate() {
 }
 
 export default function App() {
+  useShortcuts();
   return (
     <BrowserRouter>
       <StoreProvider>

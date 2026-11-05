@@ -1,0 +1,135 @@
+/* The session's solid block: Check, Next, Start practice. */
+.primary {
+  display: block;
+  width: 100%;
+  min-height: 52px;
+  border: none;
+  border-radius: 6px;
+  background: var(--accent);
+  color: var(--on-accent);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+/* The solid block's quieter partner, outlined: Another round, Keep going. */
+.secondary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 52px;
+  padding: 0 12px;
+  border: 1px solid var(--accent);
+  border-radius: 6px;
+  background: transparent;
+  color: var(--accent);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+/* Secondary weight: an outlined pill into practice, not the solid block a session uses. */
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 40px;
+  padding: 0 16px;
+  border: 1px solid var(--accent);
+  border-radius: 999px;
+  color: var(--accent);
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-decoration: none;
+}
+
+/* The quiet way back, above a screen's title. */
+.back {
+  display: inline-flex;
+  align-self: flex-start;
+  align-items: center;
+  gap: 4px;
+  min-height: 44px;
+  margin-top: -12px;
+  font-size: var(--label-size);
+  letter-spacing: var(--label-tracking);
+  text-transform: uppercase;
+  color: var(--muted);
+  text-decoration: none;
+}
+
+.chevron {
+  width: 14px;
+  height: 14px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* Canvas board B: a keycap inside the button, after the label. Hidden unless the
+   window is wide enough for the whole column, as a computer's is and a phone's is not. */
+.keycap {
+  display: none;
+  min-width: 20px;
+  height: 20px;
+  margin-left: 6px;
+  padding: 0 5px;
+  /* The raised edge, not the rule: in dark the rule vanishes on a dialog. */
+  border: 1px solid var(--raised-edge);
+  border-bottom-width: 2px;
+  border-radius: 4px;
+  font-family: var(--sans);
+  font-size: 11px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: 0;
+  text-transform: none;
+  vertical-align: middle;
+  color: var(--muted);
+}
+
+/* On the solid block the keycap is drawn in the button's own text colour. */
+.primary .keycap {
+  border-color: color-mix(in srgb, currentColor 45%, transparent);
+  color: color-mix(in srgb, currentColor 85%, transparent);
+}
+
+@media (min-width: 600px) {
+  .keycap {
+    display: inline-grid;
+    place-items: center;
+  }
+}
+
+/* Mixed case, on a computer only; a phone keeps capitals, which read better at its
+   size. Same width as the keycaps above. Labels are written in sentence case and
+   shown in title case (Start Practice), except Spanish, which does not title-case
+   (¡Otra vez!). The wide tracking is for capitals, so it goes; the small labels
+   grow, since lowercase at 11-12px reads smaller than capitals. */
+@media (min-width: 600px) {
+  button[data-casing="mixed"],
+  a[data-casing="mixed"] {
+    text-transform: capitalize;
+    letter-spacing: 0.01em;
+  }
+
+  [data-casing="mixed"]:lang(es),
+  [data-casing="mixed"] :lang(es) {
+    text-transform: none;
+  }
+
+  .pill[data-casing="mixed"],
+  .back[data-casing="mixed"] {
+    font-size: 0.875rem;
+  }
+}

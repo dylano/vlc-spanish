@@ -1,5 +1,5 @@
 import { useMemo, useRef, useState, type ReactNode } from "react";
-import { Link } from "react-router";
+import Button from "../app/Button.tsx";
 import { useStore } from "../app/store-context.ts";
 import { canonicalAnswer } from "../lib/grade.ts";
 import { forgiveMisses } from "../lib/scheduler.ts";
@@ -84,8 +84,7 @@ function SwipeRow({
           onPointerCancel={end}
         >
           {children}
-          <button
-            type="button"
+          <Button
             className={styles.remove}
             aria-label={label}
             onClick={() => {
@@ -95,7 +94,7 @@ function SwipeRow({
             <svg viewBox="0 0 12 12" aria-hidden="true">
               <path d="M3 3l6 6M9 3l-6 6" />
             </svg>
-          </button>
+          </Button>
         </div>
       </div>
     </li>
@@ -123,12 +122,9 @@ export default function ProblemWordsScreen() {
 
   return (
     <section className={styles.screen}>
-      <Link to="/" className={styles.back}>
-        <svg className={styles.backChevron} viewBox="0 0 20 20" aria-hidden="true">
-          <path d="M13 4l-6 6 6 6" />
-        </svg>
+      <Button variant="back" to="/" shortcut="Escape">
         Home
-      </Link>
+      </Button>
       <h1 className={styles.title}>Problem words</h1>
       <p className={styles.intro}>
         The words you have missed most, across every session. A word stays here after you get it
@@ -145,16 +141,14 @@ export default function ProblemWordsScreen() {
             <span className={styles.total}>
               {words.length} {words.length === 1 ? "word" : "words"}
             </span>
-            <Link
+            <Button
+              variant="pill"
+              shortcut="p"
               to="/custom"
               state={{ words: "problems" } satisfies CustomPracticeState}
-              className={styles.practice}
             >
               Practice these
-              <svg className={styles.practiceChevron} viewBox="0 0 20 20" aria-hidden="true">
-                <path d="M7 4l6 6-6 6" />
-              </svg>
-            </Link>
+            </Button>
           </div>
           <ul className={styles.list}>
             {words.map(({ entry, missed, wrongLast }) => (

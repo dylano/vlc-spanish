@@ -1,4 +1,5 @@
 import { useState, type FormEvent } from "react";
+import Button from "../app/Button.tsx";
 import { useStore } from "../app/store-context.ts";
 import styles from "./WelcomeScreen.module.css";
 
@@ -42,9 +43,16 @@ export default function WelcomeScreen() {
           // eslint-disable-next-line jsx-a11y/no-autofocus -- the only thing on the screen
           autoFocus
         />
-        <button type="submit" className={styles.addButton} disabled={name.trim() === ""} lang="es">
+        <Button
+          type="submit"
+          shortcut="Enter"
+          className={styles.addButton}
+          casing="mixed"
+          disabled={name.trim() === ""}
+          lang="es"
+        >
           Empezar
-        </button>
+        </Button>
       </form>
       <div className={styles.spacer} />
     </section>
