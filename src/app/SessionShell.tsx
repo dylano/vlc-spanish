@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { useNavigate } from "react-router";
-import Button, { Keycap } from "./Button.tsx";
+import Button from "./Button.tsx";
 import styles from "./SessionShell.module.css";
 import { useVisualViewport } from "./useVisualViewport.ts";
 
@@ -127,7 +127,6 @@ export default function SessionShell({ position, label, footer, children }: Sess
                   void navigate("/");
                 }}
               >
-                <Keycap shortcut="Escape" className={styles.closeKey} />
                 <svg
                   width="18"
                   height="18"

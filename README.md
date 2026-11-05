@@ -141,7 +141,7 @@ Keycaps appear only in a window wide enough for the whole column (600px), so not
 keys work regardless. One listener (`src/app/shortcuts.ts`) clicks the visible button for the key, so a
 key does exactly what a tap does. **↵** is each screen's main button (Start practice, Check, Next,
 Save, Empezar), **Esc** is a back link or ending a session (mid-session it asks first: _End this session?_, Esc again
-to keep going, ↵ to end; a tap on the × still ends at once), and letters are named for their button:
+to keep going, ↵ to end; a tap on the × still ends at once, and the × shows no keycap), and letters are named for their button:
 on Home **G**eneral practice, **C**ustom practice and **P**roblem words (no keycaps there, where they
 were noise); **R** for another round on the summary; **P**ractice these; the
 Dictionary's **F**ilter. Letters never fire while typing in a field; ↵ is left to a focused field

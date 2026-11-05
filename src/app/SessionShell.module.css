@@ -78,24 +78,15 @@
 /* 44px hit area, drawn small: leaving a session is available, not advertised. */
 .close {
   display: grid;
-  grid-auto-flow: column;
-  gap: 6px;
   place-items: center;
-  min-width: 44px;
+  width: 44px;
   height: 44px;
   margin-right: -13px;
-  /* Room either side of the 18px × makes the 44px square, and keeps the × in place
-     when the Esc keycap widens the button. */
-  padding: 0 13px;
+  padding: 0;
   border: none;
   background: transparent;
   color: var(--muted);
   cursor: pointer;
-}
-
-/* Esc, before the ×; hidden on a phone, where the button is the 44px square. */
-.closeKey {
-  margin-left: 0;
 }
 
 /* The scroll area reaches out into the side margins, so where a browser draws a
