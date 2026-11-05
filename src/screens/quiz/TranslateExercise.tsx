@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState, type FormEvent } from "react";
+import Button from "../../app/Button.tsx";
 import SessionShell from "../../app/SessionShell.tsx";
 import { matchesTranslation } from "../../lib/sentences/translate.ts";
 import styles from "../QuizScreen.module.css";
@@ -13,7 +14,16 @@ import type { ExerciseProps } from "./shared.ts";
  *
  * Mounted fresh for each card (the parent keys it).
  */
-export default function TranslateExercise({ card, position, label, onDone }: ExerciseProps) {
+export default function TranslateExercise({
+  card,
+  position,
+  label,
+  onDone,
+  onMore,
+}: ExerciseProps & {
+  /** Present when there are more sentences like this one to add. */
+  onMore?: () => void;
+}) {
   const sentence = card.translation!.sentence;
   const [answer, setAnswer] = useState("");
   const [submitted, setSubmitted] = useState(false);
@@ -24,22 +34,6 @@ export default function TranslateExercise({ card, position, label, onDone }: Exe
   useEffect(() => {
     if (submitted) compareRef.current?.scrollIntoView({ block: "nearest" });
   }, [submitted]);
-
-  // After Submit the text box is gone, so nothing is focused to catch Enter: listen
-  // on the page. A focused button already submits on Enter, so it is left alone.
-  useEffect(() => {
-    if (!submitted) return undefined;
-    function onKey(event: KeyboardEvent) {
-      if (event.key !== "Enter" || event.metaKey || event.ctrlKey || event.altKey) return;
-      if ((event.target as Element | null)?.closest("input, textarea, button, select")) return;
-      event.preventDefault();
-      submit();
-    }
-    globalThis.addEventListener("keydown", onKey);
-    return () => {
-      globalThis.removeEventListener("keydown", onKey);
-    };
-  });
 
   function submit(event?: FormEvent) {
     event?.preventDefault();
@@ -65,17 +59,20 @@ export default function TranslateExercise({ card, position, label, onDone }: Exe
       position={position}
       label={label}
       footer={
-        <button
+        // After Submit the text box is gone, so Enter reaches the page: it is
+        // Next's shortcut. Before, the text box's own Enter submits.
+        <Button
+          variant="primary"
+          shortcut="Enter"
           type="submit"
           form="translate-form"
-          className={styles.button}
           onMouseDown={(event) => {
             // Keep the keyboard up while the answer is still being written.
             if (!submitted) event.preventDefault();
           }}
         >
           {submitted ? "Next" : "Submit"}
-        </button>
+        </Button>
       }
     >
       <form id="translate-form" className={styles.question} onSubmit={submit}>
@@ -104,6 +101,25 @@ export default function TranslateExercise({ card, position, label, onDone }: Exe
                 <p className={styles.compareModel}>{sentence.es}</p>
               </>
             )}
+            {/* The learner judges their own translation, so they ask for more: three
+                sentences of the same pattern, straight after this one. Not after an
+                exact match, which needs no more practice. */}
+            {!exact && onMore ? (
+              <Button
+                className={styles.moreLikeThis}
+                casing="mixed"
+                shortcut="m"
+                onClick={() => {
+                  onMore();
+                  submit();
+                }}
+              >
+                <svg className={styles.moreLikeThisIcon} viewBox="0 0 20 20" aria-hidden="true">
+                  <path d="M10 4v12M4 10h12" />
+                </svg>
+                Practice more like this
+              </Button>
+            ) : null}
           </div>
         ) : (
           <>

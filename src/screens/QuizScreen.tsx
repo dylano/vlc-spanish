@@ -9,6 +9,7 @@ import { pickAnotherRound } from "../lib/anotherRound.ts";
 import { today } from "../lib/dates.ts";
 import { canonicalAnswer, type Grade } from "../lib/grade.ts";
 import { schedule } from "../lib/scheduler.ts";
+import { moreLikeThis } from "../lib/sentences/translate.ts";
 import {
   buildGapSession,
   buildMistakeSession,
@@ -127,9 +128,10 @@ export default function QuizScreen() {
     return only.length > 0 ? { ...sentences, frames: only } : sentences;
   }, [grammar]);
 
-  // Fixed when the screen opens: answering updates progress, and rebuilding
-  // mid-session would reshuffle the cards under the user.
-  const items = useMemo((): SessionItem[] => {
+  // Built when the screen opens: answering updates progress, and rebuilding
+  // mid-session would reshuffle the cards under the user. It only ever grows,
+  // when "Practice more like this" adds sentences after the current one.
+  const [items, setItems] = useState((): SessionItem[] => {
     const options = {
       entries,
       progress,
@@ -144,11 +146,38 @@ export default function QuizScreen() {
     if (config.format === "mistake") return buildMistakeSession(options);
     if (config.format === "translate") return buildTranslateSession(options);
     return buildSession(options);
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- deliberately built once per session
-  }, [entries, config]);
+  });
 
   const [index, setIndex] = useState(0);
   const [answered, setAnswered] = useState<Answered[]>([]);
+
+  // "Practice more like this" after a translation: sentences of the same frame,
+  // none already in this session, ready before the reveal so the offer only
+  // appears when there is something to offer.
+  const current = items[index];
+  const more = useMemo(() => {
+    if (!current || isMatchRound(current) || current.exercise !== "translate") return [];
+    const seen = items.flatMap((step) =>
+      isMatchRound(step)
+        ? []
+        : [step.translation?.sentence.es, step.mistake?.sentence.es, step.gap?.sentence.es],
+    );
+    return moreLikeThis(
+      current.translation!.sentence,
+      frames.frames,
+      { dictionary: entries, glue: frames.glue, random: Math.random },
+      seen.filter((text): text is string => text !== undefined),
+    );
+  }, [current, items, frames, entries]);
+
+  /** Put the extra sentences straight after this one; answering it then lands on the first. */
+  function practiceMore(card: Card) {
+    setItems((steps) => [
+      ...steps.slice(0, index + 1),
+      ...more.map((translation): SessionItem => ({ ...card, translation })),
+      ...steps.slice(index + 1),
+    ]);
+  }
   // Picked once per session, so the button does not change while it is read,
   // and never the phrase the last session showed. Recorded in an effect (which
   // may safely run twice), so the initializer stays pure.
@@ -382,6 +411,20 @@ export default function QuizScreen() {
   // keyboard survive from card to card. Other exercises get a fresh instance each.
   if (item.exercise === "choice") return <ChoiceExercise key={index} {...shared} />;
   if (item.exercise === "mistake") return <MistakeExercise key={index} {...shared} />;
-  if (item.exercise === "translate") return <TranslateExercise key={index} {...shared} />;
+  if (item.exercise === "translate") {
+    return (
+      <TranslateExercise
+        key={index}
+        {...shared}
+        onMore={
+          more.length > 0
+            ? () => {
+                practiceMore(item);
+              }
+            : undefined
+        }
+      />
+    );
+  }
   return <TypedExercise {...shared} />;
 }

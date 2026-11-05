@@ -128,26 +128,32 @@ empty progress by mistake.
 
 Every action is a `Button` (`src/app/Button.tsx`): a `<button>`, a link to another screen (`to`),
 or a link out (`href`). The shared looks are variants: **primary**, the solid block at the foot of a
-screen (Check, Next, Start practice); **secondary**, its outlined partner (Another round, Keep going); **pill**, an outlined way into practice with a chevron after it
-(Practice these); and **back**, the quiet link above a title with a chevron before it. Anything else,
-such as the Home rows or an icon ×, keeps its own look through `className`. Choice controls (Custom
-practice modes and categories, multiple-choice options, match tiles, the Dictionary's category grid)
-are not actions and stay plain buttons. Translate a sentence still uses its own buttons for now.
-Labels set in capitals take a `casing`: `caps`, or `mixed` (title case, on a computer only; a phone
-keeps capitals; Spanish labels stay as written), which the variants default to
-and Save, Empezar and Conjugate ask for; other buttons, like Home's rows, keep their own type.
+screen (Check, Next, Start practice); **secondary**, its outlined partner (Another round, Keep
+going); **pill**, an outlined way into practice with a chevron after it (Practice these); and
+**back**, the quiet link above a title with a chevron before it. Anything else, such as the Home
+rows, an icon × or Practice more like this, keeps its own look through `className`. Choice controls
+(Custom practice modes and categories, multiple-choice options, match tiles, the Dictionary's
+category grid) are not actions and stay plain buttons.
+
+A button's `casing` is `caps` or `mixed`. Mixed is title case on a computer (Start Practice) and
+capitals on a phone, where they read better; Spanish labels stay as written (¡Otra vez!). The
+variants default to mixed, and Save, Empezar, Conjugate and Practice more like this ask for it;
+other buttons, like Home's rows, keep their own type.
 
 On a computer, a Button can answer a key (`shortcut`), and shows it as a keycap after its label.
 Keycaps appear only in a window wide enough for the whole column (600px), so not on a phone; the
-keys work regardless. One listener (`src/app/shortcuts.ts`) clicks the visible button for the key, so a
-key does exactly what a tap does. **↵** is each screen's main button (Start practice, Check, Next,
-Save, Empezar), **Esc** is a back link or ending a session (mid-session it asks first: _End this session?_, Esc again
-to keep going, ↵ to end; a tap on the × still ends at once, and the × shows no keycap), and letters are named for their button:
-on Home **G**eneral practice, **C**ustom practice and **P**roblem words (no keycaps there, where they
-were noise); **R** for another round on the summary; **P**ractice these; the
-Dictionary's **F**ilter. Letters never fire while typing in a field; ↵ is left to a focused field
-(its form submits) or a button reached from the keyboard; with a dialog open, only its buttons
-answer, and Esc closes it.
+keys work regardless. One listener (`src/app/shortcuts.ts`) clicks the visible button for the key,
+so a key does exactly what a tap does.
+
+- **↵** is each screen's main button: Start practice, Submit, Check, Next, Done, Save, Empezar.
+- **Esc** is a back link, or ends a session. Mid-session it asks first (_End this session?_): Esc
+  again keeps going, ↵ ends it. A tap on the × still ends at once, and the × shows no keycap.
+- Letters are named for their button: on Home **G**eneral practice, **C**ustom practice and
+  **P**roblem words (no keycaps there, where they were noise); **P**ractice these; the Dictionary's
+  **F**ilter; **R** for another round on the summary; **M** for Practice more like this.
+- Letters never fire while typing in a field. ↵ is left to a focused field (its form submits) or to
+  a button reached with Tab; a button only clicked does not keep it. With a dialog open, only its
+  buttons answer, and Esc closes it.
 
 `src/lib` deliberately has no React or network code in it. The grading and scheduling rules are the
 part of this app most worth getting right, so they are pure functions with tests rather than logic
@@ -258,6 +264,21 @@ tangled into components.
   just as right. Nothing is
   scheduled, and the summary counts these as "translated" apart from the score. Enter submits, and
   Enter again moves on: once submitted the text box is gone, so the page listens for it.
+  **Practice more like this**: after the reveal, unless it was an exact match, a quiet pill under the
+  comparison adds three sentences of the same pattern straight after this one and moves on to the
+  first (`moreLikeThis` in `src/lib/sentences/translate.ts`; board T1b on the canvas's "More like
+  this" page). The learner judges their own translation, so they ask for it. "Like this" means the
+  same pattern with every slot re-rolled: the pattern is the structure, so its own words and any slot
+  with only one possible word stay (_tener que_, _hay_, _¿Dónde…?_) and the content varies (_Tenemos
+  que volver_ → _Tengo que leer_). Keeping one chosen word fixed was tried first and only drilled that
+  word (three sentences of _mucho_ after _Salís mucho_). Of the sentences a pattern can make, the three
+  that differ most (from the one missed and from each other, slot by slot) are chosen, so a small pattern
+  does not say "the computer" twice. No sentence already in the session comes back; when the
+  pattern runs dry, patterns sharing its first grammar tag fill in, and when nothing new can be made
+  the pill is not shown. The added sentences are ordinary Translate cards, so each can offer more in
+  turn, and the session grows (the progress bar with it). Translations stay unscored throughout. Some
+  structures span several patterns (a verb with _mucho_ in one, with _dos veces a la semana_ in
+  another); grouping those so the extra sentences mix them is a possible next step.
 - **Problem words** (`/problems`) — every word missed at least once, most missed first, with the
   count and, when the last answer was wrong, "recent miss" (`src/lib/problems.ts`: `lapses` summed over both
   directions; ties put a word still wrong first, then the lower ease). Only a **wrong** answer counts:
