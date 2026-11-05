@@ -128,7 +128,7 @@ empty progress by mistake.
 
 Every action is a `Button` (`src/app/Button.tsx`): a `<button>`, a link to another screen (`to`),
 or a link out (`href`). The shared looks are variants: **primary**, the solid block at the foot of a
-screen (Check, Next, Start practice); **pill**, an outlined way into practice with a chevron after it
+screen (Check, Next, Start practice); **secondary**, its outlined partner (Another round, Keep going); **pill**, an outlined way into practice with a chevron after it
 (Practice these); and **back**, the quiet link above a title with a chevron before it. Anything else,
 such as the Home rows or an icon ×, keeps its own look through `className`. Choice controls (Custom
 practice modes and categories, multiple-choice options, match tiles, the Dictionary's category grid)
@@ -138,7 +138,8 @@ On a computer, a Button can answer a key (`shortcut`), and shows it as a keycap 
 Keycaps appear only in a window wide enough for the whole column (600px), so not on a phone; the
 keys work regardless. One listener (`src/app/shortcuts.ts`) clicks the visible button for the key, so a
 key does exactly what a tap does. **↵** is each screen's main button (Start practice, Check, Next,
-Save, Empezar), **Esc** is a back link or ending a session, and letters are named for their button:
+Save, Empezar), **Esc** is a back link or ending a session (mid-session it asks first: _End this session?_, Esc again
+to keep going, ↵ to end; a tap on the × still ends at once), and letters are named for their button:
 on Home **G**eneral practice, **C**ustom practice and **P**roblem words (no keycaps there, where they
 were noise); **R** for another round on the summary; **P**ractice these; the
 Dictionary's **F**ilter. Letters never fire while typing in a field; ↵ is left to a focused field

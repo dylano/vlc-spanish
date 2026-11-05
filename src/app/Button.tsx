@@ -6,8 +6,9 @@ import { keycapLabel, type Shortcut } from "./shortcuts.ts";
 /*
  * Every action in the app: a button, a link to another screen (`to`), or a link
  * out (`href`). The shared looks are variants — primary, the solid block at the
- * foot of a screen; pill, an outlined way into practice with a chevron after;
- * back, the quiet link above a title with a chevron before. Anything else keeps
+ * foot of a screen, and secondary, its outlined partner; pill, an outlined way
+ * into practice with a chevron after; back, the quiet link above a title with a
+ * chevron before. Anything else keeps
  * its own look through className. Choice controls (modes, categories, options,
  * tiles) are not actions and stay plain buttons.
  *
@@ -17,7 +18,7 @@ import { keycapLabel, type Shortcut } from "./shortcuts.ts";
  * where a keycap is only noise (Home), it leaves none and the key still works.
  */
 
-export type ButtonVariant = "primary" | "pill" | "back";
+export type ButtonVariant = "primary" | "secondary" | "pill" | "back";
 
 interface Shared {
   variant?: ButtonVariant;

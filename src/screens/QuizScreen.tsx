@@ -259,7 +259,7 @@ export default function QuizScreen() {
           <div className={styles.summaryActions}>
             {/* The same settings (the URL) again: new words and sentences, not a replay. */}
             <Button
-              className={styles.buttonSecondary}
+              variant="secondary"
               shortcut="r"
               onClick={() => {
                 void navigate(`/quiz${location.search}`, { replace: true });

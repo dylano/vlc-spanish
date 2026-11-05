@@ -14,6 +14,26 @@
   cursor: pointer;
 }
 
+/* The solid block's quieter partner, outlined: Another round, Keep going. */
+.secondary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 52px;
+  padding: 0 12px;
+  border: 1px solid var(--accent);
+  border-radius: 6px;
+  background: transparent;
+  color: var(--accent);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
 /* Secondary weight: an outlined pill into practice, not the solid block a session uses. */
 .pill {
   display: inline-flex;
@@ -63,7 +83,8 @@
   height: 20px;
   margin-left: 6px;
   padding: 0 5px;
-  border: 1px solid var(--rule);
+  /* The raised edge, not the rule: in dark the rule vanishes on a dialog. */
+  border: 1px solid var(--raised-edge);
   border-bottom-width: 2px;
   border-radius: 4px;
   font-family: var(--sans);

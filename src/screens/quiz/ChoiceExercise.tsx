@@ -94,7 +94,9 @@ export default function ChoiceExercise({ card, position, label, onDone }: Exerci
   // shortcut; here it only hurries a right answer past its pause.
   useEffect(() => {
     function onKey(event: KeyboardEvent) {
-      if (event.metaKey || event.ctrlKey || event.altKey) return;
+      if (event.defaultPrevented || event.metaKey || event.ctrlKey || event.altKey) return;
+      // Nothing answers behind the end-session dialog.
+      if (document.querySelector("dialog[open]")) return;
       if (event.key === "Enter") {
         if (picked?.correct) {
           event.preventDefault();
