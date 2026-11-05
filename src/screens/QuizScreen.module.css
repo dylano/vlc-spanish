@@ -365,21 +365,6 @@
   margin: 8px 0 0;
 }
 
-.button {
-  display: block;
-  width: 100%;
-  min-height: 52px;
-  border: none;
-  border-radius: 6px;
-  background: var(--accent);
-  color: var(--on-accent);
-  font-size: 0.9375rem;
-  font-weight: 600;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  cursor: pointer;
-}
-
 /* The summary's two ways out: another round (outlined, with ↻) beside Done.
    The longer label gets a little more of the row; on narrow phones each takes
    a row of its own. */
