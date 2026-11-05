@@ -49,6 +49,23 @@ function visible(element: HTMLElement): boolean {
   return getComputedStyle(element).visibility === "visible";
 }
 
+const PRESSABLE = "button, a, [role=button]";
+
+/**
+ * The button last focused by a click or tap. Chrome marks even a clicked button
+ * :focus-visible as soon as a key is pressed, so that cannot tell the two apart;
+ * this can. A button reached with Tab is never this one.
+ */
+let clicked: Element | null = null;
+
+function remember(event: PointerEvent) {
+  clicked = event.target instanceof Element ? event.target.closest(PRESSABLE) : null;
+}
+
+function forget(event: FocusEvent) {
+  if (event.target !== clicked) clicked = null;
+}
+
 function press(event: KeyboardEvent) {
   if (event.defaultPrevented) return;
   const shortcut = shortcutFor(event);
@@ -58,7 +75,8 @@ function press(event: KeyboardEvent) {
   const inField = target?.closest(FIELD);
   if (shortcut === "Enter") {
     if (inField) return;
-    if (target?.closest("button, a, [role=button]") && target.matches(":focus-visible")) return;
+    const focused = target?.closest(PRESSABLE);
+    if (focused && focused !== clicked) return;
   } else if (shortcut !== "Escape" && inField) {
     return;
   }
@@ -76,8 +94,12 @@ function press(event: KeyboardEvent) {
 export function useShortcuts() {
   useEffect(() => {
     globalThis.addEventListener("keydown", press);
+    globalThis.addEventListener("pointerdown", remember, true);
+    globalThis.addEventListener("focusin", forget, true);
     return () => {
       globalThis.removeEventListener("keydown", press);
+      globalThis.removeEventListener("pointerdown", remember, true);
+      globalThis.removeEventListener("focusin", forget, true);
     };
   }, []);
 }
