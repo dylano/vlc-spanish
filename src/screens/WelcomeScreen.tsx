@@ -47,6 +47,7 @@ export default function WelcomeScreen() {
           type="submit"
           shortcut="Enter"
           className={styles.addButton}
+          casing="mixed"
           disabled={name.trim() === ""}
           lang="es"
         >

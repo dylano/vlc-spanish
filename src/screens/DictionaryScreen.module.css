@@ -308,6 +308,10 @@
   cursor: pointer;
 }
 
+.conjugate[data-casing="mixed"] {
+  font-size: 0.8125rem;
+}
+
 .conjugateChevron {
   width: 14px;
   height: 14px;

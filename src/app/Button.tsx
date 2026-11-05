@@ -20,9 +20,20 @@ import { keycapLabel, type Shortcut } from "./shortcuts.ts";
 
 export type ButtonVariant = "primary" | "secondary" | "pill" | "back";
 
+/**
+ * Capitals (the look so far) or the label as written. Only buttons whose label is
+ * set in capitals have a casing: the variants, and a screen's own button that
+ * asks for one. The rest (Home's rows, the filter) are left as they are.
+ */
+export type ButtonCasing = "caps" | "mixed";
+
+/** What a variant without a casing prop gets: being tried as mixed (2026-11-05). */
+const DEFAULT_CASING: ButtonCasing = "mixed";
+
 interface Shared {
   variant?: ButtonVariant;
   shortcut?: Shortcut;
+  casing?: ButtonCasing;
   /** False for no keycap (the key still works), or to place a <Keycap> among the children. */
   keycap?: boolean;
   children?: ReactNode;
@@ -82,12 +93,23 @@ function content({ variant, shortcut, keycap = true, children }: Shared) {
   );
 }
 
-/** The attributes a shortcut adds: the key to find it by, and the key for assistive tech. */
-function shortcutAttributes(shortcut: Shortcut | undefined) {
-  if (!shortcut) return {};
+/**
+ * The attributes a Button adds: its casing for the CSS (a screen's own class can
+ * size itself for mixed case), and a shortcut's key to find it by and to announce.
+ */
+function attributes(
+  variant: ButtonVariant | undefined,
+  shortcut: Shortcut | undefined,
+  casing: ButtonCasing | undefined,
+) {
   return {
-    "data-shortcut": shortcut,
-    "aria-keyshortcuts": shortcut.length === 1 ? shortcut.toUpperCase() : shortcut,
+    "data-casing": casing ?? (variant ? DEFAULT_CASING : undefined),
+    ...(shortcut
+      ? {
+          "data-shortcut": shortcut,
+          "aria-keyshortcuts": shortcut.length === 1 ? shortcut.toUpperCase() : shortcut,
+        }
+      : {}),
   };
 }
 
@@ -102,24 +124,24 @@ function Button(props: ButtonProps) {
   const className = classes || undefined;
 
   if (props.to !== undefined) {
-    const { variant, shortcut, keycap, children, ...rest } = props;
+    const { variant, shortcut, casing, keycap, children, ...rest } = props;
     return (
-      <Link {...rest} {...shortcutAttributes(shortcut)} className={className}>
+      <Link {...rest} {...attributes(variant, shortcut, casing)} className={className}>
         {content({ variant, shortcut, keycap, children })}
       </Link>
     );
   }
   if (props.href !== undefined) {
-    const { variant, shortcut, keycap, children, ...rest } = props;
+    const { variant, shortcut, casing, keycap, children, ...rest } = props;
     return (
-      <a {...rest} {...shortcutAttributes(shortcut)} className={className}>
+      <a {...rest} {...attributes(variant, shortcut, casing)} className={className}>
         {content({ variant, shortcut, keycap, children })}
       </a>
     );
   }
-  const { variant, shortcut, keycap, children, type = "button", ...rest } = props;
+  const { variant, shortcut, casing, keycap, children, type = "button", ...rest } = props;
   return (
-    <button {...rest} {...shortcutAttributes(shortcut)} type={type} className={className}>
+    <button {...rest} {...attributes(variant, shortcut, casing)} type={type} className={className}>
       {content({ variant, shortcut, keycap, children })}
     </button>
   );

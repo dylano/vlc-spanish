@@ -110,3 +110,16 @@
     place-items: center;
   }
 }
+
+/* Mixed case: the label as written. The wide tracking is for capitals, so it goes;
+   the small labels grow, since lowercase at 11-12px reads smaller than capitals. */
+button[data-casing="mixed"],
+a[data-casing="mixed"] {
+  text-transform: none;
+  letter-spacing: 0.01em;
+}
+
+.pill[data-casing="mixed"],
+.back[data-casing="mixed"] {
+  font-size: 0.875rem;
+}

@@ -133,6 +133,8 @@ screen (Check, Next, Start practice); **secondary**, its outlined partner (Anoth
 such as the Home rows or an icon ×, keeps its own look through `className`. Choice controls (Custom
 practice modes and categories, multiple-choice options, match tiles, the Dictionary's category grid)
 are not actions and stay plain buttons. Translate a sentence still uses its own buttons for now.
+Labels set in capitals take a `casing`: `caps`, or `mixed` (as written), which the variants default to
+and Save, Empezar and Conjugate ask for; other buttons, like Home's rows, keep their own type.
 
 On a computer, a Button can answer a key (`shortcut`), and shows it as a keycap after its label.
 Keycaps appear only in a window wide enough for the whole column (600px), so not on a phone; the

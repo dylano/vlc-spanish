@@ -43,7 +43,7 @@ export default function SettingsScreen() {
             autoComplete="given-name"
           />
           {changed ? (
-            <Button type="submit" shortcut="Enter" className={styles.save}>
+            <Button type="submit" shortcut="Enter" className={styles.save} casing="mixed">
               Save
             </Button>
           ) : null}

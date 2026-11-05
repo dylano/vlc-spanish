@@ -227,6 +227,7 @@ export default function DictionaryScreen() {
             {entry.pos === "verb" ? (
               <Button
                 className={styles.conjugate}
+                casing="mixed"
                 aria-haspopup="dialog"
                 onClick={() => {
                   setConjugating(entry);

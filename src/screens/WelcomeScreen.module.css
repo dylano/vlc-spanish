@@ -71,6 +71,12 @@
   cursor: pointer;
 }
 
+/* A solid button: its keycap in the button's own text colour, as on the primary. */
+.addButton kbd {
+  border-color: color-mix(in srgb, currentColor 45%, transparent);
+  color: color-mix(in srgb, currentColor 85%, transparent);
+}
+
 .addButton:disabled {
   opacity: 0.4;
   cursor: default;

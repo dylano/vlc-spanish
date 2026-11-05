@@ -69,6 +69,12 @@
   cursor: pointer;
 }
 
+/* A solid button: its keycap in the button's own text colour, as on the primary. */
+.save kbd {
+  border-color: color-mix(in srgb, currentColor 45%, transparent);
+  color: color-mix(in srgb, currentColor 85%, transparent);
+}
+
 /* One tap per choice, all options in view: the Dictionary's category pills. */
 .choices {
   display: flex;
