@@ -308,8 +308,11 @@
   cursor: pointer;
 }
 
-.conjugate[data-casing="mixed"] {
-  font-size: 0.8125rem;
+/* Mixed case on a computer (see Button.module.css): a little larger for lowercase. */
+@media (min-width: 600px) {
+  .conjugate[data-casing="mixed"] {
+    font-size: 0.8125rem;
+  }
 }
 
 .conjugateChevron {
