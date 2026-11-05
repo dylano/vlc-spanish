@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState, type FormEvent } from "react";
+import Button from "../../app/Button.tsx";
 import SessionShell from "../../app/SessionShell.tsx";
 import type { Grade, Result } from "../../lib/grade.ts";
 import { gradeFix, mistakeTokens } from "../../lib/sentences/mistake.ts";
@@ -149,20 +150,20 @@ export default function MistakeExercise({ card, position, label, onDone }: Exerc
 
   const footer =
     phase === "fix" ? (
-      <button
+      <Button
+        variant="primary"
         type="submit"
         form="mistake-form"
-        className={styles.button}
         onMouseDown={(event) => {
           event.preventDefault();
         }}
       >
         Check
-      </button>
+      </Button>
     ) : phase === "done" && grade && grade.result !== "correct" ? (
-      <button type="submit" form="mistake-form" className={styles.button}>
+      <Button variant="primary" type="submit" form="mistake-form">
         Next
-      </button>
+      </Button>
     ) : undefined;
 
   return (

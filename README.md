@@ -88,7 +88,7 @@ src/lib/          pure logic, no React, thoroughly tested
 src/
   app/            store (context), local storage (local.ts), theme (theme.ts), the update check
                   (update.ts), the bundled
-                  dictionary, sentence data and release note, and the shells
+                  dictionary, sentence data and release note, the shells, and Button (below)
   screens/        one file per screen, each with a CSS module beside it
                   (ConjugationDialog is the Dictionary's verb table, a dialog rather than a screen)
     quiz/           one component per exercise (typed and gaps, multiple choice, matching, find the
@@ -123,6 +123,17 @@ The shell is a CSS size container named `session`; exercises compact themselves 
 A session is built from progress once, when the quiz screen opens, and kept fixed while it runs.
 Progress is read from local storage synchronously on first render, so a session can never start from
 empty progress by mistake.
+
+### Buttons
+
+Every action is a `Button` (`src/app/Button.tsx`): a `<button>`, a link to another screen (`to`),
+or a link out (`href`). The shared looks are variants: **primary**, the solid block at the foot of a
+screen (Check, Next, Start practice); **pill**, an outlined way into practice with a chevron after it
+(Practice these); and **back**, the quiet link above a title with a chevron before it. Anything else,
+such as the Home rows or an icon ×, keeps its own look through `className`. Choice controls (Custom
+practice modes and categories, multiple-choice options, match tiles, the Dictionary's category grid)
+are not actions and stay plain buttons. Button is the groundwork for keyboard shortcuts on desktop;
+the session summary and Translate a sentence still use their own buttons for now.
 
 `src/lib` deliberately has no React or network code in it. The grading and scheduling rules are the
 part of this app most worth getting right, so they are pure functions with tests rather than logic

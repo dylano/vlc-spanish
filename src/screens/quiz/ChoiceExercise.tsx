@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import Button from "../../app/Button.tsx";
 import SessionShell from "../../app/SessionShell.tsx";
 import { useStore } from "../../app/store-context.ts";
 import { optionText } from "../../lib/choices.ts";
@@ -127,9 +128,9 @@ export default function ChoiceExercise({ card, position, label, onDone }: Exerci
       // after the learner has had a chance to read why.
       footer={
         checked && !picked?.correct ? (
-          <button type="button" className={styles.button} onClick={finish}>
+          <Button variant="primary" onClick={finish}>
             Next
-          </button>
+          </Button>
         ) : undefined
       }
     >

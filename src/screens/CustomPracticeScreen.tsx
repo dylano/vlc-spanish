@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
-import { Link, useLocation, useNavigate } from "react-router";
+import { useLocation, useNavigate } from "react-router";
+import Button from "../app/Button.tsx";
 import { readCustom, writeCustom, type CustomChoice } from "../app/local.ts";
 import { useStore } from "../app/store-context.ts";
 import { problemWords } from "../lib/problems.ts";
@@ -124,12 +125,9 @@ export default function CustomPracticeScreen() {
 
   return (
     <section className={styles.screen}>
-      <Link to="/" className={styles.back}>
-        <svg className={styles.backChevron} viewBox="0 0 20 20" aria-hidden="true">
-          <path d="M13 4l-6 6 6 6" />
-        </svg>
+      <Button variant="back" to="/">
         Home
-      </Link>
+      </Button>
       <h1 className={styles.title}>Custom practice</h1>
 
       <div role="radiogroup" aria-label="Words" className={styles.segmented}>
@@ -185,9 +183,9 @@ export default function CustomPracticeScreen() {
       {/* Stuck above the nav: with every category listed, the end of the page is
           below the fold on a phone. */}
       <div className={styles.footer}>
-        <button type="button" className={styles.start} onClick={start}>
+        <Button variant="primary" onClick={start}>
           Start practice
-        </button>
+        </Button>
       </div>
     </section>
   );

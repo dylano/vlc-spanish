@@ -1,5 +1,6 @@
 import { useEffect, type ReactNode } from "react";
 import { useNavigate } from "react-router";
+import Button from "./Button.tsx";
 import styles from "./SessionShell.module.css";
 import { useVisualViewport } from "./useVisualViewport.ts";
 
@@ -65,8 +66,7 @@ export default function SessionShell({ position, label, footer, children }: Sess
             </span>
             <span className={styles.metaEnd}>
               {label ? <span className={styles.exercise}>{label}</span> : null}
-              <button
-                type="button"
+              <Button
                 className={styles.close}
                 aria-label="End session"
                 // Same reason as the answer button: a tap here must not steal
@@ -90,7 +90,7 @@ export default function SessionShell({ position, label, footer, children }: Sess
                 >
                   <path d="M5 5l10 10M15 5L5 15" />
                 </svg>
-              </button>
+              </Button>
             </span>
           </div>
         </header>

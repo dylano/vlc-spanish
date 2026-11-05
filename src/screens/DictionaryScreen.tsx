@@ -1,5 +1,5 @@
 import { Fragment, useMemo, useRef, useState } from "react";
-import { Link } from "react-router";
+import Button from "../app/Button.tsx";
 import { useStore } from "../app/store-context.ts";
 import { cardForms } from "../lib/forms.ts";
 import { buildSearchIndex, search } from "../lib/search.ts";
@@ -118,8 +118,7 @@ export default function DictionaryScreen() {
           autoComplete="off"
         />
         {query ? (
-          <button
-            type="button"
+          <Button
             className={styles.clear}
             aria-label="Clear the search"
             onClick={() => {
@@ -130,15 +129,14 @@ export default function DictionaryScreen() {
             <svg viewBox="0 0 12 12" aria-hidden="true">
               <path d="M3 3l6 6M9 3l-6 6" />
             </svg>
-          </button>
+          </Button>
         ) : null}
       </div>
 
       {/* Unfiltered, the row offers both: everything, or the one category common
           enough to deserve a tap. Choosing either lands in the same filtered row. */}
       <div className={`${styles.filter} ${tag ? styles.filterOn : ""}`}>
-        <button
-          type="button"
+        <Button
           className={styles.filterOpen}
           aria-expanded={choosing}
           aria-controls="categories"
@@ -152,10 +150,9 @@ export default function DictionaryScreen() {
           <span className={styles.filterLabel}>
             {tag ? tag.replace(/-/g, " ") : "All categories"}
           </span>
-        </button>
+        </Button>
         {tag ? (
-          <button
-            type="button"
+          <Button
             className={styles.filterClear}
             aria-label={`Remove the ${tag.replace(/-/g, " ")} filter`}
             onClick={() => {
@@ -165,7 +162,7 @@ export default function DictionaryScreen() {
             <svg viewBox="0 0 12 12" aria-hidden="true">
               <path d="M3 3l6 6M9 3l-6 6" />
             </svg>
-          </button>
+          </Button>
         ) : tags.includes(QUICK_TAG) ? (
           <>
             <span className={styles.filterDivider} aria-hidden="true" />
@@ -210,16 +207,9 @@ export default function DictionaryScreen() {
           {filtered.length} {filtered.length === 1 ? "word" : "words"}
         </p>
         {tag ? (
-          <Link
-            to="/custom"
-            state={{ tags: [tag] } satisfies CustomPracticeState}
-            className={styles.practice}
-          >
+          <Button variant="pill" to="/custom" state={{ tags: [tag] } satisfies CustomPracticeState}>
             Practice these
-            <svg className={styles.practiceChevron} viewBox="0 0 20 20" aria-hidden="true">
-              <path d="M7 4l6 6-6 6" />
-            </svg>
-          </Link>
+          </Button>
         ) : null}
       </div>
 
@@ -229,8 +219,7 @@ export default function DictionaryScreen() {
             <EntryHead entry={entry} />
             {entry.notes ? <p className={styles.note}>{entry.notes}</p> : null}
             {entry.pos === "verb" ? (
-              <button
-                type="button"
+              <Button
                 className={styles.conjugate}
                 aria-haspopup="dialog"
                 onClick={() => {
@@ -239,7 +228,7 @@ export default function DictionaryScreen() {
               >
                 Conjugate
                 <Chevron className={styles.conjugateChevron} />
-              </button>
+              </Button>
             ) : null}
           </li>
         ))}

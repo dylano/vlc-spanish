@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router";
+import Button from "../app/Button.tsx";
 import { fetchCommits, REPO, type Commit } from "../lib/commits.ts";
 import styles from "./VersionScreen.module.css";
 
@@ -33,12 +33,9 @@ export default function VersionScreen() {
 
   return (
     <section className={styles.screen}>
-      <Link to="/settings" className={styles.back}>
-        <svg className={styles.backChevron} viewBox="0 0 20 20" aria-hidden="true">
-          <path d="M13 4l-6 6 6 6" />
-        </svg>
+      <Button variant="back" to="/settings">
         Settings
-      </Link>
+      </Button>
       <h1 className={styles.title}>Recent Commits</h1>
       <p className={styles.running}>
         This build is <span className={styles.hash}>{__COMMIT__}</span>

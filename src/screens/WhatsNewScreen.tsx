@@ -1,4 +1,4 @@
-import { Link } from "react-router";
+import Button from "../app/Button.tsx";
 import NoteBody from "../app/NoteBody.tsx";
 import { releaseNotes } from "../app/releaseNote.ts";
 import { today } from "../lib/dates.ts";
@@ -15,12 +15,9 @@ export default function WhatsNewScreen() {
 
   return (
     <section className={styles.screen}>
-      <Link to="/settings" className={styles.back}>
-        <svg className={styles.backChevron} viewBox="0 0 20 20" aria-hidden="true">
-          <path d="M13 4l-6 6 6 6" />
-        </svg>
+      <Button variant="back" to="/settings">
         Settings
-      </Link>
+      </Button>
       <h1 className={styles.title}>What’s new</h1>
       <p className={styles.intro}>Every note the app has shown on Home, newest first.</p>
 
@@ -44,9 +41,9 @@ export default function WhatsNewScreen() {
       )}
 
       <div className={styles.spacer} />
-      <Link to="/version" className={styles.version}>
+      <Button to="/version" className={styles.version}>
         Version {__COMMIT__} · all changes →
-      </Link>
+      </Button>
     </section>
   );
 }

@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState, type FormEvent } from "react";
+import Button from "../../app/Button.tsx";
 import SessionShell from "../../app/SessionShell.tsx";
 import { useStore } from "../../app/store-context.ts";
 import { articleRequired, grade, type Grade, type Result } from "../../lib/grade.ts";
@@ -178,10 +179,10 @@ export default function TypedExercise({ card, position, label, onDone }: Exercis
       position={position}
       label={label}
       footer={
-        <button
+        <Button
+          variant="primary"
           type="submit"
           form="answer-form"
-          className={styles.button}
           // Stops the tap moving focus out of the input, which is what closes
           // the keyboard. The click still fires; only the focus change is
           // suppressed, so the keyboard stays up from the first card to the last.
@@ -190,7 +191,7 @@ export default function TypedExercise({ card, position, label, onDone }: Exercis
           }}
         >
           {buttonLabel}
-        </button>
+        </Button>
       }
     >
       <form id="answer-form" className={styles.question} onSubmit={submit}>

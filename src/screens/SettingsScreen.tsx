@@ -1,5 +1,5 @@
 import { useMemo, useState, type FormEvent } from "react";
-import { Link } from "react-router";
+import Button from "../app/Button.tsx";
 import { SESSION_SIZES, type Theme } from "../app/local.ts";
 import { releaseNotes } from "../app/releaseNote.ts";
 import { useStore } from "../app/store-context.ts";
@@ -43,9 +43,9 @@ export default function SettingsScreen() {
             autoComplete="given-name"
           />
           {changed ? (
-            <button type="submit" className={styles.save}>
+            <Button type="submit" className={styles.save}>
               Save
-            </button>
+            </Button>
           ) : null}
         </form>
       </div>
@@ -125,7 +125,7 @@ export default function SettingsScreen() {
       {/* Every release note, for learners (board A1); the version line below is
           the same history as commits. */}
       {latest ? (
-        <Link to="/whats-new" className={styles.whatsNew}>
+        <Button to="/whats-new" className={styles.whatsNew}>
           <span>
             What’s new
             <span className={styles.whatsNewLatest}>
@@ -135,16 +135,16 @@ export default function SettingsScreen() {
           <svg className={styles.chevron} viewBox="0 0 20 20" aria-hidden="true">
             <path d="M7 4l6 6-6 6" />
           </svg>
-        </Link>
+        </Button>
       ) : null}
       {/* Which deployment this is, for telling builds apart; the screen behind it
           names the commits, read from GitHub. */}
       <div className={styles.footer}>
-        <Link to="/version" className={styles.version}>
+        <Button to="/version" className={styles.version}>
           Version {__COMMIT__}
-        </Link>
+        </Button>
         {/* The whole repository, for anyone chasing the details behind a version. */}
-        <a
+        <Button
           href={`https://github.com/${REPO}`}
           className={styles.repo}
           target="_blank"
@@ -158,7 +158,7 @@ export default function SettingsScreen() {
             <path d="M4 2.5h5.5V8M9.5 2.5L3 9" />
           </svg>
           <span className="visually-hidden"> (opens in a new tab)</span>
-        </a>
+        </Button>
       </div>
     </section>
   );

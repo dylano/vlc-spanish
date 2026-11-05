@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { Link } from "react-router";
+import Button from "../app/Button.tsx";
 import { readNoteDismissed, takeJustUpdated, writeNoteDismissed } from "../app/local.ts";
 import { releaseNotes } from "../app/releaseNote.ts";
 import { useStore } from "../app/store-context.ts";
@@ -40,24 +40,24 @@ function Note({
         {/* The way to every note, since this one goes after a week: the label's link
             stretches over the whole card (see the CSS), so a tap anywhere opens What's new. */}
         <p className={styles.noteLabel}>
-          <Link to="/whats-new" className={styles.noteLink}>
+          <Button to="/whats-new" className={styles.noteLink}>
             New · {when}
             <span className="visually-hidden">, see all notes</span>
             <svg className={styles.noteLinkChevron} viewBox="0 0 20 20" aria-hidden="true">
               <path d="M7 4l6 6-6 6" />
             </svg>
-          </Link>
+          </Button>
         </p>
         <p className={styles.noteTitle}>{note.title}</p>
         <p className={styles.noteBody}>
           <NoteBody body={note.body} />
         </p>
       </div>
-      <button type="button" className={styles.noteDismiss} aria-label="Dismiss" onClick={onDismiss}>
+      <Button className={styles.noteDismiss} aria-label="Dismiss" onClick={onDismiss}>
         <svg viewBox="0 0 20 20" aria-hidden="true">
           <path d="M5 5l10 10M15 5L5 15" />
         </svg>
-      </button>
+      </Button>
     </aside>
   );
 }
@@ -89,8 +89,7 @@ function UpdatedToast() {
 
   if (phase === "gone") return null;
   return (
-    <button
-      type="button"
+    <Button
       role="status"
       className={`${styles.updated} ${phase === "leaving" ? styles.updatedLeaving : ""}`}
       onClick={() => {
@@ -101,7 +100,7 @@ function UpdatedToast() {
         <path d="M4 10.5l4 4 8-9" />
       </svg>
       Updated to the latest version
-    </button>
+    </Button>
   );
 }
 
@@ -171,34 +170,34 @@ export default function HomeScreen() {
             offer, so it stays when General has nothing left. */}
         <div className={styles.list}>
           {canPractice ? (
-            <Link to="/quiz?scope=due" className={styles.action}>
+            <Button to="/quiz?scope=due" className={styles.action}>
               <span>
                 General practice
                 <span className={styles.subtitle}>Mixed exercises on the full dictionary</span>
               </span>
               <Chevron />
-            </Link>
+            </Button>
           ) : (
             <p className={styles.nothing}>Nothing due right now. Come back later.</p>
           )}
-          <Link to="/custom" className={styles.action}>
+          <Button to="/custom" className={styles.action}>
             <span>
               Custom practice
               <span className={styles.subtitle}>Select exercise modes and categories</span>
             </span>
             <Chevron />
-          </Link>
+          </Button>
         </div>
 
         {/* A reference, quieter than the two above: the list of words missed most.
             Drilling them is a Custom practice choice, reached from the list. */}
         {troubled > 0 ? (
-          <Link to="/problems" className={styles.problems}>
+          <Button to="/problems" className={styles.problems}>
             <span>
               Problem words <span className={styles.count}>· {troubled}</span>
             </span>
             <Chevron />
-          </Link>
+          </Button>
         ) : null}
       </div>
 
