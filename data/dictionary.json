@@ -4261,15 +4261,41 @@
     {
       "id": "gorro",
       "es": "gorro",
-      "en": ["hat", "woolly hat", "beanie"],
+      "en": ["beanie", "knit hat", "winter hat", "woolly hat"],
       "pos": "noun",
       "gender": "m",
       "forms": {
         "pl": "gorros"
       },
-      "notes": "A soft hat with no brim; 'la gorra' is a cap and 'el sombrero' has a brim.",
+      "notes": "A soft hat with no brim, for the cold; 'la gorra' is a cap and 'el sombrero' has a brim.",
       "tags": ["clothing"],
       "added": "2026-09-30"
+    },
+    {
+      "id": "gorra",
+      "es": "gorra",
+      "en": ["cap", "baseball cap"],
+      "pos": "noun",
+      "gender": "f",
+      "forms": {
+        "pl": "gorras"
+      },
+      "notes": "A cap with a visor in front: una gorra de béisbol. Not to be confused with el gorro, a soft hat with no brim.",
+      "tags": ["clothing"],
+      "added": "2026-11-07"
+    },
+    {
+      "id": "sombrero",
+      "es": "sombrero",
+      "en": ["hat", "sun hat"],
+      "pos": "noun",
+      "gender": "m",
+      "forms": {
+        "pl": "sombreros"
+      },
+      "notes": "Any hat with a brim all the way round, like a sun hat or a fedora, not only the Mexican one that English calls a sombrero.",
+      "tags": ["clothing"],
+      "added": "2026-11-07"
     },
     {
       "id": "abrigo",
@@ -4345,14 +4371,26 @@
     {
       "id": "de-tirantes",
       "es": "de tirantes",
-      "en": ["sleeveless", "strappy", "with straps"],
+      "en": ["strappy", "spaghetti-strap", "with straps"],
       "pos": "adj",
       "forms": {
         "pl": "de tirantes"
       },
-      "notes": "With thin shoulder straps: una camiseta de tirantes is a tank top, un vestido de tirantes a strappy dress. Never changes.",
+      "notes": "With thin shoulder straps: una camiseta de tirantes is a tank top, un vestido de tirantes a strappy dress. Never changes. Simply without sleeves: sin mangas.",
       "tags": ["clothing"],
       "added": "2026-11-03"
+    },
+    {
+      "id": "sin-mangas",
+      "es": "sin mangas",
+      "en": ["sleeveless"],
+      "pos": "adj",
+      "forms": {
+        "pl": "sin mangas"
+      },
+      "notes": "Goes after the noun and never changes: una camiseta sin mangas, un jersey sin mangas. With thin straps instead: de tirantes.",
+      "tags": ["clothing"],
+      "added": "2026-11-07"
     },
     {
       "id": "estampado",

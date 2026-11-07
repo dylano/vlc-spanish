@@ -109,6 +109,26 @@ describe("es→en apostrophes", () => {
   });
 });
 
+describe("es→en hyphens", () => {
+  const guapo: Entry = {
+    ...base,
+    id: "guapo",
+    es: "guapo",
+    en: ["good-looking", "handsome"],
+    pos: "adj",
+    forms: { f: "guapa", pl: "guapos" },
+  };
+
+  it("accepts a hyphenated gloss typed with a space", () => {
+    expect(grade(guapo, "es→en", "good looking").result).toBe("correct");
+    expect(grade(guapo, "es→en", "good-looking").result).toBe("correct");
+  });
+
+  it("still needs the space: two words run together are not the gloss", () => {
+    expect(grade(guapo, "es→en", "goodlooking").result).not.toBe("correct");
+  });
+});
+
 describe("en→es accents", () => {
   it("downgrades a missing accent to hard with a note", () => {
     const result = grade(simpatico, "en→es", "simpatico");

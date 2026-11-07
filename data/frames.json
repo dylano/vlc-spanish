@@ -1310,7 +1310,7 @@
         },
         "c": {
           "kind": "noun",
-          "ids": ["camiseta", "banador", "falda", "vestido"]
+          "ids": ["camiseta", "banador", "falda", "vestido", "gorra", "sombrero"]
         }
       },
       "cloze": ["c", "v", "x"]
@@ -1364,6 +1364,8 @@
             "cinturon",
             "falda",
             "gorro",
+            "gorra",
+            "sombrero",
             "jersey",
             "pulsera",
             "vestido"
@@ -2054,6 +2056,8 @@
             "gafas",
             "gafas-de-sol",
             "gorro",
+            "gorra",
+            "sombrero",
             "jersey",
             "pantalones-cortos",
             "pulsera",
@@ -2124,6 +2128,8 @@
             "gafas",
             "gafas-de-sol",
             "gorro",
+            "gorra",
+            "sombrero",
             "jersey",
             "pantalones-cortos",
             "pulsera",
@@ -3324,7 +3330,9 @@
             "cinturon",
             "bufanda",
             "abrigo",
-            "gorro"
+            "gorro",
+            "gorra",
+            "sombrero"
           ]
         },
         "p": {
@@ -3425,7 +3433,9 @@
             "cinturon",
             "bufanda",
             "abrigo",
-            "gorro"
+            "gorro",
+            "gorra",
+            "sombrero"
           ]
         },
         "p": {
@@ -3526,7 +3536,9 @@
             "cinturon",
             "bufanda",
             "abrigo",
-            "gorro"
+            "gorro",
+            "gorra",
+            "sombrero"
           ]
         },
         "p": {
@@ -3610,6 +3622,8 @@
             "bufanda",
             "abrigo",
             "gorro",
+            "gorra",
+            "sombrero",
             "cinturon"
           ]
         },
@@ -3712,7 +3726,9 @@
             "cinturon",
             "bufanda",
             "abrigo",
-            "gorro"
+            "gorro",
+            "gorra",
+            "sombrero"
           ]
         },
         "p": {
@@ -3771,7 +3787,9 @@
             "cinturon",
             "bufanda",
             "abrigo",
-            "gorro"
+            "gorro",
+            "gorra",
+            "sombrero"
           ]
         },
         "p": {
@@ -3882,7 +3900,9 @@
             "cinturon",
             "bufanda",
             "abrigo",
-            "gorro"
+            "gorro",
+            "gorra",
+            "sombrero"
           ]
         },
         "p": {
@@ -3982,6 +4002,8 @@
             "bufanda",
             "abrigo",
             "gorro",
+            "gorra",
+            "sombrero",
             "cinturon"
           ]
         },
@@ -4085,6 +4107,8 @@
             "bufanda",
             "abrigo",
             "gorro",
+            "gorra",
+            "sombrero",
             "cinturon"
           ]
         },
@@ -4186,6 +4210,8 @@
             "bufanda",
             "abrigo",
             "gorro",
+            "gorra",
+            "sombrero",
             "cinturon"
           ]
         },
@@ -4680,6 +4706,8 @@
             "bufanda",
             "abrigo",
             "gorro",
+            "gorra",
+            "sombrero",
             "cinturon"
           ]
         },
@@ -6838,6 +6866,8 @@
             "jersey",
             "bufanda",
             "gorro",
+            "gorra",
+            "sombrero",
             "abrigo",
             "cinturon",
             "mochila",
@@ -6998,7 +7028,7 @@
         },
         "c": {
           "kind": "noun",
-          "ids": ["camiseta", "banador", "falda", "vestido"]
+          "ids": ["camiseta", "banador", "falda", "vestido", "gorra", "sombrero"]
         },
         "x": {
           "kind": "word",
@@ -7072,6 +7102,8 @@
             "jersey",
             "bufanda",
             "gorro",
+            "gorra",
+            "sombrero",
             "abrigo",
             "cinturon",
             "mochila",
@@ -7206,6 +7238,8 @@
             "jersey",
             "bufanda",
             "gorro",
+            "gorra",
+            "sombrero",
             "abrigo",
             "zapato",
             "bota",
@@ -7624,7 +7658,31 @@
         },
         "c": {
           "kind": "noun",
-          "ids": ["camiseta", "vestido"]
+          "ids": ["camiseta", "vestido", "jersey"]
+        },
+        "a": {
+          "kind": "adj",
+          "ids": ["sin-mangas"],
+          "agree": "c"
+        }
+      },
+      "cloze": ["a", "c", "v"]
+    },
+    {
+      "id": "wear-strappy",
+      "grammar": ["clothing", "verb-conjugation", "articles"],
+      "subjects": ["yo", "tu", "nosotros", "vosotros", "ellos"],
+      "es": "{v} {c:un} {a}.",
+      "en": "{S} {v} {a:a} {c}.",
+      "slots": {
+        "v": {
+          "kind": "verb",
+          "ids": ["llevar", "comprar", "querer", "necesitar"],
+          "subject": "@"
+        },
+        "c": {
+          "kind": "noun",
+          "ids": ["vestido"]
         },
         "a": {
           "kind": "adj",
@@ -7799,6 +7857,8 @@
             "bufanda",
             "chaqueta",
             "gorro",
+            "gorra",
+            "sombrero",
             "jersey",
             "traje",
             "vestido",
