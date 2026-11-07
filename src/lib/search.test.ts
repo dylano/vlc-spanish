@@ -6,6 +6,11 @@ const index = buildSearchIndex(entries);
 const found = (query: string) => search(index, query).map((entry) => entry.id);
 
 describe("dictionary search", () => {
+  it("finds a word by another way to say it", () => {
+    expect(found("zapatillas deportivas")[0]).toBe("zapatillas-deportivas");
+    expect(found("zapatillas")[0]).toBe("zapatillas-deportivas");
+  });
+
   it("finds a word by the start of it", () => {
     expect(found("dic")).toContain("diciembre");
   });

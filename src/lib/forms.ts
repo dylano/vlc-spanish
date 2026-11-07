@@ -125,6 +125,10 @@ export function cardForms(entry: Entry): CardForms {
     }
   }
 
+  // Another way to say it, with the headword's article: also las zapatillas deportivas.
+  const article = head.slice(0, head.length - entry.es.length);
+  for (const other of entry.also ?? []) grammar.push(`also ${article}${other}`);
+
   if (entry.pos === "adj") {
     if (entry.enPl && entry.enPl.join(", ") !== english) out.englishPlural = entry.enPl.join(", ");
     if (entry.forms?.apocope) grammar.push(`${entry.forms.apocope} before a masculine noun`);

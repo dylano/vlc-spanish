@@ -4335,12 +4335,13 @@
     },
     {
       "id": "zapatillas-deportivas",
-      "es": "zapatillas deportivas",
+      "es": "zapatillas",
+      "also": ["zapatillas deportivas"],
       "en": ["sneakers", "athletic shoes", "running shoes", "tennis shoes", "trainers"],
       "pos": "noun",
       "gender": "f",
       "number": "pl",
-      "notes": "Usually just 'las zapatillas' in Spain. Mexico says 'los tenis'.",
+      "notes": "Mexico says 'los tenis'.",
       "tags": ["clothing"],
       "added": "2026-11-03"
     },

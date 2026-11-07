@@ -53,6 +53,12 @@ const entryBase = {
    * both only "to be". Shown under the prompt, and only when the gloss is shared.
    */
   hint: nonEmpty.optional(),
+  /**
+   * Other ways to say it in Spanish, accepted as fully right: las zapatillas is
+   * also las zapatillas deportivas in full, under the same article. Shown on
+   * the Dictionary card and found by search; prompts and sentences keep `es`.
+   */
+  also: z.array(nonEmpty).min(1).optional(),
 };
 
 /**

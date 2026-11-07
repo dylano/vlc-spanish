@@ -618,3 +618,31 @@ describe("near misses", () => {
     expect(grade(abuelo, "en→es", "el abuelo", { dictionary }).result).toBe("correct");
   });
 });
+
+describe("another way to say it (also)", () => {
+  const zapatillas: Entry = {
+    ...base,
+    id: "zapatillas-deportivas",
+    es: "zapatillas",
+    also: ["zapatillas deportivas"],
+    en: ["sneakers"],
+    pos: "noun",
+    gender: "f",
+    number: "pl",
+  };
+
+  it("accepts the headword and the other wording alike, with the article", () => {
+    expect(grade(zapatillas, "en→es", "las zapatillas", { requireArticle: true }).result).toBe(
+      "correct",
+    );
+    expect(
+      grade(zapatillas, "en→es", "las zapatillas deportivas", { requireArticle: true }).result,
+    ).toBe("correct");
+  });
+
+  it("holds the other wording to the same article", () => {
+    expect(
+      grade(zapatillas, "en→es", "los zapatillas deportivas", { requireArticle: true }).result,
+    ).toBe("wrong");
+  });
+});
