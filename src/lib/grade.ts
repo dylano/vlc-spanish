@@ -193,6 +193,18 @@ export function spanishCandidates(entry: Entry, prompt?: string): Candidate[] {
     }
   }
 
+  // Another way to say it is as right as the headword, under the same article.
+  for (const text of entry.also ?? []) {
+    if (entry.pos === "noun") {
+      const genders = entry.gender === "mf" ? (["m", "f"] as const) : [entry.gender];
+      for (const gender of genders) {
+        out.push({ text, kind: "exact", article: articleOf(entry, gender, entry.number === "pl") });
+      }
+    } else {
+      out.push({ text, kind: "exact" });
+    }
+  }
+
   return out;
 }
 

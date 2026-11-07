@@ -7,6 +7,14 @@ const forms = (id: string) => cardForms(entries.find((entry) => entry.id === id)
 const shown = (runs: Run[]) => runs.map((run) => (run.quiet ? `[${run.text}]` : run.text)).join("");
 
 describe("the forms on a Dictionary card", () => {
+  it("names another way to say it, with the headword's article", () => {
+    expect(forms("zapatillas-deportivas").grammar).toEqual([
+      "noun",
+      "always plural",
+      "also las zapatillas deportivas",
+    ]);
+  });
+
   it("puts the other gender in shorthand, keeping the masculine's article", () => {
     expect(shown(forms("abuelo").spanish)).toBe("el abuelo[/a]");
     expect(shown(forms("profesor").spanish)).toBe("el profesor[/a]");

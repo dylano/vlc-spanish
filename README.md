@@ -928,7 +928,10 @@ Worth knowing before you change `grade.ts`, because the tests encode all of it:
   uses bare: `"none"` for months (answer shown as `enero`) and `"optional"` for days (shown as
   `el lunes`). Either way the article is accepted but not asked for, and a wrong one is only `hard`.
   A noun's `bare` list holds other Spanish said without an article, like a name: _Correos_ for
-  _la oficina de correos_ is correct as typed. An other-gender noun (`abuela` for `abuelo`) or a conjugated
+  _la oficina de correos_ is correct as typed. Any entry's `also` list holds other ways to say it,
+  fully right under the same article: _las zapatillas_ is also _las zapatillas deportivas_. The
+  Dictionary card shows them ("also las zapatillas deportivas") and search finds them; prompts and
+  sentences keep the headword. An other-gender noun (`abuela` for `abuelo`) or a conjugated
   verb (`me acuesto` for `acostarse`) is accepted but downgraded to `hard` rather than silently
   passing — they are different words than the prompt asked for. The exception is a noun whose
   feminine answers to the **same gloss the prompt showed** (`nurse` is both `enfermero` and
