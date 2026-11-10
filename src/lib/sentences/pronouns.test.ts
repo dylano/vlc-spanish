@@ -132,7 +132,7 @@ describe("people and third person", () => {
       const she = sentence.slots.n!.gender === "f";
       expect(sentence.en).toMatch(
         new RegExp(
-          `^Does your [a-z ]+ [a-z]+ the .+\\?\\nYes, ${she ? "she" : "he"} [a-z]+ it\\.$`,
+          `^Does your [a-z -]+ [a-z]+ the .+\\?\\nYes, ${she ? "she" : "he"} [a-z]+ it\\.$`,
         ),
       );
     }
