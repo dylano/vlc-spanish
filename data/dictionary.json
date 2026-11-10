@@ -4295,6 +4295,19 @@
       "added": "2026-09-30"
     },
     {
+      "id": "pendiente",
+      "es": "pendiente",
+      "en": ["earring"],
+      "pos": "noun",
+      "gender": "m",
+      "forms": {
+        "pl": "pendientes"
+      },
+      "notes": "Mostly met in the plural: llevo pendientes. Latin America says 'los aretes'.",
+      "tags": ["clothing"],
+      "added": "2026-11-10"
+    },
+    {
       "id": "bufanda",
       "es": "bufanda",
       "en": ["scarf"],
@@ -4381,6 +4394,18 @@
       "notes": "A suit. 'El traje de baño' is a swimsuit in Latin America; Spain says 'el bañador'.",
       "tags": ["clothing"],
       "added": "2026-11-03"
+    },
+    {
+      "id": "corbata",
+      "es": "corbata",
+      "en": ["tie", "necktie", "neck tie"],
+      "pos": "noun",
+      "gender": "f",
+      "forms": {
+        "pl": "corbatas"
+      },
+      "tags": ["clothing"],
+      "added": "2026-11-10"
     },
     {
       "id": "zapatillas-deportivas",
