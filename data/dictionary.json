@@ -466,9 +466,49 @@
         "f": "tía",
         "pl": "tíos"
       },
-      "notes": "Plural 'los tíos' means aunts and uncles. In Spain 'tío/tía' is also very common slang for 'guy' or 'mate'.",
+      "notes": "Plural 'los tíos' means aunts and uncles. In Spain 'tío/tía' is also very common slang for 'guy' or 'dude'.",
       "tags": ["family"],
       "added": "2026-09-15"
+    },
+    {
+      "id": "suegro",
+      "es": "suegro",
+      "en": ["father-in-law"],
+      "enF": ["mother-in-law"],
+      "pos": "noun",
+      "gender": "m",
+      "forms": {
+        "f": "suegra",
+        "pl": "suegros"
+      },
+      "notes": "Plural 'los suegros' means parents-in-law, or the in-laws.",
+      "tags": ["family"],
+      "added": "2026-11-10"
+    },
+    {
+      "id": "suegros",
+      "es": "suegros",
+      "en": ["in-laws", "parents-in-law"],
+      "pos": "noun",
+      "gender": "m",
+      "number": "pl",
+      "tags": ["family"],
+      "added": "2026-11-10"
+    },
+    {
+      "id": "cunado",
+      "es": "cuñado",
+      "en": ["brother-in-law"],
+      "enF": ["sister-in-law"],
+      "pos": "noun",
+      "gender": "m",
+      "forms": {
+        "f": "cuñada",
+        "pl": "cuñados"
+      },
+      "notes": "Plural 'los cuñados' can mean brothers- and sisters-in-law together.",
+      "tags": ["family"],
+      "added": "2026-11-10"
     },
     {
       "id": "siempre",

@@ -56,11 +56,11 @@ describe("gustar in sentences", () => {
   it("uses le and les for relatives, and reads subject-first in English", () => {
     for (const sentence of renders("relative-likes-activity")) {
       expect(sentence.es).toMatch(/^A mi \p{L}+ le (gusta|encanta) /u);
-      expect(sentence.en).toMatch(/^My \p{L}+ (likes|loves) to /u);
+      expect(sentence.en).toMatch(/^My [\p{L}-]+ (likes|loves) to /u);
     }
     for (const sentence of renders("relatives-like-things")) {
       expect(sentence.es).toMatch(/^A mis \p{L}+ les (gustan|encantan) /u);
-      expect(sentence.en).toMatch(/^My \p{L}+ (like|love) /u);
+      expect(sentence.en).toMatch(/^My [\p{L}-]+ (like|love) /u);
     }
   });
 

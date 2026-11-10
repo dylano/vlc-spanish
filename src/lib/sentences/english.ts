@@ -110,6 +110,11 @@ const IRREGULAR_PLURAL: Record<string, string> = {
   person: "people",
   wife: "wives",
   knife: "knives",
+  // In-laws pluralize the person, not "law".
+  "father-in-law": "fathers-in-law",
+  "mother-in-law": "mothers-in-law",
+  "brother-in-law": "brothers-in-law",
+  "sister-in-law": "sisters-in-law",
 };
 
 /** Plural of an English noun phrase; only the last word changes ("fashion designers"). */
