@@ -21,15 +21,20 @@ export interface CustomPracticeState {
 }
 
 /**
- * A row of pills led by "All". All is chosen while nothing narrower is; choosing
- * a pill narrows to it, and clearing the last one goes back to All.
+ * A row of pills under an "All" checkbox on its own line, set apart so it reads as
+ * the default rather than one more choice. All is ticked while nothing narrower is;
+ * choosing a pill narrows to it, clearing the last one goes back to All, and ticking
+ * All clears the pills. It cannot be unticked on its own: choose a pill instead.
  */
 function AllPills({
+  allLabel,
   items,
   chosen,
   onChange,
   disabled = false,
 }: {
+  /** What All says for this row: "All types", "All categories". */
+  allLabel: string;
   items: { id: string; label: string }[];
   chosen: string[];
   onChange: (chosen: string[]) => void;
@@ -37,36 +42,39 @@ function AllPills({
 }) {
   const pill = (on: boolean) => `${styles.pill} ${on ? styles.pillOn : ""}`;
   return (
-    <div className={styles.pills}>
-      <button
-        type="button"
-        className={pill(chosen.length === 0)}
-        aria-pressed={chosen.length === 0}
-        disabled={disabled}
-        onClick={() => {
-          onChange([]);
-        }}
-      >
-        All
-      </button>
-      {items.map(({ id, label }) => {
-        const on = chosen.includes(id);
-        return (
-          <button
-            key={id}
-            type="button"
-            className={pill(on)}
-            aria-pressed={on}
-            disabled={disabled}
-            onClick={() => {
-              onChange(on ? chosen.filter((other) => other !== id) : [...chosen, id]);
-            }}
-          >
-            {label}
-          </button>
-        );
-      })}
-    </div>
+    <>
+      <label className={styles.all}>
+        <input
+          type="checkbox"
+          className={styles.allBox}
+          checked={chosen.length === 0}
+          disabled={disabled}
+          onChange={() => {
+            if (chosen.length > 0) onChange([]);
+          }}
+        />
+        {allLabel}
+      </label>
+      <div className={styles.pills}>
+        {items.map(({ id, label }) => {
+          const on = chosen.includes(id);
+          return (
+            <button
+              key={id}
+              type="button"
+              className={pill(on)}
+              aria-pressed={on}
+              disabled={disabled}
+              onClick={() => {
+                onChange(on ? chosen.filter((other) => other !== id) : [...chosen, id]);
+              }}
+            >
+              {label}
+            </button>
+          );
+        })}
+      </div>
+    </>
   );
 }
 
@@ -156,8 +164,9 @@ export default function CustomPracticeScreen() {
         </button>
       </div>
 
-      <h2 className={styles.heading}>Exercise modes</h2>
+      <h2 className={styles.heading}>Exercise Types</h2>
       <AllPills
+        allLabel="All types"
         items={modes}
         chosen={choice.exercises}
         onChange={(exercises) => {
@@ -170,6 +179,7 @@ export default function CustomPracticeScreen() {
       <div className={problems ? styles.inactive : undefined} aria-disabled={problems}>
         <h2 className={styles.heading}>Categories</h2>
         <AllPills
+          allLabel="All categories"
           items={categories}
           chosen={problems ? [] : choice.tags}
           disabled={problems}

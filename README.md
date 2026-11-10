@@ -200,8 +200,9 @@ tangled into components.
   so a screen reader hears "New · 27 October, see all notes" rather than the whole note, and × sits
   above it and only dismisses.
 - **Custom practice** (`/custom`) — on top, **All words | Problem words · N**; then **Exercise
-  modes** and **Categories** as pills, each row led by **All**. Choosing a pill narrows to it,
-  several can be chosen, and clearing the last one goes back to All. With Problem words chosen the
+  Types** and **Categories** as pills, each under its own checkbox (**All types**, **All
+  categories**) on its own line, set apart so it reads as the default. Choosing a pill narrows to it, several can be chosen, clearing the
+  last one goes back to All, and ticking All clears them. With Problem words chosen the
   categories grey out rather than hide (board 5e over 5d): the list ignores categories, and the
   choice comes back on All words. **Start practice** sticks just above the nav, since with every
   category listed the end of the page is below the fold on a phone; the shell measures the nav into
