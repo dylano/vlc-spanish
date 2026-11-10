@@ -27,7 +27,14 @@ import {
  * should be.
  */
 
-export type MistakeKind = "agreement" | "number" | "person" | "word" | "hay-estar" | "muy-mucho";
+export type MistakeKind =
+  | "agreement"
+  | "number"
+  | "person"
+  | "word"
+  | "hay-estar"
+  | "muy-mucho"
+  | "tambien-tampoco";
 
 export interface Mistake {
   /** The sentence as it should read. */
@@ -254,6 +261,32 @@ function muyMuchoBreak(
   return undefined;
 }
 
+/**
+ * Agreeing with what someone said: también after a positive, tampoco after a
+ * negative (No me gusta. / A mí tampoco). Swapped, either is plainly wrong, but
+ * only in a reply; inside a sentence (Mi hermano tampoco trabaja) the other word
+ * just means something else. So only frames tagged `agreeing` offer it.
+ */
+function tambienTampocoBreak(entry: Entry, right: string): Break | undefined {
+  if (entry.id === "tambien") {
+    return {
+      kind: "tambien-tampoco",
+      wrong: "tampoco",
+      right,
+      explanation: "agreeing with a positive sentence is también; tampoco agrees with a negative",
+    };
+  }
+  if (entry.id === "tampoco") {
+    return {
+      kind: "tambien-tampoco",
+      wrong: "también",
+      right,
+      explanation: "agreeing with a negative sentence is tampoco; también agrees with a positive",
+    };
+  }
+  return undefined;
+}
+
 /** Every way this slot of this sentence can be broken, each producing different text. */
 function breaksFor(
   frame: Frame,
@@ -367,6 +400,11 @@ function breaksFor(
 
   const muyMucho = muyMuchoBreak(frame, sentence, slot, entry, right);
   if (muyMucho) out.push(muyMucho);
+
+  if (frame.grammar.includes("agreeing")) {
+    const tambienTampoco = tambienTampocoBreak(entry, right);
+    if (tambienTampoco) out.push(tambienTampoco);
+  }
 
   const swap = wordSwap(frame, sentence, slot, entry, dictionary, random);
   if (swap) out.push(swap);

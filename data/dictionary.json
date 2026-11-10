@@ -3547,7 +3547,7 @@
       "es": "también",
       "en": ["also", "too", "as well"],
       "pos": "adv",
-      "notes": "'Yo también' is me too.",
+      "notes": "Agreeing with a positive: Trabajo mucho. / Yo también. After gustar it is 'a mí': Me gusta el queso. / A mí también.",
       "tags": ["common-words"],
       "added": "2026-09-21"
     },
@@ -3556,7 +3556,7 @@
       "es": "tampoco",
       "en": ["neither", "not either", "either"],
       "pos": "adv",
-      "notes": "The negative of 'también': yo tampoco, me neither.",
+      "notes": "The negative of 'también', agreeing with a negative: No trabajo mucho. / Yo tampoco. After gustar it is 'a mí': No me gusta el queso. / A mí tampoco.",
       "tags": ["common-words"],
       "added": "2026-09-21"
     },
@@ -3679,6 +3679,15 @@
       "notes": "No accent. 'Sí' with an accent is yes.",
       "tags": ["common-words"],
       "added": "2026-09-21"
+    },
+    {
+      "id": "si-2",
+      "es": "sí",
+      "en": ["yes"],
+      "pos": "adv",
+      "notes": "With an accent; without it, 'si' is if. Disagreeing with a negative: No me gusta. / A mí sí.",
+      "tags": ["common-words"],
+      "added": "2026-11-10"
     },
     {
       "id": "grande",
