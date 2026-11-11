@@ -189,6 +189,15 @@ describe("nouns with a feminine form", () => {
     expect(grade(enfermero, "en→es", "el enfermero", asked).result).toBe("correct");
   });
 
+  it("shows the feminine as the answer when that is what was given", () => {
+    expect(grade(enfermero, "en→es", "la enfermera", asked).expected).toBe("la enfermera");
+    expect(grade(enfermero, "en→es", "el enfermero", asked).expected).toBe("el enfermero");
+    const slip = grade(enfermero, "en→es", "la enférmera", asked);
+    expect(slip.result).toBe("hard");
+    expect(slip.expected).toBe("la enfermera");
+    expect(grade(enfermero, "en→es", "enfermera").expected).toBe("enfermera");
+  });
+
   it("judges by the gloss the prompt showed, when it knows it", () => {
     const nieto: NounEntry = {
       ...base,

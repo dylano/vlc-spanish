@@ -268,7 +268,10 @@ tangled into components.
   rendered from ("One way to say it") sit one above the other to compare by eye. The one verdict it gives
   is **Correct** for an exact match with that version, ignoring capitals, spacing and the closing
   full stop but not accents (`matchesTranslation`), and then only the learner's version is shown, since
-  the model would repeat it; anything else gets no verdict, since it may be
+  the model would repeat it. Where the English doesn't show a person's gender ("The nurse seems
+  serious", "My cousin lives nearby"), the version with that person in the other gender is just as
+  exact: the renderer builds it alongside (`otherGenders`), redoing everything that agrees, and keeps
+  it only when its English reads the same, so "My sister is a nurse" still wants _enfermera_. Anything else gets no verdict, since it may be
   just as right. Nothing is
   scheduled, and the summary counts these apart from the score, with the exact matches as
   **perfect**: in a mixed session the Translate a sentence row reads "5 sentences, 2 perfect" (the
@@ -958,7 +961,8 @@ Worth knowing before you change `grade.ts`, because the tests encode all of it:
   passing — they are different words than the prompt asked for. The exception is a noun whose
   feminine answers to the **same gloss the prompt showed** (`nurse` is both `enfermero` and
   `enfermera`): then either gender is correct, since the prompt cannot have asked for one of them.
-  `grade()` is given the gloss shown (`opts.prompt`), so `nieta` is right for "grandchild" and only
+  An answer in the feminine is then shown its own form ("la bailarina", not "el bailarín"), so a
+  slip of the accent in it doesn't read as the wrong gender. `grade()` is given the gloss shown (`opts.prompt`), so `nieta` is right for "grandchild" and only
   "almost" for "grandson".
 - **es→en**: a leading `to` or `the/a/an` is stripped before comparing, and any gloss listed in the
   entry's `en` array counts. So does a gloss of any other entry whose **prompt looks the same**:
