@@ -242,9 +242,8 @@ tangled into components.
   gets a row of its own (board A2 on the canvas's "Go again" page).
   A **perfect session** gets a surprise: one blast of confetti up from the foot of the summary,
   which falls away in a few seconds (`src/screens/quiz/Celebration.tsx`, `react-confetti`).
-  Perfect means every scored card correct ("almost" is not), with sentence translations left out
-  since they are not scored; a session of nothing but translations needs every one perfect
-  (`isPerfectSession`). Any size counts, so `size=1` is the quick way to see it. Nothing announces
+  Perfect means every scored card correct ("almost" is not) and every sentence translation a
+  perfect one, in a mixed session too (`isPerfectSession`). Any size counts, so `size=1` is the quick way to see it. Nothing announces
   it, it never blocks a tap, the colours are the app's own in light and dark, and a device set to
   reduce motion gets none.
 - **Multiple Choice** — the same session with four options; touching one answers it, with no
