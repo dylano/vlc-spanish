@@ -242,9 +242,8 @@ tangled into components.
   gets a row of its own (board A2 on the canvas's "Go again" page).
   A **perfect session** gets a surprise: one blast of confetti up from the foot of the summary,
   which falls away in a few seconds (`src/screens/quiz/Celebration.tsx`, `react-confetti`).
-  Perfect means every scored card correct ("almost" is not), with sentence translations left out
-  since they are not scored; a session of nothing but translations needs every one perfect
-  (`isPerfectSession`). Any size counts, so `size=1` is the quick way to see it. Nothing announces
+  Perfect means every scored card correct ("almost" is not) and every sentence translation a
+  perfect one, in a mixed session too (`isPerfectSession`). Any size counts, so `size=1` is the quick way to see it. Nothing announces
   it, it never blocks a tap, the colours are the app's own in light and dark, and a device set to
   reduce motion gets none.
 - **Multiple Choice** — the same session with four options; touching one answers it, with no
@@ -269,7 +268,10 @@ tangled into components.
   rendered from ("One way to say it") sit one above the other to compare by eye. The one verdict it gives
   is **Correct** for an exact match with that version, ignoring capitals, spacing and the closing
   full stop but not accents (`matchesTranslation`), and then only the learner's version is shown, since
-  the model would repeat it; anything else gets no verdict, since it may be
+  the model would repeat it. Where the English doesn't show a person's gender ("The nurse seems
+  serious", "My cousin lives nearby"), the version with that person in the other gender is just as
+  exact: the renderer builds it alongside (`otherGenders`), redoing everything that agrees, and keeps
+  it only when its English reads the same, so "My sister is a nurse" still wants _enfermera_. Anything else gets no verdict, since it may be
   just as right. Nothing is
   scheduled, and the summary counts these apart from the score, with the exact matches as
   **perfect**: in a mixed session the Translate a sentence row reads "5 sentences, 2 perfect" (the
@@ -423,6 +425,13 @@ anything tagged `numbers`. They are still searchable in the dictionary, and a se
 that tag by name (Custom practice, or `/quiz?tags=numbers`) still serves them. The home-screen counts apply the same
 predicate — a count that includes words no session will offer promises practice the app cannot
 deliver.
+
+**Direct object pronouns are sentence-only.** On its own, _la_ reads as the article and "him" as
+_él_, so `isWordCard` keeps _lo, la, los, las_ off typed, Multiple Choice and Match Pairs cards (and
+out of Multiple Choice options); gaps, Find the Mistake and Translate still ask them, where the
+sentence says which is meant. A sentence reviews the en→es card, so the home-screen due count
+ignores a pronoun's es→en card, and the dictionary validator asks no hint of them (_los_ and _las_
+share "them", but no prompt shows it). A Custom practice of word exercises only never serves them.
 
 **Words versus cards.** The dictionary holds twice as many cards as words, because each word is
 scheduled separately in each direction. The home-screen totals are deliberately counted **per word**
@@ -959,7 +968,8 @@ Worth knowing before you change `grade.ts`, because the tests encode all of it:
   passing — they are different words than the prompt asked for. The exception is a noun whose
   feminine answers to the **same gloss the prompt showed** (`nurse` is both `enfermero` and
   `enfermera`): then either gender is correct, since the prompt cannot have asked for one of them.
-  `grade()` is given the gloss shown (`opts.prompt`), so `nieta` is right for "grandchild" and only
+  An answer in the feminine is then shown its own form ("la bailarina", not "el bailarín"), so a
+  slip of the accent in it doesn't read as the wrong gender. `grade()` is given the gloss shown (`opts.prompt`), so `nieta` is right for "grandchild" and only
   "almost" for "grandson".
 - **es→en**: a leading `to` or `the/a/an` is stripped before comparing, and any gloss listed in the
   entry's `en` array counts. So does a gloss of any other entry whose **prompt looks the same**:

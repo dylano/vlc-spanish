@@ -313,7 +313,7 @@ function pronounAgreement(id: string): string {
 }
 
 function gradeSpanish(entry: Entry, answer: string, opts: GradeOptions): Grade {
-  const expected = canonicalAnswer(entry, "en→es", opts);
+  let expected = canonicalAnswer(entry, "en→es", opts);
 
   // lo, la, los, las: another of the four is the wrong agreement, not a typo one
   // letter off, and not an article. Two sharing the prompt (them) keep the usual
@@ -346,6 +346,18 @@ function gradeSpanish(entry: Entry, answer: string, opts: GradeOptions): Grade {
       };
     }
     return nearMiss(entry, answer, expected, opts);
+  }
+
+  // A feminine the prompt allowed (dancer: la bailarina) is shown as the answer
+  // in place of the masculine headword, so a slip in it does not look like the
+  // gender was wrong.
+  if (
+    entry.pos === "noun" &&
+    match.candidate.kind === "inflection" &&
+    match.candidate.label === "the feminine"
+  ) {
+    const withArticle = opts.requireArticle && entry.article !== "none";
+    expected = withArticle ? `la ${match.candidate.text}` : match.candidate.text;
   }
 
   let result: Result = "correct";

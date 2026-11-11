@@ -21,9 +21,13 @@ export interface Translation {
  * ignoring only capitals, spacing and the closing punctuation. This is not
  * grading — a different translation can be just as right — only a way to say
  * "that is exactly it" when it is. Accents count: a missing one is not a match.
+ * Where the English does not show a person's gender (the nurse), the sentence
+ * with them in the other gender matches too.
  */
 export function matchesTranslation(given: string, translation: Translation): boolean {
-  return normalize(given) !== "" && normalize(given) === normalize(translation.sentence.es);
+  const text = normalize(given);
+  const { es, otherGenders = [] } = translation.sentence;
+  return text !== "" && [es, ...otherGenders].some((model) => normalize(model) === text);
 }
 
 /** A sentence containing an entry, or undefined when no frame can hold it with the words available. */

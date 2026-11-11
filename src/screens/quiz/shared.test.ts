@@ -19,8 +19,9 @@ describe("a perfect session", () => {
     expect(isPerfectSession([scored("correct"), scored("wrong")])).toBe(false);
   });
 
-  it("leaves sentence translations out when there are scored cards", () => {
-    expect(isPerfectSession([scored("correct"), sentence(false)])).toBe(true);
+  it("needs every sentence perfect alongside scored cards", () => {
+    expect(isPerfectSession([scored("correct"), sentence(true)])).toBe(true);
+    expect(isPerfectSession([scored("correct"), sentence(false)])).toBe(false);
     expect(isPerfectSession([scored("hard"), sentence(true)])).toBe(false);
   });
 

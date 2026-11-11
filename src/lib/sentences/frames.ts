@@ -181,6 +181,12 @@ export interface RenderedSentence {
   /** Slot name → grading detail, for every slot filled from the dictionary. */
   slots: Record<string, SlotDetail>;
   subject?: Subject;
+  /**
+   * The same sentence with a person in the other gender, where the English
+   * reads the same either way: "The nurse is quite serious" is La enfermera es
+   * bastante seria and just as much El enfermero es bastante serio.
+   */
+  otherGenders?: string[];
 }
 
 export interface RenderContext {
@@ -536,6 +542,10 @@ export function renderFrame(
 
   const segments = spanishSegments(frame.es, filled, subject);
   const en = capitalizeSentences(renderEnglish(frame.en, filled, subject));
+  const es = segments.map((segment) => segment.text).join("");
+  const otherGenders = otherGenderSentences(frame, order, filled, pinnedGender, context, subject)
+    .filter((other) => other.en === en && other.es !== es)
+    .map((other) => other.es);
   const fills = Object.fromEntries(
     [...filled].flatMap(([name, fill]) => (fill.entryId ? [[name, fill.entryId]] : [])),
   );
@@ -577,12 +587,13 @@ export function renderFrame(
 
   return {
     frameId: frame.id,
-    es: segments.map((segment) => segment.text).join(""),
+    es,
     en,
     segments,
     fills,
     slots,
     subject,
+    ...(otherGenders.length > 0 ? { otherGenders: [...new Set(otherGenders)] } : {}),
   };
 
   function rank(slot: Slot): number {
@@ -593,6 +604,76 @@ export function renderFrame(
     if (slot.kind === "verb" && slot.same) return 4;
     return 2;
   }
+}
+
+/**
+ * The sentence again with people whose gender was left to chance put in the
+ * other one, each combination of them, and everything that agrees with them
+ * redone: the noun, its article, adjectives, pronouns. The caller keeps those
+ * whose English is unchanged, since only then could the learner not tell.
+ */
+function otherGenderSentences(
+  frame: Frame,
+  order: [string, Slot][],
+  filled: Map<string, Filled>,
+  pinnedGender: Record<string, Gender>,
+  context: RenderContext,
+  subject: Subject | undefined,
+): { es: string; en: string }[] {
+  const { dictionary } = context;
+  const entryOf = (fill: Filled | undefined) =>
+    fill?.entryId ? dictionary.find((entry) => entry.id === fill.entryId) : undefined;
+  const free = order
+    .filter(
+      ([name, slot]) =>
+        slot.kind === "noun" &&
+        !slot.agree &&
+        !slot.gender &&
+        !pinnedGender[name] &&
+        canBeEitherGender(entryOf(filled.get(name))!),
+    )
+    .map(([name]) => name);
+  // Two or three people at most in practice; more would be a lot of sentences.
+  if (free.length === 0 || free.length > 3) return [];
+
+  const out: { es: string; en: string }[] = [];
+  // Rendering again must not draw on the sentence's random numbers.
+  const fixed = () => 0;
+  for (let mask = 1; mask < 1 << free.length; mask++) {
+    const flipped = new Set(free.filter((_, index) => mask & (1 << index)));
+    const other = new Map(filled);
+    const changed = new Set<string>();
+    let possible = true;
+    for (const [name, slot] of order) {
+      if (slot.kind === "glue") continue;
+      const fill = filled.get(name)!;
+      const entry = entryOf(fill);
+      if (!entry) continue;
+      let redone: Filled | undefined;
+      if (flipped.has(name) && slot.kind === "noun" && entry.pos === "noun") {
+        redone = nounFill(entry, slot.number, fill.gender === "f" ? "m" : "f", fixed);
+      } else {
+        const dependsOn =
+          slot.kind === "verb" ? [slot.subject, slot.liked] : "agree" in slot ? [slot.agree] : [];
+        if (!dependsOn.some((on) => on !== undefined && changed.has(on))) continue;
+        redone = fillSlot(slot, entry, other, subject, dictionary, fixed);
+      }
+      if (!redone) {
+        possible = false;
+        break;
+      }
+      other.set(name, redone);
+      changed.add(name);
+    }
+    if (!possible) continue;
+    out.push({
+      es: spanishSegments(frame.es, other, subject)
+        .map((segment) => segment.text)
+        .join(""),
+      en: capitalizeSentences(renderEnglish(frame.en, other, subject)),
+    });
+  }
+  return out;
 }
 
 function subjectOf(

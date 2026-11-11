@@ -2,7 +2,7 @@ import { canonicalAnswer } from "./grade.ts";
 import { normalize } from "./normalize.ts";
 import { shuffle } from "./random.ts";
 import type { Entry, ProgressBlob } from "./schema.ts";
-import { isDrillable, type Card } from "./session.ts";
+import { isDrillable, isWordCard, type Card } from "./session.ts";
 
 /** Four options: the answer and three distractors. */
 export const CHOICE_COUNT = 4;
@@ -85,8 +85,10 @@ export function choiceOptions({
 
   // Numbers stay out of ordinary questions, but a number asked by name gets
   // number distractors: one number among three nouns is no question at all.
+  // A direct object pronoun is never asked on a card, so it is no option on one either.
   const eligible = (candidate: Entry) =>
-    isDrillable(candidate) || (!isDrillable(target) && candidate.pos === target.pos);
+    isWordCard(candidate) &&
+    (isDrillable(candidate) || (!isDrillable(target) && candidate.pos === target.pos));
 
   const ranked = shuffle(
     entries.filter(

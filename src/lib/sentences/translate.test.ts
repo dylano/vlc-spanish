@@ -26,6 +26,32 @@ describe("an exact translation", () => {
   });
 });
 
+describe("a person whose gender the English does not show", () => {
+  let state = 1;
+  const random = () => {
+    state = (state * 1_664_525 + 1_013_904_223) % 4_294_967_296;
+    return state / 4_294_967_296;
+  };
+  const context = { dictionary: entries, glue: sentences.glue, random };
+  const frame = (id: string) => sentences.frames.find((f) => f.id === id) as Frame;
+  const render = (id: string, fixed: Record<string, string>) =>
+    renderFrame(frame(id), context, fixed)!;
+
+  it("matches in either gender, with everything that agrees", () => {
+    const sentence = render("profession-seems", { p: "enfermero", a: "serio" });
+    const both = [sentence.es, ...(sentence.otherGenders ?? [])].sort();
+    expect(both).toEqual(["El enfermero parece serio.", "La enfermera parece seria."]);
+    expect(matchesTranslation("el enfermero parece serio", { sentence })).toBe(true);
+    expect(matchesTranslation("la enfermera parece seria", { sentence })).toBe(true);
+    expect(matchesTranslation("la enfermera parece serio", { sentence })).toBe(false);
+  });
+
+  it("matches only the gender the English shows (my sister, my brother)", () => {
+    const sentence = render("family-profession", { n: "hermano", p: "enfermero" });
+    expect(sentence.otherGenders).toBeUndefined();
+  });
+});
+
 describe("practice more like this", () => {
   function seeded(seed: number): () => number {
     let state = (seed * 2_654_435_761) % 4_294_967_296;

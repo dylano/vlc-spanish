@@ -11,7 +11,7 @@ import { readFileSync } from "node:fs";
 import process from "node:process";
 import { z } from "zod";
 import { dictionarySchema, entrySchema, type Entry } from "../src/lib/schema.ts";
-import { glossIndex } from "../src/lib/session.ts";
+import { glossIndex, isWordCard } from "../src/lib/session.ts";
 import { slugify } from "../src/lib/slug.ts";
 
 const path = process.argv[2] ?? "data/dictionary.json";
@@ -99,8 +99,10 @@ for (const entry of entries) {
 
 // An english → spanish prompt is chosen from the glosses no other entry claims.
 // When there is none ("to be" for ser and estar), only a hint tells them apart.
+// A word only sentences ask (los, las: "them") has no prompt of its own to tell apart.
 const glosses = glossIndex(entries);
 for (const entry of entries) {
+  if (!isWordCard(entry)) continue;
   const unique = entry.en.some((gloss) => glosses.get(gloss.trim().toLowerCase())?.length === 1);
   if (!unique && !entry.hint) {
     const rivals = glosses

@@ -1,7 +1,7 @@
 import type { IsoDate } from "./dates.ts";
 import { isDue } from "./scheduler.ts";
 import { DIRECTIONS, type Direction, type Entry, type ProgressBlob } from "./schema.ts";
-import { isDrillable } from "./session.ts";
+import { isDrillable, isWordCard } from "./session.ts";
 
 /**
  * Home-screen totals.
@@ -40,6 +40,9 @@ export function countWords(entries: Entry[], progress: ProgressBlob, today: IsoD
       const record = records?.[direction];
       if (!record) continue;
       seenAny = true;
+      // Only a sentence asks a direct object pronoun now, and a sentence reviews
+      // the en→es card: an es→en one left from before would be due for ever.
+      if (direction === "es→en" && !isWordCard(entry)) continue;
       if (isDue(record, today)) dueAny = true;
     }
 
