@@ -25,12 +25,13 @@ import {
   type QuizConfig,
   type SessionItem,
 } from "../lib/session.ts";
+import Celebration from "./quiz/Celebration.tsx";
 import ChoiceExercise from "./quiz/ChoiceExercise.tsx";
 import { EXERCISES } from "./quiz/exercises.ts";
 import MatchExercise from "./quiz/MatchExercise.tsx";
 import MistakeExercise from "./quiz/MistakeExercise.tsx";
 import TranslateExercise from "./quiz/TranslateExercise.tsx";
-import { GRADE_OPTIONS, type Outcome } from "./quiz/shared.ts";
+import { GRADE_OPTIONS, isPerfectSession, type Outcome } from "./quiz/shared.ts";
 import TypedExercise from "./quiz/TypedExercise.tsx";
 import styles from "./QuizScreen.module.css";
 
@@ -341,6 +342,8 @@ export default function QuizScreen() {
               </span>
             </p>
           )}
+
+          {isPerfectSession(answered) ? <Celebration /> : null}
 
           {graded.length === 0 && perfect > 0 ? (
             <p className={styles.tally}>
