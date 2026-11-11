@@ -29,6 +29,20 @@ export interface Outcome {
   perfect?: boolean;
 }
 
+/**
+ * A session worth confetti: every scored card correct ("almost" is not), and the
+ * sentence translations, which are not scored, left out. A session of nothing
+ * but translations needs every one of them perfect instead.
+ */
+export function isPerfectSession(
+  answered: readonly Pick<Outcome, "grade" | "ungraded" | "perfect">[],
+): boolean {
+  if (answered.length === 0) return false;
+  const scored = answered.filter((item) => !item.ungraded);
+  if (scored.length === 0) return answered.every((item) => item.perfect);
+  return scored.every((item) => item.grade.result === "correct");
+}
+
 export interface ExerciseProps {
   card: Card;
   /** Header state for the session frame. */

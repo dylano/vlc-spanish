@@ -41,6 +41,7 @@ current — notably PLAN.md §6 describes an in-app "add words" flow that is not
 - **react-router** in declarative mode
 - **zod** as the single source of truth for data shapes — runtime validation and TS types both
   derive from `src/lib/schema.ts`
+- **react-confetti** for the perfect-session celebration, the same package as the cribbage app
 - **Netlify** static hosting; no functions, no storage
 - Plain CSS with CSS modules. No Tailwind, no CSS-in-JS.
 
@@ -239,6 +240,13 @@ tangled into components.
   navigation, so the same URL still builds a fresh session; the history entry is replaced, not
   added. "Another round" takes a little more of the row than Done; below 380px wide each button
   gets a row of its own (board A2 on the canvas's "Go again" page).
+  A **perfect session** gets a surprise: one blast of confetti up from the foot of the summary,
+  which falls away in a few seconds (`src/screens/quiz/Celebration.tsx`, `react-confetti`).
+  Perfect means every scored card correct ("almost" is not), with sentence translations left out
+  since they are not scored; a session of nothing but translations needs every one perfect
+  (`isPerfectSession`). Any size counts, so `size=1` is the quick way to see it. Nothing announces
+  it, it never blocks a tap, the colours are the app's own in light and dark, and a device set to
+  reduce motion gets none.
 - **Multiple Choice** — the same session with four options; touching one answers it, with no
   separate Check. A right answer moves on by itself, a miss waits for Next. Keys a–d or 1–4 answer
   and Enter moves on, on a computer. A wrong pick says what the picked word means. Started from

@@ -1,7 +1,38 @@
 import { describe, expect, it } from "vite-plus/test";
 import { entries } from "../../app/dictionary.ts";
 import type { Card } from "../../lib/session.ts";
-import { promptDetail, promptText } from "./shared.ts";
+import { isPerfectSession, promptDetail, promptText } from "./shared.ts";
+
+describe("a perfect session", () => {
+  const scored = (result: "correct" | "hard" | "wrong") => ({
+    grade: { result, expected: "x" },
+  });
+  const sentence = (perfect: boolean) => ({
+    grade: { result: "correct" as const, expected: "x" },
+    ungraded: true,
+    perfect,
+  });
+
+  it("needs every scored card correct; almost is not enough", () => {
+    expect(isPerfectSession([scored("correct"), scored("correct")])).toBe(true);
+    expect(isPerfectSession([scored("correct"), scored("hard")])).toBe(false);
+    expect(isPerfectSession([scored("correct"), scored("wrong")])).toBe(false);
+  });
+
+  it("leaves sentence translations out when there are scored cards", () => {
+    expect(isPerfectSession([scored("correct"), sentence(false)])).toBe(true);
+    expect(isPerfectSession([scored("hard"), sentence(true)])).toBe(false);
+  });
+
+  it("needs every sentence perfect when there is nothing else", () => {
+    expect(isPerfectSession([sentence(true), sentence(true)])).toBe(true);
+    expect(isPerfectSession([sentence(true), sentence(false)])).toBe(false);
+  });
+
+  it("is never an empty session", () => {
+    expect(isPerfectSession([])).toBe(false);
+  });
+});
 
 const card = (id: string, direction: Card["direction"]) =>
   ({ entry: entries.find((entry) => entry.id === id)!, direction, prompt: "the prompt" }) as Card;
