@@ -1212,7 +1212,7 @@
         "c": {
           "kind": "noun",
           "tags": ["clothing"],
-          "exclude": ["ropa-interior", "zapato", "sandalia", "bota"]
+          "exclude": ["ropa-interior", "zapato", "sandalia", "bota", "pendiente"]
         }
       },
       "cloze": ["c", "v"]
@@ -1236,6 +1236,7 @@
             "gafas",
             "gafas-de-sol",
             "pantalones-cortos",
+            "pendiente",
             "sandalia",
             "vaqueros",
             "zapato"
@@ -1368,7 +1369,8 @@
             "sombrero",
             "jersey",
             "pulsera",
-            "vestido"
+            "vestido",
+            "corbata"
           ]
         }
       },
@@ -1404,7 +1406,9 @@
             "falda",
             "camisa",
             "camiseta",
-            "chaqueta"
+            "chaqueta",
+            "corbata",
+            "pendiente"
           ],
           "number": "pl"
         }
@@ -1445,7 +1449,7 @@
         "c": {
           "kind": "noun",
           "tags": ["clothing"],
-          "exclude": ["ropa-interior", "zapato", "sandalia", "bota"]
+          "exclude": ["ropa-interior", "zapato", "sandalia", "bota", "pendiente"]
         }
       },
       "cloze": ["v", "c"]
@@ -1464,7 +1468,7 @@
         "c": {
           "kind": "noun",
           "tags": ["classroom-objects", "clothing"],
-          "exclude": ["zapato", "sandalia", "bota"]
+          "exclude": ["zapato", "sandalia", "bota", "pendiente"]
         },
         "a": {
           "kind": "adj",
@@ -1564,7 +1568,7 @@
         "c": {
           "kind": "noun",
           "tags": ["classroom-objects", "clothing"],
-          "exclude": ["zapato", "sandalia", "bota"]
+          "exclude": ["zapato", "sandalia", "bota", "pendiente"]
         }
       },
       "cloze": ["x", "v"]
@@ -1750,6 +1754,7 @@
             "manzana",
             "naranja-2",
             "patata",
+            "pendiente",
             "peninsula",
             "pepino",
             "platano",
@@ -1968,6 +1973,7 @@
             "manzana",
             "naranja-2",
             "patata",
+            "pendiente",
             "peninsula",
             "pepino",
             "platano",
@@ -2064,7 +2070,9 @@
             "sandalia",
             "vaqueros",
             "vestido",
-            "zapato"
+            "zapato",
+            "corbata",
+            "pendiente"
           ],
           "number": "pl"
         },
@@ -2136,7 +2144,9 @@
             "sandalia",
             "vaqueros",
             "vestido",
-            "zapato"
+            "zapato",
+            "corbata",
+            "pendiente"
           ],
           "number": "pl"
         },
@@ -3332,7 +3342,8 @@
             "abrigo",
             "gorro",
             "gorra",
-            "sombrero"
+            "sombrero",
+            "corbata"
           ]
         },
         "p": {
@@ -3377,7 +3388,8 @@
             "bota",
             "sandalia",
             "gafas",
-            "vaqueros"
+            "vaqueros",
+            "pendiente"
           ],
           "number": "pl"
         },
@@ -3435,7 +3447,8 @@
             "abrigo",
             "gorro",
             "gorra",
-            "sombrero"
+            "sombrero",
+            "corbata"
           ]
         },
         "p": {
@@ -3480,7 +3493,8 @@
             "bota",
             "sandalia",
             "gafas",
-            "vaqueros"
+            "vaqueros",
+            "pendiente"
           ],
           "number": "pl"
         },
@@ -3538,7 +3552,8 @@
             "abrigo",
             "gorro",
             "gorra",
-            "sombrero"
+            "sombrero",
+            "corbata"
           ]
         },
         "p": {
@@ -3583,7 +3598,8 @@
             "bota",
             "sandalia",
             "gafas",
-            "vaqueros"
+            "vaqueros",
+            "pendiente"
           ],
           "number": "pl"
         },
@@ -3624,7 +3640,8 @@
             "gorro",
             "gorra",
             "sombrero",
-            "cinturon"
+            "cinturon",
+            "corbata"
           ]
         },
         "p": {
@@ -3660,7 +3677,8 @@
             "gafas",
             "gafas-de-sol",
             "vaqueros",
-            "pantalones-cortos"
+            "pantalones-cortos",
+            "pendiente"
           ],
           "number": "pl"
         },
@@ -3728,7 +3746,8 @@
             "abrigo",
             "gorro",
             "gorra",
-            "sombrero"
+            "sombrero",
+            "corbata"
           ]
         },
         "p": {
@@ -3789,7 +3808,8 @@
             "abrigo",
             "gorro",
             "gorra",
-            "sombrero"
+            "sombrero",
+            "corbata"
           ]
         },
         "p": {
@@ -3838,7 +3858,8 @@
             "bota",
             "sandalia",
             "gafas",
-            "vaqueros"
+            "vaqueros",
+            "pendiente"
           ],
           "number": "pl"
         },
@@ -3902,7 +3923,8 @@
             "abrigo",
             "gorro",
             "gorra",
-            "sombrero"
+            "sombrero",
+            "corbata"
           ]
         },
         "p": {
@@ -4004,7 +4026,8 @@
             "gorro",
             "gorra",
             "sombrero",
-            "cinturon"
+            "cinturon",
+            "corbata"
           ]
         },
         "p": {
@@ -4040,7 +4063,8 @@
             "gafas",
             "gafas-de-sol",
             "vaqueros",
-            "pantalones-cortos"
+            "pantalones-cortos",
+            "pendiente"
           ],
           "number": "pl"
         },
@@ -4109,7 +4133,8 @@
             "gorro",
             "gorra",
             "sombrero",
-            "cinturon"
+            "cinturon",
+            "corbata"
           ]
         },
         "a": {
@@ -4153,7 +4178,7 @@
         },
         "c": {
           "kind": "noun",
-          "ids": ["zapato", "bota", "sandalia", "vaqueros", "pantalones-cortos"],
+          "ids": ["zapato", "bota", "sandalia", "vaqueros", "pantalones-cortos", "pendiente"],
           "number": "pl"
         },
         "a": {
@@ -4212,7 +4237,8 @@
             "gorro",
             "gorra",
             "sombrero",
-            "cinturon"
+            "cinturon",
+            "corbata"
           ]
         },
         "a": {
@@ -4708,7 +4734,8 @@
             "gorro",
             "gorra",
             "sombrero",
-            "cinturon"
+            "cinturon",
+            "corbata"
           ]
         },
         "p": {
@@ -6873,7 +6900,8 @@
             "mochila",
             "estuche",
             "cuaderno",
-            "libro"
+            "libro",
+            "corbata"
           ]
         }
       },
@@ -6895,7 +6923,8 @@
             "gafas",
             "gafas-de-sol",
             "libro",
-            "cuaderno"
+            "cuaderno",
+            "pendiente"
           ],
           "number": "pl"
         }
@@ -7111,7 +7140,8 @@
             "cuaderno",
             "libro",
             "boligrafo",
-            "lapiz"
+            "lapiz",
+            "corbata"
           ]
         },
         "v": {
@@ -7142,7 +7172,8 @@
             "gafas",
             "gafas-de-sol",
             "libro",
-            "cuaderno"
+            "cuaderno",
+            "pendiente"
           ],
           "number": "pl"
         },
@@ -7243,7 +7274,9 @@
             "abrigo",
             "zapato",
             "bota",
-            "sandalia"
+            "sandalia",
+            "corbata",
+            "pendiente"
           ],
           "number": "pl"
         },
@@ -7582,7 +7615,8 @@
             "chaqueta",
             "jersey",
             "bufanda",
-            "traje"
+            "traje",
+            "corbata"
           ],
           "number": "sg"
         },
@@ -7608,7 +7642,7 @@
         },
         "c": {
           "kind": "noun",
-          "ids": ["camisa", "camiseta", "falda", "vestido", "jersey", "bufanda"],
+          "ids": ["camisa", "camiseta", "falda", "vestido", "jersey", "bufanda", "corbata"],
           "number": "pl"
         },
         "a": {
@@ -7784,7 +7818,9 @@
             "zapato",
             "bota",
             "sandalia",
-            "traje"
+            "traje",
+            "corbata",
+            "pendiente"
           ],
           "number": "pl"
         }
@@ -7864,7 +7900,8 @@
             "vestido",
             "falda",
             "bolso",
-            "cinturon"
+            "cinturon",
+            "corbata"
           ]
         }
       },
@@ -8238,6 +8275,442 @@
         }
       },
       "cloze": ["q", "c"]
+    },
+    {
+      "id": "like-food-too",
+      "grammar": ["gustar", "food", "agreeing"],
+      "subjects": ["yo"],
+      "es": "{v} {c:el}.\nA mí {t}.",
+      "en": "{S} {v} {c}.\nMe too.{t:none}",
+      "slots": {
+        "c": {
+          "kind": "noun",
+          "ids": [
+            "aceite-de-oliva",
+            "agua",
+            "arroz",
+            "atun",
+            "cafe",
+            "cerdo",
+            "cerveza",
+            "chocolate",
+            "chorizo",
+            "harina",
+            "jamon",
+            "leche",
+            "maiz",
+            "pan",
+            "pollo",
+            "queso",
+            "salmon",
+            "te",
+            "ternera",
+            "trigo",
+            "vino"
+          ]
+        },
+        "v": {
+          "kind": "verb",
+          "ids": ["gustar", "encantar"],
+          "subject": "@",
+          "liked": "c"
+        },
+        "t": {
+          "kind": "word",
+          "ids": ["tambien"]
+        }
+      },
+      "cloze": ["t", "v", "c"]
+    },
+    {
+      "id": "like-activity-too",
+      "grammar": ["gustar", "infinitive", "agreeing"],
+      "subjects": ["yo"],
+      "es": "{v} {a}.\nA mí {t}.",
+      "en": "{S} {v} {a}.\nMe too.{t:none}",
+      "slots": {
+        "a": {
+          "kind": "verb",
+          "ids": [
+            "aprender",
+            "bailar",
+            "cenar",
+            "escribir",
+            "estudiar",
+            "hacer-deporte",
+            "hacer-la-compra",
+            "jugar",
+            "leer",
+            "practicar",
+            "salir",
+            "trabajar",
+            "ir-de-compras",
+            "ir-de-viaje"
+          ],
+          "subject": "inf"
+        },
+        "v": {
+          "kind": "verb",
+          "ids": ["gustar", "encantar"],
+          "subject": "@",
+          "liked": "a"
+        },
+        "t": {
+          "kind": "word",
+          "ids": ["tambien"]
+        }
+      },
+      "cloze": ["t", "v", "a"]
+    },
+    {
+      "id": "do-a-lot-too",
+      "grammar": ["verb-conjugation", "agreeing"],
+      "subjects": ["yo"],
+      "es": "{v} {m}.\nYo {t}.",
+      "en": "{S} {v} {m}.\nMe too.{t:none}",
+      "slots": {
+        "v": {
+          "kind": "verb",
+          "ids": ["trabajar", "estudiar", "leer", "hablar", "jugar", "practicar", "salir"],
+          "subject": "@"
+        },
+        "m": {
+          "kind": "word",
+          "ids": ["mucho-2", "poco-2"]
+        },
+        "t": {
+          "kind": "word",
+          "ids": ["tambien"]
+        }
+      },
+      "cloze": ["t", "v"]
+    },
+    {
+      "id": "like-food-not-me",
+      "grammar": ["gustar", "food", "agreeing"],
+      "subjects": ["yo"],
+      "es": "{v} {c:el}.\nA mí {t}.",
+      "en": "{S} {v} {c}.\nI don't.{t:none}",
+      "slots": {
+        "c": {
+          "kind": "noun",
+          "ids": [
+            "aceite-de-oliva",
+            "agua",
+            "arroz",
+            "atun",
+            "cafe",
+            "cerdo",
+            "cerveza",
+            "chocolate",
+            "chorizo",
+            "harina",
+            "jamon",
+            "leche",
+            "maiz",
+            "pan",
+            "pollo",
+            "queso",
+            "salmon",
+            "te",
+            "ternera",
+            "trigo",
+            "vino"
+          ]
+        },
+        "v": {
+          "kind": "verb",
+          "ids": ["gustar", "encantar"],
+          "subject": "@",
+          "liked": "c"
+        },
+        "t": {
+          "kind": "word",
+          "ids": ["no"]
+        }
+      },
+      "cloze": ["t", "v", "c"]
+    },
+    {
+      "id": "like-activity-not-me",
+      "grammar": ["gustar", "infinitive", "agreeing"],
+      "subjects": ["yo"],
+      "es": "{v} {a}.\nA mí {t}.",
+      "en": "{S} {v} {a}.\nI don't.{t:none}",
+      "slots": {
+        "a": {
+          "kind": "verb",
+          "ids": [
+            "aprender",
+            "bailar",
+            "cenar",
+            "escribir",
+            "estudiar",
+            "hacer-deporte",
+            "hacer-la-compra",
+            "jugar",
+            "leer",
+            "practicar",
+            "salir",
+            "trabajar",
+            "ir-de-compras",
+            "ir-de-viaje"
+          ],
+          "subject": "inf"
+        },
+        "v": {
+          "kind": "verb",
+          "ids": ["gustar", "encantar"],
+          "subject": "@",
+          "liked": "a"
+        },
+        "t": {
+          "kind": "word",
+          "ids": ["no"]
+        }
+      },
+      "cloze": ["t", "v", "a"]
+    },
+    {
+      "id": "do-a-lot-not-me",
+      "grammar": ["verb-conjugation", "agreeing"],
+      "subjects": ["yo"],
+      "es": "{v} {m}.\nYo {t}.",
+      "en": "{S} {v} {m}.\nI don't.{t:none}",
+      "slots": {
+        "v": {
+          "kind": "verb",
+          "ids": ["trabajar", "estudiar", "leer", "hablar", "jugar", "practicar", "salir"],
+          "subject": "@"
+        },
+        "m": {
+          "kind": "word",
+          "ids": ["mucho-2", "poco-2"]
+        },
+        "t": {
+          "kind": "word",
+          "ids": ["no"]
+        }
+      },
+      "cloze": ["t", "v"]
+    },
+    {
+      "id": "like-food-neither",
+      "grammar": ["gustar", "food", "agreeing", "negation"],
+      "subjects": ["yo"],
+      "es": "No {v} {c:el}.\nA mí {t}.",
+      "en": "{S} {v:not} {c}.\nMe neither.{t:none}",
+      "slots": {
+        "c": {
+          "kind": "noun",
+          "ids": [
+            "aceite-de-oliva",
+            "agua",
+            "arroz",
+            "atun",
+            "cafe",
+            "cerdo",
+            "cerveza",
+            "chocolate",
+            "chorizo",
+            "harina",
+            "jamon",
+            "leche",
+            "maiz",
+            "pan",
+            "pollo",
+            "queso",
+            "salmon",
+            "te",
+            "ternera",
+            "trigo",
+            "vino"
+          ]
+        },
+        "v": {
+          "kind": "verb",
+          "ids": ["gustar"],
+          "subject": "@",
+          "liked": "c"
+        },
+        "t": {
+          "kind": "word",
+          "ids": ["tampoco"]
+        }
+      },
+      "cloze": ["t", "v", "c"]
+    },
+    {
+      "id": "like-activity-neither",
+      "grammar": ["gustar", "infinitive", "agreeing", "negation"],
+      "subjects": ["yo"],
+      "es": "No {v} {a}.\nA mí {t}.",
+      "en": "{S} {v:not} {a}.\nMe neither.{t:none}",
+      "slots": {
+        "a": {
+          "kind": "verb",
+          "ids": [
+            "aprender",
+            "bailar",
+            "cenar",
+            "escribir",
+            "estudiar",
+            "hacer-deporte",
+            "hacer-la-compra",
+            "jugar",
+            "leer",
+            "practicar",
+            "salir",
+            "trabajar",
+            "ir-de-compras",
+            "ir-de-viaje"
+          ],
+          "subject": "inf"
+        },
+        "v": {
+          "kind": "verb",
+          "ids": ["gustar"],
+          "subject": "@",
+          "liked": "a"
+        },
+        "t": {
+          "kind": "word",
+          "ids": ["tampoco"]
+        }
+      },
+      "cloze": ["t", "v", "a"]
+    },
+    {
+      "id": "do-a-lot-neither",
+      "grammar": ["verb-conjugation", "agreeing", "negation"],
+      "subjects": ["yo"],
+      "es": "No {v} {m}.\nYo {t}.",
+      "en": "{S} {v:not} {m}.\nMe neither.{t:none}",
+      "slots": {
+        "v": {
+          "kind": "verb",
+          "ids": ["trabajar", "estudiar", "leer", "hablar", "jugar", "practicar", "salir"],
+          "subject": "@"
+        },
+        "m": {
+          "kind": "word",
+          "ids": ["mucho-2"]
+        },
+        "t": {
+          "kind": "word",
+          "ids": ["tampoco"]
+        }
+      },
+      "cloze": ["t", "v"]
+    },
+    {
+      "id": "like-food-i-do",
+      "grammar": ["gustar", "food", "agreeing", "negation"],
+      "subjects": ["yo"],
+      "es": "No {v} {c:el}.\nA mí {t}.",
+      "en": "{S} {v:not} {c}.\nI do.{t:none}",
+      "slots": {
+        "c": {
+          "kind": "noun",
+          "ids": [
+            "aceite-de-oliva",
+            "agua",
+            "arroz",
+            "atun",
+            "cafe",
+            "cerdo",
+            "cerveza",
+            "chocolate",
+            "chorizo",
+            "harina",
+            "jamon",
+            "leche",
+            "maiz",
+            "pan",
+            "pollo",
+            "queso",
+            "salmon",
+            "te",
+            "ternera",
+            "trigo",
+            "vino"
+          ]
+        },
+        "v": {
+          "kind": "verb",
+          "ids": ["gustar"],
+          "subject": "@",
+          "liked": "c"
+        },
+        "t": {
+          "kind": "word",
+          "ids": ["si-2"]
+        }
+      },
+      "cloze": ["t", "v", "c"]
+    },
+    {
+      "id": "like-activity-i-do",
+      "grammar": ["gustar", "infinitive", "agreeing", "negation"],
+      "subjects": ["yo"],
+      "es": "No {v} {a}.\nA mí {t}.",
+      "en": "{S} {v:not} {a}.\nI do.{t:none}",
+      "slots": {
+        "a": {
+          "kind": "verb",
+          "ids": [
+            "aprender",
+            "bailar",
+            "cenar",
+            "escribir",
+            "estudiar",
+            "hacer-deporte",
+            "hacer-la-compra",
+            "jugar",
+            "leer",
+            "practicar",
+            "salir",
+            "trabajar",
+            "ir-de-compras",
+            "ir-de-viaje"
+          ],
+          "subject": "inf"
+        },
+        "v": {
+          "kind": "verb",
+          "ids": ["gustar"],
+          "subject": "@",
+          "liked": "a"
+        },
+        "t": {
+          "kind": "word",
+          "ids": ["si-2"]
+        }
+      },
+      "cloze": ["t", "v", "a"]
+    },
+    {
+      "id": "do-a-lot-i-do",
+      "grammar": ["verb-conjugation", "agreeing", "negation"],
+      "subjects": ["yo"],
+      "es": "No {v} {m}.\nYo {t}.",
+      "en": "{S} {v:not} {m}.\nI do.{t:none}",
+      "slots": {
+        "v": {
+          "kind": "verb",
+          "ids": ["trabajar", "estudiar", "leer", "hablar", "jugar", "practicar", "salir"],
+          "subject": "@"
+        },
+        "m": {
+          "kind": "word",
+          "ids": ["mucho-2"]
+        },
+        "t": {
+          "kind": "word",
+          "ids": ["si-2"]
+        }
+      },
+      "cloze": ["t", "v"]
     }
   ]
 }

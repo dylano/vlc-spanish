@@ -109,6 +109,23 @@ describe("making a mistake", () => {
     }
   });
 
+  it("swaps también and tampoco in a reply, where the other is plainly wrong", () => {
+    const tambien = mistakes("tambien", 200).filter((m) => m.kind === "tambien-tampoco");
+    expect(tambien.length).toBeGreaterThan(0);
+    for (const mistake of tambien) {
+      expect(mistake.wrong).toBe("tampoco");
+      // The sentence agreed with is positive, and the reply is its own line.
+      expect(mistake.sentence.es).toMatch(/^(?!No ).+\n(A mí|Yo) también\.$/);
+      expect(broken(mistake)).toMatch(/\n(A mí|Yo) tampoco\.$/);
+    }
+    const tampoco = mistakes("tampoco", 200).filter((m) => m.kind === "tambien-tampoco");
+    expect(tampoco.length).toBeGreaterThan(0);
+    for (const mistake of tampoco) {
+      expect(mistake.wrong).toBe("también");
+      expect(mistake.sentence.es).toMatch(/^No .+\n(A mí|Yo) tampoco\.$/);
+    }
+  });
+
   it("puts mucho for muy before an adjective, and muy for mucho after a verb", () => {
     const muy = mistakes("muy").filter((m) => m.kind === "muy-mucho");
     expect(muy.length).toBeGreaterThan(0);

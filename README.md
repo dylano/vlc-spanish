@@ -660,6 +660,11 @@ from the dictionary. The frame supplies the word order in both languages; the re
   keeps (_El invierno es frío_, "Winter is cold"). The frames that take any `weather` word (_…por la
   mañana_, _…todos los días_) are limited to `pos: "phrase"`, since the category also holds the
   adjectives and seasons: _Frío por la mañana_ is not a sentence.
+- **Agreeing and disagreeing** (`*-too`, `*-neither`, `*-not-me`, `*-i-do`, tagged `agreeing`): a
+  sentence and a short reply to it. After _gustar_ the reply takes _a mí_ — _Me gusta el queso. / A mí
+  también._ ("Me too."), _A mí no._ ("I don't."), _No me gusta bailar. / A mí tampoco._ ("Me
+  neither."), _A mí sí._ ("I do.") — and after an ordinary verb it takes _yo_: _Trabajo mucho. / Yo
+  también._, _No leo mucho. / Yo sí._ The reply word is the first thing Fill in the Blank asks for.
 - **Neighbourhoods** (`barrio-*`, `place-*`, tagged `hay-estar`, `tener`, `position`): describing a
   barrio with _hay_ and _tener_ — _En mi barrio hay un cine_, _Mi ciudad tiene muchos parques_,
   _En mi barrio no hay hotel_ (bare after _no hay_, as Spanish says it) — and saying where a known
@@ -751,6 +756,7 @@ result really reads differently:
 | word                   | _Hablo con mi sobrino._ ("cousin") | the sentence means cousin: primo                         |
 | hay-estar              | _En mi barrio está un cine._       | hay says what there is: hay un cine                      |
 | muy-mucho              | _Mi barrio es mucho tranquilo._    | before an adjective it is muy: muy tranquilo             |
+| tambien-tampoco        | _No me gusta el té. A mí también._ | agreeing with a negative sentence is tampoco             |
 
 A **word** swap puts in another word that fits the slot exactly as the right one does — same gender
 and number (so the article shown stays right), same person for a verb — and that means something
@@ -767,6 +773,10 @@ cerca_ would not read as a clear mistake.
 _mucho_ when an adjective follows it (_Mi barrio es mucho tranquilo_), and the adverb _mucho_
 becomes _muy_ when it follows a verb (_Trabajas muy_: "after a verb it is mucho: trabajas mucho").
 Both are always wrong, so no frame tag is needed; the word beside the slot decides.
+
+**también and tampoco** are swapped only in frames tagged `agreeing`, the two-line replies: _A mí
+tampoco_ after a positive sentence, or _A mí también_ after a negative one, is plainly wrong. Inside
+a sentence (_Mi hermano también trabaja_) the other word would only mean something else.
 
 **No article swaps** (_Trabaja en una hospital_). They were the easiest mistake to spot and nearly
 every noun offered one, so even held to about one mistake in eight they meant reading a whole
