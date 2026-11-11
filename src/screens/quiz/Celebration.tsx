@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ReactConfetti from "react-confetti";
 
 /**
@@ -27,15 +27,52 @@ function launchSpeed(height: number, share: number): number {
   return Math.sqrt(2 * GRAVITY * height * share);
 }
 
+/** How long the window must hold its size before the blast measures it. */
+const SETTLE_MS = 200;
+/** The longest the blast waits for that, so a window that keeps resizing still gets one. */
+const SETTLE_LIMIT_MS = 1000;
+
+/**
+ * The window's size once it stops changing. On a phone the summary appears as
+ * the keyboard of the last card is still going down: measured straight away,
+ * the screen is only the part above the keyboard, and the blast would start
+ * from the middle of it.
+ */
+function useSettledSize(): { width: number; height: number } | undefined {
+  const [size, setSize] = useState<{ width: number; height: number }>();
+
+  useEffect(() => {
+    const settle = () => {
+      clearTimeout(quiet);
+      clearTimeout(limit);
+      setSize({ width: window.innerWidth, height: window.innerHeight });
+    };
+    let quiet = setTimeout(settle, SETTLE_MS);
+    const limit = setTimeout(settle, SETTLE_LIMIT_MS);
+    const resized = () => {
+      clearTimeout(quiet);
+      quiet = setTimeout(settle, SETTLE_MS);
+    };
+    window.addEventListener("resize", resized);
+    window.visualViewport?.addEventListener("resize", resized);
+    return () => {
+      clearTimeout(quiet);
+      clearTimeout(limit);
+      window.removeEventListener("resize", resized);
+      window.visualViewport?.removeEventListener("resize", resized);
+    };
+  }, []);
+
+  return size;
+}
+
 export default function Celebration() {
   const [done, setDone] = useState(reducedMotion);
-  // Fixed for the life of the blast; a resize mid-flight does not matter.
-  const [{ width, height }] = useState(() => ({
-    width: window.innerWidth,
-    height: window.innerHeight,
-  }));
+  // Measured once, when the window has settled; a resize mid-flight does not matter.
+  const size = useSettledSize();
 
-  if (done) return null;
+  if (done || !size) return null;
+  const { width, height } = size;
   return (
     <ReactConfetti
       width={width}
