@@ -16,10 +16,12 @@ import {
   DEFAULT_CONFIG,
   glossIndex,
   isDrillable,
+  isWordCard,
   MIXED_EN_ES_SHARE,
   promptGloss,
   type Card,
   type Exercise,
+  type QuizConfig,
 } from "./session.ts";
 import type { Direction, Entry, ProgressBlob, VerbEntry } from "./schema.ts";
 import { sm2 } from "./scheduler.ts";
@@ -432,6 +434,59 @@ describe("excluding numbers", () => {
       random: seeded(13),
     });
     expect(cards).toHaveLength(0);
+  });
+});
+
+describe("direct object pronouns", () => {
+  const pronoun = (id: string, en: string[]): Entry => ({
+    id,
+    es: id,
+    en,
+    pos: "pronoun",
+    tags: ["common-words"],
+    added: TODAY,
+  });
+  const pronouns = [pronoun("lo", ["it", "him"]), pronoun("la", ["it", "her"])];
+  const words = ["mucho", "poco", "siempre", "nunca", "hoy"].map((id) =>
+    word(id, [`${id} (en)`], ["common-words"]),
+  );
+  const options = (format: QuizConfig["format"], seed: number) => ({
+    entries: [...pronouns, ...words],
+    progress: emptyProgress(),
+    userId: "dylan",
+    config: { ...DEFAULT_CONFIG, size: 10, format, scope: "all" as const },
+    today: TODAY,
+    random: seeded(seed),
+  });
+
+  it("are never asked on a word card, alone", () => {
+    expect(isWordCard(pronouns[0]!)).toBe(false);
+    expect(isWordCard(words[0]!)).toBe(true);
+    for (const seed of [1, 2, 3]) {
+      const asked = buildSession(options("typed", seed)).map((card) => card.entry.id);
+      expect(asked.sort()).toEqual(words.map((entry) => entry.id).sort());
+    }
+  });
+
+  it("are never paired in a matching round", () => {
+    for (const seed of [1, 2, 3]) {
+      const rounds = buildMatchRounds({
+        ...options("match", seed),
+        config: { ...options("match", seed).config, size: 8 },
+      });
+      const asked = rounds.flatMap((round) => round.cards.map((card) => card.entry.id));
+      expect(asked.some((id) => id === "lo" || id === "la")).toBe(false);
+    }
+  });
+
+  it("are left out of a mixed session that has no sentences", () => {
+    for (const seed of [1, 2, 3, 4, 5]) {
+      const items = buildMixedSession(options("mixed", seed));
+      const asked = items.flatMap((item) =>
+        isMatchRound(item) ? item.cards.map((card) => card.entry.id) : [item.entry.id],
+      );
+      expect(asked.sort()).toEqual(words.map((entry) => entry.id).sort());
+    }
   });
 });
 

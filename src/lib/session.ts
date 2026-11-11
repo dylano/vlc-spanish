@@ -28,6 +28,16 @@ export function isDrillable(entry: Entry): boolean {
   return entry.pos !== "number" && !entry.tags.includes(EXCLUDED_TAG);
 }
 
+/**
+ * Whether a word card (typed, Multiple Choice, Match Pairs) may ask this word.
+ * Not the direct object pronouns: on its own, la reads as the article and "him"
+ * as él. Gaps, mistakes and translations still ask them, where the sentence
+ * says which is meant.
+ */
+export function isWordCard(entry: Entry): boolean {
+  return !isDirectObject(entry);
+}
+
 export interface QuizConfig {
   size: number;
   direction: Direction | "mixed";
@@ -463,6 +473,7 @@ export function buildSession(options: BuildSessionOptions): Card[] {
   const { config } = options;
   const exercise = config.format === "choice" ? "choice" : "typed";
   const plan = rankedCards(options)
+    .filter((card) => isWordCard(card.entry))
     .slice(0, config.size)
     .map((card): Planned => ({ exercise, card }));
   // A plan of single cards finalizes to single cards.
@@ -509,8 +520,9 @@ type Planned =
  * two right answers.
  */
 function takeRound(remaining: Card[]): Card[] {
-  const anchor = remaining.shift();
-  if (!anchor) return [];
+  const first = remaining.findIndex((card) => isWordCard(card.entry));
+  if (first < 0) return [];
+  const [anchor] = remaining.splice(first, 1) as [Card];
   const round = [anchor];
   const sharesTag = (card: Card) => card.entry.tags.some((tag) => anchor.entry.tags.includes(tag));
 
@@ -518,6 +530,7 @@ function takeRound(remaining: Card[]): Card[] {
     for (let i = 0; i < remaining.length && round.length < MATCH_ROUND_SIZE;) {
       const candidate = remaining[i]!;
       if (
+        isWordCard(candidate.entry) &&
         fits(candidate) &&
         round.every((member) => !interchangeable(member.entry, candidate.entry))
       ) {
@@ -648,8 +661,10 @@ export function buildMixedSession(sessionOptions: BuildSessionOptions): SessionI
   let early = 0;
   // Words the app has not asked yet, and how many of them this session owes.
   const isNew = (card: Card) => options.progress.entries[card.entry.id] === undefined;
+  // Introduced by a word card, so a word only a sentence can ask is not owed one.
+  const introducible = (card: Card) => isNew(card) && isWordCard(card.entry);
   const quota = introduce
-    ? Math.min(remaining.filter(isNew).length, Math.round(size * NEW_SHARE))
+    ? Math.min(remaining.filter(introducible).length, Math.round(size * NEW_SHARE))
     : 0;
   let planned = 0;
 
@@ -669,7 +684,7 @@ export function buildMixedSession(sessionOptions: BuildSessionOptions): SessionI
     const mayIntroduce =
       owed > 0 && !(last === introduce && run >= MAX_RUN) && random() < owed / budget;
     if (mustIntroduce || mayIntroduce) {
-      const index = remaining.findIndex(isNew);
+      const index = remaining.findIndex(introducible);
       if (index >= 0) {
         const [card] = remaining.splice(index, 1);
         plan.push({ exercise: introduce!, card: card! });
@@ -680,10 +695,11 @@ export function buildMixedSession(sessionOptions: BuildSessionOptions): SessionI
     }
 
     // What can still be asked at all: chosen, and not exhausted.
+    const words = remaining.some((card) => isWordCard(card.entry));
     const possible: Record<Exercise, boolean> = {
-      typed: allowed("typed"),
-      choice: allowed("choice"),
-      match: allowed("match") && roundsPossible && budget >= MATCH_ROUND_SIZE,
+      typed: allowed("typed") && words,
+      choice: allowed("choice") && words,
+      match: allowed("match") && words && roundsPossible && budget >= MATCH_ROUND_SIZE,
       gap: allowed("gap") && gapsPossible,
       mistake: allowed("mistake") && mistakesPossible,
       translate: allowed("translate") && translationsPossible,
@@ -774,7 +790,10 @@ export function buildMixedSession(sessionOptions: BuildSessionOptions): SessionI
       roundsPossible = false;
       continue;
     }
-    const next = remaining.shift()!;
+    const [next] = remaining.splice(
+      remaining.findIndex((card) => isWordCard(card.entry)),
+      1,
+    ) as [Card];
     if (isNew(next)) planned++;
     plan.push({ exercise, card: next });
     budget -= 1;

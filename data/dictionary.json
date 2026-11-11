@@ -5729,7 +5729,7 @@
       "es": "lo",
       "en": ["it", "him"],
       "pos": "pronoun",
-      "notes": "Direct object pronoun for a masculine singular noun, before the verb: ¿El pan? Lo compro. Also him: lo veo.",
+      "notes": "Direct object pronoun for a masculine singular noun, before the verb: ¿El pan? Lo compro. Also him: lo veo. After a preposition, him is él: para él.",
       "tags": ["common-words"],
       "added": "2026-10-13"
     },
@@ -5738,7 +5738,7 @@
       "es": "la",
       "en": ["it", "her"],
       "pos": "pronoun",
-      "notes": "Direct object pronoun for a feminine singular noun, before the verb: ¿La ensalada? La quiero. Also her. Same spelling as the article.",
+      "notes": "Direct object pronoun for a feminine singular noun, before the verb: ¿La ensalada? La quiero. Also her: la veo. After a preposition, her is ella: con ella. Same spelling as the article.",
       "tags": ["common-words"],
       "added": "2026-10-13"
     },
@@ -5747,8 +5747,7 @@
       "es": "los",
       "en": ["them"],
       "pos": "pronoun",
-      "hint": "masculine or mixed, as an object",
-      "notes": "Direct object pronoun for a masculine plural noun, before the verb: ¿Los platos? Los tengo. Same spelling as the article.",
+      "notes": "Direct object pronoun for a masculine or mixed plural noun, before the verb: ¿Los platos? Los tengo. Same spelling as the article.",
       "tags": ["common-words"],
       "added": "2026-10-13"
     },
@@ -5757,7 +5756,6 @@
       "es": "las",
       "en": ["them"],
       "pos": "pronoun",
-      "hint": "feminine, as an object",
       "notes": "Direct object pronoun for a feminine plural noun, before the verb: ¿Las servilletas? Las traigo. Same spelling as the article.",
       "tags": ["common-words"],
       "added": "2026-10-13"

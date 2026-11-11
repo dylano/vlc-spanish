@@ -116,4 +116,19 @@ describe("counts and sessions agree", () => {
     expect(counts.total).toBe(4);
     expect(counts.unseen).toBe(3);
   });
+
+  it("counts a direct object pronoun due only in the direction a sentence reviews", () => {
+    const la: Entry = {
+      id: "la",
+      es: "la",
+      en: ["it", "her"],
+      pos: "pronoun",
+      tags: ["test"],
+      added: TODAY,
+    };
+    const old = countWords([la], blob([["la", "es→en", { due: "2026-09-01" }]]), TODAY);
+    expect(old.due).toBe(0);
+    const owed = countWords([la], blob([["la", "en→es", { due: "2026-09-01" }]]), TODAY);
+    expect(owed.due).toBe(1);
+  });
 });

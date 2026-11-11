@@ -426,6 +426,13 @@ that tag by name (Custom practice, or `/quiz?tags=numbers`) still serves them. T
 predicate — a count that includes words no session will offer promises practice the app cannot
 deliver.
 
+**Direct object pronouns are sentence-only.** On its own, _la_ reads as the article and "him" as
+_él_, so `isWordCard` keeps _lo, la, los, las_ off typed, Multiple Choice and Match Pairs cards (and
+out of Multiple Choice options); gaps, Find the Mistake and Translate still ask them, where the
+sentence says which is meant. A sentence reviews the en→es card, so the home-screen due count
+ignores a pronoun's es→en card, and the dictionary validator asks no hint of them (_los_ and _las_
+share "them", but no prompt shows it). A Custom practice of word exercises only never serves them.
+
 **Words versus cards.** The dictionary holds twice as many cards as words, because each word is
 scheduled separately in each direction. The home-screen totals are deliberately counted **per word**
 (`src/lib/counts.ts`): a word counts as new only when it has been practiced in neither direction,
