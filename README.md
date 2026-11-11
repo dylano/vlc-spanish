@@ -263,7 +263,11 @@ tangled into components.
   full stop but not accents (`matchesTranslation`), and then only the learner's version is shown, since
   the model would repeat it; anything else gets no verdict, since it may be
   just as right. Nothing is
-  scheduled, and the summary counts these as "translated" apart from the score. Enter submits, and
+  scheduled, and the summary counts these apart from the score, with the exact matches as
+  **perfect**: in a mixed session the Translate a sentence row reads "5 sentences, 2 perfect" (the
+  line under the score names only what the score is made of); in a session of nothing else the big
+  number is "15 sentences" with "● 6 perfect translations!" under it. The perfect count never shows
+  at zero and is never a score out of the total, since the rest may be just as right. Enter submits, and
   Enter again moves on: once submitted the text box is gone, so the page listens for it.
   **Practice more like this**: after the reveal, unless it was an exact match, a quiet pill under the
   comparison adds three sentences of the same pattern straight after this one and moves on to the

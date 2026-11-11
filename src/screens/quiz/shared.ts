@@ -25,6 +25,8 @@ export interface Outcome {
   strength: Strength;
   /** Not graded (a translation): nothing is scheduled and the summary does not score it. */
   ungraded?: boolean;
+  /** An ungraded translation that matched the model sentence exactly: a perfect one in the summary. */
+  perfect?: boolean;
 }
 
 export interface ExerciseProps {

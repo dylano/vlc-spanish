@@ -92,6 +92,14 @@ interface Answered {
   grade: Grade;
   given: string;
   ungraded?: boolean;
+  perfect?: boolean;
+}
+
+/** "2 perfect" in a row; "6 perfect translations!" on its own. Undefined for none. */
+function perfectLine(count: number, long: boolean): string | undefined {
+  if (count === 0) return undefined;
+  if (!long) return `${count} perfect`;
+  return `${count} perfect ${count === 1 ? "translation" : "translations"}!`;
 }
 
 /**
@@ -228,6 +236,7 @@ export default function QuizScreen() {
         grade: outcome.grade,
         given: outcome.given,
         ungraded: outcome.ungraded,
+        perfect: outcome.perfect,
       })),
     ]);
     setIndex((current) => current + 1);
@@ -262,9 +271,13 @@ export default function QuizScreen() {
   }
 
   if (finished) {
-    // Translations are not graded, so they are counted apart from the score.
+    // Sentence translations are not graded, so they are counted apart from the
+    // score: in their own row when the session mixed exercises, or as the big
+    // number when it was nothing else. An exact match counts as perfect, shown
+    // only when there is at least one and never as a score out of the total.
     const graded = answered.filter((item) => !item.ungraded);
-    const translated = answered.length - graded.length;
+    const sentenceCount = answered.length - graded.length;
+    const perfect = answered.filter((item) => item.perfect).length;
     const correct = graded.filter((item) => item.grade.result === "correct").length;
     const hard = graded.filter((item) => item.grade.result === "hard").length;
     const wrong = graded.filter((item) => item.grade.result === "wrong").length;
@@ -277,6 +290,7 @@ export default function QuizScreen() {
         total: done.length,
         ungraded: done.some((item) => item.ungraded),
         correct: done.filter((item) => item.grade.result === "correct").length,
+        perfect: done.filter((item) => item.perfect).length,
       };
     }).filter((exercise) => exercise.total > 0);
 
@@ -321,10 +335,20 @@ export default function QuizScreen() {
             </p>
           ) : (
             <p className={styles.score}>
-              <span className={styles.scoreValue}>{translated}</span>
-              <span className={styles.scoreTotal}>translated</span>
+              <span className={styles.scoreValue}>{sentenceCount}</span>
+              <span className={styles.scoreTotal}>
+                {sentenceCount === 1 ? "sentence" : "sentences"}
+              </span>
             </p>
           )}
+
+          {graded.length === 0 && perfect > 0 ? (
+            <p className={styles.tally}>
+              <span>
+                <span className={styles.dotCorrect}>●</span> {perfectLine(perfect, true)}
+              </span>
+            </p>
+          ) : null}
 
           {graded.length > 0 ? (
             <p className={styles.tally}>
@@ -341,7 +365,6 @@ export default function QuizScreen() {
                   <span className={styles.dotWrong}>●</span> {wrong} missed
                 </span>
               ) : null}
-              {translated > 0 ? <span>{translated} translated</span> : null}
             </p>
           ) : null}
 
@@ -352,7 +375,12 @@ export default function QuizScreen() {
                   <span>{SUMMARY_LABEL[exercise.id] ?? exercise.label}</span>
                   <span className={styles.breakdownScore}>
                     {exercise.ungraded
-                      ? `${exercise.total} translated`
+                      ? [
+                          `${exercise.total} ${exercise.total === 1 ? "sentence" : "sentences"}`,
+                          perfectLine(exercise.perfect, false),
+                        ]
+                          .filter(Boolean)
+                          .join(", ")
                       : `${exercise.correct} of ${exercise.total}`}
                   </span>
                 </li>

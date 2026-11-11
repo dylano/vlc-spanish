@@ -49,6 +49,7 @@ export default function TranslateExercise({
           given: answer,
           strength: "recall",
           ungraded: true,
+          perfect: exact,
         },
       },
     ]);
