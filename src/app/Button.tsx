@@ -55,12 +55,16 @@ function Chevron({ path }: { path: string }) {
 
 /**
  * A key, drawn as a keycap. Shown only in a window wide enough for the whole
- * column; on a phone the button is as it always was.
+ * column; on a phone the button is as it always was. A key that is no Button's
+ * shortcut (Del on Problem words, handled by that screen) is given as a label.
  */
-export function Keycap({ shortcut, className }: { shortcut: Shortcut; className?: string }) {
+export function Keycap({
+  className,
+  ...key
+}: ({ shortcut: Shortcut } | { label: string }) & { className?: string }) {
   return (
     <kbd className={`${styles.keycap} ${className ?? ""}`} aria-hidden="true">
-      {keycapLabel(shortcut)}
+      {"label" in key ? key.label : keycapLabel(key.shortcut)}
     </kbd>
   );
 }

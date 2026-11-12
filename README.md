@@ -152,6 +152,9 @@ so a key does exactly what a tap does.
 - Letters are named for their button: on Home **G**eneral practice, **C**ustom practice and
   **P**roblem words (no keycaps there, where they were noise); **P**ractice these; the Dictionary's
   **F**ilter; **R** for another round on the summary; **M** for Practice more like this.
+- Problem words handles its own keys: **↑/↓** move between the words and **Delete** removes one
+  (see Problem words below). Its **Del** keycap is a `<Keycap label>`, since it is no Button's
+  shortcut.
 - Letters never fire while typing in a field. ↵ is left to a focused field (its form submits) or to
   a button reached with Tab; a button only clicked does not keep it. With a dialog open, only its
   buttons answer, and Esc closes it.
@@ -303,11 +306,16 @@ tangled into components.
   chosen and the last modes kept, ready to start. It sits at the top rather than below the list, which
   can run well past a screen, and is outlined rather than solid so it does not compete with a
   session's own buttons. A Problem words session (`scope=problems`) drills only words on this list,
-  whatever their category, due or not: words wrong last time first, then due ones, then the rest. A row is **swiped left to remove** a word whose misses were only
-  slips (a typo in a sentence): it follows the finger over a "Remove" label, slides off past a third
-  of its width and the gap closes, or springs back short of that; a drag counts only once it is
-  clearly sideways, so the list still scrolls. For the keyboard and screen readers, which cannot
-  swipe, each row keeps a remove button that shows only when focused. Removing a word: `forgiveMisses` in `src/lib/scheduler.ts` clears its miss count in both
+  whatever their category, due or not: words wrong last time first, then due ones, then the rest. A row is **swiped to remove** a word whose misses were only
+  slips (a typo in a sentence), either way: it follows the finger over a "Remove" label on the side
+  it uncovers, slides off past a third of its width and the gap closes, or springs back short of
+  that; a drag counts only once it is clearly sideways, so the list still scrolls. The intro
+  says only "Swipe the row", with no direction. Each row also has a **×** button, hidden until wanted. On a
+  computer (the 600px keycap width) it takes the place of the miss count while the pointer is over
+  the row, and a click removes the word in place. From the keyboard, **↑/↓** move between the rows'
+  × buttons (↓ starts at the top), as Tab does, and **Delete**, Backspace or Enter removes the
+  focused word; the focused × shows a **Del** keycap. A removal from the keyboard moves focus to the
+  next row's ×, so several words can go one after another. No undo, by choice. Removing a word: `forgiveMisses` in `src/lib/scheduler.ts` clears its miss count in both
   directions and, if the last answer was wrong, counts it as right and gives back the ease that miss
   cost. Its due date stays, so it comes back as an ordinary
   review; progress keeps no history, so earlier misses cannot be undone beyond the count. Kept out of the Dictionary on purpose, so the Dictionary stays a
