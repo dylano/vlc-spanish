@@ -188,9 +188,8 @@ export default function ProblemWordsScreen() {
       </Button>
       <h1 className={styles.title}>Problem words</h1>
       <p className={styles.intro}>
-        The words you have missed most, across every session. A word stays here after you get it
-        right; the count is its history. Swipe a word left to remove it if the misses were only
-        slips.
+        The words you have missed most, across all sessions. A word stays here until you remove it.
+        Swipe the row to remove a word from the list.
       </p>
 
       {words.length === 0 ? (

@@ -309,8 +309,8 @@ tangled into components.
   whatever their category, due or not: words wrong last time first, then due ones, then the rest. A row is **swiped to remove** a word whose misses were only
   slips (a typo in a sentence), either way: it follows the finger over a "Remove" label on the side
   it uncovers, slides off past a third of its width and the gap closes, or springs back short of
-  that; a drag counts only once it is clearly sideways, so the list still scrolls. (The intro still
-  says "swipe left"; either way works.) Each row also has a **×** button, hidden until wanted. On a
+  that; a drag counts only once it is clearly sideways, so the list still scrolls. The intro
+  says only "Swipe the row", with no direction. Each row also has a **×** button, hidden until wanted. On a
   computer (the 600px keycap width) it takes the place of the miss count while the pointer is over
   the row, and a click removes the word in place. From the keyboard, **↑/↓** move between the rows'
   × buttons (↓ starts at the top), as Tab does, and **Delete**, Backspace or Enter removes the
