@@ -50,6 +50,8 @@
 .swipe {
   display: grid;
   grid-template-rows: 1fr;
+  /* A row moved to from the keyboard is scrolled clear of the sticky nav below. */
+  scroll-margin-block: 16px calc(80px + env(safe-area-inset-bottom));
   border-bottom: 1px solid var(--rule);
   transition: grid-template-rows 180ms ease 200ms;
 }
@@ -84,6 +86,12 @@
   letter-spacing: var(--label-tracking);
   text-transform: uppercase;
   color: var(--accent);
+}
+
+.behindLeft {
+  justify-content: flex-start;
+  padding-right: 0;
+  padding-left: 28px;
 }
 
 .row {
@@ -128,27 +136,60 @@
   color: var(--wrong);
 }
 
-/* The keyboard's way to remove a word: hidden until it has focus. */
+/* Remove without a swipe: hidden until it has keyboard focus or, on a computer,
+   the pointer is over its row. It then takes the place of the count; with
+   keyboard focus it also shows Del, the other key that presses it. */
 .remove {
   position: absolute;
   right: 0;
   display: flex;
   align-items: center;
-  justify-content: center;
-  width: 44px;
+  justify-content: flex-end;
+  gap: 10px;
+  min-width: 44px;
   height: 44px;
-  padding: 0;
+  padding: 0 0 0 8px;
   border: none;
   background: var(--paper);
   color: var(--muted);
   cursor: pointer;
   opacity: 0;
   pointer-events: none;
+  /* Reached with Tab, the browser scrolls only the button in: these margins take
+     in the rest of its row, and clear the sticky nav as the row's own do. */
+  scroll-margin-block: 30px calc(94px + env(safe-area-inset-bottom));
+}
+
+.remove:hover {
+  color: var(--ink);
 }
 
 .remove:focus-visible {
   opacity: 1;
   pointer-events: auto;
+}
+
+.row:has(.remove:focus-visible) .count {
+  visibility: hidden;
+}
+
+.remove:not(:focus-visible) .removeKey {
+  display: none;
+}
+
+.remove .removeKey {
+  margin-left: 0;
+}
+
+@media (min-width: 600px) {
+  .swipe:not([data-leaving]) .row:hover .remove {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .swipe:not([data-leaving]) .row:hover .count {
+    visibility: hidden;
+  }
 }
 
 .remove svg {
