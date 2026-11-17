@@ -4,7 +4,7 @@ import SessionShell from "../../app/SessionShell.tsx";
 import { useStore } from "../../app/store-context.ts";
 import { articleRequired, grade, type Grade, type Result } from "../../lib/grade.ts";
 import { normalize } from "../../lib/normalize.ts";
-import { gradeGap, spreadAnswer } from "../../lib/sentences/gap.ts";
+import { gradeGapAnswers, spreadAnswer } from "../../lib/sentences/gap.ts";
 import styles from "../QuizScreen.module.css";
 import {
   CORRECT_PAUSE_MS,
@@ -136,15 +136,7 @@ export default function TypedExercise({ card, position, label, onDone }: Exercis
 
     const given = Array.from({ length: slots }, (_, index) => current[index] ?? "");
     const graded = card.gap
-      ? blanks.map((blank, index) =>
-          gradeGap(
-            card.gap!,
-            blank,
-            given[index]!,
-            entries.find((entry) => entry.id === blank.entryId)!,
-            entries,
-          ),
-        )
+      ? gradeGapAnswers(card.gap, given, entries)
       : [
           grade(card.entry, card.direction, given[0]!, {
             ...GRADE_OPTIONS,

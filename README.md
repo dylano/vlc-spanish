@@ -754,7 +754,14 @@ word pinned in the slot. So a gap usually reviews a word that is due.
   nosotros it is comemos". Another dictionary word is `wrong` too (_padre_ for _madre_ is one letter
   away but a different word). A one-letter slip otherwise is `hard`, except at the end of a noun or
   adjective, where gender and number live. Each blank is graded against the sentence as shown, never
-  against what was typed in the other blanks.
+  against what was typed in the other blanks, with one exception: a person whose gender neither the
+  English nor the Spanish shown gives away. "My cousin never has lunch at midday" over "Mi … nunca
+  come al mediodía" takes _primo_ as well as _prima_ (`gradeGapAnswers`, using the renderer's
+  `otherGenders`; Translate a sentence does the same). A version counts only when every word outside
+  the blanks reads the same, so "La …" or "Mi prima es …" still fixes the gender. The blanks are
+  graded together against whichever version most of them follow, so they must agree: "Mi … es …"
+  takes _primo… serio_ or _prima… seria_, not _primo… seria_, and the sentence shown after checking
+  is the version followed.
 
 **Not repeating a pattern**: a session's gaps, mistakes and translations share a record of the
 frames they have used (`usedFrames`), and each tries a word's unused frames first (`framesToTry`

@@ -39,7 +39,7 @@ describe("a person whose gender the English does not show", () => {
 
   it("matches in either gender, with everything that agrees", () => {
     const sentence = render("profession-seems", { p: "enfermero", a: "serio" });
-    const both = [sentence.es, ...(sentence.otherGenders ?? [])].sort();
+    const both = [sentence.es, ...(sentence.otherGenders ?? []).map((other) => other.es)].sort();
     expect(both).toEqual(["El enfermero parece serio.", "La enfermera parece seria."]);
     expect(matchesTranslation("el enfermero parece serio", { sentence })).toBe(true);
     expect(matchesTranslation("la enfermera parece seria", { sentence })).toBe(true);

@@ -27,7 +27,10 @@ export interface Translation {
 export function matchesTranslation(given: string, translation: Translation): boolean {
   const text = normalize(given);
   const { es, otherGenders = [] } = translation.sentence;
-  return text !== "" && [es, ...otherGenders].some((model) => normalize(model) === text);
+  return (
+    text !== "" &&
+    [es, ...otherGenders.map((other) => other.es)].some((model) => normalize(model) === text)
+  );
 }
 
 /** A sentence containing an entry, or undefined when no frame can hold it with the words available. */

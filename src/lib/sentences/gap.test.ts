@@ -10,7 +10,14 @@ import {
   isMatchRound,
 } from "../session.ts";
 import { framesToTry, renderFrame, type Frame } from "./frames.ts";
-import { gapTargets, gradeGap, renderGap, type Gap, type GapBlank } from "./gap.ts";
+import {
+  gapTargets,
+  gradeGap,
+  gradeGapAnswers,
+  renderGap,
+  type Gap,
+  type GapBlank,
+} from "./gap.ts";
 
 const TODAY = "2026-09-17";
 
@@ -113,6 +120,51 @@ describe("grading a gap", () => {
 
   it("marks an empty answer wrong", () => {
     expect(gradeGap(shy, shy.blank, "  ", entry("timido"), entries).result).toBe("wrong");
+  });
+});
+
+describe("a person whose gender the English does not show", () => {
+  /** A gap on `slots` of a rendering of `frameId` with the cousin a woman (prima). */
+  function cousinGap(frameId: string, fixed: Record<string, string>, slots: string[]): Gap {
+    for (let seed = 1; seed < 500; seed++) {
+      const sentence = renderFrame(frame(frameId), context(seed), { n: "primo", ...fixed });
+      if (!sentence?.es.startsWith("Mi prima")) continue;
+      return {
+        sentence,
+        blanks: slots.map((slot) => ({
+          slot,
+          entryId: sentence.fills[slot]!,
+          expected: sentence.slots[slot]!.accepts[0]!,
+        })),
+      };
+    }
+    throw new Error(`no rendering of ${frameId} with prima`);
+  }
+  const results = (gap: Gap, given: string[]) =>
+    gradeGapAnswers(gap, given, entries).map((graded) => [graded.result, graded.expected]);
+
+  it("takes either gender when nothing shown gives it away (My cousin, Mi ___)", () => {
+    const gap = cousinGap("family-lunch-frequency", {}, ["n"]);
+    expect(results(gap, ["prima"])).toEqual([["correct", "prima"]]);
+    expect(results(gap, ["primo"])).toEqual([["correct", "primo"]]);
+  });
+
+  it("needs the blanks to agree with each other", () => {
+    const gap = cousinGap("family-is-trait", { a: "serio" }, ["n", "a"]);
+    expect(results(gap, ["primo", "serio"])).toEqual([
+      ["correct", "primo"],
+      ["correct", "serio"],
+    ]);
+    expect(results(gap, ["prima", "seria"])).toEqual([
+      ["correct", "prima"],
+      ["correct", "seria"],
+    ]);
+    expect(results(gap, ["primo", "seria"]).map(([result]) => result)).toContain("wrong");
+  });
+
+  it("follows the gender the sentence shows (Mi prima es ___)", () => {
+    const gap = cousinGap("family-is-trait", { a: "serio" }, ["a"]);
+    expect(results(gap, ["serio"])).toEqual([["wrong", "seria"]]);
   });
 });
 

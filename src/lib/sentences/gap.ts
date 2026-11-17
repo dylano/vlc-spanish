@@ -23,6 +23,7 @@ import {
   type Frame,
   type RenderContext,
   type RenderedSentence,
+  type Segment,
 } from "./frames.ts";
 
 export interface GapBlank {
@@ -220,6 +221,76 @@ function formsOf(entry: Entry, dictionary: Entry[]): string[] {
 function describeAgreement(gender: string | undefined, number: string | undefined): string {
   const genderWord = gender === "f" ? "feminine" : gender === "m" ? "masculine" : "";
   return [genderWord, number === "pl" ? "plural" : ""].filter(Boolean).join(" ") || "singular";
+}
+
+/**
+ * The gap again with people whose gender the English does not show put in the
+ * other gender, for each such version of the sentence in which nothing outside
+ * the blanks changes: Mi ___ nunca come al mediodía takes primo as well as
+ * prima, but La ___ shows the gender, so it does not.
+ */
+function otherGenderGaps(gap: Gap): Gap[] {
+  const blanked = new Set(gap.blanks.map((blank) => blank.slot));
+  const shown = (segments: Segment[]) =>
+    segments
+      .map((part) => (part.slot && !part.article && blanked.has(part.slot) ? "___" : part.text))
+      .join("");
+  const textOf = (segments: Segment[], slot: string) =>
+    segments.find((part) => part.slot === slot && !part.article)?.text;
+  const flip = (gender: string | undefined) =>
+    gender === "f" ? "m" : gender === "m" ? "f" : gender;
+
+  const { sentence } = gap;
+  return (sentence.otherGenders ?? [])
+    .filter((other) => shown(other.segments) === shown(sentence.segments))
+    .map((other) => {
+      const slots = Object.fromEntries(
+        Object.entries(sentence.slots).map(([name, detail]) => {
+          const text = textOf(other.segments, name);
+          return text === undefined || text === textOf(sentence.segments, name)
+            ? [name, detail]
+            : [name, { ...detail, accepts: [text], gender: flip(detail.gender) }];
+        }),
+      ) as RenderedSentence["slots"];
+      return {
+        sentence: { ...sentence, es: other.es, segments: other.segments, slots },
+        blanks: gap.blanks.map((blank) => ({ ...blank, expected: slots[blank.slot]!.accepts[0]! })),
+      };
+    });
+}
+
+/**
+ * Grade every blank of a gap. Where the sentence could as well have a person in
+ * the other gender (see otherGenderGaps), the answers are graded against the
+ * version they follow, the one most of them match, so they must agree with
+ * each other: Mi ___ es ___ takes primo… serio or prima… seria, not primo… seria.
+ */
+export function gradeGapAnswers(gap: Gap, given: string[], dictionary: Entry[]): Grade[] {
+  const matching = (version: Gap) =>
+    version.blanks.filter((blank, index) =>
+      version.sentence.slots[blank.slot]!.accepts.some(
+        (accepted) =>
+          foldAccents(normalize(accepted)) === foldAccents(normalize(given[index] ?? "")),
+      ),
+    ).length;
+  let best = gap;
+  let bestCount = matching(gap);
+  for (const version of otherGenderGaps(gap)) {
+    const count = matching(version);
+    if (count > bestCount) {
+      best = version;
+      bestCount = count;
+    }
+  }
+  return best.blanks.map((blank, index) =>
+    gradeGap(
+      best,
+      blank,
+      given[index] ?? "",
+      dictionary.find((entry) => entry.id === blank.entryId)!,
+      dictionary,
+    ),
+  );
 }
 
 /**

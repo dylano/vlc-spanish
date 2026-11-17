@@ -186,7 +186,7 @@ export interface RenderedSentence {
    * reads the same either way: "The nurse is quite serious" is La enfermera es
    * bastante seria and just as much El enfermero es bastante serio.
    */
-  otherGenders?: string[];
+  otherGenders?: { es: string; segments: Segment[] }[];
 }
 
 export interface RenderContext {
@@ -544,8 +544,11 @@ export function renderFrame(
   const en = capitalizeSentences(renderEnglish(frame.en, filled, subject));
   const es = segments.map((segment) => segment.text).join("");
   const otherGenders = otherGenderSentences(frame, order, filled, pinnedGender, context, subject)
-    .filter((other) => other.en === en && other.es !== es)
-    .map((other) => other.es);
+    .filter(
+      (other, index, all) =>
+        other.en === en && other.es !== es && all.findIndex((o) => o.es === other.es) === index,
+    )
+    .map(({ es: otherEs, segments: otherSegments }) => ({ es: otherEs, segments: otherSegments }));
   const fills = Object.fromEntries(
     [...filled].flatMap(([name, fill]) => (fill.entryId ? [[name, fill.entryId]] : [])),
   );
@@ -593,7 +596,7 @@ export function renderFrame(
     fills,
     slots,
     subject,
-    ...(otherGenders.length > 0 ? { otherGenders: [...new Set(otherGenders)] } : {}),
+    ...(otherGenders.length > 0 ? { otherGenders } : {}),
   };
 
   function rank(slot: Slot): number {
@@ -619,7 +622,7 @@ function otherGenderSentences(
   pinnedGender: Record<string, Gender>,
   context: RenderContext,
   subject: Subject | undefined,
-): { es: string; en: string }[] {
+): { es: string; en: string; segments: Segment[] }[] {
   const { dictionary } = context;
   const entryOf = (fill: Filled | undefined) =>
     fill?.entryId ? dictionary.find((entry) => entry.id === fill.entryId) : undefined;
@@ -636,7 +639,7 @@ function otherGenderSentences(
   // Two or three people at most in practice; more would be a lot of sentences.
   if (free.length === 0 || free.length > 3) return [];
 
-  const out: { es: string; en: string }[] = [];
+  const out: { es: string; en: string; segments: Segment[] }[] = [];
   // Rendering again must not draw on the sentence's random numbers.
   const fixed = () => 0;
   for (let mask = 1; mask < 1 << free.length; mask++) {
@@ -666,11 +669,11 @@ function otherGenderSentences(
       changed.add(name);
     }
     if (!possible) continue;
+    const segments = spanishSegments(frame.es, other, subject);
     out.push({
-      es: spanishSegments(frame.es, other, subject)
-        .map((segment) => segment.text)
-        .join(""),
+      es: segments.map((segment) => segment.text).join(""),
       en: capitalizeSentences(renderEnglish(frame.en, other, subject)),
+      segments,
     });
   }
   return out;
