@@ -4085,7 +4085,7 @@
     {
       "id": "a-la-izquierda",
       "es": "a la izquierda",
-      "en": ["on the left", "left"],
+      "en": ["on the left", "to the left", "left"],
       "pos": "adv",
       "notes": "Before a place it takes 'de': a la izquierda del banco. Gira a la izquierda: turn left.",
       "tags": ["position"],
@@ -4094,7 +4094,7 @@
     {
       "id": "a-la-derecha",
       "es": "a la derecha",
-      "en": ["on the right", "right"],
+      "en": ["on the right", "to the right", "right"],
       "pos": "adv",
       "notes": "Before a place it takes 'de': a la derecha de la farmacia. Not 'derecho', which is straight on in Latin America.",
       "tags": ["position"],
