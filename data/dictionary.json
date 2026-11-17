@@ -3234,7 +3234,7 @@
     {
       "id": "gafas",
       "es": "gafas",
-      "en": ["glasses", "spectacles", "eyeglasses"],
+      "en": ["eyeglasses", "glasses", "spectacles"],
       "pos": "noun",
       "gender": "f",
       "number": "pl",
