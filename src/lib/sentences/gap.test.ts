@@ -108,6 +108,17 @@ describe("grading a gap", () => {
     expect(gradeGap(gap, gap.blank, "almuerzo", entry("comer"), entries).result).toBe("correct");
   });
 
+  it("accepts almorzar wherever comer is shown as have lunch", () => {
+    const gap = gapFrom(
+      "do-inside-outside",
+      "v",
+      { v: "comer" },
+      (g) => g.sentence.subject === "yo",
+    );
+    expect(gap.sentence.en).toMatch(/^I have lunch /);
+    expect(gradeGap(gap, gap.blank, "almuerzo", entry("comer"), entries).result).toBe("correct");
+  });
+
   it("forgives a slip of the finger but not a changed ending", () => {
     const gap = gapFrom("family-is-trait", "a", { n: "padre", a: "inteligente" });
     expect(gradeGap(gap, gap.blank, "intelignete", entry("inteligente"), entries).result).toBe(
