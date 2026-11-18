@@ -1646,7 +1646,7 @@
       "slots": {
         "v": {
           "kind": "verb",
-          "ids": ["jugar", "estudiar", "trabajar", "comer", "leer"],
+          "ids": ["jugar", "estudiar", "trabajar", "comer", "almorzar", "leer"],
           "subject": "@"
         },
         "p": {
@@ -7434,6 +7434,7 @@
             "ducharse",
             "desayunar",
             "comer",
+            "almorzar",
             "cenar",
             "acostarse",
             "ir-al-trabajo",
@@ -7470,6 +7471,7 @@
             "ducharse",
             "desayunar",
             "comer",
+            "almorzar",
             "cenar",
             "acostarse",
             "ir-al-trabajo",
