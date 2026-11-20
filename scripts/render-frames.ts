@@ -1,7 +1,7 @@
 /**
  * Print sentences generated from the frames, for reading through.
  *
- *   node scripts/render-frames.ts [--per 12] [--frame id] [--seed 1]
+ *   node scripts/render-frames.ts [--per 12] [--frame id] [--grammar tag] [--seed 1]
  *
  * Reading this output is the check that catches what a validator cannot: a
  * sentence that is grammatical but odd ("Mi hijo es muy calvo"). Do it whenever
@@ -37,9 +37,11 @@ const random = () => {
 
 const per = Number(flag("per", "12"));
 const only = flag("frame", "");
+const grammar = flag("grammar", "");
 
 for (const frame of frames) {
   if (only && frame.id !== only) continue;
+  if (grammar && !frame.grammar.includes(grammar)) continue;
   const context = { dictionary, glue, random };
   console.log(`\n## ${frame.id}  (~${estimateVariety(frame, context)} sentences)`);
   const seen = new Set<string>();

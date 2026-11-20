@@ -9,6 +9,7 @@ import { pickAnotherRound } from "../lib/anotherRound.ts";
 import { today } from "../lib/dates.ts";
 import { canonicalAnswer, type Grade } from "../lib/grade.ts";
 import { schedule } from "../lib/scheduler.ts";
+import { frameTense } from "../lib/sentences/frames.ts";
 import { moreLikeThis } from "../lib/sentences/translate.ts";
 import {
   buildGapSession,
@@ -130,11 +131,17 @@ export default function QuizScreen() {
   }, [params, sessionSize]);
 
   // `grammar=object-pronouns` keeps sentence exercises to the frames practising
-  // one grammar point, for trying out new frames. Unknown names leave all frames in.
+  // one grammar point, for trying out new frames. Unknown names leave all frames
+  // in, except frames in a tense the student has not opted into: for now every
+  // tense but the present (`grammar=preterito-perfecto` tries those out).
   const grammar = params.get("grammar");
   const frames = useMemo(() => {
     const only = sentences.frames.filter((frame) => grammar && frame.grammar.includes(grammar));
-    return only.length > 0 ? { ...sentences, frames: only } : sentences;
+    if (only.length > 0) return { ...sentences, frames: only };
+    return {
+      ...sentences,
+      frames: sentences.frames.filter((frame) => frameTense(frame) === "presente"),
+    };
   }, [grammar]);
 
   // Built when the screen opens: answering updates progress, and rebuilding

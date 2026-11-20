@@ -2654,6 +2654,20 @@
       "added": "2026-09-21"
     },
     {
+      "id": "viajar",
+      "es": "viajar",
+      "en": ["to travel"],
+      "hint": "one word",
+      "pos": "verb",
+      "verb": {
+        "reflexive": false,
+        "regular": true
+      },
+      "notes": "Where to takes 'a': viajo a Madrid. 'Ir de viaje' is to go away on a trip.",
+      "tags": ["verbs", "travel"],
+      "added": "2026-11-20"
+    },
+    {
       "id": "leer",
       "es": "leer",
       "en": ["to read"],

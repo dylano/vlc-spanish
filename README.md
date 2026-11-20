@@ -722,6 +722,7 @@ from the dictionary. The frame supplies the word order in both languages; the re
 vp run validate:frames                     # schema, placeholders, vocabulary, every slot fillable
 vp run render:frames -- --per 12           # sample sentences from every frame
 vp run render:frames -- --frame days-routine --per 40
+vp run render:frames -- --grammar preterito-perfecto  # one grammar point
 vp run render:perfect                      # every verb's pretérito perfecto, Spanish and English
 ```
 
@@ -736,8 +737,43 @@ and a phrase taking its first verb's), and `perfectForm` puts _haber_ before it,
 pronoun first and the rest of a phrase after (_me he levantado_, _han hecho la cama_, _has tenido
 que_). _Gustar_ and the like are left to the frames (_me ha gustado_). English has
 `pastParticiple`, `perfectVerb` and `negatePerfectVerb` ("has gotten up", "hasn't had lunch"),
-with the irregular participles listed and American forms (_gotten_). Still to come: frames, the
-grading, an opt-in under Verb Tenses in a reorganized Settings, a Verb Tenses row on Custom
+with the irregular participles listed and American forms (_gotten_).
+
+Frames: a verb slot with `"tense": "perfecto"` renders _haber_ and the participle, and
+`frameTense` calls a frame with one a perfecto frame. Their `grammar` starts with
+`preterito-perfecto`, so More like this stays in the tense. English needs the two halves apart
+for what goes between them, so `{v:aux}` gives _have_/_has_ and `{v:pp}` the participle phrase
+("{S} {v:aux} already {v:pp}" → "I have already gotten up"; "{v:aux} {S} {v:pp} yet?");
+`{v}` and `{v:not}` give "have eaten" and "haven't eaten". The validator allows `aux` and `pp`
+only on a perfecto verb, and `base` not on one. The baseline frames are a verb and its object
+with no time word, as English says it too: _He comido la manzana_ ("I have eaten the apple"),
+_Hemos comprado una camisa_, _He leído el libro_, _¿Has visto mi mochila?_ None drinks: the
+English participle "drunk" is correct but sounds stiff to American ears, and "drank" is not
+standard (decided 2026-11-20).
+A verb slot's `gloss` picks which English gloss to say where the first does not fit: _comer_ is
+first "to have lunch", so _perfecto-eaten_ asks for "to eat". Travel frames (_He viajado a
+Granada_, _Nunca he estado en Bilbao_ "I have never been to Bilbao") take their places from a
+`cities` glue group, so the city names stay out of the Dictionary and off word cards. Only cities
+spelled the same in both languages, with no accent (Madrid, Barcelona, Valencia, Granada, Bilbao,
+Toledo, Zaragoza): Translate a sentence would otherwise withhold a perfect match over _Lisboa_ or
+_Nueva York_, which is not what the sentence is practising. The rest use
+time words where English also takes the present perfect: _ya_ (already), _nunca_ (never), _hoy_
+and _esta semana_ (today, this week). The negative is plain _no_ before _haber_ (_No he
+desayunado_, _Mi padre no ha vuelto_, _No, no lo he comprado_). _Alguna vez_ (ever: _¿Has estado
+alguna vez en París?_) and _todavía no_ (not yet) wait until the class has met them
+(2026-11-20). Spain also uses the perfecto for earlier
+today (_esta mañana he comido_), which English says in the simple past ("I ate"), so no frame
+does. _Gustar_ in the perfecto (_me ha gustado_, "I liked it") is not offered, for the same
+reason.
+
+Grading: a blank holds _haber_ and the participle together (_ha comido_), and a gap says what went
+wrong in the tense: the present typed instead ("here it is the pretérito perfecto"), _haber_ left
+out, the participle made regular (_volvido_: "vuelto is irregular") or left as the infinitive
+(_ha comer_); _haber_ in the wrong person is the usual "right verb, wrong person". Find the Mistake
+breaks the person through _haber_, swaps the verb in the same tense, and has a `participle` break
+of its own for an irregular participle (_he volvido_).
+
+Still to come: an opt-in under Verb Tenses in a reorganized Settings, a Verb Tenses row on Custom
 practice, a third of General practice's sentences once opted in, and the participle in the
 Dictionary's conjugation dialog (mockup boards S3, C2 and D4).
 
@@ -793,6 +829,8 @@ see some; sessions have as many sentences as before.
 session's sentences to frames whose `grammar` includes that name (any frame tag works, such as
 `gustar` or `negation`; an unknown name leaves every frame in). Word exercises are unaffected, so
 name sentence modes in `exercise`. It is for testing new frames and has no control in the app.
+Frames in the pretérito perfecto are left out of every session until the opt-in arrives; this is
+the way to try them now: `/quiz?exercise=gap,mistake,translate&grammar=preterito-perfecto`.
 
 ## Find the Mistake
 

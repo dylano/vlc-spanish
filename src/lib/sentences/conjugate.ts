@@ -77,7 +77,7 @@ export const IRREGULAR_PARTICIPLES: Record<string, string> = {
 };
 
 /** A verb entry's first word without a reflexive -se, and whether it had one. */
-function headInfinitive(entry: VerbEntry): {
+export function headInfinitive(entry: VerbEntry): {
   infinitive: string;
   reflexive: boolean;
   rest: string[];

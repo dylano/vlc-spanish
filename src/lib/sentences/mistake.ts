@@ -2,7 +2,7 @@ import type { Grade } from "../grade.ts";
 import { differsOnlyByAccent, foldAccents, normalize } from "../normalize.ts";
 import { shuffle } from "../random.ts";
 import type { AdjEntry, Entry, NounEntry, VerbEntry } from "../schema.ts";
-import { verbForm } from "./conjugate.ts";
+import { participle, perfectForm, verbForm } from "./conjugate.ts";
 import { SUBJECTS, type Subject } from "./english.ts";
 import {
   adjectiveForm,
@@ -16,6 +16,7 @@ import {
   type Frame,
   type RenderContext,
   type RenderedSentence,
+  type SlotDetail,
 } from "./frames.ts";
 
 /*
@@ -34,7 +35,8 @@ export type MistakeKind =
   | "word"
   | "hay-estar"
   | "muy-mucho"
-  | "tambien-tampoco";
+  | "tambien-tampoco"
+  | "participle";
 
 export interface Mistake {
   /** The sentence as it should read. */
@@ -156,7 +158,7 @@ function wordSwap(
     } else if (spec.kind === "adj" && other.pos === "adj") {
       wrong = adjectiveForm(other, gender, number);
     } else if (spec.kind === "verb" && other.pos === "verb" && detail.subject) {
-      wrong = verbForm(other, detail.subject, dictionary);
+      wrong = conjugated(other, detail, detail.subject, dictionary);
     }
     if (!wrong || normalize(wrong) === normalize(right)) continue;
     return {
@@ -287,6 +289,41 @@ function tambienTampocoBreak(entry: Entry, right: string): Break | undefined {
   return undefined;
 }
 
+/** A verb in a slot's tense and a given person: como, or he comido in the perfecto. */
+function conjugated(
+  entry: VerbEntry,
+  detail: SlotDetail,
+  subject: Subject,
+  dictionary: Entry[],
+): string | undefined {
+  return detail.tense === "perfecto"
+    ? perfectForm(entry, subject, dictionary)
+    : verbForm(entry, subject, dictionary);
+}
+
+/**
+ * An irregular participle made regular, the classic perfecto mistake: he
+ * volvido for he vuelto, hemos escribido for hemos escrito.
+ */
+function participleBreak(
+  detail: SlotDetail,
+  entry: Entry,
+  right: string,
+  dictionary: Entry[],
+): Break | undefined {
+  if (detail.tense !== "perfecto" || entry.pos !== "verb") return undefined;
+  const made = participle(entry, dictionary);
+  if (!made?.regular) return undefined;
+  const wrong = right.replace(new RegExp(`(^|\\s)${made.form}(?=\\s|$)`), `$1${made.regular}`);
+  if (wrong === right) return undefined;
+  return {
+    kind: "participle",
+    wrong,
+    right,
+    explanation: `${made.form} is irregular, not ${made.regular}: ${right}`,
+  };
+}
+
 /** Every way this slot of this sentence can be broken, each producing different text. */
 function breaksFor(
   frame: Frame,
@@ -406,6 +443,9 @@ function breaksFor(
     if (tambienTampoco) out.push(tambienTampoco);
   }
 
+  const irregular = participleBreak(detail, entry, right, dictionary);
+  if (irregular) out.push(irregular);
+
   const swap = wordSwap(frame, sentence, slot, entry, dictionary, random);
   if (swap) out.push(swap);
 
@@ -419,7 +459,7 @@ function breaksFor(
       random,
     );
     for (const other of others) {
-      const wrong = verbForm(entry as VerbEntry, other, dictionary);
+      const wrong = conjugated(entry as VerbEntry, detail, other, dictionary);
       if (!wrong || normalize(wrong) === normalize(right)) continue;
       out.push({
         kind: "person",

@@ -1,11 +1,15 @@
 import { z } from "zod";
 import { POS, type AdjEntry, type Entry, type NounEntry, type VerbEntry } from "../schema.ts";
-import { verbForm } from "./conjugate.ts";
+import { perfectForm, verbForm } from "./conjugate.ts";
 import {
   baseVerb,
   indefiniteArticle,
   inflectVerb,
+  negatePerfectVerb,
   negateVerb,
+  participleGloss,
+  perfectAuxiliary,
+  perfectVerb,
   pluralize,
   SUBJECTS,
   subjectPronoun,
@@ -106,6 +110,19 @@ export const slotSchema = z.discriminatedUnion("kind", [
      * ids as that slot, so Fill in the Blank knows which verbs can sit here.
      */
     same: z.string().optional(),
+    /**
+     * The pretérito perfecto instead of the present: haber and the participle
+     * (he comido, me he levantado). Its English is the present perfect, and
+     * {v:aux} and {v:pp} give "have" and "eaten" apart, for what English puts
+     * between them: "I have already eaten", "Have you eaten yet?".
+     */
+    tense: z.enum(["perfecto"]).optional(),
+    /**
+     * Which English gloss to say, for a verb whose first one does not fit:
+     * comer is first "to have lunch", so "I have eaten the bread" asks for "to
+     * eat". A verb without this gloss uses its first.
+     */
+    gloss: z.string().optional(),
   }),
   z.object({ kind: z.literal("word"), ...select, pos: z.enum(POS).optional() }),
   /**
@@ -131,6 +148,20 @@ export const frameSchema = z.object({
   cloze: z.array(z.string()).min(1),
 });
 export type Frame = z.infer<typeof frameSchema>;
+
+/** The tenses sentences practise. The present is every student's; the rest are opted into. */
+export const TENSES = ["presente", "perfecto"] as const;
+export type Tense = (typeof TENSES)[number];
+
+/** A frame's tense: the perfecto if any of its verbs is in it, else the present. */
+export function frameTense(frame: Frame): Tense {
+  return Object.values(frame.slots).some(
+    (slot) => slot.kind === "verb" && slot.tense === "perfecto",
+  )
+    ? "perfecto"
+    : "presente";
+}
+
 /** A frame as written in JSON, before defaults are applied. */
 export type FrameInput = z.input<typeof frameSchema>;
 
@@ -169,6 +200,8 @@ export interface SlotDetail {
   subject?: Subject;
   /** For a verb like gustar, the slot holding what is liked, which decides gusta or gustan. */
   liked?: string;
+  /** For a verb in the pretérito perfecto: he comido rather than como. */
+  tense?: "perfecto";
 }
 
 export interface RenderedSentence {
@@ -238,6 +271,10 @@ interface Filled {
   enNot?: string;
   /** For a verb, the bare English form after does or do ("buy"), for {v:base}. */
   enBase?: string;
+  /** For a verb in the perfecto, "have" or "has", for {v:aux}. */
+  enAux?: string;
+  /** For a verb in the perfecto, the participle phrase ("eaten", "brushed her teeth"), for {v:pp}. */
+  enPp?: string;
 }
 
 const OBJECT_PRONOUN: Record<Subject, string> = {
@@ -584,6 +621,7 @@ export function renderFrame(
         detail.liked = slot.liked;
         detail.number = filled.get(slot.liked)?.number ?? "sg";
       }
+      if (slot.tense) detail.tense = slot.tense;
     }
     slots[name] = detail;
   }
@@ -739,8 +777,24 @@ function fillSlot(
       }
       const who = subjectOf(slot.subject, filled, frameSubject);
       if (!who) return undefined;
+      const gloss = slot.gloss && entry.en.includes(slot.gloss) ? slot.gloss : entry.en[0]!;
       const liked = slot.liked ? filled.get(slot.liked) : undefined;
       if (slot.liked && !liked) return undefined;
+      if (slot.tense === "perfecto") {
+        // Gustar in the perfecto (me ha gustado) reads in English as the simple
+        // past ("I liked it"), which the present perfect cannot say; not offered.
+        if (liked) return undefined;
+        const perfect = perfectForm(entry as VerbEntry, who.subject, dictionary);
+        if (!perfect) return undefined;
+        return {
+          entryId: entry.id,
+          es: perfect,
+          en: perfectVerb(gloss, who.subject, who.gender),
+          enNot: negatePerfectVerb(gloss, who.subject, who.gender),
+          enAux: perfectAuxiliary(who.subject, who.gender),
+          enPp: participleGloss(gloss, who.subject, who.gender),
+        };
+      }
       const es = liked
         ? likeForm(entry as VerbEntry, who.subject, liked.number ?? "sg", dictionary)
         : verbForm(entry as VerbEntry, who.subject, dictionary);
@@ -748,9 +802,9 @@ function fillSlot(
       return {
         entryId: entry.id,
         es,
-        en: inflectVerb(entry.en[0]!, who.subject, who.gender),
-        enNot: negateVerb(entry.en[0]!, who.subject, who.gender),
-        enBase: baseVerb(entry.en[0]!, who.subject, who.gender),
+        en: inflectVerb(gloss, who.subject, who.gender),
+        enNot: negateVerb(gloss, who.subject, who.gender),
+        enBase: baseVerb(gloss, who.subject, who.gender),
       };
     }
     case "word":
@@ -863,6 +917,8 @@ function renderEnglish(
     if (modifier === "the") return `the ${fill.en}`;
     if (modifier === "not") return fill.enNot ?? `not ${fill.en}`;
     if (modifier === "base") return fill.enBase ?? fill.en;
+    if (modifier === "aux") return fill.enAux ?? "";
+    if (modifier === "pp") return fill.enPp ?? fill.en;
     // A person named earlier, as the subject of the answer: Yes, she buys it.
     if (modifier === "pronoun")
       return fill.number === "pl" ? "they" : fill.gender === "f" ? "she" : "he";
@@ -906,7 +962,10 @@ export function allowedSpanishWords(dictionary: Entry[], glue: Glue): Set<string
     add(entry.es);
     for (const value of Object.values(entry.forms ?? {})) if (typeof value === "string") add(value);
     if (entry.pos === "verb") {
-      for (const subject of SUBJECTS) add(verbForm(entry, subject, dictionary) ?? "");
+      for (const subject of SUBJECTS) {
+        add(verbForm(entry, subject, dictionary) ?? "");
+        add(perfectForm(entry, subject, dictionary) ?? "");
+      }
     }
   }
   for (const word of glue.words) add(word);
@@ -925,7 +984,7 @@ export function checkFrame(
 
   for (const [language, template, modifiers] of [
     ["es", frame.es, ["el", "un"]],
-    ["en", frame.en, ["the", "a", "not", "none", "base", "pronoun"]],
+    ["en", frame.en, ["the", "a", "not", "none", "base", "pronoun", "aux", "pp"]],
   ] as const) {
     for (const { name, modifier } of placeholders(template)) {
       if (name === "S") {
@@ -938,6 +997,18 @@ export function checkFrame(
           `${language} {${name}:${modifier}}: modifier must be one of ${modifiers.join(", ")}`,
         );
       }
+    }
+  }
+  for (const { name, modifier } of placeholders(frame.en)) {
+    const slot = frame.slots[name];
+    if ((modifier === "aux" || modifier === "pp" || modifier === "base") && slot?.kind === "verb") {
+      const perfect = slot.tense === "perfecto";
+      if (modifier !== "base" && !perfect)
+        errors.push(`en {${name}:${modifier}} is only for a verb in the perfecto`);
+      if (modifier === "base" && perfect)
+        errors.push(
+          `en {${name}:base} has no meaning in the perfecto; use {${name}:aux} and {${name}:pp}`,
+        );
     }
   }
   const inSpanish = new Set(placeholders(frame.es).map((p) => p.name));

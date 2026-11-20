@@ -8713,6 +8713,474 @@
         }
       },
       "cloze": ["t", "v"]
+    },
+    {
+      "id": "perfecto-eaten",
+      "grammar": ["preterito-perfecto", "verb-conjugation", "articles"],
+      "subjects": ["yo", "tu", "el", "nosotros", "vosotros", "ellos"],
+      "es": "{v} {c:el}.",
+      "en": "{S} {v} {c:the}.",
+      "slots": {
+        "v": {
+          "kind": "verb",
+          "ids": ["comer"],
+          "subject": "@",
+          "tense": "perfecto",
+          "gloss": "to eat"
+        },
+        "c": {
+          "kind": "noun",
+          "ids": [
+            "pan",
+            "queso",
+            "ensalada",
+            "tortilla",
+            "helado",
+            "pollo",
+            "manzana",
+            "arroz",
+            "huevo",
+            "jamon",
+            "chorizo",
+            "croqueta",
+            "salchicha",
+            "chocolate",
+            "platano"
+          ]
+        }
+      },
+      "cloze": ["v", "c"]
+    },
+    {
+      "id": "perfecto-bought",
+      "grammar": ["preterito-perfecto", "verb-conjugation"],
+      "subjects": ["yo", "tu", "el", "nosotros", "vosotros", "ellos"],
+      "es": "{v} {c:un}.",
+      "en": "{S} {v} {c:a}.",
+      "slots": {
+        "v": {
+          "kind": "verb",
+          "ids": ["comprar"],
+          "subject": "@",
+          "tense": "perfecto"
+        },
+        "c": {
+          "kind": "noun",
+          "tags": ["clothing"],
+          "exclude": ["ropa-interior", "zapato", "sandalia", "bota", "pendiente"]
+        }
+      },
+      "cloze": ["v", "c"]
+    },
+    {
+      "id": "perfecto-read",
+      "grammar": ["preterito-perfecto", "verb-conjugation"],
+      "subjects": ["yo", "tu", "el", "nosotros", "vosotros", "ellos"],
+      "es": "{v} {o:el}.",
+      "en": "{S} {v} {o:the}.",
+      "slots": {
+        "v": {
+          "kind": "verb",
+          "ids": ["leer"],
+          "subject": "@",
+          "tense": "perfecto"
+        },
+        "o": {
+          "kind": "noun",
+          "ids": ["libro", "periodico"]
+        }
+      },
+      "cloze": ["v", "o"]
+    },
+    {
+      "id": "perfecto-seen-my",
+      "grammar": ["preterito-perfecto", "questions"],
+      "subjects": ["tu", "vosotros"],
+      "es": "¿{v} mi {o}?",
+      "en": "{v:aux} {S} {v:pp} my {o}?",
+      "slots": {
+        "v": {
+          "kind": "verb",
+          "ids": ["ver"],
+          "subject": "@",
+          "tense": "perfecto"
+        },
+        "o": {
+          "kind": "noun",
+          "ids": [
+            "libro",
+            "mochila",
+            "cuaderno",
+            "estuche",
+            "boligrafo",
+            "lapiz",
+            "chaqueta",
+            "bufanda",
+            "abrigo",
+            "gorro",
+            "gorra",
+            "sombrero",
+            "bolso",
+            "cinturon",
+            "jersey"
+          ]
+        }
+      },
+      "cloze": ["v", "o"]
+    },
+    {
+      "id": "perfecto-traveled-to",
+      "grammar": ["preterito-perfecto", "verb-conjugation", "travel"],
+      "subjects": ["yo", "tu", "el", "nosotros", "vosotros", "ellos"],
+      "es": "{v} a {g}.",
+      "en": "{S} {v} to {g}.",
+      "slots": {
+        "v": {
+          "kind": "verb",
+          "ids": ["viajar"],
+          "subject": "@",
+          "tense": "perfecto"
+        },
+        "g": {
+          "kind": "glue",
+          "group": "cities"
+        }
+      },
+      "cloze": ["v"]
+    },
+    {
+      "id": "perfecto-never-been",
+      "grammar": ["preterito-perfecto", "verb-conjugation", "travel"],
+      "subjects": ["yo", "tu", "el", "nosotros", "vosotros", "ellos"],
+      "es": "Nunca {v} en {g}.",
+      "en": "{S} {v:aux} never {v:pp} to {g}.",
+      "slots": {
+        "v": {
+          "kind": "verb",
+          "ids": ["estar"],
+          "subject": "@",
+          "tense": "perfecto"
+        },
+        "g": {
+          "kind": "glue",
+          "group": "cities"
+        }
+      },
+      "cloze": ["v"]
+    },
+    {
+      "id": "perfecto-already",
+      "grammar": ["preterito-perfecto", "verb-conjugation"],
+      "subjects": ["yo", "tu", "el", "nosotros", "vosotros", "ellos"],
+      "es": "Ya {v}.",
+      "en": "{S} {v:aux} already {v:pp}.",
+      "slots": {
+        "v": {
+          "kind": "verb",
+          "ids": [
+            "desayunar",
+            "comer",
+            "almorzar",
+            "cenar",
+            "ducharse",
+            "levantarse",
+            "vestirse",
+            "hacer-la-cama",
+            "hacer-la-compra",
+            "lavarse-los-dientes",
+            "hacer-deporte",
+            "llegar-al-trabajo",
+            "salir-del-trabajo",
+            "volver",
+            "acostarse"
+          ],
+          "subject": "@",
+          "tense": "perfecto"
+        }
+      },
+      "cloze": ["v"]
+    },
+    {
+      "id": "perfecto-not",
+      "grammar": ["preterito-perfecto", "negation", "verb-conjugation"],
+      "subjects": ["yo", "tu", "el", "nosotros", "vosotros", "ellos"],
+      "es": "No {v}.",
+      "en": "{S} {v:not}.",
+      "slots": {
+        "v": {
+          "kind": "verb",
+          "ids": [
+            "desayunar",
+            "comer",
+            "almorzar",
+            "cenar",
+            "ducharse",
+            "levantarse",
+            "vestirse",
+            "hacer-la-cama",
+            "hacer-la-compra",
+            "lavarse-los-dientes",
+            "hacer-deporte",
+            "llegar-al-trabajo",
+            "salir-del-trabajo",
+            "volver",
+            "acostarse"
+          ],
+          "subject": "@",
+          "tense": "perfecto"
+        }
+      },
+      "cloze": ["v"]
+    },
+    {
+      "id": "perfecto-relative-not",
+      "grammar": ["preterito-perfecto", "negation", "third-person"],
+      "es": "Mi {n} no {v}.",
+      "en": "My {n} {v:not}.",
+      "slots": {
+        "n": {
+          "kind": "noun",
+          "tags": ["family"],
+          "number": "sg",
+          "exclude": ["mujer"]
+        },
+        "v": {
+          "kind": "verb",
+          "ids": [
+            "desayunar",
+            "comer",
+            "almorzar",
+            "cenar",
+            "ducharse",
+            "levantarse",
+            "vestirse",
+            "hacer-la-cama",
+            "hacer-la-compra",
+            "lavarse-los-dientes",
+            "hacer-deporte",
+            "llegar-al-trabajo",
+            "salir-del-trabajo",
+            "volver",
+            "acostarse"
+          ],
+          "subject": "n",
+          "tense": "perfecto"
+        }
+      },
+      "cloze": ["v", "n"]
+    },
+    {
+      "id": "perfecto-question-yet",
+      "grammar": ["preterito-perfecto", "questions"],
+      "subjects": ["tu", "vosotros"],
+      "es": "¿Ya {v}?",
+      "en": "{v:aux} {S} {v:pp} yet?",
+      "slots": {
+        "v": {
+          "kind": "verb",
+          "ids": [
+            "desayunar",
+            "comer",
+            "almorzar",
+            "cenar",
+            "ducharse",
+            "levantarse",
+            "vestirse",
+            "hacer-la-cama",
+            "hacer-la-compra",
+            "lavarse-los-dientes",
+            "hacer-deporte",
+            "llegar-al-trabajo",
+            "salir-del-trabajo",
+            "volver",
+            "acostarse"
+          ],
+          "subject": "@",
+          "tense": "perfecto"
+        }
+      },
+      "cloze": ["v"]
+    },
+    {
+      "id": "perfecto-today-a-lot",
+      "grammar": ["preterito-perfecto", "adverbs"],
+      "subjects": ["yo", "tu", "nosotros", "vosotros", "ellos"],
+      "es": "Hoy {v} {m}.",
+      "en": "{S} {v} {m} today.",
+      "slots": {
+        "v": {
+          "kind": "verb",
+          "ids": ["trabajar", "estudiar", "leer", "hablar", "jugar", "practicar", "salir"],
+          "subject": "@",
+          "tense": "perfecto"
+        },
+        "m": {
+          "kind": "word",
+          "ids": ["mucho-2", "demasiado-2"]
+        }
+      },
+      "cloze": ["v", "m"]
+    },
+    {
+      "id": "perfecto-this-week-a-lot",
+      "grammar": ["preterito-perfecto", "adverbs"],
+      "subjects": ["yo", "tu", "nosotros", "vosotros", "ellos"],
+      "es": "Esta semana {v} {m}.",
+      "en": "{S} {v} {m} this week.",
+      "slots": {
+        "v": {
+          "kind": "verb",
+          "ids": ["trabajar", "estudiar", "leer", "hablar", "jugar", "practicar", "salir"],
+          "subject": "@",
+          "tense": "perfecto"
+        },
+        "m": {
+          "kind": "word",
+          "ids": ["mucho-2", "demasiado-2"]
+        }
+      },
+      "cloze": ["v", "m"]
+    },
+    {
+      "id": "perfecto-bought-it",
+      "grammar": ["preterito-perfecto", "object-pronouns", "questions"],
+      "es": "¿Ya {v} {c:el}?\nSí, ya {p} {w}.",
+      "en": "{v:aux} you {v:pp} {c:the} yet?\nYes, I {w:aux} already {w:pp} {p}.",
+      "slots": {
+        "v": {
+          "kind": "verb",
+          "ids": ["comprar"],
+          "subject": "tu",
+          "tense": "perfecto"
+        },
+        "c": {
+          "kind": "noun",
+          "ids": [
+            "pan",
+            "queso",
+            "cafe",
+            "leche",
+            "agua",
+            "vino",
+            "ensalada",
+            "tortilla",
+            "helado",
+            "tenedor",
+            "cuchillo",
+            "cuchara",
+            "plato",
+            "vaso",
+            "taza",
+            "servilleta",
+            "camisa",
+            "chaqueta",
+            "falda",
+            "vestido",
+            "jersey",
+            "bolso",
+            "cinturon",
+            "bufanda",
+            "abrigo",
+            "gorro",
+            "gorra",
+            "sombrero",
+            "corbata"
+          ]
+        },
+        "p": {
+          "kind": "pronoun",
+          "agree": "c"
+        },
+        "w": {
+          "kind": "verb",
+          "ids": ["comprar"],
+          "subject": "yo",
+          "tense": "perfecto",
+          "same": "v"
+        }
+      },
+      "cloze": ["p", "w", "c"]
+    },
+    {
+      "id": "perfecto-not-bought-it",
+      "grammar": ["preterito-perfecto", "object-pronouns", "negation"],
+      "es": "¿Ya {v} {c:el}?\nNo, no {p} {w}.",
+      "en": "{v:aux} you {v:pp} {c:the} yet?\nNo, I {w:not} {p}.",
+      "slots": {
+        "v": {
+          "kind": "verb",
+          "ids": ["comprar"],
+          "subject": "tu",
+          "tense": "perfecto"
+        },
+        "c": {
+          "kind": "noun",
+          "ids": [
+            "pan",
+            "queso",
+            "cafe",
+            "leche",
+            "agua",
+            "vino",
+            "ensalada",
+            "tortilla",
+            "helado",
+            "tenedor",
+            "cuchillo",
+            "cuchara",
+            "plato",
+            "vaso",
+            "taza",
+            "servilleta",
+            "camisa",
+            "chaqueta",
+            "falda",
+            "vestido",
+            "jersey",
+            "bolso",
+            "cinturon",
+            "bufanda",
+            "abrigo",
+            "gorro",
+            "gorra",
+            "sombrero",
+            "corbata"
+          ]
+        },
+        "p": {
+          "kind": "pronoun",
+          "agree": "c"
+        },
+        "w": {
+          "kind": "verb",
+          "ids": ["comprar"],
+          "subject": "yo",
+          "tense": "perfecto",
+          "same": "v"
+        }
+      },
+      "cloze": ["p", "w", "c"]
+    },
+    {
+      "id": "perfecto-never-seen",
+      "grammar": ["preterito-perfecto", "verb-conjugation"],
+      "subjects": ["yo", "tu", "el", "nosotros", "vosotros", "ellos"],
+      "es": "Nunca {v} {g:un}.",
+      "en": "{S} {v:aux} never {v:pp} {g:a}.",
+      "slots": {
+        "v": {
+          "kind": "verb",
+          "ids": ["ver", "visitar"],
+          "subject": "@",
+          "tense": "perfecto"
+        },
+        "g": {
+          "kind": "noun",
+          "tags": ["geography"],
+          "exclude": ["norte", "sur", "este-2", "oeste", "peninsula"]
+        }
+      },
+      "cloze": ["v", "g"]
     }
   ]
 }
