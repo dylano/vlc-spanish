@@ -82,8 +82,9 @@ src/lib/          pure logic, no React, thoroughly tested
   commits.ts        recent commits from GitHub, for the Version screen
   random.ts         seedable shuffle
   sentences/        sentence frames: renderer and checks (frames.ts), gaps (gap.ts), mistakes
-                    (mistake.ts), translations (translate.ts), Spanish verb forms (conjugate.ts),
-                    English inflection (english.ts)
+                    (mistake.ts), translations (translate.ts), Spanish verb forms (conjugate.ts:
+                    the present, participles and the pretérito perfecto), English inflection
+                    (english.ts, past participles included)
   dates.ts          ISO calendar-date maths in whole local days
   slug.ts           stable entry ids
 src/
@@ -528,7 +529,12 @@ the deployed site has no endpoint that writes words at all.
    ```
 
    Errors fail it; warnings (flagged entries, ids that are not the slug of the headword, a verb with
-   no "to …" gloss) are for you to read. The same script runs first in the Netlify build, so a file
+   no "to …" gloss) are for you to read. A new verb whose participle is irregular must store it as
+   `verb.participle` (_hecho, visto, vuelto, escrito, puesto_): the validator knows the common
+   ones (`IRREGULAR_PARTICIPLES` in `conjugate.ts`) and fails without it, since the -ado/-ido rule
+   would teach _hacido_. A phrase built on a verb (_hacer la cama_) takes that verb's participle
+   and stores none. Read `vp run render:perfect` after adding verbs: every verb's
+   pretérito perfecto, Spanish and English, one line each. The same script runs first in the Netlify build, so a file
    that does not validate fails the deploy rather than reaching the app. `vp test` also parses the
    bundled file.
 
@@ -716,11 +722,24 @@ from the dictionary. The frame supplies the word order in both languages; the re
 vp run validate:frames                     # schema, placeholders, vocabulary, every slot fillable
 vp run render:frames -- --per 12           # sample sentences from every frame
 vp run render:frames -- --frame days-routine --per 40
+vp run render:perfect                      # every verb's pretérito perfecto, Spanish and English
 ```
 
 The validator catches structural problems; only reading `render:frames` output catches sentences
 that are grammatical but odd. Read it whenever frames change **or words are added**, since new
 words in a tag flow straight into the frames that draw on it.
+
+**Pretérito perfecto (in progress).** An opt-in tense for students whose class has reached it
+(_he comido el pan_). Built so far is the conjugation: `participle` gives a verb's participle (a
+stored `verb.participle` where it is irregular, else -ado/-ido, with _leído_ and _traído_ accented,
+and a phrase taking its first verb's), and `perfectForm` puts _haber_ before it, a reflexive
+pronoun first and the rest of a phrase after (_me he levantado_, _han hecho la cama_, _has tenido
+que_). _Gustar_ and the like are left to the frames (_me ha gustado_). English has
+`pastParticiple`, `perfectVerb` and `negatePerfectVerb` ("has gotten up", "hasn't had lunch"),
+with the irregular participles listed and American forms (_gotten_). Still to come: frames, the
+grading, an opt-in under Verb Tenses in a reorganized Settings, a Verb Tenses row on Custom
+practice, a third of General practice's sentences once opted in, and the participle in the
+Dictionary's conjugation dialog (mockup boards S3, C2 and D4).
 
 ## Fill in the Blank
 

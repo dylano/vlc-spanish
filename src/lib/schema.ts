@@ -137,6 +137,12 @@ export const verbEntrySchema = z.object({
      * me gustan rather than one form per person.
      */
     pattern: z.enum(["gustar"]).optional(),
+    /**
+     * The past participle, stored only where it breaks the -ado/-ido rule:
+     * hecho, visto, vuelto, escrito, puesto. A multi-word verb takes its first
+     * word's (hacer la cama → hecho la cama), so it needs none of its own.
+     */
+    participle: nonEmpty.optional(),
   }),
   forms: z
     .object({

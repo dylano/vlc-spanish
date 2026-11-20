@@ -11,7 +11,8 @@
     "prepare": "vp config",
     "validate:dictionary": "node scripts/validate-dictionary.ts",
     "validate:frames": "node scripts/validate-frames.ts",
-    "render:frames": "node scripts/render-frames.ts"
+    "render:frames": "node scripts/render-frames.ts",
+    "render:perfect": "node scripts/render-perfect.ts"
   },
   "dependencies": {
     "react": "^19.2.8",

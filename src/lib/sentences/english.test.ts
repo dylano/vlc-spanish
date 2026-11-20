@@ -1,5 +1,14 @@
 import { describe, expect, it } from "vite-plus/test";
-import { indefiniteArticle, inflectVerb, pluralize, subjectPronoun } from "./english.ts";
+import {
+  indefiniteArticle,
+  inflectVerb,
+  negatePerfectVerb,
+  participleGloss,
+  pastParticiple,
+  perfectVerb,
+  pluralize,
+  subjectPronoun,
+} from "./english.ts";
 
 describe("english verbs", () => {
   it("leaves the base form for every subject but the third person singular", () => {
@@ -60,5 +69,29 @@ describe("english nouns", () => {
     expect(indefiniteArticle("athlete")).toBe("an");
     expect(indefiniteArticle("university")).toBe("a");
     expect(indefiniteArticle("hour")).toBe("an");
+  });
+});
+
+describe("the english present perfect", () => {
+  it("makes past participles, regular and irregular", () => {
+    expect(pastParticiple("eat")).toBe("eaten");
+    expect(pastParticiple("get")).toBe("gotten");
+    expect(pastParticiple("dance")).toBe("danced");
+    expect(pastParticiple("study")).toBe("studied");
+    expect(pastParticiple("play")).toBe("played");
+    expect(pastParticiple("prefer")).toBe("preferred");
+    expect(pastParticiple("work")).toBe("worked");
+  });
+
+  it("puts have or has before it, with one's for the subject", () => {
+    expect(perfectVerb("to eat", "yo")).toBe("have eaten");
+    expect(perfectVerb("to brush one's teeth", "el", "f")).toBe("has brushed her teeth");
+    expect(perfectVerb("to go to bed", "el", "mf")).toBe("have gone to bed");
+    expect(negatePerfectVerb("to have lunch", "el")).toBe("hasn't had lunch");
+    expect(negatePerfectVerb("to get up", "nosotros")).toBe("haven't gotten up");
+  });
+
+  it("gives the participle alone for a question: Has she gotten up?", () => {
+    expect(participleGloss("to get up", "el", "f")).toBe("gotten up");
   });
 });
