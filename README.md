@@ -795,7 +795,11 @@ adds its frames to every session's sentences. With both tenses, each sentence ro
 first, `PERFECTO_SHARE` (a third) for the perfecto, and then looks for a word with a frame in that
 tense, so words no perfecto frame holds do not dilute the share; it falls back to any frame. Custom
 practice can narrow to one tense (`tense=`). The Dictionary's conjugation dialog shows the
-participle to everyone, ticked or not. A miss counts against the verb like any other. Without the tick, nothing changes.
+A miss counts against the verb like any other. Without the tick, nothing changes: every session
+takes its frames from `sessionFrames` (in `frames.ts`), which keeps the perfecto out unless it is
+ticked, whatever `tense=` the URL carries. `perfecto.test.ts` builds sessions of every kind (General,
+each sentence exercise, Problem words, due-only) and More like this with it off, and checks that
+none has a perfecto frame or any _haber_ + participle in its Spanish.
 
 ## Fill in the Blank
 

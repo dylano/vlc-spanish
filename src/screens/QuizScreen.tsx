@@ -9,7 +9,7 @@ import { pickAnotherRound } from "../lib/anotherRound.ts";
 import { today } from "../lib/dates.ts";
 import { canonicalAnswer, type Grade } from "../lib/grade.ts";
 import { schedule } from "../lib/scheduler.ts";
-import { frameTense, type Tense } from "../lib/sentences/frames.ts";
+import { sessionFrames } from "../lib/sentences/frames.ts";
 import { moreLikeThis } from "../lib/sentences/translate.ts";
 import {
   buildGapSession,
@@ -138,17 +138,13 @@ export default function QuizScreen() {
   // unknown name falls back to the tenses.
   const grammar = params.get("grammar");
   const tense = params.get("tense");
-  const frames = useMemo(() => {
-    const only = sentences.frames.filter((frame) => grammar && frame.grammar.includes(grammar));
-    if (only.length > 0) return { ...sentences, frames: only };
-    const allowed: Tense[] = ["presente", ...tenses];
-    const wanted = allowed.filter((one) => !tense || one === tense);
-    const use = wanted.length > 0 ? wanted : allowed;
-    return {
+  const frames = useMemo(
+    () => ({
       ...sentences,
-      frames: sentences.frames.filter((frame) => use.includes(frameTense(frame))),
-    };
-  }, [grammar, tense, tenses]);
+      frames: sessionFrames(sentences.frames, { opted: tenses, tense, grammar }),
+    }),
+    [grammar, tense, tenses],
+  );
 
   // Built when the screen opens: answering updates progress, and rebuilding
   // mid-session would reshuffle the cards under the user. It only ever grows,

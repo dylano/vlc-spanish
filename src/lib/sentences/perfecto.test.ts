@@ -1,11 +1,30 @@
 import { describe, expect, it } from "vite-plus/test";
 import { entries } from "../../app/dictionary.ts";
 import { sentences } from "../../app/sentences.ts";
-import { checkFrame, frameTense, renderFrame, type Frame, type FrameInput } from "./frames.ts";
+import {
+  checkFrame,
+  frameTense,
+  renderFrame,
+  sessionFrames,
+  type Frame,
+  type FrameInput,
+} from "./frames.ts";
 import { frameSchema } from "./frames.ts";
 import { gapTargets, gradeGap, type Gap } from "./gap.ts";
 import { renderMistake } from "./mistake.ts";
-import { buildTranslateSession, DEFAULT_CONFIG, PERFECTO_SHARE } from "../session.ts";
+import type { ProgressBlob } from "../schema.ts";
+import {
+  buildGapSession,
+  buildMistakeSession,
+  buildMixedSession,
+  buildTranslateSession,
+  DEFAULT_CONFIG,
+  isMatchRound,
+  PERFECTO_SHARE,
+  type QuizConfig,
+  type SessionItem,
+} from "../session.ts";
+import { moreLikeThis } from "./translate.ts";
 
 function seeded(seed: number): () => number {
   let state = (seed * 2_654_435_761) % 4_294_967_296;
@@ -180,5 +199,102 @@ describe("a session for a learner who has opted in", () => {
     const { perfecto, total } = share(perfectFrames);
     expect(total).toBeGreaterThan(0);
     expect(perfecto).toBe(total);
+  });
+});
+
+describe("with the pretérito perfecto not ticked", () => {
+  const off = sessionFrames(sentences.frames, { opted: [] });
+  const isPerfecto = (frameId: string) => frameTense(frame(frameId)) === "perfecto";
+  // Belt and braces: haber and a participle anywhere in the Spanish.
+  const HABER_PARTICIPLE =
+    /\b(he|has|ha|hemos|habéis|han) \p{L}+(ado|ido|ído|cho|sto|lto|rto|to)\b/iu;
+
+  it("leaves every perfecto frame out, whatever the URL asks for", () => {
+    expect(off.length).toBeGreaterThan(0);
+    expect(off.some((f) => frameTense(f) === "perfecto")).toBe(false);
+    for (const tense of ["perfecto", "presente", "nonsense", null]) {
+      const frames = sessionFrames(sentences.frames, { opted: [], tense });
+      expect(
+        frames.some((f) => frameTense(f) === "perfecto"),
+        String(tense),
+      ).toBe(false);
+    }
+    // An unknown grammar tag falls back to the tenses, not to every frame.
+    const unknown = sessionFrames(sentences.frames, { opted: [], grammar: "no-such-tag" });
+    expect(unknown.some((f) => frameTense(f) === "perfecto")).toBe(false);
+  });
+
+  it("takes them in once ticked, or one tense on its own", () => {
+    const on = sessionFrames(sentences.frames, { opted: ["perfecto"] });
+    expect(on).toHaveLength(sentences.frames.length);
+    const only = sessionFrames(sentences.frames, { opted: ["perfecto"], tense: "perfecto" });
+    expect(only.every((f) => frameTense(f) === "perfecto")).toBe(true);
+    const present = sessionFrames(sentences.frames, { opted: ["perfecto"], tense: "presente" });
+    expect(present.every((f) => frameTense(f) === "presente")).toBe(true);
+  });
+
+  // Words missed before, for Problem words sessions.
+  const missed: ProgressBlob = { userId: "me", entries: {} };
+  for (const word of entries.filter((e) => e.pos === "verb" || e.pos === "noun").slice(0, 80)) {
+    missed.entries[word.id] = {
+      "en→es": {
+        userId: "me",
+        entryId: word.id,
+        direction: "en→es",
+        due: "2026-11-01",
+        interval: 1,
+        ease: 2.3,
+        reps: 2,
+        lapses: 1,
+        lastResult: "wrong",
+        lastSeen: "2026-10-31",
+      },
+    };
+  }
+
+  const sentencesIn = (items: SessionItem[]) =>
+    items.flatMap((item) => {
+      if (isMatchRound(item)) return [];
+      const made = item.gap?.sentence ?? item.mistake?.sentence ?? item.translation?.sentence;
+      return made ? [made] : [];
+    });
+
+  it("has no perfecto sentence in any kind of session", () => {
+    let seen = 0;
+    for (const scope of ["all", "due", "problems"] as const) {
+      for (let seed = 1; seed <= 10; seed++) {
+        const options = (format: QuizConfig["format"]) => ({
+          entries,
+          progress: scope === "problems" ? missed : { userId: "me", entries: {} },
+          userId: "me",
+          config: { ...DEFAULT_CONFIG, format, scope, size: 20 },
+          today: "2026-11-20",
+          random: seeded(seed),
+          sentences: { frames: off, glue: sentences.glue },
+        });
+        const made = [
+          ...sentencesIn(buildMixedSession(options("mixed"))),
+          ...sentencesIn(buildGapSession(options("gap"))),
+          ...sentencesIn(buildMistakeSession(options("mistake"))),
+          ...sentencesIn(buildTranslateSession(options("translate"))),
+        ];
+        for (const sentence of made) {
+          seen++;
+          expect(isPerfecto(sentence.frameId), sentence.es).toBe(false);
+          expect(sentence.es, sentence.frameId).not.toMatch(HABER_PARTICIPLE);
+        }
+      }
+    }
+    expect(seen).toBeGreaterThan(500);
+  });
+
+  it("never offers a perfecto sentence through Practice more like this", () => {
+    for (let seed = 1; seed <= 40; seed++) {
+      const start = renderFrame(off[seed % off.length]!, context(seed));
+      if (!start) continue;
+      for (const made of moreLikeThis(start, off, context(seed + 100), [])) {
+        expect(isPerfecto(made.sentence.frameId), made.sentence.es).toBe(false);
+      }
+    }
   });
 });

@@ -162,6 +162,30 @@ export function frameTense(frame: Frame): Tense {
     : "presente";
 }
 
+/**
+ * The frames a session's sentences may use. The present always; a tense beyond
+ * it only once the learner has opted in (`opted`, from Settings). `tense`, from
+ * Custom practice, narrows to one of those, and is ignored if it is not one of
+ * them, so a URL cannot reach a tense the learner has not opted into.
+ * `grammar`, for trying out new frames, keeps only frames with that tag, in any
+ * tense; an unknown tag falls back to the tenses.
+ */
+export function sessionFrames(
+  frames: readonly Frame[],
+  {
+    opted,
+    tense,
+    grammar,
+  }: { opted: readonly Tense[]; tense?: string | null; grammar?: string | null },
+): Frame[] {
+  const tagged = grammar ? frames.filter((frame) => frame.grammar.includes(grammar)) : [];
+  if (tagged.length > 0) return tagged;
+  const allowed: Tense[] = ["presente", ...opted.filter((one) => one !== "presente")];
+  const wanted = allowed.filter((one) => !tense || one === tense);
+  const use = wanted.length > 0 ? wanted : allowed;
+  return frames.filter((frame) => use.includes(frameTense(frame)));
+}
+
 /** A frame as written in JSON, before defaults are applied. */
 export type FrameInput = z.input<typeof frameSchema>;
 
