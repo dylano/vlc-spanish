@@ -5,6 +5,7 @@ import { checkFrame, frameTense, renderFrame, type Frame, type FrameInput } from
 import { frameSchema } from "./frames.ts";
 import { gapTargets, gradeGap, type Gap } from "./gap.ts";
 import { renderMistake } from "./mistake.ts";
+import { buildTranslateSession, DEFAULT_CONFIG, PERFECTO_SHARE } from "../session.ts";
 
 function seeded(seed: number): () => number {
   let state = (seed * 2_654_435_761) % 4_294_967_296;
@@ -142,5 +143,42 @@ describe("a mistake in the pretérito perfecto", () => {
     expect(found.length).toBeGreaterThan(0);
     for (const mistake of found)
       expect(mistake!.wrong).toMatch(/^(\w+ )?(he|has|ha|hemos|habéis|han) cenado$/);
+  });
+});
+
+describe("a session for a learner who has opted in", () => {
+  const share = (frames: Frame[]) => {
+    let perfecto = 0;
+    let total = 0;
+    for (let seed = 1; seed <= 12; seed++) {
+      const cards = buildTranslateSession({
+        entries,
+        progress: { userId: "me", entries: {} },
+        userId: "me",
+        config: { ...DEFAULT_CONFIG, format: "translate", scope: "all", size: 20 },
+        today: "2026-11-20",
+        random: seeded(seed),
+        sentences: { frames, glue: sentences.glue },
+      });
+      for (const card of cards) {
+        if (!card.translation) continue;
+        total++;
+        if (card.translation.sentence.frameId.startsWith("perfecto-")) perfecto++;
+      }
+    }
+    return { perfecto, total };
+  };
+
+  it("has about a third of its sentences in the perfecto", () => {
+    const { perfecto, total } = share(sentences.frames);
+    expect(total).toBeGreaterThan(100);
+    expect(perfecto / total).toBeGreaterThan(PERFECTO_SHARE - 0.1);
+    expect(perfecto / total).toBeLessThan(PERFECTO_SHARE + 0.1);
+  });
+
+  it("has only the perfecto when that is all it is given", () => {
+    const { perfecto, total } = share(perfectFrames);
+    expect(total).toBeGreaterThan(0);
+    expect(perfecto).toBe(total);
   });
 });

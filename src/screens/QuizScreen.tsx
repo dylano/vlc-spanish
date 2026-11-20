@@ -9,7 +9,7 @@ import { pickAnotherRound } from "../lib/anotherRound.ts";
 import { today } from "../lib/dates.ts";
 import { canonicalAnswer, type Grade } from "../lib/grade.ts";
 import { schedule } from "../lib/scheduler.ts";
-import { frameTense } from "../lib/sentences/frames.ts";
+import { frameTense, type Tense } from "../lib/sentences/frames.ts";
 import { moreLikeThis } from "../lib/sentences/translate.ts";
 import {
   buildGapSession,
@@ -110,7 +110,7 @@ function perfectLine(count: number, long: boolean): string | undefined {
  * exercise components under ./quiz.
  */
 export default function QuizScreen() {
-  const { entries, progress, recordResults, sessionSize } = useStore();
+  const { entries, progress, recordResults, sessionSize, tenses } = useStore();
   const [params] = useSearchParams();
   const navigate = useNavigate();
   const location = useLocation();
@@ -130,19 +130,25 @@ export default function QuizScreen() {
     };
   }, [params, sessionSize]);
 
-  // `grammar=object-pronouns` keeps sentence exercises to the frames practising
-  // one grammar point, for trying out new frames. Unknown names leave all frames
-  // in, except frames in a tense the student has not opted into: for now every
-  // tense but the present (`grammar=preterito-perfecto` tries those out).
+  // Sentences use the tenses the learner has opted into (the present always),
+  // all of them unless Custom practice named one (`tense=perfecto`). With more
+  // than one, PERFECTO_SHARE of the sentences are in the perfecto.
+  // `grammar=object-pronouns` instead keeps sentence exercises to the frames
+  // practising one grammar point, any tense, for trying out new frames; an
+  // unknown name falls back to the tenses.
   const grammar = params.get("grammar");
+  const tense = params.get("tense");
   const frames = useMemo(() => {
     const only = sentences.frames.filter((frame) => grammar && frame.grammar.includes(grammar));
     if (only.length > 0) return { ...sentences, frames: only };
+    const allowed: Tense[] = ["presente", ...tenses];
+    const wanted = allowed.filter((one) => !tense || one === tense);
+    const use = wanted.length > 0 ? wanted : allowed;
     return {
       ...sentences,
-      frames: sentences.frames.filter((frame) => frameTense(frame) === "presente"),
+      frames: sentences.frames.filter((frame) => use.includes(frameTense(frame))),
     };
-  }, [grammar]);
+  }, [grammar, tense, tenses]);
 
   // Built when the screen opens: answering updates progress, and rebuilding
   // mid-session would reshuffle the cards under the user. It only ever grows,

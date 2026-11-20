@@ -1,5 +1,8 @@
 import { describe, expect, it } from "vite-plus/test";
 import {
+  readTenses,
+  TENSES_KEY,
+  writeTenses,
   CUSTOM_KEY,
   DEFAULT_CUSTOM,
   EMPTY_PROGRESS,
@@ -93,10 +96,30 @@ describe("local name", () => {
   });
 });
 
+describe("verb tenses", () => {
+  it("is the present only until the perfecto is ticked", () => {
+    const store = memoryStorage();
+    expect(readTenses(store)).toEqual([]);
+    writeTenses(["perfecto"], store);
+    expect(readTenses(store)).toEqual(["perfecto"]);
+    writeTenses([], store);
+    expect(readTenses(store)).toEqual([]);
+  });
+
+  it("ignores anything it cannot read", () => {
+    expect(readTenses(memoryStorage({ [TENSES_KEY]: "not json" }))).toEqual([]);
+  });
+});
+
 describe("custom practice choices", () => {
   it("round-trips what was saved", () => {
     const store = memoryStorage();
-    const choice = { words: "problems" as const, exercises: ["gap"], tags: ["food"] };
+    const choice = {
+      words: "problems" as const,
+      exercises: ["gap"],
+      tags: ["food"],
+      tenses: ["perfecto"],
+    };
     writeCustom(choice, store);
     expect(readCustom(store)).toEqual(choice);
   });
@@ -108,7 +131,7 @@ describe("custom practice choices", () => {
       readCustom(
         memoryStorage({ [CUSTOM_KEY]: '{"words": 3, "exercises": [1, "gap"], "tags": "x"}' }),
       ),
-    ).toEqual({ words: "all", exercises: ["gap"], tags: [] });
+    ).toEqual({ words: "all", exercises: ["gap"], tags: [], tenses: [] });
   });
 });
 
