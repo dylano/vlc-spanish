@@ -82,8 +82,9 @@ src/lib/          pure logic, no React, thoroughly tested
   commits.ts        recent commits from GitHub, for the Version screen
   random.ts         seedable shuffle
   sentences/        sentence frames: renderer and checks (frames.ts), gaps (gap.ts), mistakes
-                    (mistake.ts), translations (translate.ts), Spanish verb forms (conjugate.ts),
-                    English inflection (english.ts)
+                    (mistake.ts), translations (translate.ts), Spanish verb forms (conjugate.ts:
+                    the present, participles and the pretérito perfecto), English inflection
+                    (english.ts, past participles included)
   dates.ts          ISO calendar-date maths in whole local days
   slug.ts           stable entry ids
 src/
@@ -215,7 +216,13 @@ tangled into components.
   All words uses `scope=all`, so a narrow choice still has words after the due and new ones run out.
   The choices are kept for next time (`vlc-spanish:custom`); there is no summary line and no note
   saying so. The Words and Sentences groups both have a Translate, so the pills say "Translate a
-  word" and "Translate a sentence".
+  word" and "Translate a sentence". Once the pretérito perfecto is ticked in Settings, a **Verb
+  Tenses** row sits between Exercise Types and Categories (board C2): **All tenses**, then
+  _Presente_ and _Pretérito perfecto_. All mixes them as General practice does; one alone adds
+  `tense=presente|perfecto` to the URL. The perfecto alone is only in sentences, so the word
+  exercises grey out and are left out of the session (with only word exercises chosen, every
+  sentence exercise is used instead). Until the perfecto is ticked the row is not there, and a saved
+  tense choice has no effect.
 - **Quiz** — one prompt at a time, typed answer, inline verdict, progress bar, and a summary
   listing what to look at again. Nouns are prompted with "include the article"; the other way round, a Spanish noun is
   shown with its article (_la manzana_, _el agua_, _el/la estudiante_), as in the Dictionary. A session is full
@@ -353,7 +360,7 @@ tangled into components.
   list (`ConjugationDialog`, a native `<dialog>`: Escape or a tap on the dimmed list closes it). The
   table (`src/lib/conjugation.ts`) colours what to notice: a changed stem (_pref**ie**ro_, not in
   nosotros/vosotros), the endings of a regular verb, a whole irregular form (_voy_, _salgo_), and mutes
-  a reflexive pronoun; tags beside "Present tense" name the pattern (_e → ie_, _irregular yo_,
+  a reflexive pronoun; tags beside the _Presente_ label name the pattern (_e → ie_, _irregular yo_,
   _reflexive_). Verbs marked `verb.pattern: "gustar"` get two columns instead, one thing and several
   (_me gusta / me gustan_), with no tag: a "works backwards" label was mocked up and dropped as
   unhelpful. Search (`src/lib/search.ts`) matches any form a learner might type: the
@@ -363,8 +370,17 @@ tangled into components.
   the query, then any containing it. Forms other than the headword (a feminine, a plural, a conjugation)
   match only whole or from the start of a word, and verb forms are indexed without their reflexive
   pronoun, so `nos` does not list every reflexive verb or every plural ending in -nos.
-- **Settings** — your name (editable), **session length** and **appearance**, and how much you have
-  practiced. No other users, no switching. Session length is 10, 15 (default), 20 or 30 words, for
+  Under the table, the dialog shows the **participio** (board D4), for every learner whether or not
+  the pretérito perfecto is ticked (decided 2026-11-20): _vuelto_, marked "irregular" in the accent colour with "Not _volvido_. With
+  _haber_: _he vuelto_, I have returned." A regular one (_comido_) shows plainly with no note. It is
+  what the perfecto, and later compound tenses (_había vuelto_), are built from.
+- **Settings** — in the order of board S3 (2026-11-20): your name (editable), the **What's new** row,
+  **appearance**, **session length**, **Verb Tenses**, then the version line, with the note that
+  progress is kept on this device at the very bottom. The "Your practice" counts were removed. No
+  other users, no switching. **Verb Tenses** lists _Presente_ ("como · ves · lo hacemos"), ticked for
+  good with its box dimmed, and _Pretérito perfecto_ ("he comido · has visto · lo hemos hecho"),
+  which a learner ticks once the class has reached it (`vlc-spanish:tenses`); see Pretérito
+  perfecto under Sentence frames for what that turns on. Session length is 10, 15 (default), 20 or 30 words, for
   every kind of session (General practice, Custom practice, a single exercise; Match Pairs rounds to
   whole rounds); a `size` in the URL still overrides it. Appearance is Light or Dark with no
   "System" choice: until one is picked the app follows the device and Settings shows whichever that
@@ -383,7 +399,7 @@ rev-parse` locally, marked "+ local changes" when the tree is dirty), injected a
   chasing the details.
   Offline it says so and still shows the build's own commit, which is baked in; the browser's own
   cache often answers anyway.
-  Above the version, a **What's new** row (with the latest note's title and date under it) opens
+  Near the top, a **What's new** row (with the latest note's title and date under it) opens
   **What's new** (`/whats-new`): every release note whose date has come, newest first, the latest
   marked, each with its date, title and text as Home showed it, and a link on to Version at the foot.
   The row is hidden while there are no notes. Boards A1 and A2 on the canvas's "Release note history"
@@ -394,13 +410,15 @@ rev-parse` locally, marked "+ local changes" when the tree is dirty), injected a
 ## Data
 
 The dictionary ships with the app (see [Working on the dictionary](#working-on-the-dictionary)).
-Everything else lives in the browser's **local storage** (`src/app/local.ts`), under seven keys:
+Everything else lives in the browser's **local storage** (`src/app/local.ts`), under eight keys:
 
 - `vlc-spanish:name` — the name given on first start.
 - `vlc-spanish:theme` — `light` or `dark` once chosen in Settings; absent means follow the device.
 - `vlc-spanish:session-size` — words per session from Settings; absent means 15.
-- `vlc-spanish:custom` — the last Custom practice choice: which words, and the chosen modes and
-  categories (empty lists mean All).
+- `vlc-spanish:tenses` — `["perfecto"]` once the pretérito perfecto is ticked in Settings; absent
+  or empty means the present only.
+- `vlc-spanish:custom` — the last Custom practice choice: which words, and the chosen modes,
+  categories and verb tenses (empty lists mean All).
 - `vlc-spanish:note-dismissed` — the date of the last release note dismissed with ×; a note dated
   later shows, an edit to the same note does not.
 - `vlc-spanish:update-checked` — when Home last asked which build is live; it asks again after 6
@@ -528,7 +546,12 @@ the deployed site has no endpoint that writes words at all.
    ```
 
    Errors fail it; warnings (flagged entries, ids that are not the slug of the headword, a verb with
-   no "to …" gloss) are for you to read. The same script runs first in the Netlify build, so a file
+   no "to …" gloss) are for you to read. A new verb whose participle is irregular must store it as
+   `verb.participle` (_hecho, visto, vuelto, escrito, puesto_): the validator knows the common
+   ones (`IRREGULAR_PARTICIPLES` in `conjugate.ts`) and fails without it, since the -ado/-ido rule
+   would teach _hacido_. A phrase built on a verb (_hacer la cama_) takes that verb's participle
+   and stores none. Read `vp run render:perfect` after adding verbs: every verb's
+   pretérito perfecto, Spanish and English, one line each. The same script runs first in the Netlify build, so a file
    that does not validate fails the deploy rather than reaching the app. `vp test` also parses the
    bundled file.
 
@@ -716,11 +739,67 @@ from the dictionary. The frame supplies the word order in both languages; the re
 vp run validate:frames                     # schema, placeholders, vocabulary, every slot fillable
 vp run render:frames -- --per 12           # sample sentences from every frame
 vp run render:frames -- --frame days-routine --per 40
+vp run render:frames -- --grammar preterito-perfecto  # one grammar point
+vp run render:perfect                      # every verb's pretérito perfecto, Spanish and English
 ```
 
 The validator catches structural problems; only reading `render:frames` output catches sentences
 that are grammatical but odd. Read it whenever frames change **or words are added**, since new
 words in a tag flow straight into the frames that draw on it.
+
+**Pretérito perfecto.** An opt-in tense for students whose class has reached it
+(_he comido el pan_). The conjugation: `participle` gives a verb's participle (a
+stored `verb.participle` where it is irregular, else -ado/-ido, with _leído_ and _traído_ accented,
+and a phrase taking its first verb's), and `perfectForm` puts _haber_ before it, a reflexive
+pronoun first and the rest of a phrase after (_me he levantado_, _han hecho la cama_, _has tenido
+que_). _Gustar_ and the like are left to the frames (_me ha gustado_). English has
+`pastParticiple`, `perfectVerb` and `negatePerfectVerb` ("has gotten up", "hasn't had lunch"),
+with the irregular participles listed and American forms (_gotten_).
+
+Frames: a verb slot with `"tense": "perfecto"` renders _haber_ and the participle, and
+`frameTense` calls a frame with one a perfecto frame. Their `grammar` starts with
+`preterito-perfecto`, so More like this stays in the tense. English needs the two halves apart
+for what goes between them, so `{v:aux}` gives _have_/_has_ and `{v:pp}` the participle phrase
+("{S} {v:aux} already {v:pp}" → "I have already gotten up"; "{v:aux} {S} {v:pp} yet?");
+`{v}` and `{v:not}` give "have eaten" and "haven't eaten". The validator allows `aux` and `pp`
+only on a perfecto verb, and `base` not on one. The baseline frames are a verb and its object
+with no time word, as English says it too: _He comido la manzana_ ("I have eaten the apple"),
+_Hemos comprado una camisa_, _He leído el libro_, _¿Has visto mi mochila?_ None drinks: the
+English participle "drunk" is correct but sounds stiff to American ears, and "drank" is not
+standard (decided 2026-11-20).
+A verb slot's `gloss` picks which English gloss to say where the first does not fit: _comer_ is
+first "to have lunch", so _perfecto-eaten_ asks for "to eat". Travel frames (_He viajado a
+Granada_, _Nunca he estado en Bilbao_ "I have never been to Bilbao") take their places from a
+`cities` glue group, so the city names stay out of the Dictionary and off word cards. Only cities
+spelled the same in both languages, with no accent (Madrid, Barcelona, Valencia, Granada, Bilbao,
+Toledo, Zaragoza): Translate a sentence would otherwise withhold a perfect match over _Lisboa_ or
+_Nueva York_, which is not what the sentence is practising. The rest use
+time words where English also takes the present perfect: _ya_ (already), _nunca_ (never), _hoy_
+and _esta semana_ (today, this week). The negative is plain _no_ before _haber_ (_No he
+desayunado_, _Mi padre no ha vuelto_, _No, no lo he comprado_). _Alguna vez_ (ever: _¿Has estado
+alguna vez en París?_) and _todavía no_ (not yet) wait until the class has met them
+(2026-11-20). Spain also uses the perfecto for earlier
+today (_esta mañana he comido_), which English says in the simple past ("I ate"), so no frame
+does. _Gustar_ in the perfecto (_me ha gustado_, "I liked it") is not offered, for the same
+reason.
+
+Grading: a blank holds _haber_ and the participle together (_ha comido_), and a gap says what went
+wrong in the tense: the present typed instead ("here it is the pretérito perfecto"), _haber_ left
+out, the participle made regular (_volvido_: "vuelto is irregular") or left as the infinitive
+(_ha comer_); _haber_ in the wrong person is the usual "right verb, wrong person". Find the Mistake
+breaks the person through _haber_, swaps the verb in the same tense, and has a `participle` break
+of its own for an irregular participle (_he volvido_).
+
+Opting in: ticking _Pretérito perfecto_ under Verb Tenses in Settings (`tenses` in the store)
+adds its frames to every session's sentences. With both tenses, each sentence rolls for its tense
+first, `PERFECTO_SHARE` (a third) for the perfecto, and then looks for a word with a frame in that
+tense, so words no perfecto frame holds do not dilute the share; it falls back to any frame. Custom
+practice can narrow to one tense (`tense=`). The Dictionary's conjugation dialog shows the
+A miss counts against the verb like any other. Without the tick, nothing changes: every session
+takes its frames from `sessionFrames` (in `frames.ts`), which keeps the perfecto out unless it is
+ticked, whatever `tense=` the URL carries. `perfecto.test.ts` builds sessions of every kind (General,
+each sentence exercise, Problem words, due-only) and More like this with it off, and checks that
+none has a perfecto frame or any _haber_ + participle in its Spanish.
 
 ## Fill in the Blank
 
@@ -774,6 +853,9 @@ see some; sessions have as many sentences as before.
 session's sentences to frames whose `grammar` includes that name (any frame tag works, such as
 `gustar` or `negation`; an unknown name leaves every frame in). Word exercises are unaffected, so
 name sentence modes in `exercise`. It is for testing new frames and has no control in the app.
+It works whatever the learner has opted into, so
+`/quiz?exercise=gap,mistake,translate&grammar=preterito-perfecto` tries the perfecto frames
+without ticking anything.
 
 ## Find the Mistake
 
@@ -850,8 +932,10 @@ Phases 1 and 2 are complete and deployed at [vlc-spanish.netlify.app](https://vl
   `vp run render:frames` how many sentences they can make)
 - **Problem words**: a list of every word missed, most first, with Practice these
 - **What's new**: a release note on Home, written by hand in `data/release-note.json`
-- **Settings**: name, session length (10–30 words), light or dark, every release note (What's new),
-  and the recent commits
+- **Settings**: name, every release note (What's new), light or dark, session length (10–30
+  words), verb tenses (the pretérito perfecto as an opt-in), and the recent commits
+- **Pretérito perfecto**: opted into in Settings; a third of the sentences once on, or on its own
+  from Custom practice; every verb's participle in the Dictionary
 - **Single-user and fully static**: name on first start, everything in local storage, no server;
   installable PWA with the app shell cached offline
 

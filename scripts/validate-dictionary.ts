@@ -11,6 +11,7 @@ import { readFileSync } from "node:fs";
 import process from "node:process";
 import { z } from "zod";
 import { dictionarySchema, entrySchema, type Entry } from "../src/lib/schema.ts";
+import { IRREGULAR_PARTICIPLES, regularParticiple } from "../src/lib/sentences/conjugate.ts";
 import { glossIndex, isWordCard } from "../src/lib/session.ts";
 import { slugify } from "../src/lib/slug.ts";
 
@@ -63,7 +64,8 @@ for (const entry of entries) {
     warnings.push(`id "${entry.id}" is not the slug of "${entry.es}" (expected "${expected}")`);
   }
   if (entry.tags.length === 0) warnings.push(`"${entry.id}" has no tags`);
-  if (entry.en.some((value) => /^to\s/.test(value)) && entry.pos !== "verb") {
+  // "to the left" is a direction, not an infinitive.
+  if (entry.en.some((value) => /^to\s(?!the\b)/.test(value)) && entry.pos !== "verb") {
     warnings.push(`"${entry.id}" has an infinitive english gloss but pos is "${entry.pos}"`);
   }
   if (entry.pos === "verb" && !entry.en.some((value) => /^to\s/.test(value))) {
@@ -95,6 +97,25 @@ for (const entry of entries) {
     );
   }
   if (entry.flagged) warnings.push(`"${entry.id}" is flagged for review: ${entry.flagged}`);
+  // The pretérito perfecto is built from the participle, so a verb known to
+  // break the -ado/-ido rule must say so, or it would be taught as *hacido.
+  if (entry.pos === "verb") {
+    const head = (entry.es.split(" ")[0] ?? "").replace(entry.verb.reflexive ? /se$/ : /$^/, "");
+    const known = IRREGULAR_PARTICIPLES[head];
+    const own =
+      entry.es.split(" ").length === 1 ||
+      !entries.some((other) => other.pos === "verb" && other.es === head);
+    if (known && own && entry.verb.participle !== known) {
+      errors.push(
+        `verb "${entry.id}" needs verb.participle "${known}" (the -ado/-ido rule would give ${regularParticiple(head)})`,
+      );
+    }
+    if (entry.verb.participle && entry.verb.participle === regularParticiple(head)) {
+      warnings.push(
+        `verb "${entry.id}" stores participle "${entry.verb.participle}", which the rule makes anyway`,
+      );
+    }
+  }
 }
 
 // An english → spanish prompt is chosen from the glosses no other entry claims.

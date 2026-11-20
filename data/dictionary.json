@@ -1080,7 +1080,8 @@
       "verb": {
         "reflexive": false,
         "regular": false,
-        "irregularYo": "hago"
+        "irregularYo": "hago",
+        "participle": "hecho"
       },
       "forms": {
         "yo": "hago",
@@ -1154,7 +1155,8 @@
       "verb": {
         "reflexive": false,
         "regular": false,
-        "stemChange": "o→ue"
+        "stemChange": "o→ue",
+        "participle": "vuelto"
       },
       "forms": {
         "yo": "vuelvo",
@@ -1254,7 +1256,8 @@
       "pos": "verb",
       "verb": {
         "reflexive": false,
-        "regular": true
+        "regular": true,
+        "participle": "escrito"
       },
       "tags": ["verbs", "classroom-objects"],
       "added": "2026-09-15"
@@ -2622,7 +2625,8 @@
       "verb": {
         "reflexive": false,
         "regular": false,
-        "irregularYo": "veo"
+        "irregularYo": "veo",
+        "participle": "visto"
       },
       "forms": {
         "yo": "veo",
@@ -2648,6 +2652,20 @@
       "notes": "A person visited takes 'a': visito a mi abuela.",
       "tags": ["verbs"],
       "added": "2026-09-21"
+    },
+    {
+      "id": "viajar",
+      "es": "viajar",
+      "en": ["to travel"],
+      "hint": "one word",
+      "pos": "verb",
+      "verb": {
+        "reflexive": false,
+        "regular": true
+      },
+      "notes": "Where to takes 'a': viajo a Madrid. 'Ir de viaje' is to go away on a trip.",
+      "tags": ["verbs", "travel"],
+      "added": "2026-11-20"
     },
     {
       "id": "leer",
@@ -5362,7 +5380,8 @@
       "verb": {
         "reflexive": false,
         "regular": false,
-        "irregularYo": "pongo"
+        "irregularYo": "pongo",
+        "participle": "puesto"
       },
       "forms": {
         "yo": "pongo",

@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useLocation, useNavigate } from "react-router";
 import Button from "../app/Button.tsx";
 import { readCustom, writeCustom, type CustomChoice } from "../app/local.ts";
+import type { Tense } from "../lib/sentences/frames.ts";
 import { useStore } from "../app/store-context.ts";
 import { problemWords } from "../lib/problems.ts";
 import { EXERCISES } from "./quiz/exercises.ts";
@@ -35,7 +36,8 @@ function AllPills({
 }: {
   /** What All says for this row: "All types", "All categories". */
   allLabel: string;
-  items: { id: string; label: string }[];
+  /** An item can be greyed out on its own: word exercises when only the perfecto is chosen. */
+  items: { id: string; label: string; disabled?: boolean; lang?: string }[];
   chosen: string[];
   onChange: (chosen: string[]) => void;
   disabled?: boolean;
@@ -56,15 +58,16 @@ function AllPills({
         {allLabel}
       </label>
       <div className={styles.pills}>
-        {items.map(({ id, label }) => {
+        {items.map(({ id, label, disabled: off = false, lang }) => {
           const on = chosen.includes(id);
           return (
             <button
               key={id}
               type="button"
-              className={pill(on)}
+              className={`${pill(on)} ${off ? styles.pillOff : ""}`}
               aria-pressed={on}
-              disabled={disabled}
+              disabled={disabled || off}
+              lang={lang}
               onClick={() => {
                 onChange(on ? chosen.filter((other) => other !== id) : [...chosen, id]);
               }}
@@ -78,13 +81,21 @@ function AllPills({
   );
 }
 
+/** The tenses a learner who has opted in can narrow to (board C2), in Spanish as in Settings. */
+const TENSE_PILLS: { id: Tense; label: string; lang: string }[] = [
+  { id: "presente", label: "Presente", lang: "es" },
+  { id: "perfecto", label: "Pretérito perfecto", lang: "es" },
+];
+
 /**
  * Choose which words (all, or the Problem words list) and which exercise modes
  * and categories, then start. The choice is kept for next time. Problem words
- * ignore categories, so those grey out while it is chosen.
+ * ignore categories, so those grey out while it is chosen. Once a tense beyond
+ * the present is opted into in Settings, a Verb Tenses row narrows the sentences
+ * to one; the perfecto alone is only in sentences, so word exercises grey out.
  */
 export default function CustomPracticeScreen() {
-  const { entries, progress } = useStore();
+  const { entries, progress, tenses } = useStore();
   const navigate = useNavigate();
   const opened = useLocation().state as CustomPracticeState | null;
   const troubled = useMemo(() => problemWords(entries, progress).length, [entries, progress]);
@@ -112,6 +123,7 @@ export default function CustomPracticeScreen() {
       tags: (opened?.tags ?? saved.tags).filter((tag) =>
         entries.some((entry) => entry.tags.includes(tag)),
       ),
+      tenses: saved.tenses.filter((tense) => TENSE_PILLS.some((pill) => pill.id === tense)),
     };
   });
 
@@ -121,10 +133,25 @@ export default function CustomPracticeScreen() {
 
   // With nothing on the list, Problem words cannot be chosen, whatever was saved.
   const problems = choice.words === "problems" && troubled > 0;
+  // The Verb Tenses row exists only once a tense beyond the present is opted into;
+  // until then a saved choice is kept but has no effect.
+  const tensesShown = tenses.length > 0;
+  const tense = tensesShown && choice.tenses.length === 1 ? choice.tenses[0] : undefined;
+  const sentencesOnly = tense !== undefined && tense !== "presente";
+  const isSentence = (id: string) =>
+    EXERCISES.find((exercise) => exercise.id === id)?.group === "Sentences";
 
   function start() {
     const params = new URLSearchParams({ scope: problems ? "problems" : "all" });
-    if (choice.exercises.length > 0) params.set("exercise", choice.exercises.join(","));
+    // The perfecto alone has only sentences: drop word exercises, and with none
+    // left (only word types were chosen) take every sentence one.
+    const exercises = sentencesOnly
+      ? choice.exercises.filter(isSentence).length > 0
+        ? choice.exercises.filter(isSentence)
+        : EXERCISES.filter((exercise) => exercise.group === "Sentences").map(({ id }) => id)
+      : choice.exercises;
+    if (exercises.length > 0) params.set("exercise", exercises.join(","));
+    if (tense) params.set("tense", tense);
     if (!problems && choice.tags.length > 0) params.set("tags", choice.tags.join(","));
     void navigate(`/quiz?${params.toString()}`);
   }
@@ -167,12 +194,26 @@ export default function CustomPracticeScreen() {
       <h2 className={styles.heading}>Exercise Types</h2>
       <AllPills
         allLabel="All types"
-        items={modes}
+        items={modes.map((mode) => ({ ...mode, disabled: sentencesOnly && !isSentence(mode.id) }))}
         chosen={choice.exercises}
         onChange={(exercises) => {
           setChoice((current) => ({ ...current, exercises }));
         }}
       />
+
+      {tensesShown ? (
+        <>
+          <h2 className={styles.heading}>Verb Tenses</h2>
+          <AllPills
+            allLabel="All tenses"
+            items={TENSE_PILLS}
+            chosen={choice.tenses}
+            onChange={(chosen) => {
+              setChoice((current) => ({ ...current, tenses: chosen }));
+            }}
+          />
+        </>
+      ) : null}
 
       {/* Kept in view but greyed with Problem words: the list ignores categories,
           and the choice comes back as it was on All words. */}

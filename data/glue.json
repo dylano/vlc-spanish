@@ -141,6 +141,36 @@
         "es": "a las doce",
         "en": "at twelve"
       }
+    ],
+    "cities": [
+      {
+        "es": "Madrid",
+        "en": "Madrid"
+      },
+      {
+        "es": "Barcelona",
+        "en": "Barcelona"
+      },
+      {
+        "es": "Valencia",
+        "en": "Valencia"
+      },
+      {
+        "es": "Granada",
+        "en": "Granada"
+      },
+      {
+        "es": "Bilbao",
+        "en": "Bilbao"
+      },
+      {
+        "es": "Toledo",
+        "en": "Toledo"
+      },
+      {
+        "es": "Zaragoza",
+        "en": "Zaragoza"
+      }
     ]
   }
 }

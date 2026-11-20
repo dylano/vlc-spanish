@@ -1,6 +1,7 @@
 import { createContext, use } from "react";
 import type { Counts } from "../lib/counts.ts";
 import type { Direction, Entry, Progress, ProgressBlob } from "../lib/schema.ts";
+import type { Tense } from "../lib/sentences/frames.ts";
 import type { Theme } from "./local.ts";
 
 export interface Store {
@@ -17,6 +18,9 @@ export interface Store {
   /** Words per session, from Settings. */
   sessionSize: number;
   setSessionSize: (size: number) => void;
+  /** Tenses opted into beyond the present, from Settings' Verb Tenses. */
+  tenses: Tense[];
+  setTenses: (tenses: Tense[]) => void;
 }
 
 export const StoreContext = createContext<Store | undefined>(undefined);

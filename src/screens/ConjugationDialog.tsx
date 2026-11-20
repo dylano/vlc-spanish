@@ -2,12 +2,16 @@ import { useEffect, useRef } from "react";
 import Button from "../app/Button.tsx";
 import { conjugationTable } from "../lib/conjugation.ts";
 import type { Entry, VerbEntry } from "../lib/schema.ts";
+import { participle, perfectForm } from "../lib/sentences/conjugate.ts";
+import { perfectVerb } from "../lib/sentences/english.ts";
 import styles from "./ConjugationDialog.module.css";
 
 /**
  * A verb's present tense, over the Dictionary rather than on a screen of its
  * own. A native modal dialog, so focus stays inside it and Escape closes it; a
- * tap on the dimmed list behind closes it too.
+ * tap on the dimmed list behind closes it too. The participle follows the table
+ * (board D4), for everyone, whether or not the pretérito perfecto is ticked in
+ * Settings: it is what that tense, and every later compound one, is built from.
  */
 export default function ConjugationDialog({
   entry,
@@ -20,6 +24,10 @@ export default function ConjugationDialog({
 }) {
   const ref = useRef<HTMLDialogElement>(null);
   const table = conjugationTable(entry, dictionary);
+  const made = participle(entry, dictionary);
+  // "With haber: he vuelto, I have returned", for an irregular one; gustar has no
+  // yo form of its own (me ha gustado), so it says only what the rule would give.
+  const withHaber = made?.irregular ? perfectForm(entry, "yo", dictionary) : undefined;
 
   // No close() on cleanup: closing fires onClose, and React runs this effect
   // twice in development. Unmounting takes the dialog out of the top layer anyway.
@@ -58,7 +66,7 @@ export default function ConjugationDialog({
         </div>
 
         <div className={styles.label}>
-          <span>Present tense</span>
+          <span lang="es">Presente</span>
           {table.tags.length > 0 ? (
             <span className={styles.tags}>
               {table.tags.map((tag) => (
@@ -113,6 +121,37 @@ export default function ConjugationDialog({
         </table>
 
         {table.explanation ? <p className={styles.explanation}>{table.explanation}</p> : null}
+
+        {made ? (
+          <>
+            <div className={styles.participle}>
+              <div>
+                <span className={styles.label} lang="es">
+                  Participio
+                </span>
+                <span
+                  className={`${styles.participleForm} ${made.irregular ? styles.mark : ""}`}
+                  lang="es"
+                >
+                  {made.form}
+                </span>
+              </div>
+              {made.irregular ? <span className={styles.tag}>irregular</span> : null}
+            </div>
+            {made.irregular ? (
+              <p className={styles.explanation}>
+                Not <em lang="es">{made.regular}</em>.
+                {withHaber ? (
+                  <>
+                    {" "}
+                    With <em lang="es">haber</em>: <em lang="es">{withHaber}</em>, I{" "}
+                    {perfectVerb(entry.en[0]!, "yo")}.
+                  </>
+                ) : null}
+              </p>
+            ) : null}
+          </>
+        ) : null}
       </div>
     </dialog>
   );

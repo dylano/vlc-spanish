@@ -1,8 +1,10 @@
 import { progressBlobSchema, type ProgressBlob } from "../lib/schema.ts";
+import type { Tense } from "../lib/sentences/frames.ts";
 
 /*
  * Everything the app remembers lives in this browser's local storage: the
- * learner's name, their progress, two settings (theme, session length), the
+ * learner's name, their progress, three settings (theme, session length, verb
+ * tenses), the
  * last Custom practice choices, the release note they dismissed and when the app
  * last checked for a newer build. There is no server and no account, so
  * progress belongs to one browser on one device.
@@ -20,6 +22,7 @@ export const PROGRESS_KEY = "vlc-spanish:progress";
 export const THEME_KEY = "vlc-spanish:theme";
 export const SESSION_SIZE_KEY = "vlc-spanish:session-size";
 export const CUSTOM_KEY = "vlc-spanish:custom";
+export const TENSES_KEY = "vlc-spanish:tenses";
 export const NOTE_DISMISSED_KEY = "vlc-spanish:note-dismissed";
 export const UPDATE_CHECKED_KEY = "vlc-spanish:update-checked";
 /** In session storage: set just before reloading onto a newer build, read once after. */
@@ -98,6 +101,27 @@ export function writeSessionSize(size: number, store: Storage | undefined = stor
 }
 
 /**
+ * The tenses opted into in Settings, beyond the present, which every learner
+ * has: [] until the class reaches the pretérito perfecto, then ["perfecto"].
+ */
+export function readTenses(store: Storage | undefined = storage()): Tense[] {
+  try {
+    const raw = store?.getItem(TENSES_KEY);
+    return raw && (JSON.parse(raw) as unknown[]).includes("perfecto") ? ["perfecto"] : [];
+  } catch {
+    return [];
+  }
+}
+
+export function writeTenses(tenses: Tense[], store: Storage | undefined = storage()): void {
+  try {
+    store?.setItem(TENSES_KEY, JSON.stringify(tenses));
+  } catch {
+    // The choice still applies for this visit.
+  }
+}
+
+/**
  * The Custom practice screen's choices, kept for next time. Empty lists mean
  * "All". Ids are stored as given; the screen drops any it no longer knows.
  */
@@ -105,9 +129,11 @@ export interface CustomChoice {
   words: "all" | "problems";
   exercises: string[];
   tags: string[];
+  /** Verb tenses, shown once a tense beyond the present is opted into. */
+  tenses: string[];
 }
 
-export const DEFAULT_CUSTOM: CustomChoice = { words: "all", exercises: [], tags: [] };
+export const DEFAULT_CUSTOM: CustomChoice = { words: "all", exercises: [], tags: [], tenses: [] };
 
 const strings = (value: unknown): string[] =>
   Array.isArray(value) ? value.filter((item): item is string => typeof item === "string") : [];
@@ -121,6 +147,7 @@ export function readCustom(store: Storage | undefined = storage()): CustomChoice
       words: parsed.words === "problems" ? "problems" : "all",
       exercises: strings(parsed.exercises),
       tags: strings(parsed.tags),
+      tenses: strings(parsed.tenses),
     };
   } catch {
     return DEFAULT_CUSTOM;

@@ -1,7 +1,7 @@
 import type { IsoDate } from "./dates.ts";
 import { choiceOptions, interchangeable, type ChoiceOption } from "./choices.ts";
 import { shuffle } from "./random.ts";
-import type { Frame, Glue } from "./sentences/frames.ts";
+import { frameTense, type Frame, type Glue } from "./sentences/frames.ts";
 import { gapTargets, renderGap, type Gap } from "./sentences/gap.ts";
 import { renderMistake, type Mistake } from "./sentences/mistake.ts";
 import { renderTranslation, type Translation } from "./sentences/translate.ts";
@@ -189,6 +189,14 @@ function withUsedFrames(options: BuildSessionOptions): BuildSessionOptions {
  */
 export const NEW_SHARE = 0.4;
 
+/**
+ * With both tenses in a session's frames (a learner who has opted into the
+ * pretérito perfecto), how many of its sentences are in the perfecto. Each
+ * sentence rolls for its tense first and then looks for a word that has a frame
+ * in it, so words no perfecto frame holds do not water the share down.
+ */
+export const PERFECTO_SHARE = 1 / 3;
+
 /** How many usable words to try before giving up on building a sentence exercise. */
 const GAP_SCAN = 40;
 
@@ -243,6 +251,23 @@ function sentenceSetup(options: BuildSessionOptions) {
     usedFrames: options.usedFrames,
   };
   const targets = gapTargets(sentences.frames, context);
+  // Where each word can sit in a frame of each tense, when the session has both.
+  const perfecto = sentences.frames.filter((frame) => frameTense(frame) === "perfecto");
+  const byTense =
+    perfecto.length > 0 && perfecto.length < sentences.frames.length
+      ? {
+          perfecto: gapTargets(perfecto, context),
+          presente: gapTargets(
+            sentences.frames.filter((frame) => frameTense(frame) === "presente"),
+            context,
+          ),
+        }
+      : undefined;
+  /** The targets to try for the next sentence, in order: its tense's, then any. */
+  const targetsToTry = () => {
+    if (!byTense) return [targets];
+    return [random() < PERFECTO_SHARE ? byTense.perfecto : byTense.presente, targets];
+  };
   // Every other practiced word a sentence can hold, the longest unseen first.
   // Aimed at only due words, a new learner saw no sentences until the day after
   // their first practice, and none again whenever their due words ran out. The
@@ -260,7 +285,7 @@ function sentenceSetup(options: BuildSessionOptions) {
     .map((card) => ({ card, seen: lastSeen(card) }))
     .sort((a, b) => a.seen.localeCompare(b.seen))
     .map(({ card }) => card);
-  return { practiced, due, context, targets, fallback };
+  return { practiced, due, context, targets, targetsToTry, fallback };
 }
 
 type SentenceSetup = NonNullable<ReturnType<typeof sentenceSetup>>;
@@ -277,13 +302,14 @@ function* sentenceCandidates(
   taken: Set<string>,
   setup: SentenceSetup,
   dueOnly = false,
+  targets = setup.targets,
 ): Generator<{ card: Card; queued: boolean }> {
   let tried = 0;
   const offered = new Set<string>();
   for (const card of remaining) {
     // Due first (or never asked in this direction), so a sentence reviews what is
     // ready; the rest of the ranked list follows.
-    if (!setup.due(card.entry) || !setup.targets.has(card.entry.id)) continue;
+    if (!setup.due(card.entry) || !targets.has(card.entry.id)) continue;
     if (tried++ >= GAP_SCAN) return;
     offered.add(card.entry.id);
     yield { card, queued: true };
@@ -291,6 +317,7 @@ function* sentenceCandidates(
   if (dueOnly) return;
   for (const card of setup.fallback) {
     if (taken.has(card.entry.id) || offered.has(card.entry.id)) continue;
+    if (!targets.has(card.entry.id)) continue;
     if (tried++ >= GAP_SCAN) return;
     yield { card, queued: false };
   }
@@ -314,7 +341,7 @@ function gapMaker(
   const { entries, progress, userId, today, random = Math.random } = options;
   const setup = sentenceSetup(options);
   if (!setup) return undefined;
-  const { context, targets } = setup;
+  const { context } = setup;
   const index = glossIndex(entries);
 
   return (remaining, maxWords, taken, dueOnly = false) => {
@@ -327,21 +354,29 @@ function gapMaker(
       return !!entry && inScope(entry, options) && (isDirectObject(entry) || !taken.has(id));
     };
 
-    for (const { card, queued } of sentenceCandidates(remaining, taken, setup, dueOnly)) {
-      const gap = renderGap(card.entry.id, targets, context, wanted, canBlank, maxWords);
-      if (!gap) continue;
+    for (const targets of setup.targetsToTry()) {
+      for (const { card, queued } of sentenceCandidates(
+        remaining,
+        taken,
+        setup,
+        dueOnly,
+        targets,
+      )) {
+        const gap = renderGap(card.entry.id, targets, context, wanted, canBlank, maxWords);
+        if (!gap) continue;
 
-      removeWord(remaining, card.entry.id);
-      // A gap is always answered in Spanish, so every blank schedules its word's
-      // en→es card. Other blanked words leave the pool so they are not asked twice.
-      const blankCards = gap.blanks.map((blank) => {
-        const entry = entries.find((candidate) => candidate.id === blank.entryId)!;
-        const queued = remaining.findIndex((other) => other.entry.id === entry.id);
-        if (queued >= 0) remaining.splice(queued, 1);
-        return toCard(entry, "en→es", progress, userId, today, index);
-      });
-      const primary = blankCards.find((blank) => blank.entry.id === card.entry.id)!;
-      return { card: primary, gap, blankCards, early: !queued };
+        removeWord(remaining, card.entry.id);
+        // A gap is always answered in Spanish, so every blank schedules its word's
+        // en→es card. Other blanked words leave the pool so they are not asked twice.
+        const blankCards = gap.blanks.map((blank) => {
+          const entry = entries.find((candidate) => candidate.id === blank.entryId)!;
+          const queued = remaining.findIndex((other) => other.entry.id === entry.id);
+          if (queued >= 0) remaining.splice(queued, 1);
+          return toCard(entry, "en→es", progress, userId, today, index);
+        });
+        const primary = blankCards.find((blank) => blank.entry.id === card.entry.id)!;
+        return { card: primary, gap, blankCards, early: !queued };
+      }
     }
     return undefined;
   };
@@ -373,33 +408,41 @@ function sentenceMaker<T>(
   const { entries, progress, userId, today } = options;
   const setup = sentenceSetup(options);
   if (!setup) return undefined;
-  const { context, targets } = setup;
+  const { context } = setup;
   const index = glossIndex(entries);
 
   return (remaining, taken, dueOnly = false) => {
-    for (const { card, queued } of sentenceCandidates(remaining, taken, setup, dueOnly)) {
-      const made = render(card.entry.id, targets, context);
-      if (!made) continue;
-      removeWord(remaining, card.entry.id);
-      const tested = tests?.(made);
-      if (tested && tested !== card.entry.id) {
-        const entry = entries.find((candidate) => candidate.id === tested)!;
+    for (const targets of setup.targetsToTry()) {
+      for (const { card, queued } of sentenceCandidates(
+        remaining,
+        taken,
+        setup,
+        dueOnly,
+        targets,
+      )) {
+        const made = render(card.entry.id, targets, context);
+        if (!made) continue;
+        removeWord(remaining, card.entry.id);
+        const tested = tests?.(made);
+        if (tested && tested !== card.entry.id) {
+          const entry = entries.find((candidate) => candidate.id === tested)!;
+          return {
+            card: toCard(entry, "en→es", progress, userId, today, index),
+            made,
+            early: !queued,
+          };
+        }
+        // A sentence in Spanish concerns the word's en→es card.
         return {
-          card: toCard(entry, "en→es", progress, userId, today, index),
+          card: {
+            ...card,
+            direction: "en→es",
+            progress: progressFor(progress, userId, card.entry, "en→es", today),
+          },
           made,
           early: !queued,
         };
       }
-      // A sentence in Spanish concerns the word's en→es card.
-      return {
-        card: {
-          ...card,
-          direction: "en→es",
-          progress: progressFor(progress, userId, card.entry, "en→es", today),
-        },
-        made,
-        early: !queued,
-      };
     }
     return undefined;
   };
