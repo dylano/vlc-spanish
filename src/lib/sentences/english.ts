@@ -92,6 +92,118 @@ export function negateVerb(gloss: string, subject: Subject, gender: SubjectGende
   return [head, ...rest].join(" ").replace(/\bone's\b/g, possessive(subject, gender));
 }
 
+/**
+ * English past participles that are not verb + -ed. American spelling and
+ * forms, as the dictionary's glosses use (practice, gotten).
+ */
+const IRREGULAR_PARTICIPLE: Record<string, string> = {
+  be: "been",
+  begin: "begun",
+  break: "broken",
+  bring: "brought",
+  buy: "bought",
+  catch: "caught",
+  choose: "chosen",
+  come: "come",
+  cut: "cut",
+  do: "done",
+  draw: "drawn",
+  drink: "drunk",
+  drive: "driven",
+  eat: "eaten",
+  fall: "fallen",
+  feel: "felt",
+  find: "found",
+  fly: "flown",
+  forget: "forgotten",
+  get: "gotten",
+  give: "given",
+  go: "gone",
+  have: "had",
+  hear: "heard",
+  hold: "held",
+  keep: "kept",
+  know: "known",
+  leave: "left",
+  lose: "lost",
+  make: "made",
+  meet: "met",
+  pay: "paid",
+  put: "put",
+  read: "read",
+  ride: "ridden",
+  run: "run",
+  say: "said",
+  see: "seen",
+  sell: "sold",
+  send: "sent",
+  set: "set",
+  sing: "sung",
+  sit: "sat",
+  sleep: "slept",
+  speak: "spoken",
+  spend: "spent",
+  stand: "stood",
+  swim: "swum",
+  take: "taken",
+  teach: "taught",
+  tell: "told",
+  think: "thought",
+  throw: "thrown",
+  understand: "understood",
+  wake: "woken",
+  wear: "worn",
+  win: "won",
+  write: "written",
+};
+
+/** Verbs that double their last consonant before -ed: preferred, stopped. */
+const DOUBLES = new Set(["prefer", "stop", "plan", "shop", "chat", "drop", "admit", "refer"]);
+
+/** The past participle of one English verb: eaten, studied, danced, played. */
+export function pastParticiple(verb: string): string {
+  if (IRREGULAR_PARTICIPLE[verb]) return IRREGULAR_PARTICIPLE[verb];
+  if (DOUBLES.has(verb)) return `${verb}${verb.at(-1)}ed`;
+  if (verb.endsWith("e")) return `${verb}d`;
+  if (/[^aeiou]y$/.test(verb)) return `${verb.slice(0, -1)}ied`;
+  return `${verb}ed`;
+}
+
+/**
+ * An infinitive gloss as a past participle phrase: "to brush one's teeth" →
+ * "brushed her teeth". What follows have or has in "she has brushed her teeth",
+ * and after the subject in a question: "Has she brushed her teeth?".
+ */
+export function participleGloss(
+  gloss: string,
+  subject: Subject,
+  gender: SubjectGender = "m",
+): string {
+  const [verb = "", ...rest] = gloss.replace(/^to\s+/, "").split(" ");
+  return [pastParticiple(verb), ...rest]
+    .join(" ")
+    .replace(/\bone's\b/g, possessive(subject, gender));
+}
+
+/** Have or has, for the subject: "she has", but "they have" for a person of either gender. */
+export function perfectAuxiliary(subject: Subject, gender: SubjectGender = "m"): "have" | "has" {
+  return subject === "el" && gender !== "mf" ? "has" : "have";
+}
+
+/** The present perfect of an infinitive gloss for a subject: "has eaten", "have gotten up". */
+export function perfectVerb(gloss: string, subject: Subject, gender: SubjectGender = "m"): string {
+  return `${perfectAuxiliary(subject, gender)} ${participleGloss(gloss, subject, gender)}`;
+}
+
+/** Its negative: "hasn't eaten", "haven't gone to bed". */
+export function negatePerfectVerb(
+  gloss: string,
+  subject: Subject,
+  gender: SubjectGender = "m",
+): string {
+  return `${perfectAuxiliary(subject, gender)}n't ${participleGloss(gloss, subject, gender)}`;
+}
+
 const IRREGULAR_PLURAL: Record<string, string> = {
   // Nouns in -o are split: tomato and potato take -es, photo and piano take -s,
   // so the ones the dictionary uses are listed rather than guessed at.

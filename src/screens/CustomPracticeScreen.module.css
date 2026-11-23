@@ -157,3 +157,9 @@
   padding: 16px 0 12px;
   background: linear-gradient(to bottom, transparent, var(--paper) 16px);
 }
+
+/* A pill that does not apply to the choice above it: word exercises when only the
+   perfecto is chosen, whose sentences are all there is. */
+.pillOff {
+  opacity: 0.35;
+}

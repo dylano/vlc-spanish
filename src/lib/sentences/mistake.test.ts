@@ -137,7 +137,7 @@ describe("making a mistake", () => {
     expect(mucho.length).toBeGreaterThan(0);
     for (const mistake of mucho) {
       expect(mistake.wrong).toBe("muy");
-      expect(mistake.explanation).toMatch(/^after a verb it is mucho: \p{Ll}+ mucho$/u);
+      expect(mistake.explanation).toMatch(/^after a verb it is mucho: [\p{Ll} ]+ mucho$/u);
     }
   });
 

@@ -2,16 +2,19 @@ import { useCallback, useEffect, useMemo, useState, type ReactNode } from "react
 import { countWords } from "../lib/counts.ts";
 import { today } from "../lib/dates.ts";
 import type { Direction, Progress, ProgressBlob } from "../lib/schema.ts";
+import type { Tense } from "../lib/sentences/frames.ts";
 import { entries } from "./dictionary.ts";
 import {
   readName,
   readProgress,
   readSessionSize,
+  readTenses,
   readTheme,
   requestPersistentStorage,
   writeName,
   writeProgress,
   writeSessionSize,
+  writeTenses,
   writeTheme,
   type Theme,
 } from "./local.ts";
@@ -30,6 +33,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   const [systemTheme, setSystemTheme] = useState<Theme>(() => effectiveTheme(undefined));
   const theme = chosenTheme ?? systemTheme;
   const [sessionSize, setSessionSizeState] = useState(readSessionSize);
+  const [tenses, setTensesState] = useState(readTenses);
 
   useEffect(() => {
     requestPersistentStorage();
@@ -55,6 +59,11 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   const setSessionSize = useCallback((next: number) => {
     writeSessionSize(next);
     setSessionSizeState(next);
+  }, []);
+
+  const setTenses = useCallback((next: Tense[]) => {
+    writeTenses(next);
+    setTensesState(next);
   }, []);
 
   const setName = useCallback((next: string) => {
@@ -96,8 +105,22 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       setTheme,
       sessionSize,
       setSessionSize,
+      tenses,
+      setTenses,
     }),
-    [name, setName, progress, recordResults, counts, theme, setTheme, sessionSize, setSessionSize],
+    [
+      name,
+      setName,
+      progress,
+      recordResults,
+      counts,
+      theme,
+      setTheme,
+      sessionSize,
+      setSessionSize,
+      tenses,
+      setTenses,
+    ],
   );
 
   return <StoreContext value={value}>{children}</StoreContext>;

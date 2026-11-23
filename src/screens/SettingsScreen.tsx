@@ -1,4 +1,4 @@
-import { useMemo, useState, type FormEvent } from "react";
+import { useState, type FormEvent } from "react";
 import Button from "../app/Button.tsx";
 import { SESSION_SIZES, type Theme } from "../app/local.ts";
 import { releaseNotes } from "../app/releaseNote.ts";
@@ -8,13 +8,16 @@ import { today } from "../lib/dates.ts";
 import { noteDate, noteHistory } from "../lib/releaseNote.ts";
 import styles from "./SettingsScreen.module.css";
 
+/**
+ * Settings, in the order of board S3: name, What's new, Appearance, Session
+ * length, Verb Tenses, then which build this is and where progress lives.
+ */
 export default function SettingsScreen() {
-  const { name, setName, entries, counts, progress, theme, setTheme, sessionSize, setSessionSize } =
+  const { name, setName, theme, setTheme, sessionSize, setSessionSize, tenses, setTenses } =
     useStore();
   const [draft, setDraft] = useState(name ?? "");
+  const perfecto = tenses.includes("perfecto");
 
-  const sections = useMemo(() => new Set(entries.flatMap((entry) => entry.tags)).size, [entries]);
-  const practiced = Object.keys(progress.entries).length;
   const changed = draft.trim() !== "" && draft.trim() !== name;
   const latest = noteHistory(releaseNotes, today())[0];
 
@@ -50,30 +53,21 @@ export default function SettingsScreen() {
         </form>
       </div>
 
-      <div className={styles.section}>
-        <p className={styles.label} id="session-length">
-          Session length
-        </p>
-        <div role="radiogroup" aria-labelledby="session-length" className={styles.choices}>
-          {SESSION_SIZES.map((size) => (
-            <button
-              key={size}
-              type="button"
-              role="radio"
-              aria-checked={size === sessionSize}
-              className={`${styles.choice} ${size === sessionSize ? styles.chosen : ""}`}
-              onClick={() => {
-                setSessionSize(size);
-              }}
-            >
-              {size}
-            </button>
-          ))}
-        </div>
-        <p className={styles.note}>
-          Words in each session, for General practice and Custom practice.
-        </p>
-      </div>
+      {/* Every release note, for learners (board A1), near the top where it is seen;
+          the version line below is the same history as commits. */}
+      {latest ? (
+        <Button to="/whats-new" className={styles.whatsNew}>
+          <span>
+            What’s new
+            <span className={styles.whatsNewLatest}>
+              Latest: {latest.title} · {noteDate(latest.date)}
+            </span>
+          </span>
+          <svg className={styles.chevron} viewBox="0 0 20 20" aria-hidden="true">
+            <path d="M7 4l6 6-6 6" />
+          </svg>
+        </Button>
+      ) : null}
 
       <div className={styles.section}>
         <p className={styles.label} id="appearance">
@@ -100,43 +94,69 @@ export default function SettingsScreen() {
       </div>
 
       <div className={styles.section}>
-        <p className={styles.label}>Your practice</p>
-        <div className={styles.list}>
-          <div className={styles.fact}>
-            <span className={styles.factLabel}>Words in the dictionary</span>
-            <span className={styles.factValue}>{counts.total}</span>
-          </div>
-          <div className={styles.fact}>
-            <span className={styles.factLabel}>Sections</span>
-            <span className={styles.factValue}>{sections}</span>
-          </div>
-          <div className={styles.fact}>
-            <span className={styles.factLabel}>You have practiced</span>
-            <span className={styles.factValue}>{practiced}</span>
-          </div>
+        <p className={styles.label} id="session-length">
+          Session length
+        </p>
+        <div role="radiogroup" aria-labelledby="session-length" className={styles.choices}>
+          {SESSION_SIZES.map((size) => (
+            <button
+              key={size}
+              type="button"
+              role="radio"
+              aria-checked={size === sessionSize}
+              className={`${styles.choice} ${size === sessionSize ? styles.chosen : ""}`}
+              onClick={() => {
+                setSessionSize(size);
+              }}
+            >
+              {size}
+            </button>
+          ))}
         </div>
         <p className={styles.note}>
-          Progress is kept on this device, in this browser. Installing the app to your home screen
-          helps the browser keep it.
+          Words in each session, for General practice and Custom practice.
         </p>
       </div>
 
-      <div className={styles.spacer} />
-      {/* Every release note, for learners (board A1); the version line below is
-          the same history as commits. */}
-      {latest ? (
-        <Button to="/whats-new" className={styles.whatsNew}>
-          <span>
-            What’s new
-            <span className={styles.whatsNewLatest}>
-              Latest: {latest.title} · {noteDate(latest.date)}
+      {/* What the class has covered (board S3). The present is every learner's, so
+          its box is ticked for good; a later tense is opted into here. */}
+      <div className={styles.section}>
+        <p className={styles.label}>Verb Tenses</p>
+        <div className={styles.list}>
+          <label className={styles.tense}>
+            <span className={styles.tenseText}>
+              <span className={styles.tenseName} lang="es">
+                Presente
+              </span>
+              <span className={styles.tenseExample} lang="es">
+                como · ves · lo hacemos
+              </span>
             </span>
-          </span>
-          <svg className={styles.chevron} viewBox="0 0 20 20" aria-hidden="true">
-            <path d="M7 4l6 6-6 6" />
-          </svg>
-        </Button>
-      ) : null}
+            <input type="checkbox" className={styles.tenseBox} checked disabled />
+          </label>
+          <label className={styles.tense}>
+            <span className={styles.tenseText}>
+              <span className={styles.tenseName} lang="es">
+                Pretérito perfecto
+              </span>
+              <span className={styles.tenseExample} lang="es">
+                he comido · has visto · lo hemos hecho
+              </span>
+            </span>
+            <input
+              id="settings-perfecto"
+              type="checkbox"
+              className={styles.tenseBox}
+              checked={perfecto}
+              onChange={() => {
+                setTenses(perfecto ? [] : ["perfecto"]);
+              }}
+            />
+          </label>
+        </div>
+      </div>
+
+      <div className={styles.spacer} />
       {/* Which deployment this is, for telling builds apart; the screen behind it
           names the commits, read from GitHub. */}
       <div className={styles.footer}>
@@ -160,6 +180,10 @@ export default function SettingsScreen() {
           <span className="visually-hidden"> (opens in a new tab)</span>
         </Button>
       </div>
+      <p className={`${styles.note} ${styles.bottomNote}`}>
+        Progress is kept on this device, in this browser. Installing the app to your home screen
+        helps the browser keep it.
+      </p>
     </section>
   );
 }

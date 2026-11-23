@@ -8,7 +8,7 @@ import {
 } from "../normalize.ts";
 import { shuffle } from "../random.ts";
 import type { Entry, VerbEntry } from "../schema.ts";
-import { verbForm } from "./conjugate.ts";
+import { HABER, headInfinitive, participle, perfectForm, verbForm } from "./conjugate.ts";
 import { SUBJECTS, type Subject } from "./english.ts";
 import {
   adjectivePlural,
@@ -24,6 +24,7 @@ import {
   type RenderContext,
   type RenderedSentence,
   type Segment,
+  type SlotDetail,
 } from "./frames.ts";
 
 export interface GapBlank {
@@ -190,7 +191,10 @@ const SPANISH_SUBJECT: Record<Subject, string> = {
 function formsOf(entry: Entry, dictionary: Entry[]): string[] {
   switch (entry.pos) {
     case "verb":
-      return SUBJECTS.map((subject) => verbForm(entry as VerbEntry, subject, dictionary) ?? "");
+      return SUBJECTS.flatMap((subject) => [
+        verbForm(entry as VerbEntry, subject, dictionary) ?? "",
+        perfectForm(entry as VerbEntry, subject, dictionary) ?? "",
+      ]);
     case "adj": {
       const feminine = entry.forms?.f;
       return [
@@ -294,6 +298,51 @@ export function gradeGapAnswers(gap: Gap, given: string[], dictionary: Entry[]):
 }
 
 /**
+ * What is wrong with a verb typed in the wrong tense, or with its perfecto
+ * built wrong: the present where the perfecto belongs (como for he comido) or
+ * the other way round; haber left out (comido); the participle made regular
+ * (he volvido) or left as the infinitive (he comer). Undefined for anything
+ * else, which the general checks handle (the wrong person of haber among them).
+ */
+function perfectoNote(
+  detail: SlotDetail,
+  expected: string,
+  answer: string,
+  entry: VerbEntry,
+  dictionary: Entry[],
+): string | undefined {
+  if (!detail.subject || detail.liked) return undefined;
+  const folded = foldAccents(answer);
+  const matches = (form: string | undefined) => !!form && foldAccents(normalize(form)) === folded;
+
+  if (detail.tense !== "perfecto") {
+    return SUBJECTS.some((subject) => matches(perfectForm(entry, subject, dictionary)))
+      ? `here it is the present: ${expected}`
+      : undefined;
+  }
+  if (SUBJECTS.some((subject) => matches(verbForm(entry, subject, dictionary)))) {
+    return `here it is the pretérito perfecto: ${expected}`;
+  }
+  const made = participle(entry, dictionary);
+  if (!made) return undefined;
+  // The expected text with its participle swapped for something else.
+  const withParticiple = (other: string) =>
+    expected.replace(new RegExp(`(^|\\s)${made.form}(?=\\s|$)`), `$1${other}`);
+  if (made.regular && matches(withParticiple(made.regular))) {
+    return `${made.form} is irregular: ${expected}, not ${made.regular}`;
+  }
+  const { infinitive } = headInfinitive(entry);
+  if (matches(withParticiple(infinitive))) {
+    return `after haber comes the participle: ${expected}`;
+  }
+  const haber = HABER[detail.subject];
+  if (matches(expected.replace(new RegExp(`(^|\\s)${haber} `), "$1"))) {
+    return `don't forget haber: ${expected}`;
+  }
+  return undefined;
+}
+
+/**
  * Grade the word typed into one blank of a gap. Each blank is graded against
  * the sentence as shown, not against what was typed in the other blanks.
  *
@@ -327,6 +376,10 @@ export function gradeGap(
   );
   if (nearAccent)
     return { result: "hard", expected, note: `almost — check the accent: ${nearAccent}` };
+
+  const tenseNote =
+    entry.pos === "verb" ? perfectoNote(detail, expected, answer, entry, dictionary) : undefined;
+  if (tenseNote) return { result: "wrong", expected, note: tenseNote };
 
   // Gustar and the like: the right verb with the wrong agreement or pronoun is
   // wrong, not a near miss, however close the spelling (me gusta for me gustan).
