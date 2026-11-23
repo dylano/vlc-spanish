@@ -1,6 +1,6 @@
 [
   {
-    "date": "2026-11-20",
+    "date": "2026-11-23",
     "title": "Practice makes Present Perfect",
     "body": "Support added for the *pretérito perfecto* verb tense (*He comprado el pan, ¿Has ido al río?* ). This tense is disabled by default but can be turned on via a new Verb Tenses option in the Settings tab."
   },

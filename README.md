@@ -8,7 +8,7 @@ dictionary, spaced-repetition scheduling, and exercises from single words to gen
     <td><img src="docs/screenshots/home.png" width="200" alt="Home: General practice, Custom practice and a what's-new note"></td>
     <td><img src="docs/screenshots/custom.png" width="200" alt="Custom practice: exercise modes and categories chosen as pills"></td>
     <td><img src="docs/screenshots/exercise.png" width="200" alt="Fill in the Blank: a wrong pronoun, with the note abrigo is masculine, so lo"></td>
-    <td><img src="docs/screenshots/conjugation.png" width="200" alt="Dictionary: the present tense of volver, with the o to ue stem change marked"></td>
+    <td><img src="docs/screenshots/conjugation.png" width="200" alt="Dictionary: the present tense of volver, with the o to ue stem change marked, and its irregular participle vuelto"></td>
   </tr>
   <tr>
     <td align="center">Home</td>
