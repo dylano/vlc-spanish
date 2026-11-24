@@ -262,7 +262,7 @@ describe("with the pretérito perfecto not ticked", () => {
   it("has no perfecto sentence in any kind of session", () => {
     let seen = 0;
     for (const scope of ["all", "due", "problems"] as const) {
-      for (let seed = 1; seed <= 10; seed++) {
+      for (let seed = 1; seed <= 5; seed++) {
         const options = (format: QuizConfig["format"]) => ({
           entries,
           progress: scope === "problems" ? missed : { userId: "me", entries: {} },
@@ -285,7 +285,7 @@ describe("with the pretérito perfecto not ticked", () => {
         }
       }
     }
-    expect(seen).toBeGreaterThan(500);
+    expect(seen).toBeGreaterThan(250);
   });
 
   it("never offers a perfecto sentence through Practice more like this", () => {

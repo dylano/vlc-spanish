@@ -252,16 +252,22 @@ function sentenceSetup(options: BuildSessionOptions) {
   };
   const targets = gapTargets(sentences.frames, context);
   // Where each word can sit in a frame of each tense, when the session has both.
-  const perfecto = sentences.frames.filter((frame) => frameTense(frame) === "perfecto");
+  // Split from the targets above rather than worked out again: that is the costly
+  // part of setting up a session, and doing it three times doubled the time.
+  const perfecto = new Set(
+    sentences.frames.filter((frame) => frameTense(frame) === "perfecto").map((frame) => frame.id),
+  );
+  const inTense = (wanted: boolean) => {
+    const out = new Map<string, { frame: Frame; slot: string }[]>();
+    for (const [entryId, options] of targets) {
+      const kept = options.filter((option) => perfecto.has(option.frame.id) === wanted);
+      if (kept.length > 0) out.set(entryId, kept);
+    }
+    return out;
+  };
   const byTense =
-    perfecto.length > 0 && perfecto.length < sentences.frames.length
-      ? {
-          perfecto: gapTargets(perfecto, context),
-          presente: gapTargets(
-            sentences.frames.filter((frame) => frameTense(frame) === "presente"),
-            context,
-          ),
-        }
+    perfecto.size > 0 && perfecto.size < sentences.frames.length
+      ? { perfecto: inTense(true), presente: inTense(false) }
       : undefined;
   /** The targets to try for the next sentence, in order: its tense's, then any. */
   const targetsToTry = () => {
