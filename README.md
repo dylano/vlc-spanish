@@ -767,7 +767,11 @@ for what goes between them, so `{v:aux}` gives _have_/_has_ and `{v:pp}` the par
 `{v}` and `{v:not}` give "have eaten" and "haven't eaten". The validator allows `aux` and `pp`
 only on a perfecto verb, and `base` not on one. The baseline frames are a verb and its object
 with no time word, as English says it too: _He comido la manzana_ ("I have eaten the apple"),
-_Hemos comprado una camisa_, _He leído el libro_, _¿Has visto mi mochila?_ None drinks: the
+_Hemos comprado una camisa_, _He leído el libro_, _¿Has visto mi mochila?_ Clothes and food,
+most of the nouns, have frames beyond _comprar_ (_¿Has traído el pan?_, _¿Dónde has puesto mi
+bufanda?_, _Nunca he llevado una corbata_, _Nunca he comido gambas_): a word picks its sentence
+from the frames that can hold it, so with buying alone to hold them, buying crowded out the rest
+(decided 2026-11-25). None drinks: the
 English participle "drunk" is correct but sounds stiff to American ears, and "drank" is not
 standard (decided 2026-11-20).
 A verb slot's `gloss` picks which English gloss to say where the first does not fit: _comer_ is
