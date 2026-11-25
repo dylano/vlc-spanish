@@ -9181,6 +9181,145 @@
         }
       },
       "cloze": ["v", "g"]
+    },
+    {
+      "id": "perfecto-brought",
+      "grammar": ["preterito-perfecto", "questions", "articles"],
+      "subjects": ["tu", "vosotros"],
+      "es": "¿{v} {c:el}?",
+      "en": "{v:aux} {S} {v:pp} {c:the}?",
+      "slots": {
+        "v": {
+          "kind": "verb",
+          "ids": ["traer"],
+          "subject": "@",
+          "tense": "perfecto"
+        },
+        "c": {
+          "kind": "noun",
+          "ids": [
+            "pan",
+            "queso",
+            "vino",
+            "agua",
+            "leche",
+            "cerveza",
+            "ensalada",
+            "tortilla",
+            "helado",
+            "jamon",
+            "chorizo",
+            "chaqueta",
+            "abrigo",
+            "jersey",
+            "bufanda",
+            "gorro",
+            "gorra",
+            "banador"
+          ]
+        }
+      },
+      "cloze": ["v", "c"]
+    },
+    {
+      "id": "perfecto-where-put",
+      "grammar": ["preterito-perfecto", "questions"],
+      "subjects": ["tu", "vosotros"],
+      "es": "¿Dónde {v} mi {o}?",
+      "en": "Where {v:aux} {S} {v:pp} my {o}?",
+      "slots": {
+        "v": {
+          "kind": "verb",
+          "ids": ["poner"],
+          "subject": "@",
+          "tense": "perfecto"
+        },
+        "o": {
+          "kind": "noun",
+          "ids": [
+            "libro",
+            "mochila",
+            "cuaderno",
+            "estuche",
+            "boligrafo",
+            "lapiz",
+            "chaqueta",
+            "bufanda",
+            "abrigo",
+            "gorro",
+            "gorra",
+            "sombrero",
+            "bolso",
+            "cinturon",
+            "jersey"
+          ]
+        }
+      },
+      "cloze": ["v", "o"]
+    },
+    {
+      "id": "perfecto-never-worn",
+      "grammar": ["preterito-perfecto", "verb-conjugation"],
+      "subjects": ["yo", "tu", "el", "nosotros", "vosotros", "ellos"],
+      "es": "Nunca {v} {c:un}.",
+      "en": "{S} {v:aux} never {v:pp} {c:a}.",
+      "slots": {
+        "v": {
+          "kind": "verb",
+          "ids": ["llevar"],
+          "subject": "@",
+          "tense": "perfecto"
+        },
+        "c": {
+          "kind": "noun",
+          "ids": [
+            "corbata",
+            "traje",
+            "sombrero",
+            "vestido",
+            "falda",
+            "gorra",
+            "gorro",
+            "bufanda",
+            "pulsera",
+            "cinturon"
+          ]
+        }
+      },
+      "cloze": ["v", "c"]
+    },
+    {
+      "id": "perfecto-never-eaten",
+      "grammar": ["preterito-perfecto", "verb-conjugation", "plural"],
+      "subjects": ["yo", "tu", "el", "nosotros", "vosotros", "ellos"],
+      "es": "Nunca {v} {c}.",
+      "en": "{S} {v:aux} never {v:pp} {c}.",
+      "slots": {
+        "v": {
+          "kind": "verb",
+          "ids": ["comer"],
+          "subject": "@",
+          "tense": "perfecto",
+          "gloss": "to eat"
+        },
+        "c": {
+          "kind": "noun",
+          "ids": [
+            "aceituna",
+            "gamba",
+            "croqueta",
+            "calamar",
+            "garbanzo",
+            "lenteja",
+            "fresa",
+            "judia",
+            "nachos",
+            "frutos-secos"
+          ],
+          "number": "pl"
+        }
+      },
+      "cloze": ["v", "c"]
     }
   ]
 }

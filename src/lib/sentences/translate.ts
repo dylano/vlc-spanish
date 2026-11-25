@@ -5,6 +5,7 @@ import {
   type Frame,
   type RenderContext,
   type RenderedSentence,
+  type Segment,
 } from "./frames.ts";
 
 /**
@@ -22,15 +23,52 @@ export interface Translation {
  * grading — a different translation can be just as right — only a way to say
  * "that is exactly it" when it is. Accents count: a missing one is not a match.
  * Where the English does not show a person's gender (the nurse), the sentence
- * with them in the other gender matches too.
+ * with them in the other gender matches too. So does any word that shares the
+ * English of the one used: almorzar for comer in "My cousin hasn't had lunch".
  */
 export function matchesTranslation(given: string, translation: Translation): boolean {
   const text = normalize(given);
+  if (text === "") return false;
   const { es, otherGenders = [] } = translation.sentence;
-  return (
-    text !== "" &&
-    [es, ...otherGenders.map((other) => other.es)].some((model) => normalize(model) === text)
-  );
+  if ([es, ...otherGenders.map((other) => other.es)].some((model) => normalize(model) === text))
+    return true;
+  return sameGlossVersions(translation.sentence).some((model) => normalize(model) === text);
+}
+
+/** At most this many reworded sentences are tried, however many slots have options. */
+const MAX_VERSIONS = 200;
+
+/**
+ * The sentence, and each of its other-gender versions, with any slot swapped
+ * for a word sharing its English (the slot's `accepts`). Those were worked out
+ * for the sentence as shown, so in another gender a slot is swapped only where
+ * its text is unchanged: the verb in "Mi primo no ha comido", never an
+ * adjective that agrees (seria in "la enfermera parece seria").
+ */
+function sameGlossVersions(sentence: RenderedSentence): string[] {
+  const { segments, slots, otherGenders = [] } = sentence;
+  if (!segments || !slots) return [];
+  const words = (of: Segment[]) =>
+    new Map(of.flatMap((part) => (part.slot && !part.article ? [[part.slot, part.text]] : [])));
+  const shown = words(segments);
+
+  const out: string[] = [];
+  for (const model of [segments, ...otherGenders.map((other) => other.segments)]) {
+    const own = words(model);
+    let versions = [""];
+    for (const part of model) {
+      const accepts = part.slot && !part.article ? slots[part.slot]?.accepts : undefined;
+      const choices =
+        accepts && accepts.length > 1 && own.get(part.slot!) === shown.get(part.slot!)
+          ? accepts
+          : [part.text];
+      versions = versions
+        .flatMap((start) => choices.map((choice) => start + choice))
+        .slice(0, MAX_VERSIONS);
+    }
+    out.push(...versions);
+  }
+  return out;
 }
 
 /** A sentence containing an entry, or undefined when no frame can hold it with the words available. */
