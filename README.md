@@ -281,7 +281,10 @@ tangled into components.
   the model would repeat it. Where the English doesn't show a person's gender ("The nurse seems
   serious", "My cousin lives nearby"), the version with that person in the other gender is just as
   exact: the renderer builds it alongside (`otherGenders`), redoing everything that agrees, and keeps
-  it only when its English reads the same, so "My sister is a nurse" still wants _enfermera_. Anything else gets no verdict, since it may be
+  it only when its English reads the same, so "My sister is a nurse" still wants _enfermera_. So is
+  a word sharing the English of the one used, the same swap Fill in the Blank accepts (the slot's
+  `accepts`): _Mi primo no ha almorzado_ for "My cousin hasn't had lunch", rendered with _comido_. In
+  the other gender a word is swapped only where it reads the same, never one that agrees. Anything else gets no verdict, since it may be
   just as right. Nothing is
   scheduled, and the summary counts these apart from the score, with the exact matches as
   **perfect**: in a mixed session the Translate a sentence row reads "5 sentences, 2 perfect" (the

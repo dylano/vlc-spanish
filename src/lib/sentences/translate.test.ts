@@ -52,6 +52,51 @@ describe("a person whose gender the English does not show", () => {
   });
 });
 
+describe("a word that shares its English with another", () => {
+  let state = 1;
+  const random = () => {
+    state = (state * 1_664_525 + 1_013_904_223) % 4_294_967_296;
+    return state / 4_294_967_296;
+  };
+  const context = { dictionary: entries, glue: sentences.glue, random };
+  const frame = (id: string) => sentences.frames.find((f) => f.id === id) as Frame;
+
+  it("matches almorzar for comer, in either gender", () => {
+    const sentence = renderFrame(frame("perfecto-relative-not"), context, {
+      n: "primo",
+      v: "comer",
+    })!;
+    expect(sentence.en).toMatch(/cousin hasn't had lunch/);
+    for (const answer of [
+      "mi primo no ha comido",
+      "mi prima no ha comido",
+      "mi primo no ha almorzado",
+      "mi prima no ha almorzado",
+    ]) {
+      expect(matchesTranslation(answer, { sentence }), answer).toBe(true);
+    }
+    expect(matchesTranslation("mi primo no ha cenado", { sentence })).toBe(false);
+    expect(matchesTranslation("mi primo no almuerza", { sentence })).toBe(false);
+  });
+
+  it("matches in the present tense too", () => {
+    const sentence = renderFrame(frame("family-lunch-at-time"), context, {
+      n: "madre",
+      v: "comer",
+    })!;
+    expect(sentence.es).toMatch(/^Mi madre come /);
+    expect(matchesTranslation(sentence.es.replace("come", "almuerza"), { sentence })).toBe(true);
+  });
+
+  it("never matches a word that only agrees in the gender shown", () => {
+    const sentence = renderFrame(frame("profession-seems"), context, {
+      p: "enfermero",
+      a: "serio",
+    })!;
+    expect(matchesTranslation("la enfermera parece serio", { sentence })).toBe(false);
+  });
+});
+
 describe("practice more like this", () => {
   function seeded(seed: number): () => number {
     let state = (seed * 2_654_435_761) % 4_294_967_296;
